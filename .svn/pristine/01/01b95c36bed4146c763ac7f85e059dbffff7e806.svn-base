@@ -1,0 +1,20 @@
+[Build]
+version = 19.0.2401
+sr = VDM201012-01
+buildnumber = 2401
+
+[Mail Receiver]
+receiver_email = ['jamie_yeh@cyberlink.com', 'jason_yeng@cyberlink.com', 'duncan_su@cyberlink.com']
+test = ['allan_hsieh@cyberlink.com', 'jason_yeng@cyberlink.com', 'jamie_yeh@cyberlink.com', 'terence_chang@cyberlink.com']
+
+[Note]
+note = develop
+
+[Checklist]
+name = Particle Room.html
+
+[GroundTruthFolder]
+name = 2008485
+
+[Temp]
+temp = n/a

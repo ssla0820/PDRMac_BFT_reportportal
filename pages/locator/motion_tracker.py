@@ -1,0 +1,16 @@
+main_window = {'AXIdentifier': '_NS:8', 'AXRole': 'AXWindow'}
+main_window = {'AXIdentifier': 'ICE_MOTIONTRACKER_MAIN_WINDOW', 'AXRole': 'AXWindow'}
+btn_track = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKING_PREVIEW_BTN_TRACK_START_STOP'}]
+btn_add_title = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKING_SETTING_BTN_ADDTITLE'}]
+text_object = [main_window, {'AXIdentifier': 'IDC_MTSETTING_TITLE_EDIT_TITLE', 'AXRole': 'AXTextArea'}]
+btn_change_color = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKER_FACE_COLOR', 'AXRole': 'AXButton'}]
+btn_add_pip = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKING_SETTING_BTN_ADDPIP'}]
+btn_import_media = {'AXIdentifier': 'IDC_MTSETTING_PIP_BTN_IMPORT', 'AXTitle': 'Import Media Clip', 'AXRole': 'AXButton'}
+btn_add_effect = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKING_SETTING_BTN_ADDEFFECT'}]
+btn_cbo_mosaic = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKING_SETTING_COMBO_EFFECTTYPE'}]
+btn_add_a_tracker = [main_window, {'AXIdentifier': 'IDC_MOTIONTRACKER_SIMPLE_TIMELINE_BTN_ADD_TRACKER'}]
+timecode = [main_window, {'AXIdentifier': 'spinTimeEditTextField'}]
+btn_ok = [main_window, {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_OK'}]
+simple_track_header_outline_view = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW'}
+text_trackers = [simple_track_header_outline_view, {'AXSubrole': 'AXOutlineRow', "get_all": True}]
+text_tracker2 = [simple_track_header_outline_view, {'AXSubrole': 'AXOutlineRow', 'index':1}]

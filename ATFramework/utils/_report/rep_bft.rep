@@ -1,0 +1,4 @@
+    .hoverBFT tr:hover td{
+  background-color: #ddddFF !important;
+}
+</style>

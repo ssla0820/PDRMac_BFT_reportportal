@@ -1,0 +1,135 @@
+<style>
+this_is_css
+
+
+#myPass {
+  border-radius: 10px;
+  background: green;
+  padding: 0px; 
+  color : white;
+  padding-left:14px;
+  padding-right:14px;
+  display: inline-block;
+  font-weight: bold;
+}
+#myFail {
+  border-radius: 10px;
+  background: red;
+  padding: 0px; 
+  color : white;
+  padding-left:14px;
+  padding-right:14px;
+  display: inline-block;
+  font-weight: bold;
+}
+#mySkip {
+  border-radius: 10px;
+  background: LightGrey;
+  padding: 0px; 
+  color : white;
+  padding-left:10px;
+  padding-right:10px;
+  display: inline-block;
+  font-weight: bold;
+}
+#myNA {
+  border-radius: 10px;
+  background: Blue;
+  padding: 0px; 
+  color : white;
+  padding-left:18px;
+  padding-right:18px;
+  display: inline-block;
+  font-weight: bold;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 5px 20px;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  -webkit-animation: fadeEffect 0.5s;
+  animation: fadeEffect 0.5s;
+}
+
+/* Fade in tabs */
+@-webkit-keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.hoverTable{
+  width: 80%; 
+  border-collapse:collapse; 
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 50px;
+  font-family: arial;
+}
+.hoverTable th{
+  background-color: #33ccdd;
+  color: white;
+  padding:7px; border:#EEEEEE 1px solid;
+}
+.hoverTable td{ 
+  padding:7px; border:#EEEEEE 1px solid;
+}
+/* Define the default color for all the table rows */
+.hoverTable tr:nth-child(even){
+  background-color: #f2f2f2;
+}
+/* Define the hover highlight color for the table row */
+
+.waffle td,.grid-fixed-table td{
+    overflow:hidden;
+    border:1px #e5e5e5 solid;
+    border-color:rgba(0,0,0,0.15);
+    border-width:0 1px 1px 0;
+    vertical-align:bottom
+    ;line-height:inherit;
+    /* background-color:#fff */
+    ;padding:0 3px
+    }
+.hoverTable tr:hover{
+  background-color: #ddddFF;
+}
+.hoverBFTe tr:hover td{
+  background-color: #ddddFF;
+}
+body{
+    height: 85%;
+}
+</style>

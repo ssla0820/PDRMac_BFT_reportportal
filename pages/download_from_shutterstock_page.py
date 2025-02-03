@@ -1,0 +1,1058 @@
+import time, datetime, os, copy
+import cv2
+import numpy
+
+from .base_page import BasePage
+from ATFramework.utils import logger
+from ATFramework.utils.Image_Search import CompareImage
+# from AppKit import NSScreen
+from .locator.locator import download_from_shutterstock as L
+from reportportal_client import step
+
+
+def arrow(obj, button="up", times=1, locator=None):
+    locator = locator[button.lower() == "up"]
+    elem = obj.exist(locator)
+    for _ in range(times):
+        obj.mouse.click(*elem.center)
+    return True
+
+checked = numpy.frombuffer(b'UKHYOLf_]\x96\x98\x9c\xa6\xb2\xbf\xb1\xc7\xd8\xb3\xcf\xe1\xac\xc5\xd6\xa6\xba\xc9\x9f\xb0\xbe\x9b\xab\xb8\x9b\xa9\xb5\x99\xa5\xad\x8f\x98\xa1~\x88\x93O_pRGEe\\Y\xa3\x9e\x9cwvwXXYOLLOMMOMMOMMOMMOMMOMMOLLWXYty\x7f\x91\x9e\xabMDA\x8a\x86\x83sopROOURRVSSVTTVTTVTTVTTVTTVTTVSSPNNIGG\xa3\xa5\xa7IB@\x9f\xa0\xa3WVWWTTYVVZWWZWWZWWZWWZWWZWWZWWTRRNKK\xb2\xb1\xb2vuuTfu\xa5\xb8\xc7URRYVVZWWZWWZWWZWWZWWZWWYVVSQQPNN\xc3\xc3\xc3\xa2\xa1\xa1KII@b\x81\x92\x9f\xaaVSSZWWZWWZWWZWWZWWZWWXVVROOTRR\xce\xcd\xcd\xc9\xc9\xc9IGGUSS\x1d/A\x85\x8b\x8fTRRZWWZWWZWWZWWZWWXVVPNN\\ZZ\xd9\xd9\xd9\xe3\xe3\xe3YWWSQQXWW\x1b%/\x94\x96\x98JIIPNNXUUZWWZWWWUUOMMedd\xdf\xdf\xdf\xe9\xe9\xe9zyyNLLYVVXVV\x18\x1e#\x86\x88\x89\xc7\xc7\xc7yxxFDDQNNTSSMKKqqq\xe1\xe1\xe1\xe6\xe6\xe6\xa7\xa6\xa6HFFXUUZWWXVV\x19\x1f"z|}wvu\xe3\xe3\xe3\xc5\xc5\xc5qpp>=<\x7f~~\xe2\xe2\xe2\xe3\xe3\xe3\xc8\xc7\xc7LJJUSSZWWZWWXVV$,1\x86\x89\x8aIHH\x99\x98\x98\xe1\xe1\xe1\xe0\xe0\xe0\xca\xca\xca\xe1\xe1\xe1\xe1\xe1\xe1\xda\xda\xda_^^ROOZWWZWWZWWXVVDKN\x91\x93\x95RQQLJJ\xb7\xb7\xb7\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xdd\xda\xda\xda\x86\x85\x85LJIYVVZWWZWWZWWXVV@??\x9b\x9c\x9dZWWTQQTSS\xca\xca\xca\xd9\xd9\xd9\xd7\xd7\xd7\xac\xac\xacGFFWTTZWWZWWZWWZWW[XX2./\x83\x81\x82wuvWUUQOOfff\xd4\xd4\xd4\xc6\xc6\xc6PNNTQQZWWZWWZWWZWWZWWqop.**GEF\x9c\x9b\x9cwuv\\ZZNKK\x85\x84\x84onnOMMYVVZWWZWWZWW_^^wuu\x8c\x8a\x8b)((\'))C@Ayxy\x86\x88\x89\x8c\x8e\x8f\x86\x88\x89\x8d\x8d\x8e\x98\x98\x99\x9c\x9b\x9c\x9b\x9a\x9b\x9a\x98\x99\x99\x97\x97\x8d\x8b\x8csop844', dtype="uint8").reshape((16,16,3))
+unchecked = numpy.frombuffer(b'UKHYOLf_]\x96\x98\x9c\xa6\xb2\xbf\xb1\xc7\xd8\xb3\xcf\xe1\xac\xc5\xd6\xa6\xba\xc9\x9f\xb0\xbe\x9b\xab\xb8\x9b\xa9\xb5\x99\xa5\xad\x8f\x98\xa1~\x88\x93P`qRGEe\\Y\xa3\x9e\x9cwvwXXYOLLOMMOMMOMMOMMOMMOMMOLLWXYx~\x84\x9d\xac\xb9MDA\x8a\x86\x83sopROOURRVSSVTTVTTVTTVTTVTTVTTVSSURRSQQsw|IB@\x9f\xa0\xa3WVWWTTYVVZWWZWWZWWZWWZWWZWWZWWZWWYVVWTTXVWTfu\xa5\xb8\xc7URRYVVZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWYVVWUU@b\x81\x92\x9f\xaaVSSZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXVV\x1d/A\x8a\x90\x95VTTZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXWW\x1b%/\x8a\x8e\x91VTTZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXWW\x18\x1e#\x89\x8b\x8dVTTZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXWW\x19\x1f"\x88\x8a\x8cVTTZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXVV$,1\x8a\x8d\x8eVTTZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXVVDKN\x91\x93\x95VTTZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWXVV@??\x9b\x9c\x9dZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWW[XX2./\x83\x81\x82wuvYVVZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWZWWqop.**GEF\x9c\x9b\x9cwuv]]]ZWWZWWZWWZWWZWWZWWZWWZWW_^^wuu\x8c\x8a\x8b)((\'))C@Ayxy\x86\x88\x89\x90\x93\x94\x92\x94\x96\x98\x98\x9a\x9b\x9b\x9c\x9c\x9b\x9c\x9b\x9a\x9b\x9a\x98\x99\x99\x97\x97\x8d\x8b\x8csop844', dtype="uint8").reshape((16,16,3))
+class AdjustSet:
+    def __init__(self, driver, locators):
+        self.driver = driver
+        self.locators = locators
+
+    def adjust_slider(self, value):
+        self.driver.exist(self.locators[0]).AXValue = value
+        return True
+
+    def set_value(self, value):
+        target = self.driver.exist(self.locators[1])
+        self.driver.mouse.click(*target.center)
+        target.AXValue = str(value)
+        self.driver.keyboard.enter()
+        return True
+
+    def get_value(self):
+        return self.driver.exist(self.locators[1]).AXValue
+
+    def click_up(self, times=1):
+        return arrow(self.driver, button="up", times=times, locator=self.locators[3:1:-1])
+
+    def click_down(self, times=1):
+        return arrow(self.driver, button="down", times=times, locator=self.locators[3:1:-1])
+
+    def click_arrow(self, opt="up", times=1):
+        option = ["down", "up"][opt.lower() == "up"]
+        return self.__getattribute__(f"click_{option}")(times)
+
+    def click_plus(self, times=1, _btn=True, _get_status=False):
+        try:
+            locator = self.locators[5:3:-1][bool(_btn)]
+        except:
+            logger("[Error] locator was not defined")
+            return False
+        target = self.driver.exist(locator)
+        if _get_status:
+            return target.AXEnabled
+        else:
+            self.driver.mouse.click(*target.center, times=times)
+            return True
+
+    def click_minus(self, times=1):
+        return self.click_plus(times, False)
+
+    def is_plus_enabled(self, btn=True):
+        return self.click_plus(_get_status=True)
+
+    def is_minus_enabled(self):
+        return self.click_plus(_btn=False, _get_status=True)
+
+
+def _set_checkbox(self, _locator, value=True, _get_status_only=False):
+    target = self.exist(_locator)
+    timer = time.time()
+    while time.time() - timer < 5:
+        try:
+            current_value = bool(int(target.AXValue))
+            if _get_status_only: return current_value
+            if current_value == value:
+                break
+            else:
+                target.press()
+                time.sleep(1)
+        except:
+            logger("First round, force click it")
+            if _get_status_only: target.press()
+            target.press()
+            time.sleep(1)
+    else:
+        return False
+    return True
+
+
+def hover_download(self, _btn=None):
+    if _btn == -1: return True
+    _btn = _btn or L.btn_download
+    self.activate()
+    dl = self.exist(_btn)
+    self.mouse.move(*dl.center)
+    return True
+
+
+def verify_download_tooltip(self, ground_truth, _btn=None, _offset=(0, 20, 62, 20), _hover_it=True):
+    if _hover_it: hover_download(self, _btn)
+    time.sleep(1)
+    _x, _y = self.mouse.position()
+    x = _x + _offset[0]
+    y = _y + _offset[1]
+    img_path = self.image.snapshot(x=x, y=y, w=_offset[2], h=_offset[3])
+    return self.compare(ground_truth, img_path)
+
+
+class Shutterstock(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.download = Download(*args, **kwargs)
+        self.search = Search(*args, **kwargs)
+        self.page_number = AdjustSet(self, (None, L.text_page_number))
+        self.video = Video(*args, **kwargs)
+        self.photo = Photo(*args, **kwargs)
+        self.music = Music(*args, **kwargs)
+
+    def is_in_shutterstock(self, timeout=5):
+        timer = time.time()
+        while time.time() - timer < timeout:
+            if self.is_exist(L.window):
+                time.sleep(0.5)
+                if self.is_not_exist(L.waiting_cursor): return True
+        else:
+            return False
+
+    def click_close(self):
+        return bool(self.exist_press(L.btn_close))
+
+    def click_maximize(self):
+        return bool(self.exist_press(L.btn_zoom))
+
+    def adjust_window(self, x=None, y=None, w=None, h=None):
+        window = self.exist(L.window)
+        _x, _y, _w, _h = *(window.AXPosition), *(window.AXSize)
+        x, y, w, h = x or _x, y or _y, w or _w, h or _h
+        logger(f"new bounds {x} {y} {w} {h}")
+        cmd = f'''osascript  -e 'tell application "System Events" to tell process "PowerDirector"' -e 'set visible ''' \
+              f'''to true' -e 'repeat with e in entire contents as list' -e 'try' -e 'if value of attribute "AXIdenti''' \
+              f'''fier" of e is equal to "IDC_DOWNLOAD_FROM_SHUTTERSTOCK_DLG" then' -e 'tell e' -e 'set size to {{{w}''' \
+              f''', {h}}}' -e 'set position to {{{x}, {y}}}' -e 'end tell' -e 'exit repeat' -e 'end if' -e 'end try' ''' \
+              f'''-e 'end repeat' -e 'end tell' '''
+        self.driver.shell(cmd)
+        return True
+
+    def get_caption_title(self):
+        try:
+            return self.exist(L.ss_title_txt).AXValue
+        except:
+            return
+
+    def hover_i_button(self):
+        btn_i = self.exist(L.btn_i)
+        self.mouse.move(*btn_i.center)
+        return True
+
+    def verify_i_tooltip(self, file_name=None):
+        # have to modify if snapshot wrong position in different resolution?
+        offset_x = 0
+        offset_y = 21
+        tooltip_w = 149
+        tooltip_h = 19
+
+        btn_i = self.exist(L.btn_i)
+        i_x, i_y = btn_i.center
+        x, y = i_x + offset_x, i_y + offset_y
+        img_path = self.image.snapshot(file_name=None, x=x, y=y, w=tooltip_w, h=tooltip_h)
+        return self.compare(file_name, img_path)
+
+    def click_i_button(self):
+        return bool(self.exist_press(L.btn_i))
+
+    def verify_i_dialog(self):
+        return self.is_exist(L.text_i)
+
+    def close_i_dialog(self):
+        return bool(self.exist_press(L.btn_i_close))
+
+    def click_download(self, _btn=None):
+        _btn = _btn or L.btn_download
+        if not self.exist(_btn).AXEnabled: return False
+        return bool(self.exist_press(_btn))
+
+    def is_enabled_download(self):
+        return self.exist(L.btn_download).AXEnabled
+
+    def click_search_not_found_ok(self, timeout=5):
+        return bool(self.exist_press(L.search_not_found.btn_ok, timeout=timeout))
+
+    def hover_download(self, _btn=None):
+        return hover_download(self, _btn)
+
+    def verify_download_tooltip(self, ground_truth, _btn=None, _offset=(0, 20, 62, 20)):
+        return verify_download_tooltip(self, ground_truth, _btn, _offset)
+
+    def hover_next_page(self):
+        return self.hover_download(L.btn_next_page.copy())
+
+    def verify_next_page_tooltip(self, ground_truth):
+        return self.verify_download_tooltip(ground_truth, L.btn_next_page.copy(), (0, 20, 64, 20))
+
+    def click_next_page(self):
+        return self.click_download(L.btn_next_page.copy())
+
+    def hover_previous_page(self):
+        return self.hover_download(L.btn_previous_page.copy())
+
+    def verify_previous_page_tooltip(self, ground_truth):
+        return self.verify_download_tooltip(ground_truth, L.btn_previous_page.copy(), (0, 20, 84, 20))
+
+    def click_previous_page(self):
+        return self.click_download(L.btn_previous_page.copy())
+
+    def set_scroll_bar(self, value):
+        scroll = self.exist(L.scroll_media)
+        scroll.AXValue = value
+        return True
+
+    def get_scroll_bar_status(self):
+        self.activate()
+        scroll = self.exist(L.scroll_media)
+        color = self.driver.image.get_color(*scroll.center)
+        if color == "2f2f2f":
+            return False
+        elif color == "979797":
+            return True
+        else:
+            logger("scroll bar is in unknown status")
+            return None
+
+
+    def get_selected_amount(self):
+        return int(self.exist(L.text_selected_amount).AXValue.replace(" clip(s) selected",""))
+
+    def switch_page_number(self, num):
+        return self.page_number.set_value(num)
+
+    def get_page_amount(self):
+        return int(self.page_number.get_value())
+
+    def get_total_page_amount(self):
+        return int(self.exist(L.text_total_page_number).AXValue.replace("of ", ""))
+
+    def click_library_menu(self):
+        return bool(self.exist_click(L.btn_library))
+
+    def get_library_setting(self, _click_it=None):
+        self.click_library_menu()
+        target = [L.btn_library, {"AXMenuItemMarkChar":"✓"}]
+        ret = self.exist(target).AXTitle.replace(" Icons","")
+        self.click_library_menu()
+        return ret
+
+    def set_library_setting(self, value):
+        icon_list = ["Extra Large Icons", "Large Icons", "Medium Icons", "Small Icons"]
+        self.click_library_menu()
+        # time.sleep(1)
+        for icon in icon_list:
+            if value + " Icons" == icon:
+                self.exist_click([L.btn_library, {"AXTitle": value + " Icons"}])
+                return True
+        logger(f">> {value} Icons << is not found")
+        return False
+
+    def switch_to_video(self):
+        if self.exist_click(L.btn_video_tab):
+            return self.is_not_exist(L.img_waiting_cursor)
+        return False
+
+    def switch_to_photo(self):
+        if self.exist_click(L.btn_photo_tab):
+            return self.is_not_exist(L.img_waiting_cursor)
+        return False
+
+    def switch_to_music(self):
+        if self.exist_click(L.btn_music_tab):
+            return self.is_not_exist(L.img_waiting_cursor)
+        return False
+
+    def close_pop_up_preview_window(self):
+        time.sleep(2)
+        if self.exist(L.max_preview.main_window):
+            self.click(L.max_preview.btn_close)
+            return True
+        else:
+            return False
+
+class Video(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.refreshed = False
+        self.download = Download(*args, **kwargs)
+
+    def _refresh_media(self):
+        self.activate()
+        if not self.refreshed:
+            scroll = self.exist(L.scroll_media)
+            temp = scroll.AXValue
+            for i in range(5):
+                scroll.AXValue = (i+1)/5
+            scroll.AXValue = temp
+            self.refreshed = True
+
+    def hover_thumbnail(self, index, _scroll_only=False):
+        self._refresh_media()
+        boundary = (_ := self.exist(L.frame_scroll_view)).AXPosition + _.AXSize
+        target = self.exist(L.frame_clips)[index]
+        x0, y0 = target.center
+        if not (boundary[1] < y0 < boundary[1] + boundary[3]):
+            y_long, y_top = (_:=self.exist(L.frame_section)).AXSize[1], _.AXPosition[1]
+            percentage = (y0 - y_top - boundary[3]/2) / (y_long-boundary[3])
+            self.exist(L.scroll_media).AXValue = percentage
+            time.sleep(0.5)
+        if not _scroll_only: self.mouse.move(*target.center)
+        return True
+    
+    @step("Select stock media by thumbnail index")
+    def select_thumbnail_for_video_intro_designer(self, index):
+        # This page function only for (Video Intro Designer) entry to enter SS
+        # Step1: Select thumbnail w/ index then click [Replace Media]
+        # Step2: Return when (downloading video) is completed
+
+        # Step1:
+        index = index - 1
+        target = self.exist(L.frame_clips)[index]
+        target_pos = target.AXPosition
+        new_pos = (target_pos[0] + 10, target_pos[1] + 10)
+        self.mouse.move(new_pos[0], new_pos[1])
+        self.mouse.click()
+        time.sleep(0.5)
+        self.click(L.btn_download)
+
+        # Step2:
+        for x in range(60):
+            elem = self.exist(L.download.txt_complete_msg)
+            if not elem:
+                time.sleep(0.5)
+            else:
+                if elem.AXValue.startswith("High Definition"):
+                    break
+
+    def check_this_page_thumbnail_amount(self):
+        check_child = self.exist(L.frame_clips)
+        amount = len(check_child)
+        #logger(amount)
+        return amount
+
+    def _get_selection_list(self, index=None):
+        self._refresh_media()
+        pos = self.mouse.position()
+        top = self.get_top()
+        _index = index.copy() if index else None
+        self.activate()
+        boundary = (_ := self.exist(L.frame_scroll_view)).AXPosition + _.AXSize
+        clips = self.exist(L.frame_clips)
+        if index:
+            _clips = []
+            for i in index:
+                _clips.append(clips[i])
+            clips = _clips
+        els = []
+        for clip in clips:
+            if _index: self.hover_thumbnail(_index.pop(0),_scroll_only= True)
+            x, y = [x + [clip.AXSize[0] - 5, +5][i] for i, x in enumerate(clip.AXPosition)]
+            if (boundary[0] < x < boundary[0] + boundary[2]) and (boundary[1] < y < boundary[1] + boundary[3]):
+                self.mouse.move(x, y, 0, wait=0.3)
+                el = top.with_ref(top.getElementAtPosition((x, y)))
+                els.append(el)  # if el.AXRole == "AXButton" else None
+            else:
+                els.append(None)
+        self.mouse.move(*pos, 0, wait=0)
+        return els
+
+    def get_selected_list(self, _checkboxes = None, _click_list=None, _unclick_list=None):
+        self._refresh_media()
+        ret = []
+        click_list = _click_list or []
+        unclick_list = _unclick_list or []
+        pos = self.mouse.position()
+        checkboxes = _checkboxes or self._get_selection_list()
+        # self.mouse.move(0,0) # by Jim - to capture the image of checkbox correctly
+        full_screen = cv2.imread(self.driver.image.screenshot(), cv2.IMREAD_COLOR)
+        logger(f"{checkboxes=}")
+        for i, checkbox in enumerate(checkboxes):
+            if not checkbox: continue
+            logger(f"{checkbox=}")
+            x, y, w, h = map(int, (*checkbox.AXPosition, *checkbox.AXSize))
+            logger(f"{x=} / {y=} / {w=} / {h=} ")
+            img1 = full_screen[y:y+h, x:x+w]
+            img2 = numpy.fromstring(checked, dtype="uint8").reshape((h,w,3))
+            res = cv2.matchTemplate(img1[2:-2, 2:-2], img2, 5)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            logger(f"{min_val=} /{max_val=} /{min_loc=} /{max_loc=}")
+            if max_val > 0.85:
+                logger(f"index-{i} : True")
+                ret.append(i)
+                if i in unclick_list or len(unclick_list) > 0 and unclick_list[0] == -1:
+                    logger(f"unselect - {list(map(int,(x+w/2,y+h/2)))}", function="unselect_clip")
+                    self.mouse.click(int(x+w/2),int(y+h/2))
+            else:
+                logger(f"index-{i} : False")
+                if i in click_list or len(click_list) > 0 and click_list[0] == -1:
+                    logger(f"select - {list(map(int, (x + w / 2, y + h / 2)))}", function="select_clip")
+                    self.mouse.click(int(x+w/2),int(y+h/2))
+        self.mouse.move(*pos, 0, wait=0)
+        return ret
+
+    def select_clip(self, value):
+        # value = 1, select 1st thumbnail
+        # value = 2, select 2nd thumbnail
+        self._refresh_media()
+
+        index = value - 1
+        target = self.exist(L.frame_clips)[index]
+        target_pos = target.AXPosition
+        new_pos = (target_pos[0] + 10, target_pos[1] + 10)
+        logger(new_pos)
+        self.mouse.move(new_pos[0], new_pos[1])
+        self.mouse.click()
+        return True
+
+    def unselect_clip(self, value):
+        self._refresh_media()
+        mylist = value if isinstance(value, (list, tuple)) else [value]
+        for index in mylist:
+            self.hover_thumbnail(index)
+            checkbox = self._get_selection_list([index])
+            self.get_selected_list(_checkboxes=checkbox, _unclick_list=[-1])
+        return True
+
+    def verify_thumbnail_tooltip(self, ground_truth, index=None, position=(0, 20, 140, 64)):
+        if index is not None:
+            self._refresh_media()
+            self.hover_thumbnail(index)
+            time.sleep(2)
+            target = L.frame_clip.copy()
+            target["index"] = index
+        else:
+            target = -1
+        return verify_download_tooltip(self, ground_truth, target, position)
+
+    def verify_thumbnail(self, ground_truth, index):
+        self._refresh_media()
+        target = L.frame_clip.copy()
+        target["index"] = index
+        self.hover_thumbnail(index)
+        _x, _y = self.mouse.position()
+        self.mouse.move(0,0)
+        x, y, w, h = *(_:= self.exist(target)).AXPosition, *_.AXSize
+        img_path = self.image.snapshot(x=x, y=y, w=w, h=h)
+        self.mouse.move(_x, _y, 0, wait=0)
+        return self.compare(ground_truth, img_path)
+
+    def verify_preview(self, index, _string="shutterstock"):
+        ret = False
+        self.hover_thumbnail(index)
+        self.mouse.click()
+        if _string in self.check_chrome_page(): ret = True
+        self.close_chrome_page()
+        self.activate()
+        return ret
+
+    def get_clip_status(self, value):
+        self._refresh_media()
+        self.hover_thumbnail(value)
+        checkbox = self._get_selection_list([value])[0]
+        return bool(self.get_selected_list([checkbox]))
+
+    def click_thumbnail(self, index):
+        self._refresh_media()
+        mylist = index if isinstance(index, (list, tuple)) else [index]
+        for index in mylist:
+            self.hover_thumbnail(index)
+            self.mouse.shift(0,-30)
+            time.sleep(1)
+            self.mouse.click()
+        return True
+
+
+class Photo(Video):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _get_thumbnail_raw_data(self, index, hovered=True):
+        target = L.image_clip.copy()
+        target["index"] = index
+        img = self.exist(target)
+        x, y, w, h = map(int, (*img.AXPosition, *img.AXSize))
+        pos = self.mouse.position()
+        if not hovered: self.mouse.move(0, 0, 0, 0)
+        full_screen = cv2.imread(self.driver.image.screenshot(), 1)
+        if not hovered: self.mouse.move(*pos, 0, 0)
+        return full_screen[y:y+h, x:x+w]
+
+    def hover_thumbnail(self, index, _scroll_only=False):
+        return super().hover_thumbnail(index, _scroll_only)
+
+    def verify_thumbnail_tooltip(self, ground_truth, index):
+        return super().verify_thumbnail_tooltip(ground_truth, index, (0,20,140,48))
+
+    def verify_preview(self, index, _string="photo"):
+        return super().verify_preview(index, _string)
+
+    def get_clip_status(self,index):
+        def get_res(img1, img2, similarity=0.8):
+            res = cv2.matchTemplate(img1[1:, 2:], img2[1:, 2:], 5)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+            return True if max_val >= similarity else False
+
+        self._refresh_media()
+        self.hover_thumbnail(index)
+        thumbnail = self._get_thumbnail_raw_data(index, hovered=True)
+        if get_res(thumbnail, checked):
+            return True
+        elif get_res(thumbnail, unchecked):
+            return False
+        else:
+            return None
+
+    def select_clip(self, value, _select=True, _force=False):
+        target = L.image_clip.copy()
+        target["index"] = value
+
+        status = self.get_clip_status(value)
+        logger(f"target is ticked? {status}")
+
+        img = self.exist(target)
+        x, y, w, h = map(int, (*img.AXPosition, *img.AXSize))
+        x_new = int(x + w/2)
+        y_new = int(y + h*3/4)
+
+        if status is None:
+            return None
+        elif status is not _select or _force:
+            logger(f"click position {x_new}, {y_new}")
+            self.mouse.click(x_new, y_new)
+        return True
+
+    def unselect_clip(self, value):
+        return self.select_clip(value, False)
+
+    def click_checkbox(self, value):
+        return self.select_clip(value, _force=False)
+
+    def click_thumbnail(self, value):
+        self._refresh_media()
+        mylist = value if isinstance(value, (list, tuple)) else [value]
+        for index in mylist:
+            self.hover_thumbnail(index)
+            self.mouse.shift(0, -30)
+            time.sleep(1)
+            self.mouse.click()
+        return True
+
+    def select_thumbnail_then_download(self, index):
+        # This page function only for (Video Intro Designer) entry to enter SS
+        # Step1: Select thumbnail w/ index then click [Replace Media]
+        # Step2: Return when (downloading video) is completed
+
+        # Step1:
+        index = index - 1
+        target = self.exist(L.frame_clips)[index]
+        target_pos = target.AXPosition
+        new_pos = (target_pos[0] + 10, target_pos[1] + 10)
+        self.mouse.move(new_pos[0], new_pos[1])
+        self.mouse.click()
+        time.sleep(0.5)
+        self.click(L.btn_download)
+
+        # Step2:
+        for x in range(60):
+            elem = self.exist(L.download.btn_complete_ok)
+            if not elem:
+                time.sleep(0.5)
+            else:
+                self.click(L.download.btn_complete_ok)
+                time.sleep(10)
+                break
+
+class Music(BasePage):
+    play = numpy.frombuffer(
+        b'////////////////////////////////////////////////A0////////////////////SK:.//////////////////YIMD5/////////////////Y5@KJ>1///////////////Y+-;GKD80/////////////Y+-.1@KI>4////////////Y,-/.-4FNC81//////////Y,-///.-9KL=40////////Y,-/////..?RJ6////////Y,-//////..6VQ1.//////Y,-//////1EVF/,.//////Y,-////0?QL8/,-.//////Y,-///;LO?2-,-.///////Y,-/6FOF70,-./////////Y,2ALJ>3,-..//////////Y:HMD8-,-.////////////YLJ>0,-../////////////PD4,,-.///////////////<,,-./////////////////.-..//////////////////////////////////////////////////////////',
+        dtype="uint8").reshape((24, 22))
+    mute = numpy.frombuffer(
+        b'////////////////////////////////////////////////////0p../////////////////4u\xa9)-/N//////////////7wy\xba$+1\x8c{J.//////////<vzE\xba"*0e\x7f\x8bO-////////?v~C&\xba")@@E\x81\x8c:-////cccs\x85>&)\xba#)QuE:\x92i*.///\xba\x8e\x8e\x85:&)-\xba$)C\x84\x833O\xa01,///\xba##%&)-/\xba$)B5\x9aW*\xa2P*.//\xba#&*+-//\xba$)\x876a\x8c\'\x81n(.//\xba$)/////\xba$)yQJ\xa0%uz&-//\xba$)/////\xba$)\x8d:T\x90%{r&,//\xba$)/////\xba$)J+\x8ag%\x9a\\&,//\xba\x9b\x9c\x93@.//\xba$)8q\x974I\xaa5\'-//UPOf\x8bD-/\xba$)\\\x84L-\x89y&).//,(\'5d\x85L-\xba$)EL3v\x93=%+///.-,,3i\x7fO\xba#)1Y{\x8eT%).///////.2iz\xba")2\x81\x80U%\',/////////..g\xa2"*0c8%(,.//////////.,c$+/-)*,.////////////.+),/.-.///////////////...////////////////////////////////',
+        dtype="uint8").reshape((24, 22))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def _get_res(self, img1, img2, _slice=(0, -1)):
+        res = cv2.matchTemplate(img1[slice(*_slice)], img2[slice(*_slice)], 5)
+        return cv2.minMaxLoc(res)[1]
+
+    def click_play(self):
+        if not self.is_playing():
+            self.exist_press(L.music.btn_play)
+        return True
+
+    def click_pause(self):
+        if self.is_playing():
+            self.exist_press(L.music.btn_pause)
+        return True
+
+    def click_stop(self):
+        self.exist_press(L.music.btn_stop)
+        return True
+
+    def click_mute(self):
+        self.exist_press(L.music.btn_mute)
+        return True
+
+    def is_playing(self):
+        self.activate()
+        x, y, w, h = *(_ := self.exist(L.music.btn_play)).AXPosition, *_.AXSize
+        btn = self.driver.image.snapshot(x=x, y=y, h=h, w=w, raw=True, type=0)
+        res = self._get_res(self.play, btn)
+        logger(f"{res=}")
+        return True if res > 0.9 else False
+
+    def get_play_status(self):
+        return self.exist(L.music.btn_play).AXEnabled
+
+    def get_stop_status(self):
+        return self.exist(L.music.btn_stop).AXEnabled
+
+    def is_muted(self):
+        self.activate()
+        x, y, w, h = *(_ := self.exist(L.music.btn_mute)).AXPosition, *_.AXSize
+        btn = self.driver.image.snapshot(x=x, y=y, h=h, w=w, raw=True, type=0)
+        res = self._get_res(self.mute, btn)
+        logger(f"{res=}")
+        return True if res > 0.9 else False
+
+    def get_sort_by(self):
+        self.exist_click(L.music.btn_sort)
+        self.select_right_click_menu("Sort by")
+        time.sleep(0.5)
+        items = self.exist(L.music.menu_item_sort)
+        ret = None
+        for item in items:
+            if item.AXMenuItemMarkChar == "✓":
+                ret = item.AXTitle
+        self.exist_click(L.music.btn_sort)
+        return ret
+
+    def set_sort_by(self, index):
+        target = ["Name", "Artist", "Length", "BPM(Tempo)"][index]
+        self.exist_click(L.music.btn_sort)
+        self.select_right_click_menu("Sort by")
+        time.sleep(0.5)
+        items = self.exist(L.music.menu_item_sort)
+        for item in items:
+            if item.AXTitle == target:
+                pos = item.center
+                _pos = self.mouse.position()
+                self.mouse.move(pos[0], _pos[1])
+                self.mouse.click(*pos)
+                return True
+        logger(f"Option:{target} is not found")
+        self.exist_click(L.music.btn_sort)
+        return False
+
+    def is_ascending(self, index, _ascending=True):
+        name = ["Name", "Artist", "Length", "BPM(Tempo)"]
+        table = self.find(L.music.table_clip)
+        group = table.AXChildren[-1]
+        ascending = group.findFirstR(AXSortDirection="AXAscendingSortDirection"
+                                     if _ascending else "AXDescendingSortDirection")
+        return False if not ascending or ascending.AXTitle != name[index] else True
+
+    def is_decending(self, index):
+        return self.is_ascending(index, False)
+
+    def adjust_volume(self, value):
+        volume = self.exist(L.music.btn_volumn)
+        volume.AXValue = value
+        return True
+
+    def hover_song(self, name):
+        def get_row():
+            _rows = self.find(L.music.rows_clip)
+            for _row in _rows:
+                row_name = _row.AXChildren[0].AXChildren[1].AXValue
+                #logger(f"Found_name = {row_name}")
+                if row_name == name: return _row
+            raise Exception(f"Unable to find the song: {name}")
+        boundary = (_ := self.exist(L.music.frame_scroll_view)).AXPosition + _.AXSize
+        row = get_row()
+        x0, y0 = row.center
+        if not (boundary[1] < y0 < boundary[1] + boundary[3]):
+            y_long, y_top = (_ := self.exist(L.music.table_clip)).AXSize[1], _.AXPosition[1]
+            percentage = (y0 - y_top - boundary[3] / 2) / (y_long - boundary[3])
+            self.exist(L.music.scroll_media).AXValue = percentage
+            time.sleep(0.5)
+        self.mouse.move(*row.center)
+        return True
+
+    def select_song(self, name):
+        time.sleep(3)
+        self.hover_song(name)
+        self.mouse.click()
+
+    def get_song_name(self, index):
+        _rows = self.find(L.music.rows_clip)
+        return _rows[index].AXChildren[0].AXChildren[1].AXValue
+
+    def check_music_icon_number(self):
+        _rows = self.find(L.music.rows_clip)
+        i = 0
+        for _row in _rows:
+            row_music_icon = _row.AXChildren[0].AXChildren[0]
+            i = i + 1
+        return i
+
+    def verify_song_tooltip(self, ground_truth, value, setting=(0, 20, 120, 110)):
+        _value = self.get_song_name(value) if isinstance(value,int) else value
+        self.hover_song(_value)
+        return verify_download_tooltip(self, ground_truth, None, setting, False)
+
+class Download(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.hd_video = self.Hd_video(*args, **kwargs)
+
+    def has_dialog(self):
+        return bool(self.exist(L.download.frame))
+
+    def get_progress(self):
+        return self.exist(L.download.progress_dl).AXValue
+
+    def get_info(self):
+        return self.exist(L.download.text_dl).AXValue
+
+    def verify_progress(self, timeout=10):
+        if not self.has_dialog():
+            logger("Download dialog is not found")
+            raise Exception("Download dialog is not found")
+        current_value = self.get_progress()
+        timer = time.time()
+        while time.time() - timer < timeout:
+            if current_value != self.get_progress():
+                logger(current_value)
+                return True
+            time.sleep(0.5)
+        return False
+
+    def verify_info(self, timeout=10):
+        if not self.has_dialog():
+            logger("Download dialog is not found")
+            raise Exception("Download dialog is not found")
+        current_value = self.get_info()
+        timer = time.time()
+        while time.time() - timer < timeout:
+            if current_value != self.get_info(): return True
+            time.sleep(0.5)
+        return False
+
+    def click_cancel(self):
+        return bool(self.exist_press(L.download.btn_cancel))
+
+    def click_complete_ok(self, timeout=60):
+        return bool(self.exist_press(L.download.btn_complete_ok, timeout=timeout))
+
+    class Hd_video(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def set_dont_show_again(self, value=True):
+            checkbox = self.exist_click(L.download.hd_video.checkbox_dont_show_again)
+            if bool(int(checkbox.AXValue)) != value: checkbox.press()
+            return True
+
+        def click_yes(self):
+            return bool(self.exist_click(L.download.hd_video.btn_yes))
+
+        def click_no(self):
+            return bool(self.exist_click(L.download.hd_video.btn_no))
+
+
+class Search(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def hover_download(self, _btn=None):
+        return hover_download(self, _btn)
+
+    def verify_tooltip(self, ground_truth):
+        return verify_download_tooltip(self, ground_truth, L.search.input_search.copy(), (0, 20, 47, 20))
+
+    def verify_default_string(self, default="Search"):
+        search = self.exist(L.search.input_search)
+        return search.AXPlaceholderValue == default
+
+    def click_clear(self):
+        # After search, input_search field will select all
+        # need to cancel "select all" status
+        self.click(L.search.input_search)
+        time.sleep(1)
+
+        # Click [X]
+        if self.exist_click(L.search.btn_clear):
+            self.keyboard.enter()
+            return True
+        else:
+            return False
+
+    @step('[Action] Search content by text')
+    def search_text(self, value):
+        search = self.exist(L.search.input_search)
+        search.AXValue = value
+        self.mouse.click(*search.center)
+        self.keyboard.enter()
+        return True
+
+    def get_text(self):
+        return self.exist(L.search.input_search).AXValue
+
+    def close_not_found(self):
+        return bool(self.exist_press(L.search.btn_not_found_ok))
+
+
+'''
+    
+
+    def click_keyframe(self):
+        return bool(self.exist_press(L.fix_enhance.btn_keyframe))
+
+    def click_apply_to_all(self):
+        return bool(self.exist_press(L.fix_enhance.btn_apply_to_all))
+
+    def set_check_compare_in_split_preview(self, value):
+        target = self.exist(L.fix_enhance.checkbox_compare_in_split_preview)
+        if bool(target.AXValue) != value: target.press()
+        return True
+
+    class Fix(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.white_balance = WhiteBalance(*args, **kwargs)
+            self.video_stabilizer = VideoStabilizer(*args, **kwargs)
+            self.lens_correction = LensCorrection(*args, **kwargs)
+            self.audio_denoise = AudioDenoise(*args, **kwargs)
+
+        def switch_to_white_balance(self):
+            return bool(self.exist_press(L.fix_enhance.fix.tab_white_balance))
+
+        def switch_to_video_stabilizer(self):
+            return bool(self.exist_press(L.fix_enhance.fix.tab_video_stabilizer))
+
+        def switch_to_lens_correction(self):
+            return bool(self.exist_press(L.fix_enhance.fix.tab_lens_correction))
+
+        def switch_to_audio_denoise(self):
+            return bool(self.exist_press(L.fix_enhance.fix.tab_audio_denoise))
+
+        def enable_white_balance(self, value=True):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_white_balance, value)
+
+        def enable_video_stabilizer(self, value=True):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_video_stabilizer, value)
+    
+        def enable_lens_correction(self, value=True):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_lens_correction, value)
+    
+        def enable_audio_denoise(self, value=True):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_audio_denoise, value)
+
+        def get_white_balance(self):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_white_balance, _get_status_only=True)
+
+        def get_video_stabilizer(self):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_video_stabilizer, _get_status_only=True)
+
+        def get_lens_correction(self):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_lens_correction, _get_status_only=True)
+
+        def get_audio_denoise(self):
+            return _set_checkbox(self, L.fix_enhance.fix.checkbox_audio_denoise, _get_status_only=True)
+
+    class Enhance(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.color_adjustment = ColorAdjustment(*args, **kwargs)
+
+        def switch_to_color_adjustment(self):
+            return bool(self.exist_press(L.fix_enhance.enhance.tab_color_adjustment))
+
+
+class WhiteBalance(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.color_temperature = AdjustSet(self,L.fix_enhance.fix.white_balance.group_color_temperature)
+        self.tint = AdjustSet(self,L.fix_enhance.fix.white_balance.group_tint)
+        self.white_calibration = self.WhiteCalibration(*args, **kwargs)
+
+    def set_radio_button(self, option=0, _get_status=False):
+        locator = [ L.fix_enhance.fix.white_balance.radio_color_temperature,
+                   L.fix_enhance.fix.white_balance.radio_white_calibration][option]
+        target = self.exist(locator)
+        result = bool(int(target.AXValue))
+        logger(f"{result=}")
+        if _get_status: return int(result)
+        if not result:
+            target.press()
+        return True
+
+    def get_radio_button(self):
+        return self.set_radio_button(option=1, _get_status=True)
+
+    def set_color_temperature_value(self, value):
+        return self.color_temperature.set_value(value)
+
+    def get_color_temperature_value(self):
+        return self.color_temperature.get_value()
+
+    def set_color_temperature_slider(self, value):
+        return self.color_temperature.adjust_slider(value)
+
+    def click_color_temperature_arrow(self, option="up"):
+        return self.color_temperature.click_arrow(option)
+
+    def set_tint_value(self, value):
+        return self.tint.set_value(value)
+
+    def get_tint_value(self):
+        return self.tint.get_value()
+
+    def set_tint_slider(self, value):
+        return self.tint.adjust_slider(value)
+
+    def click_tint_arrow(self, option="up"):
+        return self.tint.click_arrow(option)
+
+    def click_white_calibrate_button(self):
+        return bool(self.exist_press(L.fix_enhance.fix.white_balance.btn_white_calibrate))
+
+    class WhiteCalibration(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def click_i_button(self):
+            return bool(self.exist_press(L.fix_enhance.fix.white_balance.white_calibration.btn_i))
+
+        def click_close(self):
+            return bool(self.exist_press(L.fix_enhance.fix.white_balance.white_calibration.btn_close))
+
+        def click_cancel(self):
+            return bool(self.exist_press(L.fix_enhance.fix.white_balance.white_calibration.btn_cancel))
+
+        def click_ok(self):
+            return bool(self.exist_press(L.fix_enhance.fix.white_balance.white_calibration.btn_ok))
+
+        def adjust_slider(self, percent):
+            if not 0.0 < percent <= 1.0: raise Exception("Value({percent}) is incorrect")
+            target = self.exist(L.fix_enhance.fix.white_balance.white_calibration.slider)
+            max, min = target.AXMaxValue, target.AXMinValue
+            value = int((max-min)*percent+min)
+            logger(f"{min=} / {max=}/ {value=}")
+            self.exist(L.fix_enhance.fix.white_balance.white_calibration.slider).AXValue = value
+            return True
+
+class VideoStabilizer(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.correction_level = AdjustSet(self, L.fix_enhance.fix.video_stabilizer.correction_level.group)
+
+class LensCorrection(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fisheye_distortion = AdjustSet(self,L.fix_enhance.fix.lens_correction.group_fisheye)
+        self.vignette_amount = AdjustSet(self, L.fix_enhance.fix.lens_correction.group_vignette_amount)
+        self.vignette_midpoint = AdjustSet(self, L.fix_enhance.fix.lens_correction.group_vignette_midpoint)
+
+    def select_marker_type(self, type):
+        target = copy.deepcopy(L.fix_enhance.fix.lens_correction.menu_item_maker)
+        target[-1]["AXValue"] = type
+        self.exist_click(L.fix_enhance.fix.lens_correction.menu_maker)
+        self.exist_click(target)
+        time.sleep(1)
+        return True
+
+    def get_marker_type(self):
+        return self.exist(L.fix_enhance.fix.lens_correction.menu_maker).AXTitle
+
+    def import_lens_profile(self, full_path):
+        self.exist_press(L.fix_enhance.fix.lens_correction.btn_import_marker)
+        self.select_file(full_path)
+        self.click_OK_onEffectExtractor()
+        return True
+
+    def download_lens_profile(self):
+        bid = "com.google.Chrome"
+        app = self.driver.getRunningAppRefsByBundleId(bid)
+        if app: self.get_top().terminateAppByBundleId("com.google.Chrome")
+        self.exist_click(L.fix_enhance.fix.lens_correction.btn_download)
+        timer = time.time()
+        while time.time()-timer < 5:
+            try:
+                app = self.driver.getRunningAppRefsByBundleId(bid)[0]
+                if "directorzone.cyberlink.com/pdr" in app.findAllR(AXHelp="⌘L")[0].AXValue:
+                    app.terminateAppByBundleId("com.google.Chrome")
+                    break
+            except:
+                pass
+        else:
+            self.activate()
+            return False
+        self.activate()
+        return True
+
+    def select_model_type(self, index):
+        target = copy.deepcopy(L.fix_enhance.fix.lens_correction.menu_item_model)
+        target[-1]["index"] = index
+        self.exist_click(L.fix_enhance.fix.lens_correction.menu_model)
+        self.exist_click(target)
+        return True
+
+    def get_model_type(self):
+        return self.exist(L.fix_enhance.fix.lens_correction.menu_model).AXTitle
+
+
+class AudioDenoise(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.degree = AdjustSet(self, L.fix_enhance.fix.audio_denoise.degree.group)
+
+    def set_noise_type(self, index):
+        target = copy.deepcopy(L.fix_enhance.fix.audio_denoise.menu_item_noise_type)
+        target[-1]["AXValue"] = ["Stationary noise","Wind noise"][index]
+        self.exist_click(L.fix_enhance.fix.audio_denoise.menu_noise_type)
+        self.exist_click(target)
+        return True
+
+    def get_noise_type(self):
+        return self.exist(L.fix_enhance.fix.audio_denoise.menu_noise_type).AXTitle
+
+class ColorAdjustment(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.exposure = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.exposure.group)
+        self.brightness = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.brightness.group)
+        self.contrast = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.contrast.group)
+        self.hue = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.hue.group)
+        self.saturation = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.saturation.group)
+        self.vibrancy = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.vibrancy.group)
+        self.highlight_healing = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.highlight_healing.group)
+        self.shadow = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.shadow.group)
+        self.sharpness = AdjustSet(self, L.fix_enhance.enhance.color_adjustment.sharpness.group)
+
+'''

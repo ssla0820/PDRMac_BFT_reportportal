@@ -1,0 +1,12 @@
+*https://beets.readthedocs.io/en/stable/plugins/chroma.html
+
+1. install python package
+correlation
+numpy
+
+2. Installing the Binary Command-Line Tool (skip for currently)
+The simplest way to get up and running, especially on Windows, is to download the appropriate Chromaprint binary package and place the fpcalc (or fpcalc.exe) on your shell search path. On Windows, this means something like C:\\Program Files. On OS X or Linux, put the executable somewhere like /usr/local/bin.
+
+> fpcalc download path: https://acoustid.org/chromaprint
+> set it to the system path or put it to C:\Windows\System32
+

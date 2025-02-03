@@ -1,0 +1,592 @@
+import time, datetime, os, copy
+
+from .base_page import BasePage
+from ATFramework.utils import logger
+from ATFramework.utils.Image_Search import CompareImage
+from AppKit import NSScreen
+from .locator import locator as L
+
+
+def arrow(obj, button="up", times=1, locator=None):
+    locator = locator[button.lower() == "up"]
+    elem = obj.exist(locator)
+    for _ in range(times):
+        obj.mouse.click(*elem.center)
+    return True
+
+
+class VideoCollageDesigner(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.border = self.Border(*args, **kwargs)
+        self.media = self.Media(*args, **kwargs)
+        self.layout = self.Layout(*args, **kwargs)
+        self.share_to = self.Share_to(*args, **kwargs)
+        self.preview = self.Preview(*args, **kwargs)
+
+    def verify_preview(self,file_path, similarity=0.95):
+        file_full_path = os.path.abspath(file_path)
+        splitter = self.exist(L.video_collage_designer.splitter)
+        slider = self.exist(L.video_collage_designer.slider)
+        settings = self.exist(L.video_collage_designer.border.frame)
+        y1 = settings.AXPosition[1]
+        h1 = settings.AXSize[1]
+        x = splitter.AXPosition[0] + splitter.AXSize[0] + 2
+        w = (slider.center[0] - x -1) * 2
+        y = y1
+        h = h1 - (y1+h1 - slider.center[1]) * 2
+        current_snapshot = self.image.snapshot(x=x, y=y, h=h, w=w)
+        logger(f'{current_snapshot=}')
+        return self.compare(file_full_path, current_snapshot, similarity)
+
+    def set_timecode(self, timecode):
+        return self._set_timecode(timecode,  L.video_collage_designer.time_code)
+
+    def click_ok(self):
+        return self.press(L.video_collage_designer.btn_ok)
+
+    def click_save_as_ok(self, name):
+        self.exist(L.video_collage_designer.save_as.input_name).AXValue = name
+        self.press(L.video_collage_designer.save_as.btn_ok)
+        return True
+
+    def click_cancel(self, option = 0):
+        button = [None,
+                  L.video_collage_designer.cancel.yes,
+                  L.video_collage_designer.cancel.no,
+                  L.video_collage_designer.cancel.cancel,][option]
+        self.press(L.video_collage_designer.btn_cancel)
+        if button: self.exist_click(button)
+        return True
+
+    def click_save_as_with_name(self, name):
+        self.press(L.video_collage_designer.btn_save_as)
+        return self.click_save_as_ok(name)
+
+    def click_save_as_with_name_slider(self, name, percentage = 0.5):
+        self.press(L.video_collage_designer.btn_save_as)
+        self.exist(L.video_collage_designer.save_as.slider).AXValue = percentage
+        return self.click_save_as_ok(name)
+
+    def click_save_as_then_cancel(self):
+        self.press(L.video_collage_designer.btn_save_as)
+        self.press(L.video_collage_designer.save_as.btn_cancel)
+        return True
+
+    def click_share(self):
+        self.press(L.video_collage_designer.btn_share)
+        return True
+
+    def _share_to(self, name, option=0):
+        self.click_share()
+        self.share_to.set_name(name)
+        self.share_to.press_ok()
+        if self.share_to.press_auto_sign_in_checkbox():
+            self.share_to.press_auto_sign_in_ok()
+        self.share_to.press_category_menu()
+        self.share_to.select_category_item(option)
+        self.share_to.set_tag("AT_tag")
+        self.exist(L.video_collage_designer.share.input_tag).AXValue = "AT_tag"
+        self.share_to.set_collection("AT_collection")
+        self.exist(L.video_collage_designer.share.input_collection).AXValue = "AT_collection"
+        self.share_to.set_description("AT_description")
+        self.exist_click(L.video_collage_designer.share.input_description)
+        self.exist(L.video_collage_designer.share.input_description).AXValue = "AT_description"
+        time.sleep(1)
+        self.share_to.press_next_button()
+        if self.share_to.press_confirm_button():
+            self.share_to.press_next_button()
+        self.share_to.press_finish_button()
+        return True
+
+    def share_to_cloud_dz(self, name):
+        return self._share_to(name, 0)
+
+    def share_to_cloud(self, name):
+        return self._share_to(name, 1)
+
+    def share_to_dz(self, name):
+        return self._share_to(name, 2)
+
+    def adjust_splitter(self, value):
+        splitter = self.find(L.video_collage_designer.splitter)
+        x,y = splitter.center
+        self.drag_mouse((x,y), (x+value,y))
+        return True
+
+    def click_preview_operation(self, op):
+        return bool(self.exist_press(getattr(L.video_collage_designer.preview, op.lower())))
+
+    def click_snapshot(self, path):
+        self.exist_press(L.video_collage_designer.preview.btn_snapshot)
+        self.select_file(path, btn_confirm="Save")
+        self.exist_press(L.video_collage_designer.preview.btn_replace, timeout=1, no_warning=True)
+        return True
+
+    def select_quality(self, name):
+        target_name = f"{name} Preview Resolution"
+        target_locator = copy.deepcopy(L.video_collage_designer.preview.menu_item_quality)
+        target_locator[-1]["AXTitle"] = target_name
+        logger(f"Select >>  {target_name} << menu item")
+        self.exist_press(L.video_collage_designer.preview.menu_quality)
+        time.sleep(1)
+        self.exist_click(target_locator)
+        return True
+
+    def set_volume(self, percentage):
+        self.exist_click(L.video_collage_designer.preview.btn_volume)
+        self.exist(L.video_collage_designer.preview.slider_volumn).AXValue = percentage
+        self._close_menu()
+        return True
+
+    def adjust_playback_slider(self, percentage):
+        slider = self.exist(L.video_collage_designer.preview.slider_playback)
+        maxi = slider.AXMaxValue
+        target = int(maxi * percentage)
+        slider.AXValue = target
+        return True
+
+    class Border(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.advanced = self.Advanced(*args, **kwargs)
+
+        def set_scroll_bar(self, value):
+            try:
+                self.exist(L.video_collage_designer.border.scroll_bar).AXValue = value
+                return True
+            except Exception as e:
+                logger(f"[Warning] {e=}")
+                return False
+
+        def enable_border(self, is_enable=True):
+            checkbox = self.exist(L.video_collage_designer.border.checkbox_enable)
+            if bool(checkbox.AXValue) != is_enable:
+                checkbox.press()
+            return True
+
+        def get_border_value(self):
+            if self.exist(L.video_collage_designer.border.value_border):
+                return self.exist(L.video_collage_designer.border.value_border).AXValue
+            else:
+                return None
+
+        def set_border_slider(self, value):
+            self.exist(L.video_collage_designer.border.slider_border).AXValue = value
+            return True
+
+        def set_border_value(self, value):
+            target = self.exist(L.video_collage_designer.border.value_border)
+            self.mouse.click(*target.center)
+            target.AXValue = str(value)
+            self.keyboard.enter()
+            return True
+
+        def click_border_arrow(self, button="up", times = 1):
+            locator = [L.video_collage_designer.border.arrow_down_border,
+                       L.video_collage_designer.border.arrow_up_border]
+            return arrow(self, button, times, locator)
+
+        def is_border_color(self, color):
+            self.exist_click(L.video_collage_designer.border.btn_color)
+            self.color_picker_switch_category_to_RGB()
+            ret = self.exist(L.video_collage_designer.border.text_hex).AXValue
+            logger(f"current hex = {ret} / expect hex = {color.upper()}")
+            self.click(L.base.colors.btn_close)
+            return ret == color.upper()
+
+        def set_border_color(self, color, _target=None):
+            _target = _target or L.video_collage_designer.border.btn_color
+            self.exist_click(_target)
+            self.color_picker_switch_category_to_RGB()
+            if color:
+                self.exist(L.tips_area.button.change_color_hex).AXFocused = True
+                self.click(L.tips_area.button.change_color_hex)
+                time.sleep(0.5)
+                self.exist(L.tips_area.button.change_color_hex).AXValue = color
+                time.sleep(0.5)
+                self.press_enter_key()
+                self.click(L.base.colors.btn_close)
+            return True
+
+        def get_interclip_value(self):
+            if self.exist(L.video_collage_designer.border.value_interclip):
+                return self.exist(L.video_collage_designer.border.value_interclip).AXValue
+            else:
+                return None
+
+        def set_interclip_slider(self, value):
+            self.exist(L.video_collage_designer.border.slider_interclip).AXValue = value
+            return True
+
+        def set_interclip_value(self, value):
+            target = self.exist(L.video_collage_designer.border.value_interclip)
+            self.mouse.click(*target.center)
+            target.AXValue = str(value)
+            self.keyboard.enter()
+            return True
+
+        def click_interclip_arrow(self, button="up", times = 1):
+            locator = [L.video_collage_designer.border.arrow_down_interclip,
+                       L.video_collage_designer.border.arrow_up_interclip]
+            return arrow(self, button, times, locator)
+
+        def set_fill_type(self, index):
+            target = [ L.video_collage_designer.border.menu_item_uniform,
+                       L.video_collage_designer.border.menu_item_interclip][index]
+            self.exist_click(L.video_collage_designer.border.menu_fill_type)
+            time.sleep(1)
+            self.exist_click(target)
+            return True
+
+        def set_uniform_color(self, color):
+            return self.set_border_color(color, L.video_collage_designer.border.btn_uniform_color)
+
+        def get_uniform_color(self):
+            self.exist_click(L.video_collage_designer.border.btn_uniform_color)
+            self.color_picker_switch_category_to_RGB()
+            ret = self.exist(L.video_collage_designer.border.text_hex).AXValue
+            logger(f"current hex = {ret}")
+            self.click(L.base.colors.btn_close)
+            return ret
+
+        def select_interclip_texture(self, path):
+            self.select_file(path)
+            return True
+
+        def set_frame_animation(self, index):
+            target = [L.video_collage_designer.border.menu_item_from_beginning,
+                      L.video_collage_designer.border.menu_item_during_closing,
+                      L.video_collage_designer.border.menu_item_off][index]
+            self.exist_click(L.video_collage_designer.border.menu_frame_animation)
+            time.sleep(1)
+            self.exist_click(target)
+            return True
+
+        def set_start_playback(self, index):
+            opt = [ L.video_collage_designer.border.radio_with_frame_animation,
+                    L.video_collage_designer.border.radio_after_frame_animation][index]
+            target = self.exist(opt)
+            if not target.AXValue: target.press()
+            return True
+
+        def set_pause_playback(self, index):
+            opt = [L.video_collage_designer.border.radio_pause_with_frame_animation,
+                   L.video_collage_designer.border.radio_pause_after_frame_animation][index]
+            target = self.exist(opt)
+            if not target.AXValue: target.press()
+            return True
+
+        def set_before_after_clip_playback(self, index):
+            opt = [L.video_collage_designer.border.radio_freeze_the_video,
+                   L.video_collage_designer.border.radio_display_color_board,
+                   L.video_collage_designer.border.radio_restart_playback][index]
+            target = self.exist(opt)
+            if not target.AXValue: target.press()
+            return True
+
+        def set_before_after_color_board(self, color):
+            return self.set_border_color(color, L.video_collage_designer.border.btn_before_after_color_board)
+
+        def click_advanced_setting(self):
+            return bool(self.exist_press(L.video_collage_designer.border.btn_advanced_setting))
+
+        def click_close(self):
+            return bool(self.exist_press(L.video_collage_designer.border.btn_close))
+
+        class Advanced(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def set_playback_timing(self, index):
+                opt = [L.video_collage_designer.border.advanced.radio_all_at_once,
+                       L.video_collage_designer.border.advanced.radio_delay,
+                       L.video_collage_designer.border.advanced.radio_one_after_another][index]
+                target = self.exist(opt)
+                if not target.AXValue: target.press()
+                return True
+
+            def set_delay_sec(self, sec):
+                target = self.exist(L.video_collage_designer.border.advanced.input_delay_sec)
+                self.mouse.click(*target.center)
+                target.AXValue = str(sec)
+                self.keyboard.enter()
+                return True
+
+            def set_match_collage_duration_to(self,index):
+                target = [L.video_collage_designer.border.advanced.menu_item_all_video,
+                          L.video_collage_designer.border.advanced.menu_item_longest_clip,
+                          L.video_collage_designer.border.advanced.menu_item_shortest_clip,
+                          L.video_collage_designer.border.advanced.menu_item_clip1,
+                          L.video_collage_designer.border.advanced.menu_item_clip2,
+                          L.video_collage_designer.border.advanced.menu_item_clip3,
+                          L.video_collage_designer.border.advanced.menu_item_clip4][index]
+                self.exist_click(L.video_collage_designer.border.advanced.menu_collage_duration)
+                time.sleep(1)
+                self.exist_click(target)
+                return True
+
+            def click_default(self):
+                return bool(self.exist_press(L.video_collage_designer.border.advanced.btn_default))
+
+            def click_cancel(self):
+                return bool(self.exist_press(L.video_collage_designer.border.advanced.btn_cancel))
+
+            def click_ok(self):
+                return bool(self.exist_press(L.video_collage_designer.border.advanced.btn_ok))
+
+
+    class Media(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def set_scroll_bar(self, value):
+            try:
+                self.exist(L.video_collage_designer.media.scroll_bar).AXValue = value
+                return True
+            except Exception as e:
+                logger(f"[Warning] {e=}")
+                return False
+
+        def import_media(self, file_path, option=0, timeout = 30):
+            target = [
+                L.video_collage_designer.media.btn_yes,
+                L.video_collage_designer.media.btn_no,
+                L.video_collage_designer.media.btn_yes_to_all,
+                L.video_collage_designer.media.btn_no_to_all][option]
+            timer = time.time()
+            self.exist_press(L.video_collage_designer.media.btn_import)
+            self.select_file(file_path, "Open")
+            time.sleep(1)
+            while time.time()-timer < timeout:
+                self.exist_press(target, timeout=0)
+                dialogs = self.find({"AXSubrole":"AXDialog","recursive":False,"get_all":True})
+                for dialog in dialogs:
+                    if "Importing Media" in dialog.AXTitle:
+                        logger("importing media, wait a sec")
+                        time.sleep(1)
+                        continue
+                logger("Importation completed")
+                time.sleep(1)
+                return True
+            else:
+                return False
+
+        def select_category(self, index):
+            target = [
+                L.video_collage_designer.media.menu_item_all_media,
+                L.video_collage_designer.media.menu_item_video,
+                L.video_collage_designer.media.menu_item_image,
+                L.video_collage_designer.media.menu_item_color_board,][index]
+            self.exist_click(L.video_collage_designer.media.menu_media)
+            self.exist_click(target)
+            return True
+
+        def click_auto_fill(self):
+            self.exist_click(L.video_collage_designer.media.btn_auto_fill)
+            return True
+
+        def select_media(self, name):
+            target = copy.deepcopy(L.video_collage_designer.media.template)
+            target["AXValue"] = name
+            self.mouse.click(*self.exist(target).center)
+            time.sleep(0.5)
+
+        def select_multiple_media(self, *args):
+            self.activate()
+            self.select_media(args[0])
+            with self.keyboard.pressed(self.keyboard.key.cmd_l):
+                for name in args[1:]:
+                    self.select_media(name)
+            return True
+
+
+        def is_exist_media(self, name, timeout=5):
+            target = copy.deepcopy(L.video_collage_designer.media.template)
+            target["AXValue"] = name
+            return self.is_exist(target, timeout=timeout)
+
+    class Layout(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.library = self.Library(*args, **kwargs)
+
+        def hover_layout(self, index):
+            locator = copy.deepcopy(L.video_collage_designer.layout.templates)
+            locator["AXIndex"] = index
+            frame_layout = self.exist(L.video_collage_designer.layout.frame)
+            x_min, _ = frame_layout.AXPosition
+            w, _ = frame_layout.AXSize
+            x_max = x_min + w
+            retry = index
+            logger(f"{x_min=}, {x_max=}")
+            while not (target := self.exist(locator, timeout=0, no_warning=True)):
+                self.exist_press(L.video_collage_designer.layout.arrow_right)
+                time.sleep(1)
+                if not (retry := retry -1):
+                    logger(f"Unable to find the layout. {index=}")
+                    raise Exception(f"Unable to find the layout. {index=}")
+            retry = 32
+            while retry := retry - 1:
+                logger(f"{target.AXPosition=}")
+                if target.AXPosition[0] < x_min:
+                    self.exist_press(L.video_collage_designer.layout.arrow_left)
+                elif target.AXPosition[0] >= x_max:
+                    self.exist_press(L.video_collage_designer.layout.arrow_right)
+                else:
+                    self.mouse.move(*target.center)
+                    return target
+                    # return True
+                time.sleep(1)  # wait animation stop
+            else:
+                logger("Unable to find the template")
+                return False
+
+        def select_layout(self, index):
+            self.hover_layout(index)
+            self.mouse.click()
+            return True
+
+        def remove_layout(self, index):
+            self.hover_layout(index)
+            self.mouse.click(btn="right")
+            self.select_right_click_menu("Delete (only for Custom/Downloaded)")
+            self.click_remove_yes()
+            return True
+
+        def select_category(self, index):
+            target = [L.video_collage_designer.layout.menu_item_all,
+                      L.video_collage_designer.layout.menu_item_custom,
+                      L.video_collage_designer.layout.menu_item_downloaded][index]
+            self.exist_click(L.video_collage_designer.layout.menu_category)
+            self.exist_click(target)
+            return True
+
+        def open_layout_library(self):
+            self.exist_press(L.video_collage_designer.layout.btn_layout_library)
+            return True
+
+        def click_remove_yes(self):
+            return bool(self.exist_click(L.video_collage_designer.layout.btn_yes))
+
+        def click_remove_no(self):
+            return bool(self.exist_click(L.video_collage_designer.layout.btn_no))
+
+        def click_scroll_right(self):
+            return bool(self.exist_press(L.video_collage_designer.layout.arrow_right))
+
+        def click_scroll_left(self):
+            return bool(self.exist_press(L.video_collage_designer.layout.arrow_left))
+
+        class Library(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def set_scroll_bar(self, value):
+                try:
+                    self.exist(L.video_collage_designer.layout.library.scroll_bar).AXValue = value
+                    return True
+                except Exception as e:
+                    logger(f"[Warning] {e=}")
+                    return False
+
+            def select_category(self, index):
+                target = [L.video_collage_designer.layout.library.menu_item_all,
+                          L.video_collage_designer.layout.library.menu_item_custom,
+                          L.video_collage_designer.layout.library.menu_item_downloaded][index]
+                self.exist_click(L.video_collage_designer.layout.library.menu_category)
+                self.exist_click(target)
+                return True
+
+            def click_zoom(self):
+                return bool(self.exist_click(L.video_collage_designer.layout.library.btn_zoom))
+
+            def select_layout(self, index):
+                templates = self.exist(L.video_collage_designer.layout.library.templates)
+                self.mouse.click(*templates[index].center)
+                return True
+
+            def click_ok(self):
+                return bool(self.exist_click(L.video_collage_designer.layout.library.btn_ok))
+
+            def click_cancel(self):
+                return bool(self.exist_click(L.video_collage_designer.layout.library.btn_cancel))
+
+    class Share_to(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def set_name(self, name):
+            self.exist(L.video_collage_designer.save_as.input_name).AXValue = name
+            return True
+
+        def press_ok(self):
+            self.press(L.video_collage_designer.save_as.btn_ok)
+            return True
+
+        def press_auto_sign_in_checkbox(self):
+            return bool(self.exist_press(L.video_collage_designer.share.checkbox_auto_sign_in, timeout=3))
+
+        def press_auto_sign_in_ok(self):
+            return bool(self.exist_press(L.video_collage_designer.share.btn_auto_sign_in_ok))
+
+        def press_category_menu(self):
+            self.exist_click(L.video_collage_designer.share.menu_upload_to, timeout=30)
+            return True
+
+        def select_category_item(self, option):
+            target = [
+                L.video_collage_designer.share.menu_item_cloud_and_dz,
+                L.video_collage_designer.share.menu_item_cloud,
+                L.video_collage_designer.share.menu_item_dz,
+            ][option]
+            self.exist_click(target)
+            time.sleep(3)
+
+        def set_tag(self, value):
+            self.exist_click(L.video_collage_designer.share.input_tag)
+            self.exist(L.video_collage_designer.share.input_tag).AXValue = value
+
+        def set_collection(self, value):
+            self.exist_click(L.video_collage_designer.share.input_collection)
+            self.exist(L.video_collage_designer.share.input_collection).AXValue = value
+
+        def set_description(self, value):
+            self.exist_click(L.video_collage_designer.share.input_description)
+            self.exist(L.video_collage_designer.share.input_description).AXValue = value
+
+        def press_next_button(self):
+            self.exist_click(L.video_collage_designer.share.btn_next)
+
+        def press_confirm_button(self):
+            ret = bool(self.exist_click(L.video_collage_designer.share.btn_confirm))
+            time.sleep(1)
+            return ret
+
+        def press_finish_button(self):
+            self.exist(L.video_collage_designer.share.btn_finish, timeout=60).press()
+            return True
+
+    class Preview(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def set_duration(self, timecode):
+            '''
+            :param timecode: "HH_MM_SS_mm" -> "1_00_59_99"
+            '''
+            self.activate()
+            elem = self.find(L.video_collage_designer.preview.timecode_duration)
+            w, h = elem.AXSize
+            x, y = elem.AXPosition
+
+            pos_click = tuple(map(int, (x + w * 0.1, y + h * 0.5)))
+            self.mouse.click(*pos_click)
+            time.sleep(1)
+            self.keyboard.send(timecode.replace("_", ""))
+            self.keyboard.enter()
+            return True
+
+        def click_duration_ok(self):
+            self.exist_click(L.video_collage_designer.preview.btn_ok)
+            return True

@@ -1,0 +1,83 @@
+# import smtplib
+# import os
+
+# from email.mime.text import MIMEText
+
+# gmail_user = 'clsignupstress@gmail.com'
+# with open(os.path.dirname(__file__)+"//p.txt", "r") as f:
+    # gmail_password = f.read()
+
+ 
+# msg = MIMEText('content')
+# msg['Subject'] = 'Test'
+# msg['From'] = gmail_user
+# msg['To'] = gmail_user
+
+# server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+# server.ehlo()
+# server.login(gmail_user, gmail_password)
+# server.send_message(msg)
+# server.quit()
+
+# print('Email sent!')
+
+''''''
+import smtplib
+import os
+
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+def send_mail(opts):
+    # set info
+    fileRead = lambda fileName,mode="r": open(os.path.dirname(__file__)+"//"+filename,mode)
+    me = opts['account']
+    you = opts['to']
+    password = opts['password']
+
+    # Create message container
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = opts['subject']
+    msg['From'] = opts['from']
+    msg['To'] = ",".join(you)
+
+    # Message data info
+    text = opts['text']
+    html = opts['html']
+    attachment = opts['attachment']
+
+    # Transfer data
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html','utf-8')
+    att = MIMEText(attachment, 'base64', 'utf-8')
+    att["Content-Type"] = 'application/octet-stream'
+    att["Content-Disposition"] = 'attachment; filename="BFT_Report.html"'
+
+    # Attach data into message container.
+    # According to RFC 2046, the last part of a multipart message, in this case
+    # the HTML message, is best and preferred.
+    msg.attach(part1)
+    msg.attach(part2)
+    msg.attach(att)
+
+
+    # Send the message via local SMTP server.
+    mail = smtplib.SMTP('smtp.gmail.com', 587)
+    mail.ehlo()
+    mail.starttls()
+    mail.login(me, password)
+    mail.sendmail(me, you, msg.as_string())
+    mail.quit()
+    
+# if __name__ == '__main__':
+    # opts = {
+        # "account":"clsignupstress@gmail.com"
+        # ,"password":"6uWHKTZpUK6Fmgm"
+        # ,"from":"QA UWeb AT <clsignupstress@gmail.com>"
+        # ,"to": ["cl.mitil.test@gmail.com","clsignupstress+2@gmail.com"]
+        # ,"subject": "UWeb AT report"
+        # ,"text": "this is UWeb BFT report"
+        # ,"html": "html report"
+        # ,"attachment": "aaa"
+    # }
+    # send_mail(opts)

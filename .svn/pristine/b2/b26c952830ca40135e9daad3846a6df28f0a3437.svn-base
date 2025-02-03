@@ -1,0 +1,25 @@
+[
+  {
+    "schedule_name": "schedule_1",
+    "exec_weekday": ["monday", "tuesday"],
+    "exec_time_at": "20:00",
+    "exec_test_main": "test_main_1.py",
+    "pdr_login_info": ["ooo", "xxx"],
+    "_note": "每周一、二晚上7點執行一次，test_main_1，使用帳號ooo/xxx"
+  },
+  {
+    "schedule_name": "schedule_2",
+    "exec_weekday": ["tuesday"],
+    "exec_time_at": "08:15",
+    "exec_test_main": "test_main_2.py",
+    "pdr_login_info": ["account", "password"],
+    "_note": "每周三、六、日早上8點執行一次，test_main_2，使用帳號account/password"
+  },
+  {
+    "schedule_name": "schedule_3",
+    "exec_weekday": ["wednesday"],
+    "exec_time_at": "12:30",
+    "exec_test_main": "test_main_3.py",
+    "_note": "每周四中午11點30分執行一次，test_main_3，未指定登入帳號"
+  }
+]

@@ -1,0 +1,795 @@
+import time, datetime, os, copy
+
+from .base_page import BasePage
+from ATFramework.utils import logger
+from ATFramework.utils.Image_Search import CompareImage
+from AppKit import NSScreen
+from .locator import locator as L
+from .main_page import Main_Page
+
+DELAY_TIME = 1 # sec
+
+class Pip_room(Main_Page, BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def find_specific_tag(self, name):
+        tags = self.exist(L.base.tag_list)
+        for tag in tags:
+            if tag.AXValue.startswith(f"{name} ("):
+                return True
+        return False
+
+    def check_in_Pip_room(self):
+        if not self.exist_click(L.pip_room.btn_import_media):
+            logger('Cannot find btn_import_media')
+            raise Exception('Cannot find btn_import_media')
+        time.sleep(DELAY_TIME * 1)
+        if not self.exist(L.pip_room.btn_import_PiP_object):
+            self.mouse.click(btn="right")
+            logger('not enter PiP Room now')
+            return False
+        else:
+            self.mouse.click(btn="right")
+            return True
+
+    def check_in_PiP_designer(self):
+        # if return True, enter PiP Designer now
+        # if return False, not find PiP Designer Window
+        if self.exist(L.pip_room.pip_designer.properties_tab):
+            return True
+        else:
+            return False
+
+    def sort_by_name(self):
+        try:
+            logger('pip now')
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+
+            if not self.select_right_click_menu('Sort by', 'Name'):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def sort_by_category(self):
+        try:
+            logger('pip now')
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+
+            if not self.select_right_click_menu('Sort by', 'Category'):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def sort_by_created_date(self):
+        try:
+            logger('pip now')
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+
+            if not self.select_right_click_menu('Sort by', 'Created Date'):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_LibraryMenu_ExtraLargeIcons(self):
+        try:
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+            if not self.select_right_click_menu('Extra Large Icons'):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_LibraryMenu_LargeIcons(self):
+        try:
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+            if not self.select_right_click_menu('Large Icons'):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_LibraryMenu_MediumIcons(self):
+        try:
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+            if not self.select_right_click_menu('Medium Icons'):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_LibraryMenu_SmallIcons(self):
+        try:
+            if not self.exist_click(L.media_room.library_menu.btn_menu):
+                raise Exception
+            if not self.select_right_click_menu('Small Icons'):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_CreateNewPiP_btn(self, full_path):
+        try:
+            if not self.exist_click(L.pip_room.btn_create_new_PiP_object):
+                raise Exception
+            time.sleep(DELAY_TIME)
+            if not self.select_file(full_path):
+                raise Exception('Cannot select file w/ full_path')
+            time.sleep(DELAY_TIME*2)
+
+            # Verify Step: check to enter Pip Designer
+            if not self.check_in_PiP_designer():
+                return False
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_CreateNewShape_btn(self):
+        try:
+            if not self.exist_click(L.pip_room.btn_create_new_Shape_object):
+                raise Exception
+            time.sleep(DELAY_TIME)
+
+            # Verify Step: check status (title description) if enter Shape Designer
+            check_title = self.exist(L.shape_designer.designer_window).AXTitle.startswith("Shape")
+            if not check_title:
+                logger('Verify Step [NG], does NOT enter shape designer.')
+                return False
+            else:
+                return True
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+
+    def click_ModifySelectedPiP_btn(self):
+        try:
+            if not self.exist_click(L.pip_room.btn_modify_selected_PiP_object):
+                logger('Fail to find btn_modify_selected_PiP_object')
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_ModifyAttribute_btn(self, strType):
+        try:
+            #strType = PiP, Mask
+            if (strType != 'PiP') and (strType != 'Mask'):
+                logger('strType is invalid')
+                raise Exception
+
+            self.click_ModifySelectedPiP_btn()
+            if (strType == 'PiP'):
+                if not self.exist_click(L.pip_room.btn_modify_PiP_Attributes):
+                    raise Exception
+                else:
+                    # Verify Step:
+                    if not self.check_in_PiP_designer():
+                        logger('Verify Step [FAIL]')
+                        return False
+            if (strType == 'Mask'):
+                if not self.exist_click(L.pip_room.btn_modify_Mask_Attributes):
+                    raise Exception
+                else:
+                    # Verify Step:
+                    if not self.exist(L.mask_designer.tab.mask):
+                        logger('Verify Step [FAIL]')
+                        return False
+            time.sleep(DELAY_TIME)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_Upload_toDZCL_btn(self, close_win=False):
+        try:
+            if not self.exist_click(L.pip_room.btn_upload_to_DZ_cloud):
+                raise Exception
+            time.sleep(DELAY_TIME * 2)
+            if self.exist(L.pip_room.cyberlink_power_director.msg):
+                self.exist_click(L.pip_room.cyberlink_power_director.yes)
+
+            time.sleep(DELAY_TIME * 5)
+            if not self.exist(L.pip_room.upload_dialog.step1):
+                raise Exception
+
+            if close_win:
+                self.exist_click(L.pip_room.upload_dialog.btn_close)
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def add_new_tag(self, name):
+        try:
+            if not self.exist(L.pip_room.explore_view_region.Romance_category):
+                logger('not in PiP room')
+                raise Exception
+
+            tags_table = self.exist(L.pip_room.explore_view_region.table_all_content_tags).AXChildren
+            before_add_tags_num = len(tags_table)
+            #logger(before_add_tags_num)
+
+            # click (Add new tag)
+            if not self.exist_click(L.pip_room.btn_add_new_tag):
+                raise Exception
+
+            time.sleep(DELAY_TIME*2)
+            self.keyboard.send(name)
+            time.sleep(DELAY_TIME)
+            self.keyboard.enter()
+
+            if self.exist(L.pip_room.warning_dialog.msg1):
+                logger('add new tag [FAIL] - duplicate tag name')
+                self.exist_click(L.pip_room.warning_dialog.ok)
+                return False
+
+            tags_table = self.exist(L.pip_room.explore_view_region.table_all_content_tags).AXChildren
+            after_add_tags_num = len(tags_table)
+            #logger(after_add_tags_num)
+
+            # Verify Step1.
+            if after_add_tags_num != before_add_tags_num + 1:
+                logger('Fail to add tag, count error after added.')
+                raise Exception
+
+            # Verify Step2.
+            if not self.find_specific_tag(name):
+                logger('Cannot find the tag [Verify FAIL]')
+                return False
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def delete_tag(self, name):
+        try:
+            if not self.exist(L.pip_room.explore_view_region.Romance_category):
+                logger('not in PiP room')
+                raise Exception
+
+            # check current tags number
+            if not self.exist(L.pip_room.explore_view_region.table_all_content_tags):
+                logger('Fail to find table_all_content_tags')
+                raise Exception
+
+            tags_table = self.exist(L.pip_room.explore_view_region.table_all_content_tags).AXChildren
+            current_tags_counts = len(tags_table)
+            #logger(current_tags_counts)
+
+            if not self.select_specific_tag(name):
+                logger('Cannot find the tag')
+                raise Exception("Cannot find the tag")
+            if not self.exist_click(L.pip_room.btn_delete_tag):
+                logger('Cannot find btn_delete_tag')
+                raise Exception
+
+            if self.exist(L.pip_room.warning_dialog.msg2):
+                time.sleep(DELAY_TIME)
+                self.exist_click(L.pip_room.warning_dialog.ok)
+
+            time.sleep(DELAY_TIME)
+            tags_table = self.exist(L.pip_room.explore_view_region.table_all_content_tags).AXChildren
+            after_tags_counts = len(tags_table)
+            #logger(after_tags_counts)
+
+            # Verify Step1. Check count - 1
+            if after_tags_counts != current_tags_counts - 1:
+                logger('Fail to delete tag, count error after added.')
+                raise Exception
+
+            # Verify Step2. Check to find the custom tag or not
+            if self.find_specific_tag(name):
+                logger(f'Can find the tag {name} [Verify FAIL]')
+                return False
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_ImportPiPObject(self, full_path):
+        try:
+            if not self.exist_click(L.pip_room.btn_import_media):
+                logger('Cannot find btn_import_media')
+                raise Exception('Cannot find btn_import_media')
+            time.sleep(DELAY_TIME*2)
+            if not self.exist_click(L.pip_room.btn_import_PiP_object):
+                logger('Cannot find btn_import_PiP_object')
+                raise Exception('Cannot find btn_import_PiP_object')
+            time.sleep(DELAY_TIME*2)
+            if not self.select_file(full_path):
+                raise Exception('Cannot select file w/ full_path')
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_DownloadContent_from_DZCL(self):
+        try:
+            if not self.exist_click(L.pip_room.btn_import_media):
+                raise Exception
+            time.sleep(DELAY_TIME)
+
+            if not self.exist(L.pip_room.btn_import_PiP_object):
+                logger('not in Pip Room')
+                self.mouse.click(btn="right")
+                raise Exception
+
+            if not self.exist_click(L.pip_room.btn_download_from_DZ_cloud):
+                raise Exception
+            time.sleep(DELAY_TIME*2)
+
+            # Verify Step1. Check "cloud tab" status
+            item = self.exist(L.pip_room.download_dialog.cloud_tab)
+            #logger(item)
+
+            for x in range(100):
+                if item.AXEnabled:
+                    logger('break')
+                    break
+                if x == 99:
+                    logger('Tab cannot active [Time out]')
+                    raise Exception
+                time.sleep(DELAY_TIME)
+
+            # Verify Step2: Check Download dialog Title
+            # For v2922 workaround .. skip this check (exception -25200)
+            #if not self.exist(L.pip_room.download_dialog.str_Title):
+            #    raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def download_Content_from_DirectorZone(self, name=None, close_win=True):
+        try:
+            if not name:
+                logger('parameter is invalid.')
+                raise Exception
+
+            # before_snapshot
+            old_img = self.snapshot(self.area.library)
+
+            self.click_DownloadContent_from_DZCL()
+
+            if not self.exist_click(L.pip_room.download_dialog.director_zone_tab):
+                raise Exception
+
+            time.sleep(DELAY_TIME)
+            if self.exist(L.pip_room.cyberlink_power_director.msg):
+                self.exist_click(L.pip_room.cyberlink_power_director.yes)
+
+            # switch to (My Director Zone) tab
+            item = self.exist(L.pip_room.download_dialog.director_zone_tab)
+
+            # wait (My Director Zone) tab [status: ready]
+            for x in range(100):
+                if item.AXEnabled:
+                    logger('break')
+                    break
+                if x == 99:
+                    logger('Tab cannot active [Time out]')
+                    raise Exception
+                time.sleep(DELAY_TIME)
+
+            # select custom template w/ name
+            self.mouse.click(*self.find({'AXValue': f'{name}', 'AXRole': 'AXStaticText'}).center)
+
+            # click download
+            if not self.exist_click(L.pip_room.download_dialog.btn_download):
+                raise Exception
+            else:
+                logger('click download')
+
+            time.sleep(DELAY_TIME*2)
+
+            if close_win:
+                self.exist_click(L.pip_room.download_dialog.btn_close)
+                time.sleep(DELAY_TIME)
+
+            # after_snapshot
+            self.mouse.move(0, 0)
+            new_img = self.snapshot(self.area.library)
+            # if old_image == new_ image, library content does not change
+            # check main window has been changed (PiP Room switch to download category & show content)
+            if self.compare(old_img, new_img, similarity=0.99):
+                return False
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def download_Content_from_Cloud(self, name=None, close_win=True):
+        try:
+            if not name:
+                logger('parameter is invalid.')
+                raise Exception
+
+            # before_snapshot
+            old_img = self.snapshot(self.area.library)
+
+            self.click_DownloadContent_from_DZCL()
+
+            # select custom template w/ name
+            self.mouse.click(*self.find({'AXValue': f'{name}', 'AXRole': 'AXStaticText'}).center)
+
+            # click download
+            if not self.exist_click(L.pip_room.download_dialog.btn_download):
+                raise Exception
+            else:
+                logger('click download')
+
+            time.sleep(DELAY_TIME*3)
+
+            if close_win:
+                self.exist_click(L.pip_room.download_dialog.btn_close)
+                time.sleep(DELAY_TIME)
+
+            # after_snapshot
+            self.mouse.move(0, 0)
+            new_img = self.snapshot(self.area.library)
+            # if old_image == new_ image, library content does not change
+            # check main window has been changed (PiP Room switch to download category & show content)
+            if self.compare(old_img, new_img, similarity=0.99):
+                return False
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def check_is_in_Downloaded_category(self, name):
+        try:
+            if not self.select_specific_tag('Downloaded'):
+                raise Exception
+
+            # select custom template w/ name
+            if not self.find({'AXValue': f'{name}', 'AXRole': 'AXStaticText'}):
+                return False
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def delete_in_Download_cateogry(self, temp_name):
+        try:
+            if not self.select_specific_tag('Downloaded'):
+                raise Exception
+
+            time.sleep(DELAY_TIME)
+            # select template w/ temp_name
+            self.mouse.click(*self.find({'AXValue': f'{temp_name}', 'AXRole': 'AXStaticText'}).center)
+            time.sleep(DELAY_TIME)
+            self.select_RightClickMenu_Delete()
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def check_is_in_Custom_category(self, name):
+        try:
+            if not self.select_specific_tag('Custom'):
+                raise Exception
+
+            # select custom template w/ name
+            if not self.find({'AXValue': f'{name}', 'AXIdentifier': 'CollectionViewItemTextField'}):
+                return False
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def delete_in_Custom_category(self, temp_name):
+        try:
+            if not self.select_specific_tag('Custom'):
+                raise Exception
+
+            time.sleep(DELAY_TIME)
+            # select template w/ temp_name
+            self.hover_library_media(f'{temp_name}')
+            time.sleep(DELAY_TIME*2)
+            self.select_RightClickMenu_Delete()
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def click_ExplorerView(self):
+        try:
+            # Verify Step1:
+            # Check (Romance) tag is find or not
+            if not self.exist(L.pip_room.explore_view_region.Romance_category):
+                before_status = False
+            else:
+                before_status = self.exist(L.pip_room.explore_view_region.Romance_category).AXValue.startswith("Romance")
+            logger(f'Initial: Display status {before_status}')
+
+            if not self.exist_click(L.pip_room.btn_explore_view):
+                logger('Cannot find btn_explore_view')
+                raise Exception
+            time.sleep(DELAY_TIME)
+
+            # Verify Step2:
+            # Check (Romance) tag again
+            if not self.exist(L.pip_room.explore_view_region.Romance_category):
+                after_status = False
+            else:
+                after_status = self.exist(L.pip_room.explore_view_region.Romance_category).AXValue.startswith("Romance")
+            logger(f'Now: Display status {after_status}')
+
+            # Verify Step3:
+            if before_status == after_status:
+                logger('Verify FAIL')
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_AddToTimeline(self):
+        try:
+            self.right_click()
+
+            if not self.select_right_click_menu('Add to Timeline'):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_ChangeAlias(self, name=None):
+        try:
+            self.right_click()
+
+            if not self.select_right_click_menu('Change Alias'):
+                raise Exception
+            time.sleep(DELAY_TIME * 2)
+            if not name:
+                self.keyboard.press(self.keyboard.key.backspace)
+                self.keyboard.enter()
+            else:
+                self.keyboard.send(name)
+                time.sleep(DELAY_TIME)
+                self.keyboard.enter()
+
+                # Verify Step
+                if not self.find({'AXValue': name, 'AXRole': 'AXTextField'}):
+                    logger('Change Alias [FAIL]')
+                    raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_ModifyTemplate(self, strType):
+        # parameter: PiP, Mask
+        try:
+            if (strType != 'PiP') and (strType != 'Mask'):
+                logger('strType is invalid')
+                raise Exception
+
+            self.right_click()
+
+            if not self.select_right_click_menu('Modify Template...', f'Modify {strType} Attributes'):
+                raise Exception
+            time.sleep(DELAY_TIME*2)
+
+            # Verify Step:
+            if (strType == 'PiP'):
+                if not self.exist(L.pip_room.pip_designer.properties_tab):
+                    logger('Verify Step [FAIL]')
+                    return False
+            elif not self.exist(L.mask_designer.tab.mask):
+                logger('Verify Step [FAIL]')
+                return False
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_ShareUploadToInternet(self, close_win=True):
+        try:
+            self.right_click()
+            if not self.select_right_click_menu('Share and Upload to the Internet...'):
+                raise Exception
+
+            time.sleep(DELAY_TIME*2)
+            if self.exist(L.pip_room.cyberlink_power_director.msg):
+                self.exist_click(L.pip_room.cyberlink_power_director.yes)
+
+            time.sleep(DELAY_TIME*5)
+            if not self.exist(L.pip_room.upload_dialog.step1):
+                raise Exception
+
+            if close_win:
+                self.exist_click(L.pip_room.upload_dialog.btn_close)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_Delete(self):
+        try:
+            self.right_click()
+            if not self.select_right_click_menu('Delete (only for Custom/Downloaded)'):
+                raise Exception
+            time.sleep(DELAY_TIME)
+
+            if self.exist(L.pip_room.warning_dialog.msg3):
+                time.sleep(DELAY_TIME)
+
+            # Verify Step
+            if not self.exist_click(L.pip_room.warning_dialog.yes):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_Addto(self, name):
+        try:
+            self.right_click()
+            if not self.select_right_click_menu('Add to', name):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_RightClickMenu_DockUndock_LibraryWindow(self):
+        try:
+            self.right_click()
+            if not self.select_right_click_menu('Dock/Undock Library Window'):
+                raise Exception
+            time.sleep(DELAY_TIME)
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def search_PiP_room_library(self, name=None):
+        try:
+            if not name:
+                raise Exception
+            time.sleep(DELAY_TIME)
+
+            # if library field has content, should clear all
+            self.exist_click(L.pip_room.btn_search_cancel)
+
+            img_collection_view_before = self.snapshot(L.media_room.library_listview.main_frame)
+            self.exist_click(L.pip_room.input_search)
+            self.keyboard.send(name)
+            time.sleep(DELAY_TIME)
+            img_collection_view_after = self.snapshot(L.media_room.library_listview.main_frame)
+
+            # verify is collection view frame is changed by snapshot
+            result_verify = self.compare(img_collection_view_before, img_collection_view_after)
+            if result_verify:
+                logger('Fail to verify after clicked select all')
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def search_PiP_room_click_cancel(self):
+        try:
+
+            if not self.exist_click(L.pip_room.btn_search_cancel):
+                logger('Fail to find btn_search_cancel')
+                raise Exception
+            self.exist_click(L.pip_room.btn_search_cancel)
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_tag_RightClickMenu_DeleteTag(self, strTag):
+        try:
+            if not self.select_specific_tag(strTag):
+                logger('Cannot find the tag')
+                raise Exception("Cannot find the tag")
+
+            self.right_click()
+            time.sleep(DELAY_TIME)
+            if not self.select_right_click_menu('Delete Tag'):
+                raise Exception
+
+            if not self.exist(L.pip_room.warning_dialog.msg2):
+                raise Exception
+
+            # Verify Step
+            if not self.exist_click(L.pip_room.warning_dialog.ok):
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_tag_RightClickMenu_RenameTag(self, strTag, strRename):
+        try:
+            if not self.select_specific_tag(strTag):
+                logger('Cannot find the tag')
+                raise Exception("Cannot find the tag")
+
+            self.right_click()
+            time.sleep(DELAY_TIME)
+            if not self.select_right_click_menu('Rename Tag'):
+                raise Exception
+
+            time.sleep(DELAY_TIME*2)
+            self.keyboard.send(strRename)
+            time.sleep(DELAY_TIME)
+            self.keyboard.enter()
+
+            # Verify Step
+            if not self.find_specific_tag(strRename):
+                logger('Rename FAIL')
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def get_status_rightclickmenu_RenameTag(self):
+        try:
+            if not self.exist(L.pip_room.right_click_menu.rename_Tag):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return self.exist(L.pip_room.right_click_menu.rename_Tag).AXEnabled
+
+    def get_status_rightclickmenu_DeleteTag(self):
+        try:
+            if not self.exist(L.pip_room.right_click_menu.delete_Tag):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return self.exist(L.pip_room.right_click_menu.delete_Tag).AXEnabled
+
+    def get_status_DeleteSelectedTag(self):
+        try:
+            if not self.exist(L.pip_room.btn_delete_tag):
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return self.exist(L.pip_room.btn_delete_tag).AXEnabled

@@ -1,0 +1,5 @@
+Please start up a terminal window and execute the following 2 lines below:
+
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements_forMac.txt
+python3 -m pip install git+https://github.com/pyatom/pyatom/

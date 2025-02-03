@@ -1,0 +1,1111 @@
+import math
+import time, datetime, os, copy
+
+from .base_page import BasePage
+from ATFramework.utils import logger
+from ATFramework.utils.Image_Search import CompareImage
+from AppKit import NSScreen
+from .locator import locator as L
+
+def _get_attribute_index(obj, attribute_name):
+    try:
+        index_row = -1
+        tar_row = -1
+        locator_outline_row = L.mask_designer.simple_track.unit_keyframe_attribute_outline_row.copy()
+        locator_outline_row[2]['get_all'] = True
+        tar_outline_row = obj.exist(locator_outline_row)
+        locator_attribute_name = L.mask_designer.simple_track.unit_attribute_name.copy()
+        locator_attribute_name['AXValue'] = attribute_name
+        locator_outline_row.append(locator_attribute_name)
+        target = obj.exist(locator_outline_row)
+        pos_row = target.AXParent.AXParent.AXPosition
+        for idx in range(len(tar_outline_row)):
+            if tar_outline_row[idx].AXPosition == pos_row:
+                index_row = idx
+                tar_row = tar_outline_row[idx]
+                break
+    except Exception as e:
+        logger(f'Exception occurs. log={e}')
+        raise Exception
+    return index_row, tar_row
+
+def _control_keyframe(obj, attribute_name, locator_operation=None):
+    try:
+        index_row, tar_row = _get_attribute_index(obj, attribute_name)
+        if locator_operation:
+            target_btn = obj.exist(locator_operation, tar_row)
+            value = target_btn.AXEnabled
+            if value:
+                obj.el_click(target_btn)
+            time.sleep(1)
+        else:
+            value = True
+    except Exception as e:
+        logger(f'Exception occurs. log={e}')
+        raise Exception
+    return value
+
+class CirclePositionCalculator:
+    def __init__(self, center, radius, start_degrees=180):
+        self.center = center
+        self.radius = radius
+        self.start_degrees = start_degrees
+
+    def get_position(self, degrees):
+        offset = lambda x: [self.radius * math.sin(math.pi * x / 180), self.radius * math.cos(math.pi * x / 180)]
+        return tuple(map(lambda x: x[0] + x[1], zip(self.center, offset(self.start_degrees + degrees))))
+
+
+def arrow(obj, button="up", times=1, locator=None):
+    locator = locator[button.lower() == "up"]
+    elem = obj.exist(locator)
+    for _ in range(times):
+        obj.mouse.click(*elem.center)
+    return True
+
+
+class AdjustSet:
+    def __init__(self, driver, locators):
+        self.driver = driver
+        self.locators = locators
+
+    def adjust_slider(self, value):
+        self.driver.exist(self.locators[0]).AXValue = value
+        return True
+
+    def set_slider(self, value):
+        return self.adjust_slider(value)
+
+    def set_value(self, value):
+        target = self.driver.exist(self.locators[1])
+        self.driver.mouse.click(*target.center)
+        target.AXValue = str(value)
+        self.driver.keyboard.enter()
+        return True
+
+    def get_value(self):
+        return self.driver.exist(self.locators[1]).AXValue
+
+    def click_up(self, times=1):
+        return arrow(self.driver, button="up", times=times, locator=self.locators[3:1:-1])
+
+    def click_down(self, times=1):
+        return arrow(self.driver, button="down", times=times, locator=self.locators[3:1:-1])
+
+    def click_arrow(self, opt="up", times=1):
+        option = ["down", "up"][opt.lower() == "up"]
+        return self.__getattribute__(f"click_{option}")(times)
+
+    def click_plus(self, times=1, _btn=True, _get_status=False):
+        try:
+            locator = self.locators[5:3:-1][bool(_btn)]
+        except:
+            logger("[Error] locator was not defined")
+            return False
+        target = self.driver.exist(locator)
+        if _get_status:
+            return target.AXEnabled
+        else:
+            self.driver.mouse.click(*target.center, times=times)
+            return True
+
+    def click_minus(self, times=1):
+        return self.click_plus(times, False)
+
+    def is_plus_enabled(self, btn=True):
+        return self.click_plus(_get_status=True)
+
+    def is_minus_enabled(self):
+        return self.click_plus(_btn=False, _get_status=True)
+
+
+class EaseSet(AdjustSet):
+    def __init__(self, *args):
+        super().__init__(*args)
+
+    def set_checkbox(self, value):
+        target = self.driver.exist(self.locators[4])
+        int(target.AXValue) ^ value and target.press()
+        return True
+
+
+class Mask_designer(BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.save_as = self.Save_as(*args, **kwargs)
+        self.object_settings = self.Object_settings(*args, **kwargs)
+        self.brush_mask = self.Brush_Mask(*args, **kwargs)
+        self.motion = self.Motion_Tab(*args, **kwargs)
+        self.mask_properties = self.MaskProperties(*args, **kwargs)
+        self.simple_timeline = self.Simple_Timeline(*args, **kwargs)
+
+    class MaskProperties(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def is_invert_mask_ticked(self):
+            try:
+                return bool(self.find(L.mask_designer.mask_property.invert_mask).AXValue)
+            except:
+                return None
+
+        def get_current_mask_menu(self):
+            el = self.find(L.mask_designer.mask_property.selection_mask_list)
+            return el.AXTitle
+
+    class Save_as(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def click_ok(self):
+            self.exist(L.mask_designer.save_as_dlg.ok).press()
+
+        def click_cancel(self):
+            self.exist(L.mask_designer.save_as_dlg.cancel).press()
+
+        def input_name(self, name):
+            self.exist(L.mask_designer.save_as_dlg.name).sendKeys(name)
+
+        def set_slider(self, value):
+            try:
+                self.exist(L.mask_designer.save_as_dlg.slider).AXValue = float(value)
+                return True
+            except:
+                return False
+
+    class Object_settings(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.position = self.ModuleSet(L.mask_designer.settings.position, *args, **kwargs)
+            self.scale = self.ModuleSet(L.mask_designer.settings.scale, *args, **kwargs)
+            self.opacity = self.ModuleSet(L.mask_designer.settings.opacity, *args, **kwargs)
+            self.rotation = self.ModuleSet(L.mask_designer.settings.rotation, *args, **kwargs)
+
+        class ModuleSet(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args[1:], **kwargs)
+                self.arg = args[0]
+                self.ease_in = EaseSet(self, args[0].group_ease.group_in)
+                self.ease_out = EaseSet(self, args[0].group_ease.group_out)
+
+            def _click_keyframe(self, locator):
+                el = self.find(locator)
+                if el.AXEnabled:
+                    el.press()
+                    return True
+                else:
+                    return False
+
+            def click_previous_keyframe(self):
+                return self._click_keyframe(self.arg.previous_keyframe)
+
+            def click_add_remove_keyframe(self):
+                return self._click_keyframe(self.arg.add_remove_keyframe)
+
+            def click_next_keyframe(self):
+                return self._click_keyframe(self.arg.next_keyframe)
+
+            def click_reset_keyframe(self):
+                self._click_keyframe(self.arg.reset_keyframe)
+                time.sleep(2.5)
+                self.click(L.main.confirm_dialog.btn_yes)
+                return True
+
+            def scroll_to_screen(self):
+                scroll_bar = self.find(L.mask_designer.tab_scroll)
+                parent = self.find(L.mask_designer.property_frame)
+                frame = self.find(L.mask_designer.tab_content)
+                el_down = self.find(self.arg.group_ease.group_out[0][0])  # frame of ease_in & ease out
+                el_top = self.find(self.arg.previous_keyframe[0])  # frame of keyframe
+
+                bottom = lambda x: int(x.AXPosition[1] + x.AXSize[1])
+                scrollable_len = parent.AXSize[1] - frame.AXSize[1]
+                percent = None
+                if bottom(el_down) - bottom(frame) > 0:
+                    percent = 1 - ((bottom(parent) - bottom(el_down)) / scrollable_len)
+                    logger(f"screen down. {percent}")
+                elif frame.AXPosition[1] - el_top.AXPosition[1] > 0:
+                    percent = (el_top.AXPosition[1] + frame.AXSize[1]) / scrollable_len
+                    logger(f"screen up. {percent}")
+                if percent: scroll_bar.AXValue = percent
+                return True
+
+        def set_position_x(self, value):
+            self.exist(L.mask_designer.settings.position_x_value).AXValue = str(value)
+            return True
+
+        def click_position_x_arrow(self, button="up", times=1):
+            return arrow(self, button, times, [
+                L.mask_designer.settings.position_x_down,
+                L.mask_designer.settings.position_x_up,
+            ])
+
+        def set_position_y(self, value):
+            self.exist(L.mask_designer.settings.position_y_value).AXValue = str(value)
+            return True
+
+        def click_position_y_arrow(self, button="up", times=1):
+            return arrow(self, button, times, [
+                L.mask_designer.settings.position_y_down,
+                L.mask_designer.settings.position_y_up,
+            ])
+
+        def set_scale_width_slider(self, value):
+            self.exist(L.mask_designer.settings.scale_width_slider).AXValue = float(value)
+            return True
+
+        def set_scale_width(self, value):
+            self.exist(L.mask_designer.settings.scale_width_value).AXValue = str(value)
+            return True
+
+        def get_scale_width(self):
+            el = self.exist(L.mask_designer.settings.scale_width_value)
+            return el.AXValue if el and el.AXEnabled else None
+
+        def click_scale_width_arrow(self, button="up", times=1):
+            return arrow(self, button, times, [
+                L.mask_designer.settings.scale_width_down,
+                L.mask_designer.settings.scale_width_up,
+            ])
+
+        def set_scale_height_slider(self, value):
+            self.exist(L.mask_designer.settings.scale_height_slider).AXValue = float(value)
+            return True
+
+        def set_scale_height(self, value):
+            self.exist(L.mask_designer.settings.scale_height_value).AXValue = str(value)
+            return True
+
+        def get_scale_height(self):
+            el = self.exist(L.mask_designer.settings.scale_height_value)
+            return el.AXValue if el and el.AXEnabled else None
+
+        def click_scale_height_arrow(self, button="up", times=1):
+            return arrow(self, button, times, [
+                L.mask_designer.settings.scale_height_down,
+                L.mask_designer.settings.scale_height_up,
+            ])
+
+        def set_scale_ratio(self, check=True):
+            button = self.exist(L.mask_designer.settings.scale_ratio)
+            if button.AXValue != int(bool(check)): button.press()
+            return True
+
+        def set_opacity_slider(self, value):
+            self.exist(L.mask_designer.settings.opacity_slider).AXValue = float(value)
+            return True
+
+        def set_opacity(self, value):
+            self.exist(L.mask_designer.settings.opacity_value).AXValue = str(value)
+            self.set_opacity_slider(value)
+            return True
+
+        def click_opacity_arrow(self, button="up", times=1):
+            return arrow(self, button, times, [
+                L.mask_designer.settings.opacity_down,
+                L.mask_designer.settings.opacity_up,
+            ])
+
+        def set_rotation(self, value):
+            self.exist(L.mask_designer.settings.rotation_value).AXValue = str(value)
+            self.click_rotation_arrow()
+            self.click_rotation_arrow("down")
+            return True
+
+        def click_rotation_arrow(self, button="up", times=1):
+            return arrow(self, button, times, [
+                L.mask_designer.settings.rotation_down,
+                L.mask_designer.settings.rotation_up,
+            ])
+
+    class Simple_Timeline(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.position = self.Position(*args, **kwargs)
+            self.scale = self.Scale(*args, **kwargs)
+            self.opacity = self.Opacity(*args, **kwargs)
+            self.rotation = self.Rotation(*args, **kwargs)
+
+        class Position(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.attribute_name = 'Position'
+
+            def add_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_previous_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_next_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_next_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+        class Scale(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.attribute_name = 'Scale'
+
+            def add_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_previous_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_next_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_next_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+        class Opacity(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.attribute_name = 'Opacity'
+
+            def add_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_previous_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_next_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_next_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+        class Rotation(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+                self.attribute_name = 'Rotation'
+
+            def add_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_previous_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+            def click_next_keyframe(self):
+                locator_operation = L.mask_designer.simple_track.btn_next_keyframe
+                return bool(_control_keyframe(self, self.attribute_name, locator_operation))
+
+
+    def check_MaskDesigner_preview(self, ground_truth_image=None, similarity=0.95):
+        try:
+            return self.compare(self.snapshot(L.mask_designer.preview_window),
+                                self.ground_truth(ground_truth_image),
+                                similarity)
+        except:
+            return None
+
+    def set_MaskDesigner_timecode(self, timecode):
+        '''
+        :param timecode: "HH_MM_SS_mm" -> "1_00_59_99"
+        :return: True/False
+        '''
+        self.activate()
+        elem = self.find(L.mask_designer.timecode)
+        w, h = elem.AXSize
+        x, y = elem.AXPosition
+
+        pos_click = tuple(map(int, (x + w * 0.1, y + h * 0.5)))
+        self.mouse.click(*pos_click)
+        time.sleep(1)
+        self.keyboard.send(timecode.replace("_", ""))
+        self.keyboard.enter()
+
+    def get_timecode(self):
+        try:
+            timecode = self.exist(L.mask_designer.timecode).AXValue
+            return timecode
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_MaskDesigner_Undo_btn(self):
+        self.find(L.mask_designer.undo).press()
+
+    def tap_MaskDesigner_Redo_btn(self):
+        self.find(L.mask_designer.redo).press()
+
+    def Edit_MaskDesigner_Only_Show_Selected_track_SetCheck(self, check_it=True):
+        checkbox = self.find(L.mask_designer.only_show_selected_track_checkbox)
+        if checkbox.AXValue != check_it:
+            checkbox.press()
+        return True
+
+    def Edit_MaskDesigner_ClickOK(self):
+        self.find(L.mask_designer.ok).press()
+        return True
+
+    def Edit_MaskDesigner_ClickSaveAs(self):
+        self.exist(L.mask_designer.save_as).press()
+        return True
+
+    def share_to_cloud(self, name, tags, collection, description, verify_dz_link=0, only_dz=0):
+        try:
+            self.Edit_MaskDesigner_ClickShare()
+            self.save_as.input_name(name)
+            self.save_as.click_ok()
+            time.sleep(1)
+            if self.exist(L.pip_designer.auto_sign_in_to_DZ):
+                self.exist_click(L.pip_designer.log_in_yes)
+                time.sleep(2)
+
+            self.exist_click(L.pip_designer.upload.upload_to_box)
+            self.exist_click(L.pip_designer.upload.cloud_and_dz)
+            if only_dz:
+                self.exist_click(L.pip_designer.upload.dz)
+            else:
+                self.exist_click(L.pip_designer.upload.cloud_and_dz)
+            time.sleep(2)
+            self.exist_click(L.pip_designer.upload.tags)
+            self.keyboard.send(tags)
+            self.exist_click(L.pip_designer.upload.collection)
+            self.keyboard.send(collection)
+            self.exist_click(L.pip_designer.upload.description)
+            self.keyboard.send(description)
+            self.exist_click(L.pip_designer.upload.next_btn)
+
+            if self.exist(L.pip_designer.upload.confirm_disclaimer, timeout=6):
+                self.exist_click(L.pip_designer.upload.confirm_disclaimer)
+                self.exist_click(L.pip_designer.upload.next_btn)
+
+            for x in range(500):
+                if not self.exist(L.pip_designer.upload.finish):
+                    time.sleep(1)
+                elif self.exist(L.pip_designer.upload.finish).AXEnabled == False:
+                    time.sleep(1)
+                else:
+                    time.sleep(1)
+                    if verify_dz_link:
+                        self.click(L.upload_cloud_dz.upload_view_DZ)
+                        time.sleep(3)
+                        self.activate()
+                        time.sleep(6)
+                    break
+            self.click(L.pip_designer.upload.finish)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def Edit_MaskDesigner_ClickOK_CustomName(self, name):
+        try:
+            self.exist(L.mask_designer.save_as).press()
+            self.exist(L.mask_designer.save_as_dlg.name).sendKeys(name)
+            self.exist(L.mask_designer.save_as_dlg.ok).press()
+            return True
+        except:
+            return False
+
+    def MaskDesigner_SaveAs_SetSlider(self, value):
+        try:
+            self.exist(L.mask_designer.save_as_dlg.slider).AXValue = float(value)
+            return True
+        except:
+            return False
+
+    def Edit_MaskDesigner_ClickCancel(self, option):
+        self.exist(L.mask_designer.cancel).press()
+        if option is not None:
+            self.exist([L.mask_designer.cancel_dlg.yes,
+                        L.mask_designer.cancel_dlg.no,
+                        L.mask_designer.cancel_dlg.cancel][option]).press()
+        return True
+
+    def Edit_MaskDesigner_ClickShare(self):
+        self.exist(L.mask_designer.share).press()
+
+    def drag_Mask_Settings_Scroll_Bar(self, value):
+        self.exist(L.mask_designer.settings.scroll_bar).AXValue = float(value)
+
+    def drag_Mask_Properties_Scroll_Bar(self, value):
+        self.exist(L.mask_designer.mask_property.scroll_bar).AXValue = float(value)
+
+    def MaskDesigner_Select_category(self, option=0):
+        category = self.exist(L.mask_designer.mask_property.category)
+        category._activate()
+        self.mouse.click(*category.center)
+        option_locator = L.mask_designer.mask_property.category_option.copy()
+        option_locator[1]["index"] = option
+        category_option = self.exist(option_locator)
+        self.mouse.click(*category_option.center)
+        return True
+
+    def MaskDesigner_Apply_template(self, index):
+        template_index = L.mask_designer.mask_property.template.copy()
+        template_index["index"] = index
+        self.mouse.click(*self.find(template_index).center)
+        self.mouse.click(*self.find(template_index).center)  # performance issue? click again
+        return True
+
+    def Edit_MaskDesigner_CreateImageMask(self, full_path):
+        self.exist(L.mask_designer.mask_property.create_mask).press()
+        time.sleep(1)
+        self.select_file(full_path)
+        return True
+
+    def MaskDesigner_Select_Mask_Alpha_Channel(self, option=1):
+        opt = [L.mask_designer.mask_property.gif.use_alpha_channel,
+               L.mask_designer.mask_property.gif.convert_grayscale][bool(option)]
+        self.exist(opt).press()
+        time.sleep(1)
+        self.exist(L.mask_designer.mask_property.gif.ok).press()
+        return True
+
+    def is_enter_mask_composer(self):
+        return self.is_exist(L.mask_designer.mask_property.mask_composer.window)
+
+    def click_create_text_mask_btn(self):
+        self.exist_click(L.mask_designer.mask_property.create_text_mask)
+        time.sleep(1)
+        return self.is_enter_mask_composer()
+
+    def is_enter_brush_mask_designer(self):
+        return self.is_exist(L.mask_designer.mask_property.brush_mask_designer.window)
+
+    def click_create_brush_mask_btn(self):
+        self.exist_click(L.mask_designer.mask_property.create_brush_mask)
+        time.sleep(1)
+        return self.is_enter_brush_mask_designer()
+
+    class Brush_Mask(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.reset_dialog = self.Reset_Dialog(*args, **kwargs)
+            self.close_dialog = self.Close_Dialog(*args, **kwargs)
+            self.tools = self.Tools(*args, **kwargs)
+            self.width = self.Width(*args, **kwargs)
+            self.transparency = self.Transparency(*args, **kwargs)
+            self.smart_brush = self.Smart_Brush(*args, **kwargs)
+
+        def click_undo(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.undo)
+            time.sleep(2)
+            return True
+
+        def click_redo(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.redo)
+            time.sleep(2)
+            return True
+
+        def click_reset(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.reset)
+            time.sleep(2)
+            return True
+
+        class Reset_Dialog(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def click_ok(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.reset_dialog.ok)
+                time.sleep(2)
+                return True
+
+            def click_cancel(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.reset_dialog.cancel)
+                time.sleep(2)
+                return True
+
+        def click_max_restore_btn(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.maximize)
+            time.sleep(2)
+            return True
+
+        def click_close_btn(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.close)
+            time.sleep(2)
+            return True
+
+        class Close_Dialog(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def click_yes(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.close_dialog.yes)
+                time.sleep(2)
+                return True
+
+            def click_no(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.close_dialog.no)
+                time.sleep(2)
+                return True
+
+            def click_cancel(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.close_dialog.cancel)
+                time.sleep(2)
+                return True
+
+        class Tools(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def set_round(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.tools.round)
+                time.sleep(2)
+                return True
+
+            def set_flat(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.tools.flat)
+                time.sleep(2)
+                return True
+
+            def set_smart_brush(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.tools.smart_brush)
+                time.sleep(2)
+                return True
+
+            def set_eraser(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.tools.eraser)
+                time.sleep(2)
+                return True
+
+        def enable_auto_object_selection(self, opt='None'):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.auto_object_select_tool)
+            time.sleep(2)
+            if opt != 'None':
+                if opt == 'Yes':
+                    self.exist_click(L.mask_designer.mask_property.brush_mask_designer.close_dialog.yes)
+                    time.sleep(2)
+                    return True
+                elif opt == 'No':
+                    self.exist_click(L.mask_designer.mask_property.brush_mask_designer.close_dialog.no)
+                    time.sleep(2)
+                    return True
+            else:
+                return True
+
+        def drag_tool_on_canvas_from_upper_left(self):
+            el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
+            pos_canvas = el_canvas.AXPosition
+            size_canvas = el_canvas.AXSize
+            time.sleep(1)
+            pos_middle_x = pos_canvas[0] + size_canvas[0] * 0.5
+            pos_middle_y = pos_canvas[1] + size_canvas[1] * 0.5
+            self.drag_mouse((pos_middle_x - 80, pos_middle_y - 80), (pos_middle_x, pos_middle_y))
+            return True
+
+        def drag_tool_on_canvas_from_upper_middle(self):
+            el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
+            pos_canvas = el_canvas.AXPosition
+            size_canvas = el_canvas.AXSize
+            time.sleep(1)
+            pos_middle_x = pos_canvas[0] + size_canvas[0] * 0.5
+            pos_middle_y = pos_canvas[1] + size_canvas[1] * 0.5
+            self.drag_mouse((pos_middle_x, pos_middle_y - 80), (pos_middle_x, pos_middle_y))
+            return True
+
+        def drag_tool_on_canvas_from_upper_right(self):
+            el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
+            pos_canvas = el_canvas.AXPosition
+            size_canvas = el_canvas.AXSize
+            time.sleep(1)
+            pos_middle_x = pos_canvas[0] + size_canvas[0] * 0.5
+            pos_middle_y = pos_canvas[1] + size_canvas[1] * 0.5
+            self.drag_mouse((pos_middle_x + 80, pos_middle_y - 80), (pos_middle_x, pos_middle_y))
+            return True
+
+        def click_mouse_on_canvas_center(self):
+            el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
+            pos_canvas = el_canvas.AXPosition
+            size_canvas = el_canvas.AXSize
+            time.sleep(1)
+            pos_middle_x = pos_canvas[0] + size_canvas[0] * 0.5
+            pos_middle_y = pos_canvas[1] + size_canvas[1] * 0.5
+            self.drag_mouse((pos_middle_x, pos_middle_y), (pos_middle_x, pos_middle_y))
+            return True
+
+        class Width(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def set_value(self, value):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.width_value)
+                self.exist(L.mask_designer.mask_property.brush_mask_designer.width_value).AXValue = str(value)
+                time.sleep(1)
+                self.press_enter_key()
+                return True
+
+            def get_value(self):
+                return self.exist(L.mask_designer.mask_property.brush_mask_designer.width_value).AXValue
+
+            def adjust_slider(self, value):
+                self.exist(L.mask_designer.mask_property.brush_mask_designer.width_slider).AXValue = value
+                time.sleep(1)
+                return True
+
+            def set_arrow(self, option=0, times=1):
+                for i in range(times):
+                    if option == 0:
+                        self.exist_click(L.mask_designer.mask_property.brush_mask_designer.width_arrow_up)
+                    elif option == 1:
+                        self.exist_click(L.mask_designer.mask_property.brush_mask_designer.width_arrow_down)
+                return True
+
+        class Transparency(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def set_value(self, value):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.transparency_value)
+                self.exist(L.mask_designer.mask_property.brush_mask_designer.transparency_value).AXValue = str(value)
+                time.sleep(1)
+                self.press_enter_key()
+                return True
+
+            def get_value(self):
+                return self.exist(L.mask_designer.mask_property.brush_mask_designer.transparency_value).AXValue
+
+            def adjust_slider(self, value):
+                self.exist(L.mask_designer.mask_property.brush_mask_designer.transparency_slider).AXValue = value
+                time.sleep(1)
+                return True
+
+            def set_arrow(self, option=0, times=1):
+                for i in range(times):
+                    if option == 0:
+                        self.exist_click(L.mask_designer.mask_property.brush_mask_designer.transparency_arrow_up)
+                    elif option == 1:
+                        self.exist_click(L.mask_designer.mask_property.brush_mask_designer.transparency_arrow_down)
+                return True
+
+        def click_zoom_out(self, times=1):
+            for i in range(times):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.zoom_out)
+            return True
+
+        def click_zoom_in(self, times=1):
+            for i in range(times):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.zoom_in)
+            return True
+
+        def click_viewer_zoom_menu(self, value='Fit'):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.zoom_menu)
+            time.sleep(1)
+            items = self.exist(L.mask_designer.mask_property.brush_mask_designer.zoom_menu_item)
+            for item in items:
+                if item.AXValue.strip() == value:
+                    self.mouse.click(*item.center)
+                    return True
+            return False
+
+        def click_previous_frame(self, times=1):
+            for i in range(times):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.previous_frame)
+            return True
+
+        def click_next_frame(self, times=1):
+            for i in range(times):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.next_frame)
+            return True
+
+        def set_timecode(self, timecode):
+            elem = self.find(L.mask_designer.mask_property.brush_mask_designer.timecode)
+            w, h = elem.AXSize
+            x, y = elem.AXPosition
+            pos_click = tuple(map(int, (x + w * 0.1, y + h * 0.5)))
+            self.mouse.click(*pos_click)
+            time.sleep(1)
+            self.keyboard.send(timecode.replace("_", ""))
+            self.keyboard.enter()
+            return True
+
+        def get_timecode_slidebar(self):
+            return self.find(L.mask_designer.mask_property.brush_mask_designer.timecode).AXValue
+
+        def click_ok_btn(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.ok)
+            return self.is_not_exist(L.mask_designer.mask_property.brush_mask_designer.window, None, 10)
+
+        def click_cancel_btn(self):
+            self.exist_click(L.mask_designer.mask_property.brush_mask_designer.cancel)
+            time.sleep(2)
+            return True
+
+        class Smart_Brush(BasePage):
+            def __init__(self, *args, **kwargs):
+                super().__init__(*args, **kwargs)
+
+            def create_new_selection(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.smart_brush.ceate_new_selection)
+                time.sleep(2)
+                return True
+
+            def add_to_selection(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.smart_brush.add_to_selection)
+                time.sleep(2)
+                return True
+
+            def subtract_from_selection(self):
+                self.exist_click(L.mask_designer.mask_property.brush_mask_designer.smart_brush.subtract_from_selection)
+                time.sleep(2)
+                return True
+
+
+
+    def switch_to_motion(self):
+        self.exist_click(L.mask_designer.tab.motion)
+        return self.is_exist(L.mask_designer.motion_tab.path_text, None, 10)
+
+    def switch_to_mask(self):
+        self.exist_click(L.mask_designer.tab.mask)
+        return self.is_exist(L.mask_designer.mask_property.mask_property_text, None, 10)
+
+    class Motion_Tab(BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def open_path_tag(self, open=1):
+            el_path_tag = self.exist(L.mask_designer.motion_tab.path_tag)
+            if open != el_path_tag.AXValue:
+                self.exist_click(L.mask_designer.motion_tab.path_tag)
+                return True
+            else:
+                return True
+
+        def select_category(self, opt):
+            self.exist_click(L.mask_designer.motion_tab.path_category)
+            time.sleep(1)
+            if opt == "all":
+                value = "All Paths"
+            elif opt == "default":
+                value = "Default Paths"
+            elif opt == "custom":
+                value = "Custom Paths"
+            items = self.exist(L.mask_designer.motion_tab.path_category_item)
+            for item in items:
+                if item.AXValue.strip() == value:
+                    self.mouse.click(*item.center)
+                    return True
+            return False
+
+        def get_current_category(self):
+            return self.exist(L.mask_designer.motion_tab.path_category).AXTitle
+
+        def select_path_template(self, index):
+            self.exist_click({"AXRoleDescription": "group", 'AXIdentifier': 'motionPathThumbCVI', 'index': index-1})
+            return True
+
+        def click_save_custom_btn(self):
+            self.exist_click(L.mask_designer.motion_tab.save_path_btn)
+            time.sleep(1)
+            return True
+
+        def remove_custom_template(self, index):
+            self.exist_click({"AXRoleDescription": "group", 'AXIdentifier': 'motionPathThumbCVI', 'index': index - 1})
+            self.right_click({"AXRoleDescription": "group", 'AXIdentifier': 'motionPathThumbCVI', 'index': index - 1})
+            time.sleep(2)
+            self.exist_click(L.mask_designer.motion_tab.remove_menu_item)
+            time.sleep(2)
+            self.exist_click(L.mask_designer.motion_tab.confirm_remove_ok)
+            time.sleep(1)
+            return True
+
+
+    def adjust_object_on_canvas_resize(self, x=100, y=100):
+        el_canvas = self.exist(L.mask_designer.mask_frame)
+        pos_canvas = el_canvas.AXPosition
+        time.sleep(1)
+        self.mouse.drag_directly((pos_canvas[0], pos_canvas[1]), (pos_canvas[0] + x, pos_canvas[1] + y))
+        return True
+
+    def Edit_MaskDesigner_Invert_mask_SetCheck(self, check=True):
+        button = self.exist(L.mask_designer.mask_property.invert_mask)
+        if button.AXValue != int(bool(check)): button.press()
+        return True
+
+    def Edit_MaskDesigner_Feather_radius_Slider(self, value):
+        self.exist(L.mask_designer.mask_property.feather_slider).AXValue = int(value)
+        return True
+
+    def Edit_MaskDesigner_Feather_radius_InputValue(self, value):
+        self.exist(L.mask_designer.mask_property.feather_slider).AXValue = int(value)
+        return True
+
+    def Edit_MaskDesigner_Feather_radius_ArrowButton(self, button="up", times=1):
+        return arrow(self, button, times, [
+            L.mask_designer.mask_property.feather_down,
+            L.mask_designer.mask_property.feather_up,
+        ])
+
+    def Edit_MaskDesigner_PreviewOperation(self, operation):
+        self.find(getattr(L.mask_designer.preview, operation.lower())).press()
+        return True
+
+    def Viewer_Zoom_dropdown_menu(self, value="Fit"):
+        category = self.exist(L.mask_designer.zoom)
+        category._activate()
+        self.mouse.click(*category.center)
+        option_locator = L.mask_designer.zoom_value.copy()
+        option_locator.append({"AXValue": value})
+        zome_value = self.exist(option_locator)
+        self.mouse.click(*zome_value.center)
+        return True
+
+    def set_snap_ref_line(self, value=True):
+        toggle = self.exist(L.mask_designer.toggle_grid_line)
+        toggle.activate()
+        toggle.press()
+        snap_ref_line = self.exist(L.mask_designer.snap_ref_line)
+        current = snap_ref_line.AXMenuItemMarkChar is not None
+        if current == value:
+            self.mouse.click()
+        else:
+            snap_ref_line.press()
+        return True
+
+    def set_grid_line(self, index):
+        toggle = self.exist(L.mask_designer.toggle_grid_line)
+        toggle.activate()
+        self.mouse.click(*toggle.center)
+        grid_line = self.exist(L.mask_designer.grid_line)
+        self.mouse.move(*grid_line.center)
+        targer_locator = L.mask_designer.grid_list.copy()
+        targer_locator[1]["index"] = index
+        target = self.exist(targer_locator)
+        self.mouse.click(*target.center)
+        return True
+
+    def Get_MaskDesigner_Feather_radius_CurrentValue(self):
+        try:
+            return self.find(L.mask_designer.mask_property.feather_slider).AXValue
+        except:
+            return None
+
+    def Get_MaskDesigner_ObjectSetting_PositionX_Value(self):
+        try:
+            return self.find(L.mask_designer.settings.position_x_value).AXValue
+        except:
+            return None
+
+    def Get_MaskDesigner_ObjectSetting_PositionY_Value(self):
+        try:
+            return self.find(L.mask_designer.settings.position_y_value).AXValue
+        except:
+            return None
+
+    def Get_MaskDesigner_ObjectSetting_ScaleWidth_Value(self):
+        try:
+            return self.find(L.mask_designer.settings.scale_width_value).AXValue
+        except:
+            return None
+
+    def Get_MaskDesigner_ObjectSetting_ScaleHigh_Value(self):
+        try:
+            return self.find(L.mask_designer.settings.scale_height_value).AXValue
+        except:
+            return None
+
+    def Get_MaskDesigner_ObjectSetting_Opacity_Value(self):
+        try:
+            return self.find(L.mask_designer.settings.opacity_value).AXValue
+        except:
+            return None
+
+    def Get_MaskDesigner_ObjectSetting_Rotation_Value(self):
+        try:
+            return self.find(L.mask_designer.settings.rotation_value).AXValue
+        except:
+            return None
+
+    def Edit_MaskDesigner_CloseWindow(self):
+        self.find(L.mask_designer.close).press()
+        return True
+
+    def Edit_MaskDesigner_ClickFullScreen(self):
+        self.find(L.mask_designer.zoom_window).press()
+        return True
+
+    def Edit_MaskDesigner_ClickRestoreScreen(self):
+        self.find(L.mask_designer.zoom_window).press()
+        return True
+
+    def Edit_MaskDesigner_RemoveCustomMask(self, index):
+        template_index = L.mask_designer.mask_property.template.copy()
+        template_index["index"] = index
+        self.mouse.click(*self.find(template_index).center, btn="right")
+        time.sleep(1)
+        # self.select_right_click_menu("Remove Mask")
+        x = self.find({"AXRole": "AXMenuItem", "AXTitle": "Remove Mask"})
+        print(f"{x.AXPosition=} / {x.AXSize=} / {x.AXIdentifier=}")
+        self.mouse.click(*x.center)
+        self.find(L.mask_designer.cancel_dlg.yes).press()
+        return True
+
+    def Edit_MaskDesigner_ClickZoomIn(self):
+        self.find(L.mask_designer.zoom_in).press()
+        return True
+
+    def Edit_MaskDesigner_ClickZoomOut(self):
+        self.find(L.mask_designer.zoom_out).press()
+        return True
+
+    def Get_MaskDesigner_ViewerZoomValue(self):
+        try:
+            return self.find(L.mask_designer.zoom).AXTitle
+        except:
+            return None
+
+    def move_object_on_canvas(self, offset_x=50, offset_y=50):
+        offset_x, offset_y = map(int, [offset_x, offset_y])
+        mask = self.find(L.mask_designer.preview.mask_object)
+        end_position = [
+            mask.center[0] + offset_x,
+            mask.center[1] + offset_y
+        ]
+        self.mouse.move(end_position[0], end_position[1])
+        time.sleep(0.5)
+        logger(f"start_pos={mask.center}, end_pos={end_position}")
+        self.mouse.drag_directly(mask.center, end_position)
+        return True
+
+    def move_object_out_of_canvas(self):
+        mask = self.find(L.mask_designer.preview.mask_object)
+        video = self.find(L.mask_designer.preview.video_frame)
+        end_position = (mask.center[0] + video.AXSize[0], mask.center[1])
+        logger(f"start_pos={mask.center}, end_pos={end_position}")
+        self.mouse.drag_directly(mask.center, end_position)
+        return True
+
+    def rotate_object_on_canvas(self, degrees=90):
+        degrees = int(-degrees)
+        radius = 120
+        mask_pos_ini = self.find(L.mask_designer.preview.mask_object)
+        mask_pos_center = self.find(L.mask_designer.preview.mask_object).center
+        x1, y1 = mask_pos_ini.AXPosition
+        x2 = mask_pos_center[0]
+        mask_pos = (x2, y1-8)
+        self.mouse.move(x2, y1-8)
+        time.sleep(0.5)
+        cpc = CirclePositionCalculator(mask_pos, radius)
+        start_position = cpc.get_position(0)
+        end_position = cpc.get_position(degrees)
+        logger(f"start_pos={start_position}, end_pos={end_position}")
+        self.mouse.drag_directly(mask_pos, end_position)
+        return True
+
+    def click_create_selection_mask_btn(self):
+        return bool(self.exist_click(L.mask_designer.mask_property.create_selection_mask))
+
+    def draw_triangle_on_canvas(self, angle=3):
+        captions = self.find(L.mask_designer.property_captions)
+        if len(captions) != 1:
+            self.click_create_selection_mask_btn()
+            time.sleep(1)
+        mask_locator = L.mask_designer.preview.mask_object.copy()
+        mask_locator["index"] = 0
+        mask = self.find(mask_locator)
+        cpc = CirclePositionCalculator(mask.center, int(min(*mask.AXSize) / 2) - 1)
+        for i in range(angle + 1):
+            degrees = int(360 / angle)
+            position = cpc.get_position(degrees * i)
+            self.mouse.click(*position, duration=0.3, wait=0)
+        return True

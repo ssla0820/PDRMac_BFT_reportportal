@@ -1,0 +1,11 @@
+{
+    "python.testing.pytestArgs": [
+        ".",
+        "-s",
+        "--color=yes",
+        "--reportportal"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
+    
+}

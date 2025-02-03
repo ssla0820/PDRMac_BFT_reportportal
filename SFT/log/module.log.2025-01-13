@@ -1,0 +1,1163 @@
+01/13/2025 09:23:01 AM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 09:23:30 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 64.5%
+01/13/2025 09:23:30 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 215M
+01/13/2025 09:23:33 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/6ddc187f-9b7b-427c-8733-cac0ff1174c2.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/ec2e9883-25f7-46f9-8e57-6ca2469cffbd.png'
+similarity=0.95
+01/13/2025 09:23:33 AM <base_page.py> [compare](line 152) -  compare fail -> search() got an unexpected keyword argument 'color'
+01/13/2025 09:23:34 AM <intro_video_room_page.py> [enter_intro_video_room](line 117) -  Pop up Quick Tutorial dialog - press Esc to close it.
+01/13/2025 09:23:48 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/e52c57f1-fad7-412f-b78b-c9f390aa9f13.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c106f94f-9ada-4346-8648-7a819799d402.png'
+similarity=0.95
+01/13/2025 09:23:48 AM <base_page.py> [compare](line 149) -  Result similarity = 0.551770530641079
+01/13/2025 09:23:48 AM <main_page.py> [set_time_code](line 280) -  set_time_code - Input duration='00_00_01_22'
+01/13/2025 09:23:59 AM <base_page.py> [compare](line 141) -  source_path='/Users/qadf_at/Desktop/AT/Trunk_22/SFT/ground_truth/BFT_21_Stage1/L194.png'
+target_path='/Users/qadf_at/Desktop/AT/Trunk_22/SFT/auto_ground_truth/BFT_21_Stage1/L194.png'
+similarity=0.94
+01/13/2025 09:23:59 AM <base_page.py> [compare](line 149) -  Result similarity = 0.9766802191734314
+01/13/2025 09:23:59 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6354) -  Add Result = e25505e3-33aa-46af-897b-86ab2680706f / True / 2_1_1 / 
+01/13/2025 09:23:59 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.0%
+01/13/2025 09:23:59 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 249M
+01/13/2025 09:24:02 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 37.3%
+01/13/2025 09:24:02 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 260M
+01/13/2025 09:24:11 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/347d295e-d7b7-4617-b205-0e5813cf3985.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/8091e493-54c0-4812-a9d8-6579bdec0ab2.png'
+similarity=0.95
+01/13/2025 09:24:11 AM <base_page.py> [compare](line 149) -  Result similarity = 0.7076513916254044
+01/13/2025 09:24:24 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/1d26eea0-9d53-4fa9-ab2e-ad4808837647.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/f03b4870-fc2f-42df-97cc-199b452577fa.png'
+similarity=0.95
+01/13/2025 09:24:24 AM <base_page.py> [compare](line 149) -  Result similarity = 0.4996122944285162
+01/13/2025 09:24:35 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/68955fcd-2f77-4610-859e-62a0e4c8ba60.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/568ea44e-443a-4c6b-9579-342dd85ce16f.png'
+similarity=0.95
+01/13/2025 09:24:35 AM <base_page.py> [compare](line 149) -  Result similarity = 0.695072203874588
+01/13/2025 09:24:38 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/dcff1d8c-9e47-471d-865a-15175059b97c.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/5e3c2e00-155b-46ff-9c8b-8f05fe2fc65e.png'
+similarity=0.88
+01/13/2025 09:24:38 AM <base_page.py> [compare](line 149) -  Result similarity = 0.8762038052082062
+01/13/2025 09:24:38 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/dcff1d8c-9e47-471d-865a-15175059b97c.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/d080a344-8fad-4f4e-8e81-960c2cd8d371.png'
+similarity=0.88
+01/13/2025 09:24:38 AM <base_page.py> [compare](line 149) -  Result similarity = 0.8428775370121002
+01/13/2025 09:24:38 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/5e3c2e00-155b-46ff-9c8b-8f05fe2fc65e.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/d080a344-8fad-4f4e-8e81-960c2cd8d371.png'
+similarity=0.88
+01/13/2025 09:24:38 AM <base_page.py> [compare](line 149) -  Result similarity = 0.8335364758968353
+01/13/2025 09:24:38 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6392) -  check_search_12=True, check_search_13=True, check_search_23=True
+01/13/2025 09:24:38 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6394) -  Add Result = ef94a884-f71d-4111-bc9d-fafab5c034b7 / True / 2_1_1 / 
+01/13/2025 09:24:38 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.5%
+01/13/2025 09:24:39 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 259M
+01/13/2025 09:24:39 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 40.4%
+01/13/2025 09:24:39 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 288M
+01/13/2025 09:24:42 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/53252273-e0a2-4619-80ed-39bbf0a1b263.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/8b0949fc-a725-46fe-bf3e-c7f8f7188953.png'
+similarity=0.95
+01/13/2025 09:24:42 AM <base_page.py> [compare](line 149) -  Result similarity = 0.49441839987412095
+01/13/2025 09:24:45 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6406) -  Add Result = 14ba0fd1-597b-4c60-86bb-b0bb4e36d38c / True / 2_1_1 / 
+01/13/2025 09:24:45 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.9%
+01/13/2025 09:24:45 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 261M
+01/13/2025 09:24:45 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 52.3%
+01/13/2025 09:24:45 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 256M
+01/13/2025 09:24:49 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/a8690998-1687-47d0-b16c-6f501954f714.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/1759b455-6a58-4b73-8da7-e2543393ef0e.png'
+similarity=0.95
+01/13/2025 09:24:49 AM <base_page.py> [compare](line 149) -  Result similarity = 0.4947435944341123
+01/13/2025 09:24:53 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6414) -  Add Result = 41c21164-4368-47f5-a335-41604a0d507f / True / 2_1_1 / 
+01/13/2025 09:24:53 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 3.6%
+01/13/2025 09:24:53 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 245M
+01/13/2025 09:24:55 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/fd0a3c4e-dac3-4277-adf1-56b1ac8f2203.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c007fc50-a420-4109-bce4-549fe5ba6334.png'
+similarity=0.95
+01/13/2025 09:24:55 AM <base_page.py> [compare](line 149) -  Result similarity = 0.8991330862045288
+01/13/2025 09:24:57 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 3.6%
+01/13/2025 09:24:57 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 244M
+01/13/2025 09:25:54 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'} <<
+01/13/2025 09:25:54 AM <base_page.py> [snapshot](line 226) -  [Warning] : Element is not found. {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'}
+01/13/2025 09:26:00 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'} <<
+01/13/2025 09:26:00 AM <base_page.py> [snapshot](line 226) -  [Warning] : Element is not found. {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'}
+01/13/2025 09:26:00 AM <base_page.py> [compare](line 141) -  source_path=None
+target_path=None
+similarity=0.95
+01/13/2025 09:26:00 AM <base_page.py> [compare](line 152) -  compare fail -> stat: path should be string, bytes, os.PathLike or integer, not NoneType
+01/13/2025 09:26:18 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXDescription': 'cancel'} <<
+01/13/2025 09:26:30 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'} <<
+01/13/2025 09:26:30 AM <base_page.py> [snapshot](line 226) -  [Warning] : Element is not found. {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'}
+01/13/2025 09:26:37 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'} <<
+01/13/2025 09:26:37 AM <base_page.py> [snapshot](line 226) -  [Warning] : Element is not found. {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'}
+01/13/2025 09:26:37 AM <base_page.py> [compare](line 141) -  source_path=None
+target_path=None
+similarity=0.95
+01/13/2025 09:26:37 AM <base_page.py> [compare](line 152) -  compare fail -> stat: path should be string, bytes, os.PathLike or integer, not NoneType
+01/13/2025 09:26:42 AM <media_room_page.py> [sound_clips_hover_library_clip](line 1843) -  Found clip >> Feel the Music Within <<
+01/13/2025 09:26:43 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/0ee03c94-b2b8-47b4-b31e-40c566e5abec.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/0b815c94-8177-464b-84ff-68ec198aac6c.png'
+similarity=0.99999
+01/13/2025 09:26:43 AM <base_page.py> [compare](line 149) -  Result similarity = 0.688482791185379
+01/13/2025 09:26:46 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6451) -  Add Result = bd302be5-7617-4374-9a0a-80236f611f0d / True / 2_1_1 / 
+01/13/2025 09:26:46 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 3.4%
+01/13/2025 09:26:46 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 257M
+01/13/2025 09:26:46 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.0%
+01/13/2025 09:26:46 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 257M
+01/13/2025 09:26:47 AM <media_room_page.py> [sound_clips_hover_library_clip](line 1843) -  Found clip >> Feel the Music Within <<
+01/13/2025 09:26:48 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/faa468d5-2573-44b6-a9fc-8da8d17b5654.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/ddddc21c-f9ab-4dc8-9a8c-bd4079913944.png'
+similarity=0.99999
+01/13/2025 09:26:48 AM <base_page.py> [compare](line 149) -  Result similarity = 0.68814717233181
+01/13/2025 09:26:57 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6466) -  00:00:06:00
+01/13/2025 09:26:57 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6472) -  Add Result = bf712047-041b-447d-82a6-7326596c0300 / True / 2_1_1 / 
+01/13/2025 09:26:57 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 18.6%
+01/13/2025 09:26:57 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 252M
+01/13/2025 09:26:57 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 10.4%
+01/13/2025 09:26:57 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 252M
+01/13/2025 09:27:05 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6485) -  True
+01/13/2025 09:27:05 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6486) -  True
+01/13/2025 09:27:08 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'} <<
+01/13/2025 09:27:08 AM <base_page.py> [snapshot](line 226) -  [Warning] : Element is not found. {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'}
+01/13/2025 09:27:11 AM <main_page.py> [enter_room](line 350) -  Due to enter Audio mixing room: cannot find locator, skip verify step
+01/13/2025 09:27:14 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6501) -  /var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/ca038deb-f52e-4f6f-823a-5d9973c3e88b.png
+01/13/2025 09:27:14 AM <main_page.py> [set_time_code](line 280) -  set_time_code - Input duration='00_00_28_20'
+01/13/2025 09:27:23 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6508) -  /var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c021cee0-e177-4c6a-b359-ac3a464b5369.png
+01/13/2025 09:27:23 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/ca038deb-f52e-4f6f-823a-5d9973c3e88b.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c021cee0-e177-4c6a-b359-ac3a464b5369.png'
+similarity=0.94
+01/13/2025 09:27:23 AM <base_page.py> [compare](line 149) -  Result similarity = 0.9209543764591217
+01/13/2025 09:27:23 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6512) -  Add Result = 732c7d65-f879-4da5-981b-09a6951a3bbd / True / 2_1_1 / 
+01/13/2025 09:27:23 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 6.8%
+01/13/2025 09:27:23 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 344M
+01/13/2025 09:27:25 AM <base_page.py> [select_file](line 431) -  [Warning] Target path >> /Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1/test_case_2_1_1 << is not found
+01/13/2025 09:27:25 AM <mac_driver.py> [is_os_version_greater_than_or_equal_to](line 375) -  current version: 10.16
+01/13/2025 09:27:33 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop'
+01/13/2025 09:27:34 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT'
+01/13/2025 09:27:34 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320'
+01/13/2025 09:27:35 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1'
+01/13/2025 09:27:45 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 24.0%
+01/13/2025 09:27:45 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 338M
+01/13/2025 09:27:52 AM <mac_driver.py> [is_os_version_greater_than_or_equal_to](line 375) -  current version: 10.16
+01/13/2025 09:28:02 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'NS_OPEN_SAVE_DISCLOSURE_TRIANGLE'} <<
+01/13/2025 09:28:04 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop'
+01/13/2025 09:28:05 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT'
+01/13/2025 09:28:05 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320'
+01/13/2025 09:28:06 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1'
+01/13/2025 09:28:06 AM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1/test_case_2_1_1.pds'
+01/13/2025 09:28:16 AM <main_page.py> [enter_room](line 350) -  Due to enter Audio mixing room: cannot find locator, skip verify step
+01/13/2025 09:28:19 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6542) -  /var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/2366b368-0e34-4c4a-bb0e-d99477bd3e3a.png
+01/13/2025 09:28:19 AM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/2366b368-0e34-4c4a-bb0e-d99477bd3e3a.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c021cee0-e177-4c6a-b359-ac3a464b5369.png'
+similarity=0.98
+01/13/2025 09:28:19 AM <base_page.py> [compare](line 149) -  Result similarity = 0.9999998211860657
+01/13/2025 09:28:19 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6545) -  Add Result = 834ff7aa-a69a-4695-ba62-97b6812ab90b / True / 2_1_1 / 
+01/13/2025 09:28:19 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 7.6%
+01/13/2025 09:28:19 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 343M
+01/13/2025 09:28:19 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.1%
+01/13/2025 09:28:19 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 343M
+01/13/2025 09:28:23 AM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'} <<
+01/13/2025 09:28:23 AM <base_page.py> [snapshot](line 226) -  [Warning] : Element is not found. {'AXIdentifier': 'IDC_LIBRARY_SCROLLVIEW_COLLECTIONVIEW'}
+01/13/2025 09:28:25 AM <base_page.py> [compare](line 141) -  source_path=None
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/0a1d6d22-a790-4bd0-bb47-d4fcefa1a718.png'
+similarity=0.95
+01/13/2025 09:28:25 AM <base_page.py> [compare](line 152) -  compare fail -> stat: path should be string, bytes, os.PathLike or integer, not NoneType
+01/13/2025 09:28:28 AM <BFT_PDR22_stage1_os14.py> [test_2_1_1](line 6556) -  Add Result = de129b84-db97-4048-96f3-7af83dd4167d / True / 2_1_1 / 
+01/13/2025 09:28:28 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 9.7%
+01/13/2025 09:28:28 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 343M
+01/13/2025 09:28:30 AM <BFT_PDR22_stage1_os14.py> [teardown_class](line 106) -  teardown_class - export report
+01/13/2025 09:28:30 AM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'e25505e3-33aa-46af-897b-86ab2680706f,-60.5,34.0,64.5,215,4.0,249\n', 'ef94a884-f71d-4111-bc9d-fafab5c034b7,-34.8,-1.0,37.3,260,2.5,259\n', '14ba0fd1-597b-4c60-86bb-b0bb4e36d38c,-35.5,-27.0,40.4,288,4.9,261\n', '41c21164-4368-47f5-a335-41604a0d507f,-48.699999999999996,-11.0,52.3,256,3.6,245\n', 'bd302be5-7617-4374-9a0a-80236f611f0d,-0.20000000000000018,13.0,3.6,244,3.4,257\n', 'bf712047-041b-447d-82a6-7326596c0300,16.6,-5.0,2.0,257,18.6,252\n', '732c7d65-f879-4da5-981b-09a6951a3bbd,-3.6000000000000005,92.0,10.4,252,6.8,344\n', '834ff7aa-a69a-4695-ba62-97b6812ab90b,-16.4,5.0,24.0,338,7.6,343\n', 'de129b84-db97-4048-96f3-7af83dd4167d,5.6,0.0,4.1,343,9.7,343\n']
+01/13/2025 09:28:30 AM <BFT_PDR22_stage1_os14.py> [teardown_class](line 108) -  BFT_365_os14 result=9, report.fail_number=0, 0, 618, 0:05:28
+01/13/2025 11:44:38 AM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 11:44:47 AM <BFT_PDR22_stage1_os14.py> [test_1_1_1](line 376) -  Launch PDR
+01/13/2025 11:44:53 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 3.1%
+01/13/2025 11:44:53 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 77M
+01/13/2025 11:44:53 AM <BFT_PDR22_stage1_os14.py> [test_1_1_1](line 383) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / <atomac.AXClasses.NativeUIElement AXWindow ''> / 1_1_1 / 
+01/13/2025 11:44:53 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 9.4%
+01/13/2025 11:44:53 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 74M
+01/13/2025 11:44:53 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 39.5%
+01/13/2025 11:44:54 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 74M
+01/13/2025 11:44:55 AM <BFT_PDR22_stage1_os14.py> [test_1_1_1](line 390) -  Add Result = 98c0a3ab-d4de-46ef-bb16-39884f6a1caf / <atomac.AXClasses.NativeUIElement AXButton 'Accept and Continue...'> / 1_1_1 / 
+01/13/2025 11:44:55 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 82.9%
+01/13/2025 11:44:55 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 94M
+01/13/2025 11:44:55 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 44.7%
+01/13/2025 11:44:55 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 94M
+01/13/2025 11:45:02 AM <BFT_PDR22_stage1_os14.py> [teardown_class](line 106) -  teardown_class - export report
+01/13/2025 11:45:03 AM <mac_driver.py> [cpu](line 134) -  Current CPU usage: -1%
+01/13/2025 11:45:03 AM <mac_driver.py> [ram](line 156) -  Current RAM uasge: -1M
+01/13/2025 11:45:03 AM <report.py> [export](line 232) -  [Fail] ID = c9b335af-3053-4807-accb-2671a5de7c46 , Screenshot = False , fail number = 1
+01/13/2025 11:45:03 AM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,6.300000000000001,-3.0,3.1,77,9.4,74\n', '98c0a3ab-d4de-46ef-bb16-39884f6a1caf,43.400000000000006,20.0,39.5,74,82.9,94\n', 'c9b335af-3053-4807-accb-2671a5de7c46,N/A,N/A,44.7,94,-1,-1\n']
+01/13/2025 11:45:03 AM <BFT_PDR22_stage1_os14.py> [teardown_class](line 108) -  BFT_365_os14 result=2, report.fail_number=1, 0, 624, 0:00:24
+01/13/2025 11:51:27 AM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 11:51:32 AM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 119) -  teardown_class - export report
+01/13/2025 11:51:32 AM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 11:51:32 AM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 121) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:05
+01/13/2025 11:51:52 AM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 11:52:01 AM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 389) -  Launch PDR
+01/13/2025 11:52:07 AM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 119) -  teardown_class - export report
+01/13/2025 11:52:07 AM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 11:52:07 AM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 121) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:14
+01/13/2025 11:52:52 AM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 11:52:58 AM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 379) -  Export_Folder='/Users/qadf_at/Desktop/AT/export_path'
+01/13/2025 11:53:02 AM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 387) -  Launch PDR
+01/13/2025 11:53:04 AM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 116) -  teardown_class - export report
+01/13/2025 11:53:04 AM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 11:53:04 AM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:11
+01/13/2025 02:32:35 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 02:32:40 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 421) -  test_1_1_1_1
+01/13/2025 02:32:44 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 429) -  test_1_1_1_2
+01/13/2025 02:32:44 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: -1%
+01/13/2025 02:32:44 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: -1M
+01/13/2025 02:32:52 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 436) -  Add Result = 98c0a3ab-d4de-46ef-bb16-39884f6a1caf / <atomac.AXClasses.NativeUIElement AXButton 'Accept and Continue...'> / 1_1_1_2 / 
+01/13/2025 02:32:52 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 79.8%
+01/13/2025 02:32:52 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 95M
+01/13/2025 02:32:54 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 02:32:54 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", '98c0a3ab-d4de-46ef-bb16-39884f6a1caf,N/A,N/A,-1,-1,79.8,95\n']
+01/13/2025 02:32:54 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=1, report.fail_number=0, 0, 626, 0:00:19
+01/13/2025 02:33:50 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 02:33:55 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 421) -  test_1_1_1_1
+01/13/2025 02:33:59 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 429) -  test_1_1_1_2
+01/13/2025 02:34:03 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 444) -  test_1_1_1_3
+01/13/2025 02:34:07 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 02:34:07 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 02:34:07 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:16
+01/13/2025 02:34:26 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 02:34:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 421) -  test_1_1_1_1
+01/13/2025 02:34:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 422) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_422.png
+01/13/2025 02:34:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 422) -  Exception: 
+01/13/2025 02:34:36 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 429) -  test_1_1_1_2
+01/13/2025 02:34:37 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 430) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_2_430.png
+01/13/2025 02:34:37 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 430) -  Exception: 
+01/13/2025 02:34:41 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 444) -  test_1_1_1_3
+01/13/2025 02:34:45 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 02:34:45 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 02:34:45 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:18
+01/13/2025 02:58:54 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 02:58:59 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 422) -  test_1_1_1_1
+01/13/2025 02:58:59 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 423) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_423.png
+01/13/2025 02:58:59 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 423) -  Exception: 
+01/13/2025 02:59:04 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 430) -  test_1_1_1_2
+01/13/2025 02:59:04 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 431) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_2_431.png
+01/13/2025 02:59:04 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 431) -  Exception: 
+01/13/2025 02:59:09 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 445) -  test_1_1_1_3
+01/13/2025 02:59:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 02:59:11 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 02:59:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:17
+01/13/2025 03:02:46 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:02:52 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 422) -  test_1_1_1_1
+01/13/2025 03:02:52 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 423) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_423.png
+01/13/2025 03:02:52 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 423) -  Exception: 
+01/13/2025 03:02:56 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 430) -  test_1_1_1_2
+01/13/2025 03:02:56 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 431) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_2_431.png
+01/13/2025 03:02:56 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 431) -  Exception: 
+01/13/2025 03:03:01 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 445) -  test_1_1_1_3
+01/13/2025 03:03:08 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:03:08 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 03:03:08 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:22
+01/13/2025 03:06:56 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:07:01 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 425) -  test_1_1_1_1
+01/13/2025 03:07:01 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 426) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_426.png
+01/13/2025 03:07:01 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 426) -  Exception: 
+01/13/2025 03:07:06 PM <BFT_PDR23_stage1_SeperateUUID.py> [wrapper](line 153) -  Checking group test_1_1 for test_1_1_1_2
+01/13/2025 03:07:06 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 433) -  test_1_1_1_2
+01/13/2025 03:07:06 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 434) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_2_434.png
+01/13/2025 03:07:06 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 434) -  Exception: 
+01/13/2025 03:07:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [wrapper](line 153) -  Checking group test_1_1 for test_1_1_1_3
+01/13/2025 03:07:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 448) -  test_1_1_1_3
+01/13/2025 03:07:42 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:07:42 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 03:07:42 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:46
+01/13/2025 03:08:06 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:08:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 426) -  test_1_1_1_1
+01/13/2025 03:08:12 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 427) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_427.png
+01/13/2025 03:08:12 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 427) -  Exception: 
+01/13/2025 03:08:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [wrapper](line 153) -  Checking group test_1_1 for test_1_1_1_2
+01/13/2025 03:08:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [wrapper](line 154) -  Test results: {}
+01/13/2025 03:08:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 434) -  test_1_1_1_2
+01/13/2025 03:08:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 435) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_2_435.png
+01/13/2025 03:08:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 435) -  Exception: 
+01/13/2025 03:08:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [wrapper](line 153) -  Checking group test_1_1 for test_1_1_1_3
+01/13/2025 03:08:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [wrapper](line 154) -  Test results: {}
+01/13/2025 03:08:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 449) -  test_1_1_1_3
+01/13/2025 03:08:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:08:22 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 03:08:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:16
+01/13/2025 03:16:52 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:16:58 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 451) -  test_1_1_1_1
+01/13/2025 03:16:58 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 452) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_452.png
+01/13/2025 03:16:58 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 452) -  Exception: 
+01/13/2025 03:17:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:17:11 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 03:17:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:18
+01/13/2025 03:17:39 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:17:45 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 451) -  test_1_1_1_1
+01/13/2025 03:17:49 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 459) -  test_1_1_1_2
+01/13/2025 03:17:53 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 474) -  test_1_1_1_3
+01/13/2025 03:17:58 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:17:58 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n"]
+01/13/2025 03:17:58 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=0, 0, 627, 0:00:18
+01/13/2025 03:23:46 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 03:23:47 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 03:23:48 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 03:23:49 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 03:23:50 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 03:23:50 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 03:23:50 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 03:23:50 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:23:59 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 439) -  Launch PDR
+01/13/2025 03:24:04 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 10.6%
+01/13/2025 03:24:04 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 107M
+01/13/2025 03:24:09 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'GDPR_DLG'} <<
+01/13/2025 03:24:09 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 446) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / None / 1_1_1_1 / Fail Log is not set. 
+01/13/2025 03:24:10 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 20.1%
+01/13/2025 03:24:10 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 108M
+01/13/2025 03:24:10 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 448) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_448.png
+01/13/2025 03:24:10 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 448) -  Exception: GDPR dialog not found!
+01/13/2025 03:24:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 10.0%
+01/13/2025 03:24:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 107M
+01/13/2025 03:24:28 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXTitle': 'LAUNCH FREE VERSION', 'AXRole': 'AXLink'} <<
+01/13/2025 03:24:33 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXTitle': 'Launch Free Version', 'AXRole': 'AXButton'} <<
+01/13/2025 03:24:33 PM <main_page.py> [launch_free_version](line 64) -  cannot find it
+01/13/2025 03:24:33 PM <BFT_PDR23_stage1_SeperateUUID.py> [launch_Essential_build](line 328) -  [AT Execution] launch_free_version [NG]
+01/13/2025 03:24:33 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_4](line 329) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_4_329.png
+01/13/2025 03:24:33 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_4](line 329) -  Exception: 
+01/13/2025 03:24:38 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 15.2%
+01/13/2025 03:24:38 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 107M
+01/13/2025 03:24:39 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:24:39 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 8.4%
+01/13/2025 03:24:39 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 107M
+01/13/2025 03:24:39 PM <report.py> [export](line 232) -  [Fail] ID = ebc38a68-9415-48ab-9914-16aa63afadb5 , Screenshot = False , fail number = 1
+01/13/2025 03:24:39 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 6.6%
+01/13/2025 03:24:39 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 107M
+01/13/2025 03:24:39 PM <report.py> [export](line 232) -  [Fail] ID = 600a1107-4281-415c-bda2-f4923e7ebd48 , Screenshot = False , fail number = 2
+01/13/2025 03:24:39 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,9.500000000000002,1.0,10.6,107,20.1,108\n', 'ebc38a68-9415-48ab-9914-16aa63afadb5,-1.5999999999999996,0.0,10.0,107,8.4,107\n', '600a1107-4281-415c-bda2-f4923e7ebd48,-8.6,0.0,15.2,107,6.6,107\n']
+01/13/2025 03:24:39 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=2, 1, 624, 0:00:48
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 03:25:23 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 03:25:24 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 03:25:25 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 03:25:26 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 03:25:26 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:25:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 430) -  start test case 1_1_1_1
+01/13/2025 03:25:35 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 440) -  Launch PDR
+01/13/2025 03:25:40 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.0%
+01/13/2025 03:25:40 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 78M
+01/13/2025 03:25:41 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 447) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / <atomac.AXClasses.NativeUIElement AXWindow ''> / 1_1_1_1 / 
+01/13/2025 03:25:41 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 30.1%
+01/13/2025 03:25:41 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 72M
+01/13/2025 03:25:45 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 457) -  test_1_1_1_2
+01/13/2025 03:25:49 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 472) -  test_1_1_1_3
+01/13/2025 03:25:55 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:25:55 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,28.1,-6.0,2.0,78,30.1,72\n']
+01/13/2025 03:25:55 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=1, report.fail_number=0, 0, 626, 0:00:29
+01/13/2025 03:26:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 03:27:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 03:27:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 03:27:02 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 03:27:03 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:27:08 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 430) -  start test case 1_1_1_1
+01/13/2025 03:27:12 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 440) -  Launch PDR
+01/13/2025 03:27:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 6.3%
+01/13/2025 03:27:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 80M
+01/13/2025 03:27:18 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 448) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / False / 1_1_1_1 / Fail Log is not set. 
+01/13/2025 03:27:18 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 12.0%
+01/13/2025 03:27:18 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 82M
+01/13/2025 03:27:18 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 448) -  Fail screenshot = 1_1_1_1_1.png
+01/13/2025 03:27:18 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 448) -  [Fail] ID = fec6b64b-8ab2-4422-b056-b8a711e5725f , Screenshot = True , fail number = 1
+01/13/2025 03:27:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 458) -  test_1_1_1_2
+01/13/2025 03:27:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 473) -  test_1_1_1_3
+01/13/2025 03:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:27:31 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,5.7,2.0,6.3,80,12.0,82\n']
+01/13/2025 03:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=0, report.fail_number=1, 0, 626, 0:00:28
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 03:27:58 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 03:27:59 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 03:28:00 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 03:28:01 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 03:28:01 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:28:07 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 430) -  start test case 1_1_1_1
+01/13/2025 03:28:10 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 440) -  Launch PDR
+01/13/2025 03:28:15 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 9.7%
+01/13/2025 03:28:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 80M
+01/13/2025 03:28:17 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 447) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / <atomac.AXClasses.NativeUIElement AXWindow ''> / 1_1_1_1 / 
+01/13/2025 03:28:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 34.2%
+01/13/2025 03:28:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 81M
+01/13/2025 03:28:17 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 450) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_450.png
+01/13/2025 03:28:17 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 450) -  Exception: GDPR dialog not found!
+01/13/2025 03:28:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.7%
+01/13/2025 03:28:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 81M
+01/13/2025 03:28:35 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXTitle': 'LAUNCH FREE VERSION', 'AXRole': 'AXLink'} <<
+01/13/2025 03:28:40 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXTitle': 'Launch Free Version', 'AXRole': 'AXButton'} <<
+01/13/2025 03:28:40 PM <main_page.py> [launch_free_version](line 64) -  cannot find it
+01/13/2025 03:28:40 PM <BFT_PDR23_stage1_SeperateUUID.py> [launch_Essential_build](line 328) -  [AT Execution] launch_free_version [NG]
+01/13/2025 03:28:40 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_4](line 329) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_4_329.png
+01/13/2025 03:28:40 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_4](line 329) -  Exception: 
+01/13/2025 03:28:44 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:28:44 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.4%
+01/13/2025 03:28:45 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 83M
+01/13/2025 03:28:45 PM <report.py> [export](line 232) -  [Fail] ID = ebc38a68-9415-48ab-9914-16aa63afadb5 , Screenshot = False , fail number = 1
+01/13/2025 03:28:45 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,24.500000000000004,1.0,9.7,80,34.2,81\n', 'ebc38a68-9415-48ab-9914-16aa63afadb5,-0.29999999999999993,2.0,0.7,81,0.4,83\n']
+01/13/2025 03:28:45 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=1, report.fail_number=1, 0, 625, 0:00:43
+01/13/2025 03:41:54 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 03:41:54 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 03:41:54 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 03:41:55 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 03:41:56 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 03:41:57 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 03:41:57 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:42:06 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 417) -  Launch PDR
+01/13/2025 03:42:12 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 9.4%
+01/13/2025 03:42:12 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 80M
+01/13/2025 03:42:13 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 424) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / <atomac.AXClasses.NativeUIElement AXWindow ''> / 1_1_1_1 / 
+01/13/2025 03:42:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 17.2%
+01/13/2025 03:42:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 74M
+01/13/2025 03:42:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.9%
+01/13/2025 03:42:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 86M
+01/13/2025 03:42:19 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 438) -  Add Result = 98c0a3ab-d4de-46ef-bb16-39884f6a1caf / <atomac.AXClasses.NativeUIElement AXButton 'Accept and Continue...'> / 1_1_1_2 / 
+01/13/2025 03:42:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 51.9%
+01/13/2025 03:42:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 101M
+01/13/2025 03:42:37 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:42:37 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,7.799999999999999,-6.0,9.4,80,17.2,74\n', '98c0a3ab-d4de-46ef-bb16-39884f6a1caf,49.0,15.0,2.9,86,51.9,101\n']
+01/13/2025 03:42:37 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=2, report.fail_number=0, 0, 625, 0:00:39
+01/13/2025 03:43:07 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 03:43:07 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 03:43:07 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 03:43:08 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 03:43:09 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 03:43:10 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 03:43:10 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 03:43:19 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 417) -  Launch PDR
+01/13/2025 03:43:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.7%
+01/13/2025 03:43:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 81M
+01/13/2025 03:43:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 424) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / <atomac.AXClasses.NativeUIElement AXWindow ''> / 1_1_1_1 / 
+01/13/2025 03:43:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 14.2%
+01/13/2025 03:43:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 85M
+01/13/2025 03:43:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 426) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_1_426.png
+01/13/2025 03:43:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 426) -  Exception: GDPR dialog not found!
+01/13/2025 03:43:49 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 03:43:49 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,9.5,4.0,4.7,81,14.2,85\n']
+01/13/2025 03:43:49 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=1, report.fail_number=0, 0, 626, 0:00:38
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : media_room_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : precut_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : intro_video_room_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_shutterstock_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : gettyimage_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_designer_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : timeline_operation_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : tips_area_page
+01/13/2025 04:14:17 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : playback_window_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : produce_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : import_downloaded_media_from_cl_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : title_room_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : download_from_cl_dz_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_designer_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pip_room_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : shape_designer_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_room_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : particle_designer_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : mask_designer_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_collage_designer_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : trim_page
+01/13/2025 04:14:18 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_new_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : library_preview_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : project_room_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_room_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : effect_settings_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_mixing_room_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : preferences_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : voice_over_recording_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : subtitle_room_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : blending_mode_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_image_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : pan_zoom_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : crop_zoom_pan_page
+01/13/2025 04:14:19 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : video_speed_page
+01/13/2025 04:14:20 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : audio_editing_page
+01/13/2025 04:14:20 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : fix_enhance_page
+01/13/2025 04:14:20 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : motion_tracker_page
+01/13/2025 04:14:20 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : keyframe_room_page
+01/13/2025 04:14:20 PM <page_factory.py> [get_page_object](line 144) -  incorrect page_name : transition_room_page
+01/13/2025 04:14:20 PM <conftest.py> [get_project_info](line 139) -  [Project Info] SR_No=VDM241202-01, TR_No=TR250102-018, VERSION=23.1, Build_No=7302, Build_File=/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk\app\, OS_Version=10.15
+01/13/2025 04:14:29 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 417) -  Launch PDR
+01/13/2025 04:14:34 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.6%
+01/13/2025 04:14:34 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 80M
+01/13/2025 04:14:35 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_1](line 424) -  Add Result = fec6b64b-8ab2-4422-b056-b8a711e5725f / <atomac.AXClasses.NativeUIElement AXWindow ''> / 1_1_1_1 / 
+01/13/2025 04:14:35 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.2%
+01/13/2025 04:14:35 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 77M
+01/13/2025 04:14:39 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:14:39 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 82M
+01/13/2025 04:14:40 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_2](line 438) -  Add Result = 98c0a3ab-d4de-46ef-bb16-39884f6a1caf / <atomac.AXClasses.NativeUIElement AXButton 'Accept and Continue...'> / 1_1_1_2 / 
+01/13/2025 04:14:40 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 55.1%
+01/13/2025 04:14:40 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 98M
+01/13/2025 04:14:44 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.4%
+01/13/2025 04:14:44 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 98M
+01/13/2025 04:14:55 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 462) -  1
+01/13/2025 04:15:07 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_3](line 466) -  Add Result = c9b335af-3053-4807-accb-2671a5de7c46 / 1 / 1_1_1_3 / 
+01/13/2025 04:15:07 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.7%
+01/13/2025 04:15:07 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 98M
+01/13/2025 04:15:11 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.7%
+01/13/2025 04:15:11 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 98M
+01/13/2025 04:15:14 PM <BFT_PDR23_stage1_SeperateUUID.py> [launch_Essential_build](line 312) -  handle launcher
+01/13/2025 04:15:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_4](line 481) -  Add Result = ebc38a68-9415-48ab-9914-16aa63afadb5 / 1 / 1_1_1_4 / 
+01/13/2025 04:15:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 102.3%
+01/13/2025 04:15:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 199M
+01/13/2025 04:15:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 61.0%
+01/13/2025 04:15:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 186M
+01/13/2025 04:15:30 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:15:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_5](line 503) -  Seasonal BB is closed
+01/13/2025 04:15:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_5](line 508) -  Add Result = 600a1107-4281-415c-bda2-f4923e7ebd48 / True / 1_1_1_5 / 
+01/13/2025 04:15:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 76.1%
+01/13/2025 04:15:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 190M
+01/13/2025 04:15:35 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.8%
+01/13/2025 04:15:35 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 190M
+01/13/2025 04:15:35 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.7%
+01/13/2025 04:15:35 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 190M
+01/13/2025 04:16:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_6](line 548) -  Launch PDR ready
+01/13/2025 04:16:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_6](line 553) -  Add Result = 45d2632c-6975-4bed-bd4a-5c13667d1cc0 / True / 1_1_1_6 / 
+01/13/2025 04:16:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 209.0%
+01/13/2025 04:16:16 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 165M
+01/13/2025 04:16:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_6](line 554) -  Add Result = 89b5f8e9-dc8f-42d7-9fda-2771939dfb81 / True / 1_1_1_6 / 
+01/13/2025 04:16:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 226.7%
+01/13/2025 04:16:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 173M
+01/13/2025 04:16:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 29.3%
+01/13/2025 04:16:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 182M
+01/13/2025 04:16:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_7](line 582) -  Add Result = ae748270-f3c2-40a4-abfb-29c9cac00762 / True / 1_1_1_7 / 
+01/13/2025 04:16:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 18.8%
+01/13/2025 04:16:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 187M
+01/13/2025 04:16:29 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 11.6%
+01/13/2025 04:16:29 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 184M
+01/13/2025 04:16:45 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_8](line 608) -  Add Result = c7cdcba0-c817-4a1c-b3eb-52362d6ffae4 / True / 1_1_1_8 / 
+01/13/2025 04:16:45 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 11.6%
+01/13/2025 04:16:45 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 91M
+01/13/2025 04:16:50 PM <base_page.py> [close_app](line 859) -  Force close
+01/13/2025 04:17:02 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 126.7%
+01/13/2025 04:17:02 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 166M
+01/13/2025 04:17:02 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 629) -  Add Result = 26e3ee5d-f35e-462d-bc4a-806d507ae850 / True / 1_1_1_b / 
+01/13/2025 04:17:02 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 109.3%
+01/13/2025 04:17:02 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 167M
+01/13/2025 04:17:02 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 88.6%
+01/13/2025 04:17:02 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 168M
+01/13/2025 04:17:06 PM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/f75f8c19-2882-4dbd-b993-bd39c36639c4.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c019433f-c56e-4e87-b30d-9a859c2ff338.png'
+similarity=0.95
+01/13/2025 04:17:06 PM <base_page.py> [compare](line 149) -  Result similarity = 0.49139835499227047
+01/13/2025 04:17:11 PM <base_page.py> [compare](line 141) -  source_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/b2a5e85a-b0b7-4526-b7fc-a9e3be252b0a.png'
+target_path='/var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/c702087b-89cb-42fc-8b98-71c3cbc3266c.png'
+similarity=0.95
+01/13/2025 04:17:11 PM <base_page.py> [compare](line 149) -  Result similarity = 0.4898477690294385
+01/13/2025 04:17:13 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 644) -  Add Result = 23a12e63-4e72-40b4-945d-ff28a89add36 / True / 1_1_1_b / 
+01/13/2025 04:17:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.7%
+01/13/2025 04:17:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 212M
+01/13/2025 04:17:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 4.3%
+01/13/2025 04:17:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 212M
+01/13/2025 04:17:19 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 653) -  Add Result = d032fcd4-f9ce-4d86-95cb-fe61cbc6f3a7 / True / 1_1_1_b / 
+01/13/2025 04:17:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 18.8%
+01/13/2025 04:17:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 238M
+01/13/2025 04:17:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 21.4%
+01/13/2025 04:17:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 238M
+01/13/2025 04:17:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 666) -  True
+01/13/2025 04:17:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 667) -  True
+01/13/2025 04:17:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 668) -  Add Result = f5a29d63-68fa-4554-8d72-05f5df80812a / True / 1_1_1_b / 
+01/13/2025 04:17:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 107.8%
+01/13/2025 04:17:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 346M
+01/13/2025 04:17:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 69.8%
+01/13/2025 04:17:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 346M
+01/13/2025 04:17:21 PM <base_page.py> [compare](line 141) -  source_path='/Users/qadf_at/Desktop/AT/Trunk_22/SFT/ground_truth/BFT_21_Stage1/L102_1.png'
+target_path='/Users/qadf_at/Desktop/AT/Trunk_22/SFT/auto_ground_truth/BFT_21_Stage1/L102_1.png'
+similarity=0.95
+01/13/2025 04:17:21 PM <base_page.py> [compare](line 149) -  Result similarity = 0.9999912083148956
+01/13/2025 04:17:22 PM <base_page.py> [compare](line 141) -  source_path='/Users/qadf_at/Desktop/AT/Trunk_22/SFT/ground_truth/BFT_21_Stage1/L102_2.png'
+target_path='/Users/qadf_at/Desktop/AT/Trunk_22/SFT/auto_ground_truth/BFT_21_Stage1/L102_2.png'
+similarity=0.95
+01/13/2025 04:17:22 PM <base_page.py> [compare](line 149) -  Result similarity = 0.9999922513961792
+01/13/2025 04:17:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 676) -  Add Result = db557877-2404-45b1-a573-bb9931430283 / True / 1_1_1_b / 
+01/13/2025 04:17:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 22.6%
+01/13/2025 04:17:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 346M
+01/13/2025 04:17:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 12.9%
+01/13/2025 04:17:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 346M
+01/13/2025 04:17:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 681) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_1_b_681.png
+01/13/2025 04:17:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_1_1_1_b](line 681) -  Exception: 'NoneType' object has no attribute 'select_timeline_media'
+01/13/2025 04:18:05 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:18:12 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:18:12 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:18:15 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 10.7%
+01/13/2025 04:18:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 329M
+01/13/2025 04:18:20 PM <main_page.py> [top_menu_bar_file_open_recent_projects](line 773) -  Fail to click item due to it's disabled
+01/13/2025 04:18:25 PM <base_page.py> [select_file](line 431) -  [Warning] Target path >> /Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1/extract_flder_2 << is not found
+01/13/2025 04:18:25 PM <mac_driver.py> [is_os_version_greater_than_or_equal_to](line 375) -  current version: 10.16
+01/13/2025 04:18:31 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXRoleDescription': 'pop up button'} <<
+01/13/2025 04:18:37 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXSubrole': 'AXDialog', 'AXRole': 'AXWindow'} <<
+01/13/2025 04:18:42 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXSubrole': 'AXDialog'} <<
+01/13/2025 04:18:47 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXRole': 'AXSheet'} <<
+01/13/2025 04:18:47 PM <base_page.py> [test_1_1_10](line 475) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_1_1_10_475.png
+01/13/2025 04:18:47 PM <base_page.py> [test_1_1_10](line 475) -  Exception: File picker is not found
+01/13/2025 04:19:30 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:19:38 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:19:38 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:19:41 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 12.6%
+01/13/2025 04:19:41 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 330M
+01/13/2025 04:19:41 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_2_1_1](line 6436) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_2_1_1_6436.png
+01/13/2025 04:19:41 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_2_1_1](line 6436) -  Exception: 'NoneType' object has no attribute 'enter_intro_video_room'
+01/13/2025 04:20:23 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:20:31 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:20:31 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:20:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_3_1_1](line 6760) -  /var/folders/yh/gry3198j28v1cbcqgwd35c680000gn/T/mac_driver/90b75ecf-ffc0-4602-816b-ad202a92d2ec.png
+01/13/2025 04:20:34 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 11.2%
+01/13/2025 04:20:34 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 330M
+01/13/2025 04:20:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_3_1_1](line 6763) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_3_1_1_6763.png
+01/13/2025 04:20:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_3_1_1](line 6763) -  Exception: 'NoneType' object has no attribute 'search_library'
+01/13/2025 04:21:17 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:21:24 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:21:24 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:21:30 PM <main_page.py> [set_project_aspect_ratio](line 482) -  Already set as 16_9
+01/13/2025 04:21:35 PM <mac_driver.py> [is_os_version_greater_than_or_equal_to](line 375) -  current version: 10.16
+01/13/2025 04:21:43 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'NS_OPEN_SAVE_DISCLOSURE_TRIANGLE'} <<
+01/13/2025 04:21:44 PM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop'
+01/13/2025 04:21:44 PM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT'
+01/13/2025 04:21:45 PM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320'
+01/13/2025 04:21:46 PM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1'
+01/13/2025 04:21:46 PM <base_page.py> [select_file](line 481) -  base='/Users/qadf_at/Desktop/AT/Material_m320/BFT_21_Stage1/can_del.pds'
+01/13/2025 04:22:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 45.1%
+01/13/2025 04:22:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 216M
+01/13/2025 04:22:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_4_1_12](line 7397) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_4_1_12_7397.png
+01/13/2025 04:22:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_4_1_12](line 7397) -  Exception: 'NoneType' object has no attribute 'import_media_from_shutterstock'
+01/13/2025 04:23:13 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:23:21 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:23:21 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:23:24 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_5_1_1](line 9959) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_5_1_1_9959.png
+01/13/2025 04:23:24 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_5_1_1](line 9959) -  Exception: 'NoneType' object has no attribute 'import_media_file'
+01/13/2025 04:24:07 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:24:14 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:24:14 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:24:17 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_6_1_1](line 10655) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_6_1_1_10655.png
+01/13/2025 04:24:17 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_6_1_1](line 10655) -  Exception: 'NoneType' object has no attribute 'enter_background_music_CL'
+01/13/2025 04:25:00 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:25:08 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:25:08 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:25:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_7_1_1](line 11203) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_7_1_1_11203.png
+01/13/2025 04:25:11 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_7_1_1](line 11203) -  Exception: 'NoneType' object has no attribute 'import_media_file'
+01/13/2025 04:25:16 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_8_1_1](line 11780) -  Launch PDR
+01/13/2025 04:25:29 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXTitle': 'LAUNCH FREE VERSION', 'AXRole': 'AXLink'} <<
+01/13/2025 04:25:34 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXTitle': 'Launch Free Version', 'AXRole': 'AXButton'} <<
+01/13/2025 04:25:34 PM <main_page.py> [launch_free_version](line 64) -  cannot find it
+01/13/2025 04:25:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_8_1_1](line 11787) -  [AT Execution] launch_free_version [NG]
+01/13/2025 04:25:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_8_1_1](line 11788) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_8_1_1_11788.png
+01/13/2025 04:25:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_8_1_1](line 11788) -  Exception: 
+01/13/2025 04:26:02 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.4%
+01/13/2025 04:26:03 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:26:08 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': 'IDC_LAUNCHER_MAIN_WINDOW'} <<
+01/13/2025 04:26:08 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_9_1_1](line 12857) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_9_1_1_12857.png
+01/13/2025 04:26:08 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_9_1_1](line 12857) -  Exception: 'NoneType' object has no attribute 'center'
+01/13/2025 04:26:51 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXIdentifier': '_NS:8'} <<
+01/13/2025 04:26:58 PM <base_page.py> [exist](line 106) -  [Locator] The element is not found via >> {'AXValue': 'use sample media.'} <<
+01/13/2025 04:26:58 PM <main_page.py> [start_app](line 40) -  cannot find use sample media
+01/13/2025 04:27:02 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_10_1_22](line 13846) -  Exception screenshot:/Users/qadf_at/Desktop/AT/PDRMac_BFT/trunk/SFT/report/MyReport/[Exception]test_10_1_22_13846.png
+01/13/2025 04:27:02 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_10_1_22](line 13846) -  Exception: 'NoneType' object has no attribute 'import_media_file'
+01/13/2025 04:27:06 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 2.6%
+01/13/2025 04:27:06 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:06 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.7%
+01/13/2025 04:27:07 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:07 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.4%
+01/13/2025 04:27:07 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:07 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.2%
+01/13/2025 04:27:07 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:07 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.0%
+01/13/2025 04:27:07 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:07 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.0%
+01/13/2025 04:27:08 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:08 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:08 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:08 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:08 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:08 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:08 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:08 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.0%
+01/13/2025 04:27:08 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:08 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:09 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:09 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:09 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:09 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:09 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:09 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:09 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:09 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:10 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:10 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:10 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:10 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:10 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:10 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:10 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:10 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:10 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:10 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:11 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:11 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:11 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:11 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:11 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:11 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:11 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:11 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:11 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:12 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:12 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:12 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:12 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:12 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:12 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:12 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:12 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:12 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 1.0%
+01/13/2025 04:27:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:13 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:13 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:14 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:14 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:14 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:14 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:14 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:14 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:14 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:14 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:14 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:15 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:15 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:15 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:15 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:15 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:16 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:16 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:16 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:16 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:16 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:17 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:17 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:18 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:18 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:18 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:18 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:18 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:18 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:18 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:18 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:18 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:19 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 758e68c1-a62d-4ffb-87f0-13b98fa82f7e / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:19 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = f6068849-031c-48a0-912f-ae72071a46ad / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.7%
+01/13/2025 04:27:19 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:19 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = da0b07b8-ab61-4351-bd85-b43caef54696 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:19 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.8%
+01/13/2025 04:27:20 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:20 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 67391393-7c99-42e4-ab81-99a1a47c4f04 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:20 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:20 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:20 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 6677c5ba-305e-4742-9988-099a48d10270 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:20 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:20 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:20 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = ff239744-74cd-4b8e-91a3-9844d624a964 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:20 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:20 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:20 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = af0c9188-3a17-4cba-81c7-a229353698cb / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:20 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 37eea6f6-4e58-42fb-91b3-f7c3f3511d92 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = aa965a18-7823-42e6-a6cc-7e1696500b99 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 4372f92a-5da4-42ab-b8b2-db555fbc4fee / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 8d9287b4-765f-43ac-b628-4a8802a14e91 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:21 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:21 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:21 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = f5aee31f-25fe-4b66-84ce-a4105113ee87 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = c07a4bfc-ce9d-401c-be8a-18a2eab602ca / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 6510cb1c-17cf-47b4-8ad0-de8c15e71d48 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 01bae86c-ef1b-4d49-aa1d-ecfa8ae7e70d / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:22 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:22 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = acf4e893-b714-408e-9658-566fe7060f15 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:22 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:23 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:23 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 718f50b3-517d-48c2-ad6b-d067a270da1f / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:23 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:23 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:23 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 798c0668-9be6-40fc-948b-5a73726e3c34 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:23 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:23 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:23 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 97affa2a-c953-49a3-925c-417b95db719f / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:23 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:23 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:23 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = ee316164-79e3-40da-91a8-78ef31c1b08b / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:23 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:24 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:24 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = deeae229-a221-4738-9de1-61b0fd983374 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:24 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:24 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:24 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 923f1789-4139-49aa-a2bb-509f841b4dad / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:24 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:24 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:24 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 9f35ba03-1cef-4b0e-96cb-191310b2cecd / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:24 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:24 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:24 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 7b066cbc-1607-4469-b677-7b8cab1b3a55 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:24 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:24 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = fdceddae-485a-447c-a89c-fef3e06326bf / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 1f0fbbb2-a77d-459b-bb90-4bcbff2c9b86 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 7cae4f2a-fa01-4d3b-8c06-71f2158091c9 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 8145aec8-8fc1-4a62-a17b-ae8cfaad39cf / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:25 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:25 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 662d72bf-19e7-4200-8bec-14a7c97b34b4 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:25 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:26 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 22b24c83-bff2-48af-9fe5-afe866158399 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:26 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:26 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 55aa8d43-0d80-465f-bad7-c14a7104f9a6 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:26 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:26 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 22fdea74-6a4a-475d-b8aa-953ec9987fab / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:26 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:26 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:26 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 01f08c96-e7ec-4ca7-b86f-4c6c7205287e / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:26 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:27 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:27 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 77f85454-ae23-4306-954a-1b6c33c960ee / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:27 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:27 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:27 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 838697fb-5e4e-4d77-bd72-6780e588b3c2 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:27 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:27 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:27 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = d666e85a-ea54-4c2a-82f2-d06e07b2cd8a / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:27 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:27 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:27 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 302a858b-f48c-4094-9ae0-bd37e6d542e1 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:27 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:28 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:28 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 461a78c6-9db8-43fe-94c8-6a1f3ab16182 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:28 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:28 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:28 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = fe0d0793-f9d3-4dd5-850f-26914dcb14c1 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:28 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:28 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:28 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = d9079e1c-b8a5-4d27-94e6-d9dd71ccb90c / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:28 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:28 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:28 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = d0f8f9c2-3ea7-4e1b-b88d-1fa88c5bb2fd / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:28 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:28 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:28 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 85b38734-3f9a-4bf0-ae0a-a2701628dccf / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:29 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:29 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:29 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 0811b795-5fa4-42bf-8a57-22f389e9f6f7 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:29 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:29 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:29 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 98ea0e05-c63e-4be7-8c32-7055b526a850 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:29 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:29 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:29 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = b75b3f6d-1f3c-4431-a1b4-06999c7d3598 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:29 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:29 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:29 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 999ef8a7-3db0-414e-b2b6-602b1670ad37 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:29 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.8%
+01/13/2025 04:27:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 7ac86abb-4b66-498b-9857-e09eb6d176f2 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 8d69ec14-dbed-4ed9-877a-9c58de1a9bc5 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = ad8f3229-129f-45c5-a9c4-e8c490be438c / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:30 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:30 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 32b3fc79-6dfb-4ff5-9348-15e4b6d6dce1 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:30 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:31 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 96ee5e10-47e1-4c84-b13c-2e6ddc5fdc48 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:31 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:31 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = dd55a4de-e286-462c-bf18-990daed490d9 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:31 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:31 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = a93a1fe6-78f0-48a2-958e-251f3d95bf1e / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:31 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:31 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 9a90ab51-c059-4084-a1f1-b3c1f5ae5553 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:31 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:31 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:31 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = bb2184bb-47cf-45d5-931f-cd20daccf879 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:31 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:32 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 13a760bb-7e1c-401a-8ace-fdba828c3fb8 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:32 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:32 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [test_na_cases](line 16861) -  Add Result = 475fcf12-b238-405c-8e37-6cd246afd396 / None / na_cases / Not support in BFT testing 
+01/13/2025 04:27:32 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:32 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:32 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 118) -  teardown_class - export report
+01/13/2025 04:27:32 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:32 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:32 PM <report.py> [export](line 232) -  [Fail] ID = 724e6ae1-8e88-4304-9ae8-e327dc38ed8c , Screenshot = False , fail number = 1
+01/13/2025 04:27:32 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:33 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:33 PM <report.py> [export](line 232) -  [Fail] ID = 4cc570a7-5122-4edc-880b-1bc832bd6a40 , Screenshot = False , fail number = 2
+01/13/2025 04:27:33 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:33 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:33 PM <report.py> [export](line 232) -  [Fail] ID = 012b2e9c-9f94-4c7d-a5b2-b771fd5a5912 , Screenshot = False , fail number = 3
+01/13/2025 04:27:33 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:33 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:33 PM <report.py> [export](line 232) -  [Fail] ID = e25505e3-33aa-46af-897b-86ab2680706f , Screenshot = False , fail number = 4
+01/13/2025 04:27:33 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:33 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:33 PM <report.py> [export](line 232) -  [Fail] ID = c3af3f4a-a05d-4596-ab93-1f03b76b1f7c , Screenshot = False , fail number = 5
+01/13/2025 04:27:33 PM <mac_driver.py> [cpu](line 134) -  Current CPU usage: 0.9%
+01/13/2025 04:27:33 PM <mac_driver.py> [ram](line 156) -  Current RAM uasge: 207M
+01/13/2025 04:27:34 PM <report.py> [export](line 232) -  [Fail] ID = c22ae48a-63ec-451e-9b27-25200ad164c3 , Screenshot = False , fail number = 6
+01/13/2025 04:27:34 PM <report.py> [export](line 271) -  csv_data=["PDR22 Mac BFT_20231106,'==========,'==========,'==========,'==========,'==========,'==========\n", 'fec6b64b-8ab2-4422-b056-b8a711e5725f,-0.3999999999999999,-3.0,2.6,80,2.2,77\n', '98c0a3ab-d4de-46ef-bb16-39884f6a1caf,54.2,16.0,0.9,82,55.1,98\n', 'c9b335af-3053-4807-accb-2671a5de7c46,-3.7,0.0,4.4,98,0.7,98\n', 'ebc38a68-9415-48ab-9914-16aa63afadb5,101.6,101.0,0.7,98,102.3,199\n', '600a1107-4281-415c-bda2-f4923e7ebd48,15.099999999999994,4.0,61.0,186,76.1,190\n', '89b5f8e9-dc8f-42d7-9fda-2771939dfb81,223.89999999999998,-17.0,2.8,190,226.7,173\n', '45d2632c-6975-4bed-bd4a-5c13667d1cc0,207.3,-25.0,1.7,190,209.0,165\n', 'ae748270-f3c2-40a4-abfb-29c9cac00762,-10.5,5.0,29.3,182,18.8,187\n', 'c7cdcba0-c817-4a1c-b3eb-52362d6ffae4,0.0,-93.0,11.6,184,11.6,91\n', '26e3ee5d-f35e-462d-bc4a-806d507ae850,-17.400000000000006,1.0,126.7,166,109.3,167\n', '23a12e63-4e72-40b4-945d-ff28a89add36,-83.89999999999999,44.0,88.6,168,4.7,212\n', 'd032fcd4-f9ce-4d86-95cb-fe61cbc6f3a7,14.5,26.0,4.3,212,18.8,238\n', 'f5a29d63-68fa-4554-8d72-05f5df80812a,86.4,108.0,21.4,238,107.8,346\n', 'db557877-2404-45b1-a573-bb9931430283,-47.199999999999996,0.0,69.8,346,22.6,346\n', 'c3af3f4a-a05d-4596-ab93-1f03b76b1f7c,-12.0,-139.0,12.9,346,0.9,207\n', '4cc570a7-5122-4edc-880b-1bc832bd6a40,-9.799999999999999,-122.0,10.7,329,0.9,207\n', 'e25505e3-33aa-46af-897b-86ab2680706f,-11.7,-123.0,12.6,330,0.9,207\n', '724e6ae1-8e88-4304-9ae8-e327dc38ed8c,-10.299999999999999,-123.0,11.2,330,0.9,207\n', '012b2e9c-9f94-4c7d-a5b2-b771fd5a5912,-44.2,-9.0,45.1,216,0.9,207\n', 'c22ae48a-63ec-451e-9b27-25200ad164c3,-1.5,0.0,2.4,207,0.9,207\n', '758e68c1-a62d-4ffb-87f0-13b98fa82f7e,-1.7000000000000002,0.0,2.6,207,0.9,207\n', 'f6068849-031c-48a0-912f-ae72071a46ad,-1.0,0.0,1.7,207,0.7,207\n', 'da0b07b8-ab61-4351-bd85-b43caef54696,-0.5999999999999999,0.0,1.4,207,0.8,207\n', '67391393-7c99-42e4-ab81-99a1a47c4f04,-0.29999999999999993,0.0,1.2,207,0.9,207\n', '6677c5ba-305e-4742-9988-099a48d10270,-0.09999999999999998,0.0,1.0,207,0.9,207\n', 'ff239744-74cd-4b8e-91a3-9844d624a964,-0.09999999999999998,0.0,1.0,207,0.9,207\n', 'af0c9188-3a17-4cba-81c7-a229353698cb,0.0,0.0,0.9,207,0.9,207\n', '37eea6f6-4e58-42fb-91b3-f7c3f3511d92,0.0,0.0,0.9,207,0.9,207\n', 'aa965a18-7823-42e6-a6cc-7e1696500b99,0.0,0.0,0.9,207,0.9,207\n', '4372f92a-5da4-42ab-b8b2-db555fbc4fee,-0.09999999999999998,0.0,1.0,207,0.9,207\n', '8d9287b4-765f-43ac-b628-4a8802a14e91,0.0,0.0,0.9,207,0.9,207\n', 'f5aee31f-25fe-4b66-84ce-a4105113ee87,0.0,0.0,0.9,207,0.9,207\n', 'c07a4bfc-ce9d-401c-be8a-18a2eab602ca,0.0,0.0,0.9,207,0.9,207\n', '6510cb1c-17cf-47b4-8ad0-de8c15e71d48,0.0,0.0,0.9,207,0.9,207\n', '01bae86c-ef1b-4d49-aa1d-ecfa8ae7e70d,0.0,0.0,0.9,207,0.9,207\n', 'acf4e893-b714-408e-9658-566fe7060f15,0.0,0.0,0.9,207,0.9,207\n', '718f50b3-517d-48c2-ad6b-d067a270da1f,0.0,0.0,0.9,207,0.9,207\n', '798c0668-9be6-40fc-948b-5a73726e3c34,0.0,0.0,0.9,207,0.9,207\n', '97affa2a-c953-49a3-925c-417b95db719f,0.0,0.0,0.9,207,0.9,207\n', 'ee316164-79e3-40da-91a8-78ef31c1b08b,0.0,0.0,0.9,207,0.9,207\n', 'deeae229-a221-4738-9de1-61b0fd983374,0.0,0.0,0.9,207,0.9,207\n', '923f1789-4139-49aa-a2bb-509f841b4dad,0.0,0.0,0.9,207,0.9,207\n', '9f35ba03-1cef-4b0e-96cb-191310b2cecd,0.0,0.0,0.9,207,0.9,207\n', '7b066cbc-1607-4469-b677-7b8cab1b3a55,0.0,0.0,0.9,207,0.9,207\n', 'fdceddae-485a-447c-a89c-fef3e06326bf,0.0,0.0,0.9,207,0.9,207\n', '1f0fbbb2-a77d-459b-bb90-4bcbff2c9b86,0.0,0.0,0.9,207,0.9,207\n', '7cae4f2a-fa01-4d3b-8c06-71f2158091c9,0.0,0.0,0.9,207,0.9,207\n', '8145aec8-8fc1-4a62-a17b-ae8cfaad39cf,0.0,0.0,0.9,207,0.9,207\n', '662d72bf-19e7-4200-8bec-14a7c97b34b4,-0.09999999999999998,0.0,1.0,207,0.9,207\n', '22b24c83-bff2-48af-9fe5-afe866158399,0.0,0.0,0.9,207,0.9,207\n', '55aa8d43-0d80-465f-bad7-c14a7104f9a6,0.0,0.0,0.9,207,0.9,207\n', '22fdea74-6a4a-475d-b8aa-953ec9987fab,0.0,0.0,0.9,207,0.9,207\n', '01f08c96-e7ec-4ca7-b86f-4c6c7205287e,0.0,0.0,0.9,207,0.9,207\n', '77f85454-ae23-4306-954a-1b6c33c960ee,0.0,0.0,0.9,207,0.9,207\n', '838697fb-5e4e-4d77-bd72-6780e588b3c2,0.0,0.0,0.9,207,0.9,207\n', 'd666e85a-ea54-4c2a-82f2-d06e07b2cd8a,0.0,0.0,0.9,207,0.9,207\n', '302a858b-f48c-4094-9ae0-bd37e6d542e1,0.0,0.0,0.9,207,0.9,207\n', '461a78c6-9db8-43fe-94c8-6a1f3ab16182,0.0,0.0,0.9,207,0.9,207\n', 'fe0d0793-f9d3-4dd5-850f-26914dcb14c1,0.0,0.0,0.9,207,0.9,207\n', 'd9079e1c-b8a5-4d27-94e6-d9dd71ccb90c,0.0,0.0,0.9,207,0.9,207\n', 'd0f8f9c2-3ea7-4e1b-b88d-1fa88c5bb2fd,0.0,0.0,0.9,207,0.9,207\n', '85b38734-3f9a-4bf0-ae0a-a2701628dccf,0.0,0.0,0.9,207,0.9,207\n', '0811b795-5fa4-42bf-8a57-22f389e9f6f7,0.0,0.0,0.9,207,0.9,207\n', '98ea0e05-c63e-4be7-8c32-7055b526a850,0.0,0.0,0.9,207,0.9,207\n', 'b75b3f6d-1f3c-4431-a1b4-06999c7d3598,0.0,0.0,0.9,207,0.9,207\n', '999ef8a7-3db0-414e-b2b6-602b1670ad37,-0.09999999999999998,0.0,0.9,207,0.8,207\n', '7ac86abb-4b66-498b-9857-e09eb6d176f2,0.0,0.0,0.9,207,0.9,207\n', '8d69ec14-dbed-4ed9-877a-9c58de1a9bc5,0.0,0.0,0.9,207,0.9,207\n', 'ad8f3229-129f-45c5-a9c4-e8c490be438c,0.0,0.0,0.9,207,0.9,207\n', '32b3fc79-6dfb-4ff5-9348-15e4b6d6dce1,0.0,0.0,0.9,207,0.9,207\n', '96ee5e10-47e1-4c84-b13c-2e6ddc5fdc48,0.0,0.0,0.9,207,0.9,207\n', 'dd55a4de-e286-462c-bf18-990daed490d9,0.0,0.0,0.9,207,0.9,207\n', 'a93a1fe6-78f0-48a2-958e-251f3d95bf1e,0.0,0.0,0.9,207,0.9,207\n', '9a90ab51-c059-4084-a1f1-b3c1f5ae5553,0.0,0.0,0.9,207,0.9,207\n', 'bb2184bb-47cf-45d5-931f-cd20daccf879,0.0,0.0,0.9,207,0.9,207\n', '13a760bb-7e1c-401a-8ace-fdba828c3fb8,0.0,0.0,0.9,207,0.9,207\n', '475fcf12-b238-405c-8e37-6cd246afd396,0.0,0.0,0.9,207,0.9,207\n']
+01/13/2025 04:27:34 PM <BFT_PDR23_stage1_SeperateUUID.py> [teardown_class](line 120) -  BFT_365_os14 result=14, report.fail_number=6, 57, 550, 0:13:12

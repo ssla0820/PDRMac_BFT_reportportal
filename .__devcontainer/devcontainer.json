@@ -1,0 +1,15 @@
+{
+    "name": "Python in Docker",
+    "image": "python:3.9",
+    "workspaceFolder": "/workspace",
+    "mounts": [
+      "source=/Users/qadf_at/Desktop/AT/PDRMac_BFT_reportportal/trunk,target=/workspace,type=bind"
+    ],
+    "settings": {
+      "python.pythonPath": "/usr/local/bin/python"
+    },
+    "extensions": [
+      "ms-python.python"
+    ]
+}
+  

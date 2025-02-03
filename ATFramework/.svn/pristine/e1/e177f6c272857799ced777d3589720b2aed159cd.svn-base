@@ -1,0 +1,32 @@
+Support OS: Windows, Mac OS
+
+A. Presetting for environment:
+	1. [Win/Mac] Navigate to eCL TR page via Chrome correctly (clt account/password and OTP)
+	2. [Mac] Execute the for_mac_permission_load_chrome_cookie.py and click [Always allow] on confirm dialog
+		- refer to mac_permisson_click_always_allow.png
+	3. [Win/Mac] Use Password.py (or Password.exe) to generate CLT crdential file (account/password)
+	4. Python version: 3.8+ is recommended
+
+B. How to Use:
+	1. [For AutoIt] 
+		a. Copy ecl_operation.exe and password.exe (support x64 only) to your script folder
+		b. Refer to ecl_operation.au3 for example
+	2. [Module mode for Win/Mac] Copy the modules (main entry: ecl_operation.py) as below to your script and refer to test_script.py
+
+C. Parameters:
+	- It's a dictionary structure of parameter. The keys are as below:
+		> prod_name: the product name of TR for monitoring mode
+		> sr_no: the SR no. for monitoring mode
+		> tr_no: the TR no. for force executing mode (keep empty if you would like to execute as searching by SR mode)
+		> prog_path_sub: the sub-folder of program path to download. e.g. Compressed
+		> dest_path: the destination path of downloading build
+		> mail_list: the mail list of receiver if error occurs
+
+D. Return:
+	1. [For AutoIt] It's a return INI file (called "return") with (sesction, key) as below:
+		> (RETURN, result) - the result of execution. e.g. True/False
+		> (RETURN, error_log) - the error log
+		> (RETURN, ver_type) - the TR build version type (e.g. PowerDirector: Subscription)
+		> (RETURN, build) - the build field of TR page (e.g. Screen Recorder: 4.2.5.12448 PowerDirector: 2407_GM3_365)
+	2. [For Module mode] It's a dictionary with keys as below:
+		> result, error_log, ver_type, build

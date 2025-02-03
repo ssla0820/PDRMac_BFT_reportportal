@@ -1,0 +1,549 @@
+import time, datetime, os, copy
+
+from .base_page import BasePage
+from ATFramework.utils import logger
+from ATFramework.utils.Image_Search import CompareImage
+from AppKit import NSScreen
+from .locator import locator as L
+#from .locator.hardcode_0408 import locator as L
+from .main_page import Main_Page
+
+DELAY_TIME = 1 # sec
+
+
+class Upload_Cloud_DZ(Main_Page, BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.upload_project = self.Upload_Project(*args, **kwargs)
+        self.pack_project = self.Pack_Project(*args, **kwargs)
+        self.designer_upload_template = self.Designer_Upload_Template(*args, **kwargs)
+
+
+    def tap_Filemenu_UploadProject_ToCL(self):
+        self.exist_click(L.main.top_menu_bar.btn_file)
+        self.exist_click(L.upload_cloud_dz.save_project)
+        time.sleep(5)
+        try:
+            if not self.exist(L.upload_cloud_dz.upload_dialog):
+                logger("No upload window show up")
+                raise Exception
+
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_Filemenu_PackProject_UploadCL(self):
+        self.exist_click(L.main.top_menu_bar.btn_file)
+        self.exist_click(L.upload_cloud_dz.pack_project)
+        time.sleep(5)
+        try:
+            if not self.exist(L.upload_cloud_dz.upload_dialog):
+                logger("No upload window show up")
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def set_AutoSignIn_To_DZ(self, auto_signin=True):
+        btn_auto_signin = self.exist(L.download_from_cl_dz.signin.auto_signin)
+        if btn_auto_signin.AXValue != int(auto_signin): btn_auto_signin.press()
+        self.exist(L.download_from_cl_dz.signin.yes).press()
+        return True
+
+    def check_Stay_Upload_DZCL_Window_Step1(self):
+        try:
+            if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                logger("No upload window show up")
+                raise Exception
+            else:
+                self.exist_click({'AXRole': 'AXButton', 'AXSubrole': 'AXCloseButton'})
+                return True
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+
+    class Upload_Project(Main_Page, BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def edit_InputProjectName(self, text):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.projectname)
+                time.sleep(1)
+                self.click(None, 'left', times=3)
+                self.keyboard.tap(self.keyboard.key.backspace)
+                self.keyboard.send(text)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def get_ProjectName(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return self.exist(L.upload_cloud_dz.projectname).AXValue
+
+        def edit_ClickOK(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                for x in range(10):
+                    if self.exist(L.upload_cloud_dz.btn_ok):
+                        break
+                    else:
+                        time.sleep(DELAY_TIME)
+
+                self.click(L.upload_cloud_dz.btn_ok)
+
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_ClickCancel(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_cancel)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def click_Close(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_close)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def handle_OverwriteIt(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                while self.exist(L.upload_cloud_dz.alert_message_replace) == None:
+                    time.sleep(3)
+                self.exist_click(L.upload_cloud_dz.btn_warning_ok)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_Uploading_ClickCancel(self):
+            try:
+                if not self.has_dialog():
+                    logger("Upload dialog is not found")
+                    raise Exception("Upload dialog is not found")
+                if not self.exist(L.upload_cloud_dz.btn_uploading_cancel):
+                    logger("No cancel button show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_uploading_cancel)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def handle_ConfirmCancel_ClickYes(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.btn_uploading_cancel_yes):
+                    logger("No yes button show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_uploading_cancel_yes)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_Complete(self):
+            try:
+                for x in range(30):
+                    if self.exist(L.upload_cloud_dz.upload_project_preview):
+                        break
+                    else:
+                        time.sleep(DELAY_TIME)
+
+                if not self.exist(L.upload_cloud_dz.btn_ok):
+                    return False
+                self.click(L.upload_cloud_dz.btn_ok)
+                return True
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+
+
+    class Pack_Project(Main_Page, BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def edit_InputProjectName(self, text):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.projectname)
+                time.sleep(1)
+                self.click(None, 'left', times=3)
+                self.keyboard.tap(self.keyboard.key.backspace)
+                self.keyboard.send(text)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+
+        def get_ProjectName(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return self.exist(L.upload_cloud_dz.projectname).AXValue
+
+        def edit_ClickOK(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_ok)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_ClickCancel(self):
+            try:
+                if not self.has_dialog():
+                    logger("Upload dialog is not found")
+                    raise Exception("Upload dialog is not found")
+                if not self.exist(L.upload_cloud_dz.btn_uploading_cancel):
+                    logger("No cancel button show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_uploading_cancel)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def click_Close(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_close)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def handle_OverwriteIt(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                while self.exist(L.upload_cloud_dz.alert_message_replace) == None:
+                    time.sleep(3)
+                self.exist_click(L.upload_cloud_dz.btn_warning_ok)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_Uploading_ClickCancel(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.btn_uploading_cancel):
+                    logger("No cancel button show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_uploading_cancel)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def handle_ConfirmCancel_ClickYes(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.btn_uploading_cancel_yes):
+                    logger("No yes button show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_uploading_cancel_yes)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_Complete(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog, timeout=10):
+                    logger("No upload window show up")
+                    raise Exception
+                while self.exist(L.upload_cloud_dz.upload_project_preview) == None:
+                    time.sleep(3)
+                if not self.exist(L.upload_cloud_dz.btn_ok):
+                    return False
+                self.exist_click(L.upload_cloud_dz.btn_ok)
+                return True
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+    class Designer_Upload_Template(Main_Page, BasePage):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+
+        def edit_Upload_To(self, upload_option):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_to)
+                if upload_option == 0:
+                    self.exist_click(L.upload_cloud_dz.upload_to_both)
+                elif upload_option == 1:
+                    self.exist_click(L.upload_cloud_dz.upload_to_cl)
+                elif upload_option == 2:
+                    self.exist_click(L.upload_cloud_dz.upload_to_dz)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_UsedSpaceInfo(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.used_space, timeout=10):
+                    logger("No used spcae info")
+                    raise Exception
+
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_DetailsLink(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.used_space_detail)
+                if not self.check_chrome_page():
+                    return False
+                self.close_chrome_page()
+                return True
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+
+        def get_TitleField(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                return None
+            return self.exist(L.upload_cloud_dz.upload_title).AXValue
+
+        def edit_ApplyStyle(self, style):
+            style_dic = ['General', 'Graduation', 'Kids', 'Party', 'Romance', 'Sport', 'Vacation', 'Holidays', 'Birthday', 'Wedding', 'Baby', 'Pets', 'Religious']
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_style)
+                self.exist_click({'AXRole': 'AXStaticText', 'AXValue': style_dic[style-1]})
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_InputTags(self, tags):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_tags)
+                self.keyboard.send(tags)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_InputCollection(self, collection):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_collection)
+                self.keyboard.send(collection)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_InputDescription(self, description):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_description)
+                self.keyboard.send(description)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def tap_CloseWindow(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.btn_close)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_ClickNext(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                if self.exist(L.upload_cloud_dz.upload_btn_next).AXEnabled == False:
+                    logger("Unable to click next")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_btn_next)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_ClickCancel(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                if self.exist(L.upload_cloud_dz.upload_btn_cancel).AXEnabled == False:
+                    logger("Unable to click cancel")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_btn_cancel)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_ClickPrevious(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                if self.exist(L.upload_cloud_dz.upload_btn_previous).AXEnabled == False:
+                    logger("Unable to click previous")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_btn_previous)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_TickConfirm(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_tick_confirm)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def edit_ClickFinish(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                if self.exist(L.upload_cloud_dz.upload_btn_finish).AXEnabled == False:
+                    logger("Unable to click finish")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_btn_finish)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_ViewOnDZ(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_view_DZ)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_ViewOnCL(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                self.exist_click(L.upload_cloud_dz.upload_view_CL)
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def check_Complete(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                while self.exist(L.upload_cloud_dz.upload_project_preview) == None:
+                    time.sleep(3)
+                if not self.exist(L.upload_cloud_dz.btn_ok):
+                    return False
+                self.exist_click(L.upload_cloud_dz.btn_ok)
+                return True
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+            return True
+
+        def get_ConfirmedCheckboxValue(self):
+            try:
+                if not self.exist(L.upload_cloud_dz.upload_template_dialog):
+                    logger("No upload window show up")
+                    raise Exception
+                if self.exist(L.upload_cloud_dz.upload_btn_next).AXEnabled == None:
+                    logger("No checkbox")
+                    raise Exception
+                return self.exist(L.upload_cloud_dz.upload_btn_next).AXEnabled
+            except Exception as e:
+                logger(f'Exception occurs. log={e}')
+                raise Exception
+
+
+
+
+
+
+
+

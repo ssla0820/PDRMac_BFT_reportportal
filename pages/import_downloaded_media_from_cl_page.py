@@ -1,0 +1,387 @@
+import time, datetime, os, copy
+
+from .base_page import BasePage
+from ATFramework.utils import logger
+from ATFramework.utils.Image_Search import CompareImage
+# from AppKit import NSScreen
+from .locator import locator as L
+#from .locator.hardcode_0408 import locator as L
+from .main_page import Main_Page
+
+DELAY_TIME = 1 # sec
+
+class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def check_downloaded_media_preview(self, ground_truth_image, area):
+        #self.snapshot(L.import_downloaded_media_from_cl.downloaded_media_window, '/Users/qadf-mbp3/Desktop/1000/downloaded_media_preview.jpg')
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            if area == 'Download Media Window':
+                downloaded_media_window = self.snapshot(L.import_downloaded_media_from_cl.downloaded_media_window)
+                print(downloaded_media_window)
+                result_verify = self.compare(ground_truth_image, downloaded_media_window, similarity=0.80)
+                if result_verify:
+                    return True
+                else:
+                    return False
+            else:
+                logger("Input the wrong augment")
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_refresh_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            time.sleep(DELAY_TIME*2)
+            self.exist_click(L.import_downloaded_media_from_cl.refresh_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def switch_to_video_page(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.video_page)
+            self.mouse.move(0, 0)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def switch_to_photo_page(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.photo_page)
+            self.mouse.move(0, 0)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def switch_to_music_page(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.music_page)
+            self.mouse.move(0, 0)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def highlight_download_media_content(self, folder_index, file_index=None):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+            if file_index != None:
+               self.mouse.click(times=2)
+               time.sleep(1)
+               self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_select_deselect_all_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.select_deselect_all_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_remove_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.delete_btn)
+            time.sleep(DELAY_TIME*2)
+            if not self.exist(L.import_downloaded_media_from_cl.delete_dialog_text):
+                logger("No delete dialog show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.delete_dialog_ok)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def set_content_checkbox_check_uncheck(self, folder_index, file_index= None):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+
+            self.exist_click(L.import_downloaded_media_from_cl.library_menu_btn)
+            if self.exist(L.import_downloaded_media_from_cl.medium_icon).AXMenuItemMarkChar == '✓':
+                if file_index == None:
+                    self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    folder = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    x, y = folder.AXPosition
+                    self.mouse.move(x + 95, y + 35)
+                    self.mouse.click()
+                    return True
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                self.mouse.click(times=2)
+                time.sleep(1)
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                file = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                x1, y1 = file.AXPosition
+                self.mouse.move(x1 + 120, y1 + 20)
+                self.mouse.move(x1 + 100, y1 + 15)
+                self.mouse.click()
+            elif self.exist(L.import_downloaded_media_from_cl.extra_large_icon).AXMenuItemMarkChar == '✓':
+                if file_index == None:
+                    self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    folder = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    x, y = folder.AXPosition
+                    self.mouse.move(x + 175, y + 35)
+                    self.mouse.click()
+                    return True
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                self.mouse.click(times=2)
+                time.sleep(1)
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                file = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                x1, y1 = file.AXPosition
+                self.mouse.move(x1 + 200, y1 + 20)
+                self.mouse.move(x1 + 185, y1 + 15)
+                self.mouse.click()
+            elif self.exist(L.import_downloaded_media_from_cl.large_icon).AXMenuItemMarkChar == '✓':
+                if file_index == None:
+                    self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    folder = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    x, y = folder.AXPosition
+                    self.mouse.move(x + 135, y + 35)
+                    self.mouse.click()
+                    return True
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                self.mouse.click(times=2)
+                time.sleep(1)
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                file = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                x1, y1 = file.AXPosition
+                self.mouse.move(x1 + 180, y1 + 20)
+                self.mouse.move(x1 + 155, y1 + 15)
+                self.mouse.click()
+            elif self.exist(L.import_downloaded_media_from_cl.small_icon).AXMenuItemMarkChar == '✓':
+                if file_index == None:
+                    self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    folder = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                    x, y = folder.AXPosition
+                    self.mouse.move(x + 55, y + 35)
+                    self.mouse.click()
+                    return True
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+                self.mouse.click(times=2)
+                time.sleep(1)
+                self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                file = self.exist({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': file_index})
+                x1, y1 = file.AXPosition
+                self.mouse.move(x1 + 100, y1 + 20)
+                self.mouse.move(x1 + 70, y1 + 15)
+                self.mouse.click()
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def double_click_folder(self, folder_index):
+        # if folder_index >= 2, exception -25200
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            #self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': folder_index})
+            self.exist_click([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole":"AXGroup", 'index': folder_index}])
+            self.mouse.click(times=2)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def back_to_previous_level(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click({'AXIdentifier': 'CloudMediaCollectionViewItem', 'index': 0})
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def input_text_in_seacrh_library(self, strName):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.search_textfield)
+            self.keyboard.send(strName)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def clear_keyword_in_search_library(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.clear_search_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_library_menu_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.library_menu_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_sort_by_item(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.sort_by_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def apply_sort_by_type(self, strType):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            if strType == 'Name':
+                self.exist_click(L.import_downloaded_media_from_cl.sort_by_name)
+            elif strType == 'Upload Date':
+                self.exist_click(L.import_downloaded_media_from_cl.sort_by_upload_date)
+            elif strType == 'Size':
+                self.exist_click(L.import_downloaded_media_from_cl.sort_by_size)
+            else:
+                logger('Input the wrong augment')
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def set_icon_size(self, strType):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            if strType == 'Extra':
+                self.exist_click(L.import_downloaded_media_from_cl.extra_large_icon)
+            elif strType == 'Large':
+                self.exist_click(L.import_downloaded_media_from_cl.large_icon)
+            elif strType == 'Medium':
+                self.exist_click(L.import_downloaded_media_from_cl.medium_icon)
+            elif strType == 'Small':
+                self.exist_click(L.import_downloaded_media_from_cl.small_icon)
+            else:
+                logger('Input the wrong augment')
+                raise Exception
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_download_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.download_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_cancel_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.cancel_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def tap_ok_btn(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+                raise Exception
+            self.exist_click(L.import_downloaded_media_from_cl.ok_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_content_in_folder_level(self, folder_index, click_times=2):
+        # folder_index = 0 (1st folder), 1 (2nd folder), etc
+        # times = 2 : double click the folder to enter file level
+        # times = 1 : tick/untick the folder selected status
+        try:
+            if folder_index == None:
+                logger('folder_index is empty, invalid parameter')
+                return None
+            if not self.exist([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole": "AXGroup", "index": folder_index}]):
+                logger('Cannot find the folder')
+                raise Exception
+            thumbnail_parent = self.exist([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole": "AXGroup", "index": folder_index}])
+            thumbnail = self.exist_click({'AXRole': 'AXImage'}, thumbnail_parent, times= click_times)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+    def select_content_in_file_level(self, file_index):
+        # file_index = 1 (1st file), 2 (2nd file), etc
+        try:
+            if file_index == None:
+                logger('file_index is empty, invalid parameter')
+                return None
+            if not self.exist([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole": "AXGroup", "index": file_index}]):
+                logger('Cannot find the folder')
+                raise Exception
+            thumbnail_parent = self.exist([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole": "AXGroup", "index": file_index}])
+            thumbnail = self.exist_click({'AXRole': 'AXImage'}, thumbnail_parent)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception
+        return True
+
+
+

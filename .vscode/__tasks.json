@@ -1,0 +1,15 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Python File with xvfb",
+            "type": "shell",
+            "command": "xvfb-run",
+            "args": ["-a", "python3", "${file}"],
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
+        }
+    ]
+}

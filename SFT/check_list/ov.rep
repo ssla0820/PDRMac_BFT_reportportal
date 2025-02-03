@@ -1,0 +1,31 @@
+
+<h1 align="center">Auto Testing Report</h1>
+
+<table class="hoverTable">
+  <tr>
+    <th>Date</th>
+    <th>Time</th>
+    <th>TR</th>
+    <th>SR</th>
+    <th>Build Ver</th>
+    <th>Pass</th>
+    <th>Fail</th>
+    <th>Skip</th>
+    <th>N/A</th>
+    <th>Total time</th>
+  </tr>
+  <tr>
+    <td align="center">#date#</td>
+    <td align="center">#time#</td>
+    <td align="center">#tr#</td>
+    <td align="center">#sr#</td>
+    <td align="center">#build_version#</td>
+    <td align="center">#pass#</td>
+    <td align="center">#fail#</td>
+    <td align="center">#skip#</td>
+    <td align="center">#na#</td>
+    <td align="center">#duration#</td>
+  </tr>
+
+
+</table>

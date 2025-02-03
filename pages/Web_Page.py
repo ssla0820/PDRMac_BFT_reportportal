@@ -1,0 +1,65 @@
+from ATFramework.pages.base_page import BasePage
+from ATFramework.utils.log import logger
+from ATFramework.utils.ocr import OCR
+from ATFramework.utils.Image_Search import CompareImage
+# from AppKit import NSScreen
+from PIL import ImageGrab, Image
+import time, datetime, os
+
+
+class Web_Page(BasePage):
+    """
+    Author: Terence
+    Date: 2020/08/04
+    """
+    # ******** Includes locators at Main_Page ***********
+    # Note:
+    # 1. Try to use general locator to avoid MUI problem
+    # 2. If can't find via inspector, use (.page_source) to get actually source
+    # ***************************************************
+    # ============================ Locators ============================
+
+
+
+
+
+    def check_forgot_hyperlink_in(self):
+        try:
+            url_locator = {'AXRole': 'AXTextField'}
+            res = self.locator_generator(url_locator)
+            el = self.search_el(res)
+            text = self.get_axvalue(el)
+            if text.split('?')[0] == 'membership.cyberlink.com/prog/member/forgot-password.jsp':
+                logger('Done')
+                return True
+            else:
+                logger(f'text is incorrect. {text}')
+            return False
+        except Exception as e:
+            logger(f'Exception. ({e})')
+            return False
+
+    def check_signup_hyperlink_in(self):
+        try:
+            url_locator = {'AXRole': 'AXTextField'}
+            res = self.locator_generator(url_locator)
+            el = self.search_el(res)
+            text = self.get_axvalue(el)
+            if text.split('?')[0] == 'membership.cyberlink.com/prog/member/sign-up.do':
+                logger('Done')
+                return True
+            else:
+                logger(f'text is incorrect. {text}')
+            return False
+        except Exception as e:
+            logger(f'Exception. ({e})')
+            return False
+
+    def close_chrome(self):
+        if self.close_app():
+            logger('Done')
+            return True
+        else:
+            logger('close fail')
+        return False
+

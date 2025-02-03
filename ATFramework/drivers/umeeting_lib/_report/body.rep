@@ -1,0 +1,21 @@
+<div class="tab">
+  <button class="tablinks" onclick="openClick(event, 'overview')" id="defaultOpen">Overview</button>
+  <button class="tablinks" onclick="openClick(event, 'bft')"><style>body {
+        padding: 0 0 40px 0;
+    }</style>BFT</button>
+</div>
+<div id="overview" class="tabcontent">
+this_is_overview
+</div>
+
+<div id="bft" class="tabcontent">
+this_is_bft
+<p>
+<p>
+
+
+
+
+
+</div>
+

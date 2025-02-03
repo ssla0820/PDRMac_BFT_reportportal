@@ -1,0 +1,748 @@
+from .base import AdjustSet, KEComboSet, colors
+
+main_window = {'AXIdentifier': "TITLE_DESIGNER_DLG"}
+
+
+class area:
+    edittext_text_content = {'AXIdentifier': 'IDC_TITLE_DESIGNER_EDIT_SELECTED_OBJECT', 'AXRoleDescription': 'text field'}
+    object = {'AXIdentifier': 'IDC_PIP_DESIGNER_SCROLLVIEW_CONTAINER', 'AXRole': 'AXScrollArea'}
+    animation = {'AXIdentifier': 'IDC_PIP_DESIGNER_SCROLLVIEW_CONTAINER', 'AXRole': 'AXScrollArea'}
+    window_title_designer = {'AXIdentifier': 'TITLE_DESIGNER_DLG'}
+    timecode = {'AXIdentifier': 'spinTimeEditTextField', 'AXRoleDescription': 'text'}
+    frame_preview = {'AXIdentifier': 'IDC_TITLEDESIGNER_SPLITVIEW_PREVIEW', 'AXRoleDescription': 'split group'} #20v3310_Checked. v3303: _NS:153, 2922 -> _NS:82
+    view_title = [main_window, {'AXIdentifier': 'dashBorderedView', "index": -1}]
+    frame_video_preview = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SCROLLVIEW_VIDEOPREVIEW', 'AXRoleDescription': 'scroll area'} #20.3.3630_Checked
+    obj_title = [frame_preview, {'AXIdentifier': 'dashBorderedView', 'AXRoleDescription': 'group', 'index': 1}]
+
+class object:
+    slider_vertical_track = {'AXIdentifier': 'IDC_PIP_DESIGNER_SCROLLBAR_Y', 'AXRoleDescription': 'scroll bar'}
+
+class animation:
+    slider_vertical_track = {'AXIdentifier': 'IDC_PIP_DESIGNER_SCROLLBAR_Y', 'AXRoleDescription': 'scroll bar'}
+
+class simple_track:
+    slider_vertical_track = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_VERTICAL_SCROLLVIEW_SCROLLBAR', 'AXRoleDescription': 'scroll bar'} #20v3310_Checked. v2922: _NS:115
+    keyframe_node_group = {'AXIdentifier': 'SimpleTimelineKeyframeCollectionViewItem'}
+    keyframe_node_hold = {'AXDescription': 'keyframe hold r'}
+    unit_keyframe_outline_row = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW'}, {'AXRole': 'AXRow'}]
+    unit_keyframe_attribute_outline_row = [main_window, {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW'}, {'AXRoleDescription': 'outline row'}]
+    unit_attribute_name = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_KEYFRAME_HEADER_CELL_TITLE'}
+    scroll_area = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_VERTICAL_SCROLLVIEW_SCROLLBAR'}
+    track_header_outline_view = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW'}
+    btn_next_keyframe = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_NEXT_KEYFRAME'}
+    btn_add_remove_keyframe = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_ADD_REMOVE_KEYFRAME'}
+    btn_previous_keyframe = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_PREV_KEYFRAME'}
+
+
+btn_insert_title = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ADD_TITLE', 'AXRole': 'AXButton'}
+btn_insert_particle = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ADD_PARTICLE', 'AXRole': 'AXButton'}
+btn_insert_image = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ADD_IMAGE', 'AXRole': 'AXButton'}
+btn_insert_background = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ADD_BACKGROUND', 'AXRole': 'AXButton'}
+btn_delete_background = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_DEL_BACKGROUND', 'AXRole': 'AXButton'}
+btn_maximize = {'AXRoleDescription': 'zoom button', 'AXRole': 'AXButton'}
+
+class particle:
+    window_insert_particle = {'AXIdentifier': 'TITLE_IMPORT_PARTICLE_DLG', 'AXTitle': 'Import Particle'}
+    chx_particle_menu = {'AXIdentifier': 'IDC_TITLE_IMPORT_PARTICLE_COMBOBOX_CATEGORY', 'AXRole': 'AXButton'}
+    option_all_content = {'AXRole': 'AXStaticText', 'AXValue': 'All Content'}
+    option_custom = {'AXRole': 'AXStaticText', 'AXValue': 'Custom'}
+    option_downloaded = {'AXRole': 'AXStaticText', 'AXValue': 'Downloaded'}
+    option_general = {'AXRole': 'AXStaticText', 'AXValue': 'General'}
+    option_holidays = {'AXRole': 'AXStaticText', 'AXValue': 'Holidays'}
+    option_nature = {'AXRole': 'AXStaticText', 'AXValue': 'Nature'}
+    option_recreation = {'AXRole': 'AXStaticText', 'AXValue': 'Recreation'}
+    option_love = {'AXRole': 'AXStaticText', 'AXValue': 'Love'}
+    option_weather = {'AXRole': 'AXStaticText', 'AXValue': 'Weather'}
+    btn_ok = {'AXIdentifier': 'IDC_TITLE_IMPORT_PARTICLE_BTN_OK', 'AXTitle': 'OK'}
+
+class background: # click 'insert background' > select a image > target
+    window_background_adjust_setting = {'AXRole': 'AXWindow', 'AXTitle': 'Background Media Adjustment Settings'}
+    btn_stretch = {'AXIdentifier': 'IDC_BACKGROUND_STRETCH_MODE_BTN_STRETCH', 'AXRole': 'AXButton'} #20v3310_Checked
+    btn_letterbox = {'AXIdentifier': 'IDC_BACKGROUND_STRETCH_MODE_BTN_LETTERBOX', 'AXRole': 'AXButton'} #20v3310_Checked
+    btn_crop = {'AXIdentifier': 'IDC_BACKGROUND_STRETCH_MODE_BTN_CROP', 'AXRole': 'AXButton'} #20v3310_Checked
+
+btn_basic = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_BASIC_MODE', 'AXRole': 'AXButton'}
+btn_advanced = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ADVANCED_MODE', 'AXRole': 'AXButton'}
+btn_clip_timecode = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_CLIP_TIMECODE', 'AXRole': 'AXButton'}
+btn_video_timecode = {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_MOVIE_TIMECODE', 'AXRole': 'AXButton'}
+btn_object = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_OBJECT', 'AXTitle': 'Object'}
+btn_animation = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_EFFECT', 'AXTitle': 'Animation'}
+btn_motion = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_MOTION', 'AXTitle': 'Motion'}
+btn_ok = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_OK', 'AXTitle': 'OK'}
+btn_cancel = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_CANCEL', 'AXTitle': 'Cancel'}
+btn_save_as = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SAVE_AS', 'AXTitle': 'Save As'}
+btn_share = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SHARE', 'AXTitle': 'Share'}
+btn_undo = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_UNDO', 'AXRole': 'AXButton'}
+btn_redo = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_REDO', 'AXRole': 'AXButton'}
+btn_align_object = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ALIGN', 'AXRole': 'AXButton'}
+btn_save_as_cancel = {'AXIdentifier': 'IDC_SAVE_TEMPLATE_BTN_CANCEL', 'AXRole': 'AXButton'}
+btn_zoom_in = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ZOOM_IN', 'AXRole': 'AXButton'}
+btn_zoom_out = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ZOOM_OUT', 'AXRole': 'AXButton'}
+btn_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+text_selected_object = {'AXIdentifier': '_NS:110', 'AXRole': 'AXStaticText'} #20v3310_Checked. v2922: _NS:166. the element of label 'Selected Object:' at left-top
+
+
+class cancel:
+    text_dialog_description = {'AXIdentifier': 'IDC_CLALERT_MESSAGE', 'AXRole': 'AXStaticText'}
+    btn_cancel = {'AXRole': 'AXButton', 'AXTitle': 'Cancel'}
+    btn_no = {'AXRole': 'AXButton', 'AXTitle': 'No'}
+    btn_yes = {'AXRole': 'AXButton', 'AXTitle': 'Yes'}
+class save_as_template:
+    window_save_as_template = {'AXIdentifier': 'IDC_SAVE_TEMPLATE_WINDOW', 'AXTitle': 'Save as Template'}
+    edittext_save_as_template = {'AXIdentifier': 'IDC_SAVE_TEMPLATE_EDIT_TEMPLATE_NAME', 'AXRole': 'AXTextField'}
+    btn_ok = {'AXIdentifier': 'IDC_SAVE_TEMPLATE_BTN_OK', 'AXRole': 'AXButton'}
+    slider = {'AXIdentifier': 'IDC_SAVE_TEMPLATE_SLIDER_MARK_FRAME', 'AXRole': 'AXSlider'}
+class share: # click [Share] > enter template name then click [OK] > target dialog (CyberLink PowerDirecgtor)
+    text_auto_signin = {'AXIdentifier': 'IDC_LOGIN_DZ_WITH_CLOUD_DIALOG_MSG', 'AXRole': 'AXStaticText'} #20v3310_Checked. v2922: _NS:70. the element of description 'Do you want to log in to DirectorZone'
+    btn_yes_auto_signin = {'AXIdentifier': 'IDC_SSO_BUTTON_YES', 'AXTitle': 'Yes'}
+    text_step1 = {'AXIdentifier': 'IDC_UPLOAD_TEMPLATE_DIALOG_STEP1_TITLE', 'AXRole': 'AXStaticText'} # 20v3310_Checked. v2922: _NS:401
+    window_upload = {'AXIdentifier': 'IDC_UPLOAD_TEMPLATE_FROM_CYBERLINKCLOUD_DLG', 'AXTitle': 'Upload'}
+    cbx_upload_to = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_HOWLOADTO', 'AXRole': 'AXButton'}
+    option_cloud_directzone = {'AXRole': 'AXStaticText', 'AXValue': 'CyberLink Cloud and DirectorZone'}
+    option_cloud = {'AXRole': 'AXStaticText', 'AXValue': 'CyberLink Cloud'}
+    option_directzone = {'AXRole': 'AXStaticText', 'AXValue': 'DirectorZone'}
+    cbx_style = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_STYLE', 'AXRole': 'AXButton'}
+    edittext_tags = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_TAGS', 'AXRole': 'AXTextField'}
+    edittext_collection = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_COLLECTION', 'AXRole': 'AXTextField'}
+    edittext_description = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_DESCRIPTION', 'AXRole': 'AXTextField'}
+    btn_next = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_NEXT', 'AXTitle': 'Next'}
+    chx_confirm = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_CONFIRM', 'AXRoleDescription': 'toggle button'}
+    btn_finish = {'AXIdentifier': 'IDC_UPLOADTEMPLATE_FINISH', 'AXTitle': 'Finish'}
+class viewer_zoom:
+    cbx_viewer_zoom = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ZOOM_LEVEL', 'AXRole': 'AXButton'}
+    option_fit = {'AXRole': 'AXStaticText', 'AXValue': 'Fit'}
+    option_10 = {'AXRole': 'AXStaticText', 'AXValue': '10%'}
+    option_25 = {'AXRole': 'AXStaticText', 'AXValue': '25%'}
+    option_50 = {'AXRole': 'AXStaticText', 'AXValue': '50%'}
+    option_75 = {'AXRole': 'AXStaticText', 'AXValue': '75%'}
+    option_100 = {'AXRole': 'AXStaticText', 'AXValue': '100%'}
+    option_200 = {'AXRole': 'AXStaticText', 'AXValue': '200%'}
+    option_300 = {'AXRole': 'AXStaticText', 'AXValue': '300%'}
+    option_400 = {'AXRole': 'AXStaticText', 'AXValue': '400%'}
+class operation:
+    btn_play = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_PLAY', 'AXRole': 'AXButton'}
+    btn_pause = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_PAUSE', 'AXRole': 'AXButton'}
+    btn_stop = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_STOP', 'AXRole': 'AXButton'}
+    btn_previous_frame = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_PREVFRAME', 'AXRole': 'AXButton'}
+    btn_next_frame = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_NEXTFRAME', 'AXRole': 'AXButton'}
+    btn_fast_forward = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FASTFORWARD', 'AXRole': 'AXButton'}
+
+class character_presets:
+    btn_save_as_new_preset = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SAVE_CHAR'}
+    btn_character_presets = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey'}
+    cbx_character_types = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_CHAR_PRESET', 'AXRole': 'AXButton'}
+    option_default = {'AXRole': 'AXStaticText', 'AXValue': 'Default'}
+    option_my_presets = {'AXRole': 'AXStaticText', 'AXValue': 'My Presets'}
+
+class font_paragraph: # font/paragraph section at left side
+    title_font_paragraph = {'AXIdentifier': 'IDC_DESIGNER_TEXT_PROPERTY', 'AXValue': 'Font/Paragraph'}
+    btn_font_paragraph = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'index': 1}
+    cbx_font = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_TYPE', "AXRole":"AXGroup"},{'AXRole': 'AXComboBox'}]
+    btn_font = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_TYPE', "AXRole":"AXGroup"},{'AXRole': 'AXButton'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:9', 'AXRole': 'AXButton'}
+    img_font_type = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_TYPE', 'AXRole': 'AXImage'}
+    cbx_font_size = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_SIZE', "AXRole":"AXGroup"},{'AXRole': 'AXComboBox'}]
+    btn_font_size = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_SIZE', "AXRole":"AXGroup"}, {'AXRole': 'AXButton'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:9', 'AXRole': 'AXButton', 'index': 1}
+    cbx_line_spacing_amount = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_LINE_SPACING', "AXRole":"AXGroup"},{'AXRole': 'AXComboBox'}]
+    btn_line_spacing_amount = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_LINE_SPACING', "AXRole":"AXGroup"}, {'AXRole': 'AXButton'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:9', 'AXRole': 'AXButton', 'index': 2}
+    cbx_text_spacing_amount = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_SPACING', "AXRole":"AXGroup"},{'AXRole': 'AXComboBox'}]
+    btn_text_spacing_amount = [{'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FONT_SPACING', "AXRole":"AXGroup"}, {'AXRole': 'AXButton'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:9', 'AXRole': 'AXButton', 'index': 3}
+    btn_font_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_COLORPICKER_FONT', 'AXRole': 'AXButton'}
+    edittext_red = {'AXIdentifier': 'red', 'AXRole': 'AXTextField'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRole': 'AXTextField'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRole': 'AXTextField'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRole': 'AXTextField'}
+    btn_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+    chx_kerning = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FONT_KERNING', 'AXTitle': 'Kerning'}
+    btn_bold = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FONT_BOLD', 'AXRole': 'AXButton'}
+    btn_italic = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FONT_ITALIC', 'AXRole': 'AXButton'}
+    btn_align_left = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ALIGN_LEFT', 'AXRole': 'AXButton'}
+    btn_align_center = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ALIGN_CENTER', 'AXRole': 'AXButton'}
+    btn_align_right = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ALIGN_RIGHT', 'AXRole': 'AXButton'}
+
+class font_face:
+    chx_font_face = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY'}
+    btn_font_face = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'index': 2}
+    text_blur = [main_window, {'AXValue': 'Blur:'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:21', 'AXValue': 'Blur:'}
+    slider_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_FACE_BLUR', 'AXRoleDescription': 'slider'}
+    value_box_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_FACE_BLUR', 'AXRole': 'AXGroup'}
+    edittext_blur = [value_box_blur, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_blur_levels_up = [value_box_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_blur_levels_down = [value_box_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_FACE_OPACITY', 'AXRoleDescription': 'slider'}
+    value_box_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_FACE_OPACITY', 'AXRole': 'AXGroup'}
+    edittext_opacity = [value_box_opacity, {'AXIdentifier': 'spinEditTextField', 'AXRoleDescription': 'text field'}]
+    text_opacity = [main_window, {'AXValue': 'Opacity:'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:77', 'AXValue': 'Opacity:'}
+    stepper_opacity_levels_up = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_opacity_levels_down = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    cbx_fill_type = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_FACE_FILL_TYPE', 'AXRole': 'AXButton'}
+    option_uniform_color = {'AXRole': 'AXStaticText', 'AXValue': 'Uniform Color'}
+    option_gradient_color = {'AXRole': 'AXStaticText', 'AXValue': 'Gradient Color'}
+    option_2_color = {'AXRole': 'AXStaticText', 'AXValue': '2 Color Gradient'}
+    option_4_color = {'AXRole': 'AXStaticText', 'AXValue': '4 Color Gradient'}
+    option_gradient_linear = {'AXIdentifier': 'IDC_COLORGRADIENTCTRL_BTN_LINEAR', 'AXRole': 'AXButton'}
+    option_gradient_radial = {'AXIdentifier': 'IDC_COLORGRADIENTCTRL_BTN_RADIAL', 'AXRole': 'AXButton'}
+    option_gradient_corner = {'AXIdentifier': 'IDC_COLORGRADIENTCTRL_BTN_CORNER', 'AXRole': 'AXButton'}
+    btn_uniform_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FACE_ONE_COLORPICKER', 'AXRole': 'AXButton'}
+    edittext_red = {'AXIdentifier': 'red', 'AXRoleDescription': 'text field'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRoleDescription': 'text field'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRoleDescription': 'text field'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRoleDescription': 'text field'}
+    btn_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+    btn_begin_with = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FACE_BEGIN_COLORPICKER', 'AXRole': 'AXButton'}
+    btn_end_with = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FACE_END_COLORPICKER', 'AXRole': 'AXButton'}
+    text_4_color = [main_window, {'AXValue': '4 color gradient:'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:238', 'AXValue': '4 color gradient:'} ;v3310: _NS:238, v2922: _NS:234
+    four_color_gradient_group = {'AXIdentifier': 'IDC_FOURCOLOR_GRADIENT_CTRL', 'AXRole': 'AXGroup'}
+    colorpicker_left_top = {'AXIdentifier': 'IDC_FOURCOLOR_GRADIENT_CTRL_COLORPICKER_LEFT_TOP', 'AXRole': 'AXButton'}
+    colorpicker_right_top = {'AXIdentifier': 'IDC_FOURCOLOR_GRADIENT_CTRL_COLORPICKER_RIGHT_TOP', 'AXRole': 'AXButton'}
+    colorpicker_left_bottom = {'AXIdentifier': 'IDC_FOURCOLOR_GRADIENT_CTRL_COLORPICKER_LEFT_BOTTOM', 'AXRole': 'AXButton'}
+    colorpicker_right_bottom = {'AXIdentifier': 'IDC_FOURCOLOR_GRADIENT_CTRL_COLORPICKER_RIGHT_BOTTOM', 'AXRole': 'AXButton'}
+
+class border:
+    chx_border = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'index': 1}
+    btn_border = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                  'index': 3}
+    btn_image_border = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                        'index': 1}
+    slider_size = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_BORDER_SIZE', 'AXRole': 'AXSlider'}
+    value_box_size = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_SPINEDIT_SIZE', 'AXRole': 'AXGroup'}
+    edittext_size = [value_box_size, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    text_size = [main_window, {'AXIdentifier': '_NS:21', 'AXValue': 'Size:'}] #20v3310_Checked
+    slider_depth = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_BORDER_DEPTH', 'AXRole': 'AXSlider'}
+    value_box_depth = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_DEPTH_DIRECTION', 'AXRole': 'AXGroup'}
+    edittext_depth = [value_box_depth, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_size_value_up = [value_box_size, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_size_value_down = [value_box_size, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    slider_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_BORDER_BLUR'}
+    value_box_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_SPINEDIT_BLUR', 'AXRole': 'AXGroup'}
+    edittext_blur = [value_box_blur, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    value_box_image_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_BORDER_BLUR'}
+    edittext_image_blur = [value_box_image_blur, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    text_blur = [main_window, {'AXIdentifier': '_NS:75', 'AXValue': 'Blur:'}] #20v3310_Checked
+    stepper_blur_value_up = [value_box_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_blur_value_down = [value_box_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    stepper_image_blur_value_up = [value_box_image_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_image_blur_value_down = [value_box_image_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    slider_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_BORDER_OPACITY', 'AXRoleDescription': 'slider'}
+    value_box_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_BORDER_OPACITY', 'AXRole': 'AXGroup'}
+    edittext_opacity = [value_box_opacity, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    text_opacity = [main_window, {'AXIdentifier': '_NS:107', 'AXValue': 'Opacity:'}] #20v3310_Checked
+    stepper_opacity_value_up = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_opacity_value_down = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    cbx_fill_type = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_BORDER_FILL_TYPE', 'AXRole': 'AXButton'}
+    option_uniform_color = {'AXRole': 'AXStaticText', 'AXValue': 'Solid Color'}
+    option_2_color_gradient = {'AXRole': 'AXStaticText', 'AXValue': '2 Color Gradient'}
+    option_4_color_gradient = {'AXRole': 'AXStaticText', 'AXValue': '4 Color Gradient'}
+    btn_uniform_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_BORDER_ONE_COLORPICKER', 'AXRole': 'AXButton'}
+    edittext_red = {'AXIdentifier': 'red', 'AXRoleDescription': 'text field'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRoleDescription': 'text field'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRoleDescription': 'text field'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRoleDescription': 'text field'}
+    btn_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+    btn_begin_with = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_BORDER_BEGIN_COLORPICKER', 'AXRole': 'AXButton'}
+    btn_end_with = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_BORDER_END_COLORPICKER', 'AXRole': 'AXButton'}
+    text_4_color = [main_window, {'AXIdentifier': '_NS:262', 'AXValue': '4 color gradient:'}] #20v3310_Checked. v3310: _NS:262, v2922: _NS:258
+class shadow:
+    chx_shadow = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'index': 2}
+    btn_shadow = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                  'index': 4}
+    btn_image_shadow = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                  'index': 2}
+    cbx_apply_shadow_to = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_SHADOW_TYPE', 'AXRole': 'AXButton'}
+    option_object_and_border = {'AXValue': 'Object and Border', 'AXRole': 'AXStaticText'}
+    option_object_only = {'AXValue': 'Object Only', 'AXRole': 'AXStaticText'}
+    option_border_only = {'AXValue': 'Border Only', 'AXRole': 'AXStaticText'}
+    option_text_and_border = {'AXValue': 'Text and Border', 'AXRole': 'AXStaticText'}
+    option_text_only = {'AXValue': 'Text Only', 'AXRole': 'AXStaticText'}
+    slider_distance = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_SHADOW_DISTANCE', 'AXRoleDescription': 'slider'}
+    value_box_distance = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_SHADOW_DISTANCE', 'AXRole': 'AXGroup'}
+    edittext_distance = [value_box_distance, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    text_distance = {'AXValue': 'Distance:'}
+    stepper_distance_value_up = [value_box_distance, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_distance_value_down = [value_box_distance, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    slider_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_SHADOW_BLUR', 'AXRole': 'AXSlider'}
+    value_box_blur = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_SHADOW_BLUR', 'AXRole': 'AXGroup'}
+    edittext_blur = [value_box_blur, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    text_blur = {'AXValue': 'Blur:'}
+    stepper_blur_value_up = [value_box_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_blur_value_down = [value_box_blur, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    slider_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_SHADOW_OPACITY', 'AXRoleDescription': 'slider'}
+    value_box_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_SHADOW_OPACITY', 'AXRole': 'AXGroup'}
+    edittext_opacity = [value_box_opacity, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    text_opacity = {'AXValue': 'Opacity:'}
+    stepper_opacity_value_up = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    stepper_opacity_value_down = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+    chx_fill_shadow = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SHADOW_FILL', 'AXTitle': 'Fill shadow:'}
+    btn_fill_shadow_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SHADOW_FILL_COLORPICKER', 'AXRole': 'AXButton'}
+    edittext_red = {'AXIdentifier': 'red', 'AXRole': 'AXTextField'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRole': 'AXTextField'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRole': 'AXTextField'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRole': 'AXTextField'}
+    btn_close = {'AXRoleDescription': 'close button', 'AXRole': 'AXButton'}
+    btn_select_shadow_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SHADOW_COLORPICKER', 'AXRole': 'AXButton'}
+    edittext_shadow_direction = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_SHADOW_DIRECTION', 'AXRole': 'AXGroup'}
+    text_field_direction = [edittext_shadow_direction, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    btn_direction_up = [edittext_shadow_direction, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP'}]
+    btn_direction_down = [edittext_shadow_direction, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN'}]
+class menu_option:
+    menu_bar_item_edit = {'AXIdentifier': 'edit'}
+    menu_option_undo = [menu_bar_item_edit, {'AXTitle': 'Undo'}]
+    menu_option_redo = [menu_bar_item_edit, {'AXTitle': 'Redo'}]
+    menu_option_cut = [menu_bar_item_edit, {'AXTitle': 'Cut'}]
+    menu_option_copy = [menu_bar_item_edit, {'AXTitle': 'Copy'}]
+    menu_option_paste = [menu_bar_item_edit, {'AXTitle': 'Paste'}]
+    menu_option_remove = [menu_bar_item_edit, {'AXTitle': 'Remove'}]
+    menu_option_select_all = [menu_bar_item_edit, {'AXTitle': 'Select All'}]
+    menu_option_help = [menu_bar_item_edit, {'AXTitle': 'Help'}]
+    menu_option_help1 = [menu_bar_item_edit, {'AXTitle': 'Help'}]
+    menu_option_title_designer_tutorial = {'AXIdentifier': 'popupURL:'}
+class grid_line:
+    btn_toggle_grid_line = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_PREVIEW_OPTION', 'AXRole': 'AXButton'}
+    option_snap_reference_lines = {'AXRoleDescription': 'menu item', 'AXTitle': 'Snap to Reference Lines'} #20v3310_Checked. remove the _NS:70 (20.3310)
+    option_grid_lines = {'AXRoleDescription': 'menu item', 'AXTitle': 'Grid Lines'} #20v3310_Checked. remove the _NS:74 (20.3310)
+    option_none = {'AXRoleDescription': 'menu item', 'AXTitle': 'None'} #20v3310_Checked. remove the _NS:15 (20.3310)
+    option_2x2 = {'AXRoleDescription': 'menu item', 'AXTitle': '2 x 2'} #20v3310_Checked. remove the _NS:27 (20.3310)
+    option_3x3 = {'AXRoleDescription': 'menu item', 'AXTitle': '3 x 3'} #20v3310_Checked. remove the _NS:31 (20.3310)
+    option_4x4 = {'AXRoleDescription': 'menu item', 'AXTitle': '4 x 4'} #20v3310_Checked. remove the _NS:35 (20.3310)
+    option_5x5 = {'AXRoleDescription': 'menu item', 'AXTitle': '5 x 5'} #20v3310_Checked. remove the _NS:39 (20.3310)
+    option_6x6 = {'AXRoleDescription': 'menu item', 'AXTitle': '6 x 6'} #20v3310_Checked. remove the _NS:43 (20.3310)
+    option_7x7 = {'AXRoleDescription': 'menu item', 'AXTitle': '7 x 7'} #20v3310_Checked. remove the _NS:47 (20.3310)
+    option_8x8 = {'AXRoleDescription': 'menu item', 'AXTitle': '8 x 8'} #20v3310_Checked. remove the _NS:51 (20.3310)
+    option_9x9 = {'AXRoleDescription': 'menu item', 'AXTitle': '9 x 9'} #20v3310_Checked. remove the _NS:55 (20.3310)
+    option_10x10 = {'AXRoleDescription': 'menu item', 'AXTitle': '10 x 10'} #20v3310_Checked. remove the _NS:59 (20.3310)
+class object_setting:
+    btn_object_setting = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle', 'index': 6}
+    btn_position_keyframe_control = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_ADDREMOVE_KEYFRAME', 'AXRole': 'AXButton'}
+    btn_position_reset_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_RESET_PARAM_KEYFRAME', 'AXRole': 'AXButton'}
+    btn_position_previous_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_PREVIOUS_KEYFRAME', 'AXRole': 'AXButton'}
+    btn_position_next_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_NEXT_KEYFRAME', 'AXRole': 'AXButton'}
+    value_box_position_x = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_POSITION_X', 'AXRole': "AXGroup"}
+    edittext_position_x = [value_box_position_x, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_position_x_up = [value_box_position_x, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_position_x_down = [value_box_position_x, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_x = {'AXRole': 'AXStaticText', 'AXValue': 'X:'} #20v3310_Checked. remove _NS:67 (20.3310) [current object: text]
+    text_image_x = {'AXRole': 'AXStaticText', 'AXValue': 'X:'} #20v3310_Checked. remove _NS:14 (20.3310) [current object: image]
+    value_box_position_y= {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_POSITION_Y', 'AXRole': 'AXGroup'}
+    edittext_position_y = [value_box_position_y, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_position_y_up = [value_box_position_y, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_position_y_down = [value_box_position_y, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_y = {'AXRole': 'AXStaticText', 'AXValue': 'Y:'} #20v3310_Checked. remove _NS:87 (20.3310) [current object: text]
+    text_image_y = {'AXRole': 'AXStaticText', 'AXValue': 'Y:'} #20v3310_Checked. remove _NS:57 (20.3310) [current object: image]
+    btn_tutorial = {'AXIdentifier': 'IDC_EASE_CTRL_BTN_TUTORIAL', 'AXRole': 'AXButton'}
+    chx_ease_in = {'AXIdentifier': 'IDC_EASE_CTRL_CHECKBOX_EASE_IN', 'AXTitle': 'Ease in'}
+    value_box_position_ease_in = {'AXIdentifier': 'IDC_EASE_CTRL_SPINEDIT_EASE_IN', 'AXRole': 'AXGroup'}
+    edittext_position_ease_in = [value_box_position_ease_in, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_position_ease_in_up = [value_box_position_ease_in, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_position_ease_in_down = [value_box_position_ease_in, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_ease_in = {'AXIdentifier': 'IDC_EASE_CTRL_SLIDER_EASE_IN', 'AXRole': 'AXSlider'}
+    chx_ease_out = {'AXIdentifier': 'IDC_EASE_CTRL_CHECKBOX_EASE_OUT', 'AXTitle': 'Ease out'}
+
+    # position
+    group_position = {'AXIdentifier': 'IDC_TITLE_DESIGNER_EASE_POSITION'}
+    value_box_position_ease_out = [group_position, {'AXIdentifier': 'IDC_EASE_CTRL_SPINEDIT_EASE_OUT'}]
+    edittext_position_ease_out = [value_box_position_ease_out, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_position_ease_out_up = [value_box_position_ease_out, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_position_ease_out_down = [value_box_position_ease_out, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_ease_out = {'AXIdentifier': 'IDC_EASE_CTRL_SLIDER_EASE_OUT', 'AXRole': 'AXSlider'}
+    btn_scale_keyframe_control = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_ADDREMOVE_KEYFRAME', 'AXRole': 'AXButton', 'index': 1}
+    btn_scale_reset_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_RESET_PARAM_KEYFRAME', 'AXRole': 'AXButton', 'index': 1}
+    btn_scale_previous_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_PREVIOUS_KEYFRAME', 'AXRole': 'AXButton', 'index': 1}
+    btn_scale_next_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_NEXT_KEYFRAME', 'AXRole': 'AXButton', 'index': 1}
+    value_box_scale_width = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_WIDTH', 'AXRole': 'AXGroup'}
+    text_scale = {'AXRole': 'AXStaticText', 'AXValue': 'Scale'} #20v3310_Checked. remove _NS:128, add AXValue (20.3310)
+    text_image_scale = {'AXRole': 'AXStaticText', 'AXValue': 'Scale'} #20v3310_Checked. remove _NS:356, add AXValue (20.3310)
+    edittext_scale_width = [value_box_scale_width, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_scale_width_up = [value_box_scale_width, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_scale_width_down = [value_box_scale_width, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_width = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_WIDTH', 'AXRole': 'AXSlider'}
+    value_box_scale_height = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_HEIGHT', 'AXRole': 'AXGroup'}
+    edittext_scale_height = [value_box_scale_height, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_scale_height_up = [value_box_scale_height,
+                                    {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_scale_height_down = [value_box_scale_height,
+                                      {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_height = {'AXRole': 'AXStaticText', 'AXValue': 'Height:'} #20v3310_Checked. remove _NS:186, add AXRole (20.3310)
+    chx_maintain_aspect_ratio = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_KEEP_ASPECT_RATIO', 'AXRole': 'AXCheckBox'}
+    btn_opacity_keyframe_control = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_ADDREMOVE_KEYFRAME', 'AXRole': 'AXButton',
+                                  'index': 2}
+    btn_opacity_reset_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_RESET_PARAM_KEYFRAME', 'AXRole': 'AXButton',
+                                'index': 2}
+    btn_opacity_previous_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_PREVIOUS_KEYFRAME', 'AXRole': 'AXButton',
+                                   'index': 2}
+    btn_opacity_next_keyframe = {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_NEXT_KEYFRAME', 'AXRole': 'AXButton', 'index': 2}
+    slider_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_OPACITY', 'AXRole': 'AXSlider'}
+    value_box_opacity = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_OPACITY', 'AXRole': 'AXGroup'}
+    edittext_opacity = [value_box_opacity, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_opacity_up = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_opacity_down = [value_box_opacity, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_opacity = {'AXRole': 'AXStaticText', 'AXValue': 'Opacity'} #20v3310_Checked. remove _NS:261, add AXRole (20.3310)
+    text_image_opacity = {'AXRole': 'AXStaticText', 'AXValue': 'Opacity'} #20v3310_Checked. remove _NS:363, add AXRole (20.3310)
+
+    # scale group
+    group_scale = {'AXIdentifier': 'IDC_TITLE_DESIGNER_EASE_SCALE'}
+    chx_scale_ease_in = [group_scale,{'AXIdentifier': 'IDC_EASE_CTRL_CHECKBOX_EASE_IN'}]
+    value_box_scale_ease_in = [group_scale,{'AXIdentifier': 'IDC_EASE_CTRL_SPINEDIT_EASE_IN'}]
+    edittext_scale_ease_in = [value_box_scale_ease_in, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_scale_ease_in_up = [value_box_scale_ease_in, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_scale_ease_in_down = [value_box_scale_ease_in, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_scale_ease_in = [group_scale,{'AXIdentifier': 'IDC_EASE_CTRL_SLIDER_EASE_IN', 'AXRole': 'AXSlider'}]
+    chx_scale_ease_out = [group_scale,{'AXIdentifier': 'IDC_EASE_CTRL_CHECKBOX_EASE_OUT'}]
+    value_box_scale_ease_out = [group_scale,{'AXIdentifier': 'IDC_EASE_CTRL_SPINEDIT_EASE_OUT', 'AXRole': 'AXGroup'}]
+    edittext_scale_ease_out = [value_box_scale_ease_out, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_scale_ease_out_up = [value_box_scale_ease_out, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_scale_ease_out_down = [value_box_scale_ease_out, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_scale_ease_out = [group_scale, {'AXIdentifier': 'IDC_EASE_CTRL_SLIDER_EASE_OUT', 'AXRole': 'AXSlider'}]
+
+
+    # rotation
+    group_rotation_keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_KEYFRAME_ROTATION'}
+    btn_rotation_keyframe_control = [group_rotation_keyframe, {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_ADDREMOVE_KEYFRAME', 'AXRole': 'AXButton'}]
+    btn_rotation_reset_keyframe = [group_rotation_keyframe, {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_RESET_PARAM_KEYFRAME', 'AXRole': 'AXButton'}]
+    btn_rotation_previous_keyframe = [group_rotation_keyframe, {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_PREVIOUS_KEYFRAME', 'AXRole': 'AXButton'}]
+    btn_rotation_next_keyframe = [group_rotation_keyframe, {'AXIdentifier': 'IDC_KEYFRAMEROOM_BTN_NEXT_KEYFRAME', 'AXRole': 'AXButton'}]
+
+    value_box_rotation = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPINEDIT_ROTATION', 'AXRole': 'AXGroup'}
+    edittext_rotation = [value_box_rotation, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_rotation_up = [value_box_rotation, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_rotation_down = [value_box_rotation, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_rotation = {'AXIdentifier': '_NS:315', 'AXValue': 'Rotation'} #20v3310_Checked #v21.0.4619 cannot find
+    text_image_rotation = {'AXIdentifier': '_NS:370', 'AXValue': 'Rotation'} #20v3310_Checked  #v21.0.4619 cannot find
+
+    group_roration_ease = {'AXIdentifier': 'IDC_TITLE_DESIGNER_EASE_ROTATION'}
+    chx_rotation_ease_in = [group_roration_ease, {'AXIdentifier': 'IDC_EASE_CTRL_CHECKBOX_EASE_IN', 'AXTitle': 'Ease in'}]
+    value_box_rotation_ease_in = [group_roration_ease, {'AXIdentifier': 'IDC_EASE_CTRL_SPINEDIT_EASE_IN', 'AXRole': 'AXGroup'}]
+    edittext_rotation_ease_in = [value_box_rotation_ease_in, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_rotation_ease_in_up = [value_box_rotation_ease_in, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_rotation_ease_in_down = [value_box_rotation_ease_in, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_rotation_ease_in = {'AXIdentifier': 'IDC_EASE_CTRL_SLIDER_EASE_IN', 'AXRole': 'AXSlider'}
+    chx_rotation_ease_out = {'AXIdentifier': 'IDC_EASE_CTRL_CHECKBOX_EASE_OUT', 'AXTitle': 'Ease out'}
+    value_box_rotation_ease_out = {'AXIdentifier': 'IDC_EASE_CTRL_SPINEDIT_EASE_OUT', 'AXRole': 'AXGroup'}
+    edittext_rotation_ease_out = [value_box_rotation_ease_out, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_rotation_ease_out_up = [value_box_rotation_ease_out, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_rotation_ease_out_down = [value_box_rotation_ease_out, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_rotation_ease_out = {'AXIdentifier': 'IDC_EASE_CTRL_SLIDER_EASE_OUT', 'AXRole': 'AXSlider'}
+
+    # render order
+    text_render_method = {'AXRole': 'AXStaticText', 'AXValue': 'Rendering Method'}
+    cbx_render_method = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_RENDERING_METHOD', 'AXRole': 'AXButton'}
+    option_title = {'AXRole': 'AXStaticText', 'AXValue': 'Entire Title'}
+    option_character = {'AXRole': 'AXStaticText', 'AXValue': 'Each Character'}
+    method_group = [option_title, option_character]
+
+class in_animation:
+    btn_in_animation = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle'}
+    cbx_effect = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_STARTING_EFFECT', 'AXRole': 'AXButton'}
+    option_all_effects = {'AXRole': 'AXStaticText', 'AXValue': 'All Effects'}
+    option_fly = {'AXRole': 'AXStaticText', 'AXValue': 'Fly'}
+    option_no_effect = {'AXRole': 'AXStaticText', 'AXValue': 'No Effect'}
+    option_popup = {'AXRole': 'AXStaticText', 'AXValue': 'Popup'}
+    option_roll_and_crawl = {'AXRole': 'AXStaticText', 'AXValue': 'Roll and Crawl'}
+    option_slide = {'AXRole': 'AXStaticText', 'AXValue': 'Slide'}
+    option_special = {'AXRole': 'AXStaticText', 'AXValue': 'Special'}
+    option_video_rotation = {'AXRole': 'AXStaticText', 'AXValue': 'Video Rotation'}
+    option_wipe = {'AXRole': 'AXStaticText', 'AXValue': 'Wipe'}
+
+class out_animation:
+    btn_out_animation = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle', 'index': 1}
+    cbx_effect = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_ENDING_EFFECT', 'AXRole': 'AXButton'}
+    option_all_effects = {'AXRole': 'AXStaticText', 'AXValue': 'All Effects'}
+    option_fly = {'AXRole': 'AXStaticText', 'AXValue': 'Fly'}
+    option_no_effect = {'AXRole': 'AXStaticText', 'AXValue': 'No Effect'}
+    option_popup = {'AXRole': 'AXStaticText', 'AXValue': 'Popup'}
+    option_roll_and_crawl = {'AXRole': 'AXStaticText', 'AXValue': 'Roll and Crawl'}
+    option_slide = {'AXRole': 'AXStaticText', 'AXValue': 'Slide'}
+    option_special = {'AXRole': 'AXStaticText', 'AXValue': 'Special'}
+    option_video_rotation = {'AXRole': 'AXStaticText', 'AXValue': 'Video Rotation'}
+    option_wipe = {'AXRole': 'AXStaticText', 'AXValue': 'Wipe'}
+
+class chromakey:
+    chx_chromakey = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'AXRole': 'AXCheckBox'}
+    btn_chromakey = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle'}
+    btn_dropper = {'AXIdentifier': 'IDC_CHROMAKEY_BTN_COLOR', 'AXRole': 'AXButton'}
+    btn_remove = {'AXIdentifier': 'IDC_CHROMAKEY_BTN_REMOVE', 'AXRole': 'AXButton'}
+    btn_add_new_key = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_CHROMAKEY_ADD', 'AXRole': 'AXButton'}
+    value_box_color_range = {'AXIdentifier': 'IDC_CHROMAKEY_SPINEDIT_COLOR_RANGE', 'AXRole': 'AXGroup'}
+    edittext_color_range = [value_box_color_range, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_color_range_up = [value_box_color_range, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_color_range_down = [value_box_color_range, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_color_range = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHROMAKEY_SLIDER_COLORRANGE', 'AXRole': 'AXSlider'}
+    value_box_denoise = {'AXIdentifier': 'IDC_CHROMAKEY_SPINEDIT_DENOISE', 'AXRole': 'AXGroup'}
+    edittext_denoise = [value_box_denoise, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_denoise_up = [value_box_denoise, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_denoise_down = [value_box_denoise, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_denoise = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHROMAKEY_SLIDER_DENOISE', 'AXRole': 'AXSlider'}
+
+class flip:
+    chx_flip = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'AXRole': 'AXCheckBox', 'index': 3}
+    btn_flip = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle', 'index': 3}
+    rdb_upside_down = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FLIP_VERTICAL', 'AXRole': 'AXCheckBox'}
+    rdb_left_to_right = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FLIP_HORIZONTAL', 'AXRole': 'AXCheckBox'}
+
+class fade:
+    chx_fade = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'AXRole': 'AXCheckBox', 'index': 4}
+    btn_fade = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle', 'index': 4}
+    chx_enable_fade_in = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FADE_IN', 'AXRole': 'AXCheckBox'}
+    chx_enable_fade_out = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_FADE_OUT', 'AXRole': 'AXCheckBox'}
+
+btn_hide_timeline_mode = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_HIDE_TIMELINE', 'AXRole': 'AXButton'}
+btn_display_timeline_mode = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SHOW_TIMELINE', 'AXRole': 'AXButton'}
+btn_simple_track_extend = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW', 'AXRole': 'AXOutline'}, {'AXRole': 'AXRow', 'index': 1},
+                           {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle'}] #20v3310_Checked. v2922: _NS:195, v3310: IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW
+btn_specific_keyframe = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW', 'AXRole': 'AXOutline'}, {'AXIdentifier': 'SimpleTimelineKeyframeCollectionViewItem', 'index': 0}] #20v3310_Checked. v2922: _NS:255
+btn_timeline_track_keyframe_control = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW', 'AXRole': 'AXOutline'},
+                                       {'AXRole': 'AXRow', 'index': 2},
+                                       {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_ADD_REMOVE_KEYFRAME',
+                                        'AXRole': 'AXButton'}] #20v3310_Checked. v2922: _NS:195, v3310: IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW
+btn_simple_track_fade_in = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW'}, {'AXRole': 'AXRow', 'index': 2}, {'AXIdentifier': '_NS:12', 'AXRole': 'AXScrollArea'},
+                                         {'AXIdentifier': '_NS:47', 'AXRole': 'AXImage'}] #20v3310_Checked. v2922: _NS:255 > v3310: IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW, v2922: _NS:47 > v3310: _NS:47
+btn_simple_track_fade_out = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW'}, {'AXRole': 'AXRow', 'index': 2}, {'AXIdentifier': '_NS:12', 'AXRole': 'AXScrollArea'},
+                                         {'AXIdentifier': '_NS:55', 'AXRole': 'AXImage'}] #20v3310_Checked. v2922: _NS:255 > v3310: IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW, v2922: _NS:55 > v3310: _NS:55
+btn_simple_track = [{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW', 'AXRole': 'AXOutline'},
+                                       {'AXRole': 'AXRow', 'index': 2}] #20v3310_Checked. v2922: _NS:195, v3310: IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW
+option_remove_track = {'AXIdentifier': 'onRemoveTrack:', 'AXRole': 'AXMenuItem'}
+option_enable_all_track = {'AXIdentifier': 'onEnableAllTracks:', 'AXRole': 'AXMenuItem'}
+class timeline_context_menu:
+    remove_keyframe = {'AXIdentifier': 'onAddRemoveKeyframe:', 'AXRole': 'AXMenuItem'}
+    remove_all_keyframe = {'AXIdentifier': 'onRemoveAllKeyframe:', 'AXRole': 'AXMenuItem'}
+    duplicate_previous_keyframe = {'AXIdentifier': 'onDuplicatePrevKeyframe:', 'AXRole': 'AXMenuItem'}
+    duplicate_next_keyframe = {'AXIdentifier': 'onDuplicateNextKeyframe:', 'AXRole': 'AXMenuItem'}
+    ease_in = {'AXIdentifier': 'onEaseIn:', 'AXRole': 'AXMenuItem'}
+    ease_out = {'AXIdentifier': 'onEaseOut:', 'AXRole': 'AXMenuItem'}
+    hold = {'AXIdentifier': 'Hold', 'AXRole': 'AXMenuItem'}
+    linear = {'AXIdentifier': 'Linear', 'AXRole': 'AXMenuItem'}
+class motion_graphic_title:
+    warning_dialog = {'AXIdentifier': 'IDD_CLALERT', 'AXRole': 'AXWindow'}
+    waring_dialog_msg = {'AXIdentifier': 'IDC_CLALERT_MESSAGE', 'AXRole': 'AXStaticText'}
+    warning_dialog_msg_content = 'You are editing a motion graphics title.\nThe available editing options are limited.'
+    chx_dont_show_again = {'AXIdentifier': 'IDC_CLALERT_SUPPRESSION_BUTTON', 'AXRole': 'AXCheckBox'}
+    btn_ok = {'AXIdentifier': 'IDC_CLALERT_BUTTON_0', 'AXRole': 'AXButton'}
+    btn_title = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle'}
+    btn_graphics_color = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle',
+                          'index': 1}
+    btn_object_setting = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle',
+                          'index': 2}
+class title: # title room > select a template of 'Motion Graphics' category > enter title designer
+    btn_title = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRole': 'AXDisclosureTriangle'}
+    cbx_select_title = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_COMBOBOX_SELECTED_OBJECT', 'AXRole': 'AXButton'}
+    option = {'AXRole': 'AXStaticText', 'AXRoleDescription': 'text'}
+    edittext_title_text = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_EDIT_TITLE', 'AXRole': 'AXTextArea'}
+    cbx_font_type = [main_window, {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_COMBOBOX_FONT_TYPE'}, {'AXRole': 'AXComboBox'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:63', 'AXRole': 'AXComboBox'}
+    btn_font_type = [main_window, {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_COMBOBOX_FONT_TYPE'}, {'AXRole': 'AXButton'}] #20v3310_Checked. original: {'AXIdentifier': '_NS:9', 'AXRole': 'AXButton'}
+    btn_bold = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_BTN_FONT_BOLD', 'AXRole': 'AXButton'}
+    btn_italic = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_BTN_FONT_ITALIC', 'AXRole': 'AXButton'}
+    btn_font_color = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_BTN_FONT_COLOR', 'AXRole': 'AXButton'}
+    edittext_red = {'AXIdentifier': 'red', 'AXRole': 'AXTextField'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRole': 'AXTextField'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRole': 'AXTextField'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRole': 'AXTextField'}
+    btn_color_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+
+class graphic_color: # title room > select a template of 'Motion Graphics' category > enter title designer
+    frame_graphic_color = {'AXRole': 'AXRow', 'AXRoleDescription': 'outline row', 'index': 3}
+    edittext_red = {'AXIdentifier': 'red', 'AXRole': 'AXTextField'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRole': 'AXTextField'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRole': 'AXTextField'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRole': 'AXTextField'}
+    btn_color_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+
+class mgt_object_settings: # title room > select a template of 'Motion Graphics' category > enter title designer
+    text_position = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_LABEL_OBJECT_POSITION', 'AXRole': 'AXStaticText'} #20v3310_Checked
+    value_box_position_x = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SPINEDIT_POSITION_X', 'AXRole': 'AXGroup'}
+    edittext_position_x = [value_box_position_x, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_position_x_up = [value_box_position_x, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_position_x_down = [value_box_position_x, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    value_box_position_y = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SPINEDIT_POSITION_Y', 'AXRole': 'AXGroup'}
+    edittext_position_y = [value_box_position_y, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_position_y_up = [value_box_position_y, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_position_y_down = [value_box_position_y, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    value_box_width = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SPINEDIT_WIDTH', 'AXRole': 'AXGroup'}
+    edittext_width = [value_box_width, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_width_up = [value_box_width, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_width_down = [value_box_width, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_scale = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_LABEL_OBJECT_SCALE', 'AXValue': 'Scale'} #20v3310_Checked
+    slider_width = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SLIDER_WIDTH', 'AXRole': 'AXSlider'}
+    value_box_height = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SPINEDIT_HEIGHT', 'AXRole': 'AXGroup'}
+    edittext_height = [value_box_height, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_height_up = [value_box_height, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_height_down = [value_box_height, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    slider_height = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SLIDER_HEIGHT', 'AXRole': 'AXSlider'}
+    chx_maintain_aspect_ratio = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_BTN_KEEP_ASPECT_RATIO', 'AXRole': 'AXCheckBox'}
+    value_box_rotation = {'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_SPINEDIT_ROTATION', 'AXRole': 'AXGroup'}
+    edittext_rotation = [value_box_rotation, {'AXIdentifier': 'spinEditTextField', 'AXRole': 'AXTextField'}]
+    stepper_rotation_up = [value_box_rotation, {'AXIdentifier': 'IDC_SPINEDIT_BTN_UP', 'AXRole': 'AXButton'}]
+    stepper_rotation_down = [value_box_rotation, {'AXIdentifier': 'IDC_SPINEDIT_BTN_DOWN', 'AXRole': 'AXButton'}]
+    text_rotation = {'AXIdentifier': '_NS:225', 'AXValue': 'Rotation'} #20v3310_Checked
+
+class mgt_function_buttons:
+    undo = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_UNDO', 'AXRole': 'AXButton'}
+    redo = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_REDO', 'AXRole': 'AXButton'}
+    zoom_out = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ZOOM_OUT', 'AXRole': 'AXButton'}
+    zoom_in = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_ZOOM_IN', 'AXRole': 'AXButton'}
+
+class backdrop:
+    chx_backdrop = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'AXRoleDescription': 'toggle button',
+                    'index': 3}
+    btn_backdrop = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                    'index': 5}
+    radio_solid_background_bar = {'AXIdentifier': 'IDC_BACKDROP_SOLID_BACKGROUND', 'AXTitle': 'Solid background bar'}
+    radio_fit_with_title = {'AXIdentifier': 'IDC_BACKDROP_FIT_WITH_TITLE', 'AXTitle': 'Fit with title'}
+    radio_group = [radio_solid_background_bar, radio_fit_with_title]
+
+    cbx_fit_with_title = {'AXIdentifier': 'IDC_BACKDROP_SHAPE_TYPE', 'AXRole': 'AXButton'}
+    option_ellipse = {'AXRole': 'AXStaticText', 'AXValue': 'Ellipse'}
+    option_rectangle = {'AXRole': 'AXStaticText', 'AXValue': 'Rectangle'}
+    option_curve_edged_rectangle = {'AXRole': 'AXStaticText', 'AXValue': 'Curve-edged Rectangle'}
+    option_rounded_rectangle = {'AXRole': 'AXStaticText', 'AXValue': 'Rounded Rectangle'}
+    fit_with_title_group = [option_ellipse, option_rectangle, option_curve_edged_rectangle, option_rounded_rectangle]
+
+    cbx_fill_type = {'AXIdentifier': 'IDC_BACKDROP_FILL_TYPE', 'AXRole': 'AXButton'}
+    option_uniform_color = {'AXRole': 'AXStaticText', 'AXValue': 'Uniform Color'}
+    option_2_color = {'AXRole': 'AXStaticText', 'AXValue': '2 Color Gradient'}
+    option_image = {'AXRole': 'AXStaticText', 'AXValue': 'Image'}
+    fill_type_group = [option_uniform_color, option_2_color, option_image]
+
+    btn_uniform_color = {'AXIdentifier': 'IDC_BACKDROP_ONE_COLORPICKER', 'AXRole': 'AXButton'}
+    edittext_red = {'AXIdentifier': 'red', 'AXRoleDescription': 'text field'}
+    edittext_green = {'AXIdentifier': 'green', 'AXRoleDescription': 'text field'}
+    edittext_blue = {'AXIdentifier': 'blue', 'AXRoleDescription': 'text field'}
+    edittext_hex = {'AXIdentifier': 'hex', 'AXRoleDescription': 'text field'}
+    btn_close = {'AXRole': 'AXButton', 'AXRoleDescription': 'close button'}
+    btn_begin_with = {'AXIdentifier': 'IDC_BACKDROP_BEGIN_COLORPICKER', 'AXRole': 'AXButton'}
+    btn_end_with = {'AXIdentifier': 'IDC_BACKDROP_END_COLORPICKER', 'AXRole': 'AXButton'}
+
+    chx_maintain_aspect_ratio = {'AXIdentifier': 'IDC_BACKDROP_SCALE_KEEP_ASPECT_RATIO', 'AXRole': 'AXCheckBox'}
+
+    class warning:
+        dialog = {'AXIdentifier': 'IDD_CLALERT', 'AXRole': 'AXWindow'}
+        btn_yes = {'AXIdentifier': 'IDC_CLALERT_BUTTON_0', 'AXRole': 'AXButton'}
+        btn_no = {'AXIdentifier': 'IDC_CLALERT_BUTTON_1', 'AXRole': 'AXButton'}
+    class image:
+        thumbnail_image = [main_window, {'AXIdentifier': 'IDC_TITLE_DESIGNER_LABEL_BACKDROP_TEXTURE_VIEW', 'AXRole': 'AXImage'}]
+        chx_keep_aspect_ratio = {'AXIdentifier': 'IDC_BACKDROP_TEXTURE_KEEP_ASPECT_RATIO', 'AXRole': 'AXCheckBox'}
+        chx_flip_upside_down = {'AXIdentifier': 'IDC_BACKDROP_TEXTURE_FILP_UPSIDE_DOWN', 'AXRole': 'AXCheckBox'}
+        chx_flip_left_to_right = {'AXIdentifier': 'IDC_BACKDROP_TEXTURE_FILP_LEFT_TO_RIGHT', 'AXRole': 'AXCheckBox'}
+    class width:
+        value = AdjustSet({'AXIdentifier': 'IDC_BACKDROP_SPINEDIT_WIDTH', 'AXRole': 'AXGroup'})
+        slider = {'AXIdentifier': 'IDC_BACKDROP_SLIDER_WIDTH', 'AXRole': 'AXSlider'}
+        value.group[0] = slider
+    class height:
+        value = AdjustSet({'AXIdentifier': 'IDC_BACKDROP_SPINEDIT_HEIGHT', 'AXRole': 'AXGroup'})
+        slider = {'AXIdentifier': 'IDC_BACKDROP_SLIDER_HEIGHT', 'AXRole': 'AXSlider'}
+        value.group[0] = slider
+    class opacity:
+        value = AdjustSet({'AXIdentifier': 'IDC_BACKDROP_SPINEDIT_OPACITY', 'AXRole': 'AXGroup'})
+        slider = {'AXIdentifier': 'IDC_BACKDROP_SLIDER_OPACITY', 'AXRole': 'AXSlider'}
+        value.group[0] = slider
+    class offset_x:
+        value = AdjustSet({'AXIdentifier': 'IDC_BACKDROP_SPINEDIT_OFFEST_X', 'AXRole': 'AXGroup'})
+        slider = {'AXIdentifier': 'IDC_BACKDROP_SLIDER_OFFEST_X', 'AXRole': 'AXSlider'}
+        value.group[0] = slider
+    class offset_y:
+        value = AdjustSet({'AXIdentifier': 'IDC_BACKDROP_SPINEDIT_OFFEST_Y', 'AXRole': 'AXGroup'})
+        slider = {'AXIdentifier': 'IDC_BACKDROP_SLIDER_OFFEST_Y', 'AXRole': 'AXSlider'}
+        value.group[0] = slider
+    class curve_radius:
+        value = AdjustSet({'AXIdentifier': 'IDC_BACKDROP_SPINEDIT_CRUVE_RADIUS', 'AXRole': 'AXGroup'})
+        slider = {'AXIdentifier': 'IDC_BACKDROP_SLIDER_CRUVE_RADIUS', 'AXRole': 'AXSlider'}
+        value.group[0] = slider
+
+class special_effect:
+    btn_special_effect = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                    'index': 7}
+    keyframe = {'AXIdentifier': '_NS:65'}
+    key_set = KEComboSet(keyframe, None)
+    value = AdjustSet({'AXIdentifier': '_NS:39'})
+    slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER'}
+    value.group[0] = slider
+    keyframe_color = {'AXIdentifier': '_NS:33', 'AXRole': 'AXGroup'}
+    key_set_color = KEComboSet(keyframe, None)
+    btn_color = {'AXIdentifier': '_NS:9', 'AXRole': 'AXButton'}
+
+    class effect:
+        thumb_template = {'AXIdentifier': 'titleSpecialEffectThumbCVI'}
+    class look:
+        cbx_look = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_BORDER_FILL_TYPE', 'AXRole': 'AXButton'}
+        option_look_1 = {'AXRole': 'AXStaticText', 'AXValue': 'Look 1'}
+        option_look_2 = {'AXRole': 'AXStaticText', 'AXValue': 'Look 2'}
+        option_look_3 = {'AXRole': 'AXStaticText', 'AXValue': 'Look 3'}
+        option_look_4 = {'AXRole': 'AXStaticText', 'AXValue': 'Look 4'}
+        option_look_5 = {'AXRole': 'AXStaticText', 'AXValue': 'Look 5'}
+        option_look_6 = {'AXRole': 'AXStaticText', 'AXValue': 'Look 6'}
+        look_group = [option_look_1, option_look_2, option_look_3, option_look_4, option_look_5, option_look_6]
+    class size:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_SIZE', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_SPINEDIT_SIZE'})
+        slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER'}
+        value.group[0] = slider
+    class density:
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_SPINEDIT_DENSITY'})
+        slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER', 'index': 1}
+        value.group[0] = slider
+    class tail_size:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_TAIL_SIZE', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_SPINEDIT_TAIL_SIZE'})
+        slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER'}
+        value.group[0] = slider
+    class tail_color:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_TAIL_COLOR', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        btn_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_BTN_COLORPICKER_TAIL_COLOR', 'AXRole': 'AXButton'}
+    class head_size:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_HEAD_SIZE', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_SPINEDIT_HEAD_SIZE'})
+        slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER', 'index': 1}
+        value.group[0] = slider
+    class head_color:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_HEAD_COLOR', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        btn_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_BTN_COLORPICKER_HEAD_COLOR', 'AXRole': 'AXButton'}
+    class color:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_COLOR', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        btn_color = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_BTN_COLORPICKER_COLOR', 'AXRole': 'AXButton'}
+    class length:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_LENGTH', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_SPINEDIT_LENGTH'})
+        slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER', 'index': 1}
+        value.group[0] = slider
+    class period:
+        keyframe = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_KEYFRAME_PERIOD', 'AXRoleDescription': 'group', 'AXRole': 'AXGroup'}
+        key_set = KEComboSet(keyframe, None)
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPECIAL_EFFECT_SPINEDIT_PERIOD'})
+        slider = {'AXIdentifier': 'IDC_KEYFRAMEROOM_SLIDER_SELECTSLIDER', 'index': 2}
+        value.group[0] = slider
+
+class motion_blur:
+    chx_motion_blur = {'AXIdentifier': 'IDC_PIP_DESIGNER_CHECKBOX_APPLY_PROPERTY', 'AXRoleDescription': 'toggle button'}
+    btn_motion_blur = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle',
+                    'index': 2}
+    text_path = {'AXIdentifier': 'IDC_DESIGNER_TEXT_PROPERTY', 'AXValue': 'Motion Blur'}
+    class blur_length:
+        text = {'AXValue': 'Blur length'}
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPIN_EDIT_M_BLUR_STRENGTH'})
+        slider = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_M_BLUR_STRENGTH'}
+        value.group[0] = slider
+    class blur_density:
+        text = {'AXValue': 'Blur density'}
+        value = AdjustSet({'AXIdentifier': 'IDC_TITLE_DESIGNER_SPIN_EDIT_M_BLUR_DENSITY'})
+        slider = {'AXIdentifier': 'IDC_TITLE_DESIGNER_SLIDER_M_BLUR_DENSITY'}
+        value.group[0] = slider
+
+class path:
+    btn_path = {'AXIdentifier': 'NSOutlineViewDisclosureButtonKey', 'AXRoleDescription': 'disclosure triangle'}
+    text_path = {'AXIdentifier': 'IDC_DESIGNER_TEXT_PROPERTY', 'AXValue': 'Path'}
+    btn_save_custom_path = {'AXIdentifier': 'IDC_TITLE_DESIGNER_BTN_SAVE_MOTION_SCRIPT', 'AXRole': 'AXButton'}
+    menu_remove_custom_path = {'AXIdentifier': 'removeCustomMotionPathWithSender:'}
+    class paths:
+        cbx_paths = {'AXIdentifier': 'IDC_TITLE_DESIGNER_COMBOBOX_STARTING_EFFECT', 'AXRole': 'AXButton'}
+        option_paths_1 = {'AXRole': 'AXStaticText', 'AXValue': 'All Paths'}
+        option_paths_2 = {'AXRole': 'AXStaticText', 'AXValue': 'Default Paths'}
+        option_paths_3 = {'AXRole': 'AXStaticText', 'AXValue': 'Custom Paths'}
+        path_group = [option_paths_1, option_paths_2, option_paths_3]
+        thumb_template = {'AXIdentifier': 'motionPathThumbCVI'}
+
+
+
