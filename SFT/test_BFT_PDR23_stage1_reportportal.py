@@ -2034,7 +2034,7 @@ class Test_BFT_365_OS14():
             preset_x = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             compare_preset_x = main_page.compare(preset_x, preset_ori, similarity=0.7)
             different_preset_x = not main_page.compare(preset_x, preset_ori, similarity=0.985)
-            if compare_preset_x and different_preset_x:
+            if not (compare_preset_x and different_preset_x):
                 assert False, "Preview not changed after applied preset 10 by preview window! Similarity should be in 0.7~0.985"
 
         if main_page.exist(L.title_designer.character_presets.btn_character_presets).AXValue == 1:
@@ -2549,6 +2549,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
+    @pytest.mark.object_settings
     @pytest.mark.name('[test_title_designer_func_4_15] Add keyframe on Position/ Scale/ Opacity/ Rotation')
     @exception_screenshot
     def test_title_designer_func_4_15(self):
@@ -2569,7 +2570,6 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Add Second Position keyframe at (09:00) and adjust value'):
             title_designer_page.set_timecode('00_00_09_00')
-            time.sleep(DELAY_TIME)
             title_designer_page.input_object_setting_x_position_value('0.24')
             title_designer_page.input_object_setting_y_position_value('0.935')
 
@@ -2582,26 +2582,22 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Add Second Scale keyframe at (08:00) and adjust value'):
             title_designer_page.set_timecode('00_00_08_00')
-            time.sleep(DELAY_TIME)
             # Add position 2nd keyframe
             title_designer_page.input_object_setting_scale_height_value('1.64')
 
         with step('[Action] Add First Opacity keyframe at (08:00)'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
             # Add opacity keyframe
             title_designer_page.click_object_setting_opacity_add_keyframe_control()
         
         with step('[Action] Add Second Opacity keyframe at (03:00) and adjust value'):
             # Add 2nd keyframe
             title_designer_page.set_timecode('00_00_03_00')
-            time.sleep(DELAY_TIME)
             title_designer_page.drag_object_setting_opacity_slider('59')
 
         with step('[Action] Add First Rotation keyframe and adjust value'):
             title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
             # Add rotate keyframe
             title_designer_page.input_object_setting_rotation_value('60')
             title_designer_page.click_object_setting_rotation_add_keyframe_control()
@@ -2609,9 +2605,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Add Second Rotation keyframe at (09:00) and adjust value'):
             # Add 2nd keyframe
             title_designer_page.set_timecode('00_00_09_00')
-            time.sleep(DELAY_TIME*2)
             title_designer_page.input_object_setting_rotation_value('260')
-            time.sleep(DELAY_TIME*2)
 
         with step('[Verify] Check if keyframe settings are set correctly as GT'):
             with step('[Action] Initialize preview'):
@@ -2628,32 +2622,35 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.save_template
-    @pytest.mark.name('[test_title_designer_func_4_16] Reopen AP and add saved template')
+    @pytest.mark.keyframe
+    @pytest.mark.ease_in_out
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_16] Add Ease In/ Out on Scale keyframe')
     @exception_screenshot
     def test_title_designer_func_4_16(self):
         '''
+        1. Adjust Ease in on Second Scale keyframe and check value
+        2. Adjust Ease out on First Scale keyframe and check value
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_14"
+        dependency_test = "test_title_designer_func_4_15"
         self.ensure_dependency(dependency_test)
 
         # [L143] 3.2 Title Designer > Object Settings > Ease in / Ease out work
-        with uuid("94d981a1-511c-44b0-996f-ec255d2ce28a") as case:
+        # with uuid("94d981a1-511c-44b0-996f-ec255d2ce28a") as case:
+
+        with step('[Action] Adjust Ease in on Second Scale keyframe'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(0.65)
             time.sleep(DELAY_TIME)
-
             # Set Ease in on Scale keyframe
             title_designer_page.set_check_object_setting_scale_ease_in()
             title_designer_page.drag_object_setting_scale_ease_in_slider(0.71)
             check_ease_in_value = title_designer_page.get_object_setting_scale_ease_in_value()
-            if float(check_ease_in_value) == 0.71:
-                adjust_ease_in_result = True
-            else:
-                logger(check_ease_in_value)
-                adjust_ease_in_result = False
+            if float(check_ease_in_value) != 0.71:
+                assert False, f'Ease in value is not set correctly! Expected: 0.71, Actual: {float(check_ease_in_value)}'
 
+        with step('[Action] Adjust Ease out on First Scale keyframe'):
             # click previous keyframe
             title_designer_page.click_object_setting_scale_previous_keyframe()
 
@@ -2661,28 +2658,76 @@ class Test_BFT_365_OS14():
             title_designer_page.set_check_object_setting_scale_ease_out()
             title_designer_page.drag_object_setting_scale_ease_out_slider(0.83)
             check_ease_out_value = title_designer_page.get_object_setting_scale_ease_out_value()
-            if float(check_ease_out_value) == 0.83:
-                adjust_ease_out_result_scale = True
-            else:
-                adjust_ease_out_result_scale = False
+            if float(check_ease_out_value) != 0.83:
+                assert False, f'Ease out value is not set correctly! Expected: 0.83, Actual: {float(check_ease_out_value)}'
+        assert True
 
-            logger(adjust_ease_out_result_scale)
 
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.ease_in_out
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_17] Reset Scale/ Position keyframe')
+    @exception_screenshot
+    def test_title_designer_func_4_17(self):
+        '''
+        1. Reset Scale keyframe and check if reset
+        2. Reset Position keyframe and check if reset
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_16"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Reset Scale keyframe'):
+            ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             # Reset Scale keyframe
             title_designer_page.click_object_setting_scale_reset_keyframe_control()
             time.sleep(DELAY_TIME*2)
             # Click [Yes] when pop up waring (This operation will reset all keyframe ...)
             main_page.exist_click(L.title_designer.backdrop.warning.btn_yes)
 
+        with step('[Verify] Check if Scale keyframe is reset'):
+            reseted_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if not main_page.compare(ori_img, reseted_img, similarity=0.9999):
+                assert False, "Scale keyframe is not reset!"
+            
+        with step('[Action] Reset Position keyframe'):
             # scroll upper (scroll bar)
             title_designer_page.drag_object_vertical_slider(0.52)
             time.sleep(DELAY_TIME)
 
+            ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+
             # Reset Position keyframe
             title_designer_page.click_object_setting_position_reset_keyframe_control()
-            time.sleep(DELAY_TIME*2)
+
             # Click [Yes] when pop up waring (This operation will reset all keyframe ...)
             main_page.exist_click(L.title_designer.backdrop.warning.btn_yes)
+
+        with step('[Verify] Check if Position keyframe is reset'):
+            reseted_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if not main_page.compare(ori_img, reseted_img, similarity=0.9999):
+                assert False, "Position keyframe is not reset!"
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.ease_in_out
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_18] Ease out on Rotation keyframe')
+    @exception_screenshot
+    def test_title_designer_func_4_18(self):
+        '''
+        1. Set Ease out on Rotation keyframe
+        2. Check if keyframe settings are set correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_17"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Ease out on First Rotation keyframe'):
 
             # click next keyframe
             title_designer_page.click_object_setting_rotation_next_keyframe()
@@ -2694,84 +2739,141 @@ class Test_BFT_365_OS14():
             # Set Ease out on Rotation keyframe
             title_designer_page.set_check_object_setting_rotation_ease_out()
             title_designer_page.input_object_setting_rotation_ease_out_value('0.75')
-            time.sleep(DELAY_TIME)
-            check_ease_out_value = title_designer_page.get_object_setting_rotation_ease_out_value()
-            if float(check_ease_out_value) == 0.75:
-                adjust_ease_out_result_rotation = True
-            else:
-                logger(check_ease_out_value)
-                adjust_ease_out_result_rotation = False
 
-            case.result = adjust_ease_in_result and adjust_ease_out_result_scale and adjust_ease_out_result_rotation
+        with step('[Verify] Check if keyframe settings are set correctly'):
+            check_ease_out_value = title_designer_page.get_object_setting_rotation_ease_out_value()
+            assert float(check_ease_out_value) == 0.75, f'Ease out value is not set correctly! Expected: 0.75, Actual: {float(check_ease_out_value)}'
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_19] Switch to next/ previous keyframe')
+    @exception_screenshot
+    def test_title_designer_func_4_19(self):
+        '''
+        1. Switch to next keyframe on Opacity keyframe
+        2. Check if switch to correct keyframe (08:00)
+        3. Switch to previous keyframe on Rotation keyframe
+        4. Check if switch to correct keyframe (03:00)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_18"
+        self.ensure_dependency(dependency_test)
 
         # [L341] 3.2 Title Designer > Object Settings > Simple timeline Add / Remove / Switch keyframe
-        with uuid("ad107e46-3c92-4dcd-b68c-0d7122e36b04") as case:
+        # with uuid("ad107e46-3c92-4dcd-b68c-0d7122e36b04") as case:
+
+        with step('[Action] Switch to next keyframe on Opacity keyframe'):
             # Check 2nd Title on simple track
             # Current timecode = 00:00:03:00
             title_designer_page.drag_simple_track_vertical_slider(1)
 
             # Click simple track : Opacity next keyframe
             title_designer_page.click_simple_track_opacity_next_keyframe(track_no=8)
-            time.sleep(DELAY_TIME*2)
 
+        with step('[Verify] Check if switch to correct keyframe (08:00)'):
             # Verify next keyframe button
             current_time_code = title_designer_page.get_timecode()
-            if current_time_code == '00:00:08:00':
-                check_next_keyframe_btn = True
-            else:
-                check_next_keyframe_btn = False
-            logger(current_time_code)
-            logger(check_next_keyframe_btn)
+            if current_time_code != '00:00:08:00':
+                assert False, f'Next keyframe is not set correctly! Expected: 00:00:08:00, Actual: {current_time_code}'
 
+        with step('[Action] Switch to previous keyframe on Rotation keyframe'):
             # Click simple track : Rotation previous keyframe
             title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=9)
-            time.sleep(DELAY_TIME*2)
 
+        with step('[Verify] Check if switch to correct keyframe (03:00)'):
             # Verify previous keyframe button
             current_time_code = title_designer_page.get_timecode()
-            if current_time_code == '00:00:03:00':
-                check_pre_keyframe_btn = True
-            else:
-                check_pre_keyframe_btn = False
+            if current_time_code != '00:00:03:00':
+                assert False, f'Previous keyframe is not set correctly! Expected: 00:00:03:00, Actual: {current_time_code}'
+        assert True
 
-            logger(check_pre_keyframe_btn)
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_20] Click [Previous] keyframe when no previous keyframe')
+    @exception_screenshot
+    def test_title_designer_func_4_20(self):
+        '''
+        1. Cancel Opacity keyframe at (03:00) by click again
+        2. Jumps to 08:00 and click [Previous] keyframe
+        3. Check if stay in 08:00 correctly (No previous keyframe)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_19"
+        self.ensure_dependency(dependency_test)
 
+        with step('[Action] Cancel Opacity keyframe at (03:00) by click again'):
             # Click simple track : Opacity keyframe [Reset] on the 3s keyframe
             title_designer_page.click_simple_track_opacity_keyframe_control(track_no=8)
             time.sleep(DELAY_TIME*2)
 
+        with step('[Action] Jumps to 08:00 and click [Previous] keyframe'):
             # Jump to 8s keyframe > Then click [Previous] keyframe to check previous keyframe
             current_time_code = title_designer_page.set_timecode('00_00_08_00')
             title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=8)
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check if stay in 08:00 correctly (No previous keyframe)'):
             # Verify  keyframe Reset button
             current_time_code = title_designer_page.get_timecode()
-            if current_time_code == '00:00:08:00':
-                check_reset_btn = True
-            else:
-                logger(current_time_code)
-                check_reset_btn = False
-            logger(check_reset_btn)
+            if current_time_code != '00:00:08:00':
+                assert False, f'Previous keyframe is not set correctly! Expected: 00:00:08:00, Actual: {current_time_code}'
+        assert True
 
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_21] Add Opacity keyframe at (09:00) and click [Previous] keyframe')
+    @exception_screenshot
+    def test_title_designer_func_4_21(self):
+        '''
+        1. Add Opacity keyframe at (09:00)
+        2. Click [Previous] keyframe to check previous keyframe
+        3. Check if changed to 08:00 correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_20"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Add Opacity keyframe at (09:00)'):
             # Click simple track : Opacity keyframe [Add] for Rotation keyframe
             title_designer_page.click_simple_track_opacity_keyframe_control(track_no=9)
-            time.sleep(DELAY_TIME*2)
+        
+        with step('[Action] Click [Previous] keyframe to check previous keyframe'):
             # Jump to 9s keyframe > Then click [Previous] keyframe to check previous keyframe
             title_designer_page.set_timecode('00_00_09_00')
             title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=9)
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check if changed to 08:00 correctly'):
             # Verify  keyframe Add button
             current_time_code = title_designer_page.get_timecode()
-            if current_time_code == '00:00:08:00':
-                check_add_btn = True
-            else:
-                logger(current_time_code)
-                check_add_btn = False
-            logger(check_add_btn)
+            if current_time_code != '00:00:08:00':
+                assert False, f'Previous keyframe is not set correctly! Expected: 00:00:08:00, Actual: {current_time_code}'
+        
+        assert True
 
-            case.result = check_next_keyframe_btn and check_pre_keyframe_btn and check_reset_btn and check_add_btn
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.ease_in_out
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_22] Ease out on Rotation keyframe')
+    @exception_screenshot
+    def test_title_designer_func_4_22(self):
+        '''
+        1. Set Ease out on Rotation keyframe
+        2. Check if keyframe settings are set correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_21"
+        self.ensure_dependency(dependency_test)
 
         # [L144] 3.2 Title Designer > Set in [Object] > Special Effect
         with uuid("9019594e-a256-461d-9c2f-0657541e569a") as case:
