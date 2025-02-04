@@ -2507,9 +2507,6 @@ class Test_BFT_365_OS14():
         2. Enter Advance mode and reach panel
         3. Check Adjusted width/ height/ rotate value
         '''
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_13"
-        self.ensure_dependency(dependency_test)
 
         # [L149] 3.2 Title Designer > Manually adjust on canvas
         # with uuid("f54750cd-3f0e-463f-8b05-8b84ba456351") as case:
@@ -2546,6 +2543,11 @@ class Test_BFT_365_OS14():
             if float(check_rotate_value) <= 50:
                 assert False, f'Rotate value is not set correctly! Expected: > 50, Actual: {check_rotate_value}'
 
+        # close app due to the section is completed
+        main_page.close_app()
+
+        assert True
+
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
@@ -2558,8 +2560,8 @@ class Test_BFT_365_OS14():
         1. Add keyframe on Position/ Scale/ Opacity/ Rotation
         2. Check if keyframe settings are set correctly as GT
         '''
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_14"
+        # Ensure the dependency test is run and passed (start a new section, starts from "test_title_designer_func_4_1")
+        dependency_test = "test_title_designer_func_4_1"
         self.ensure_dependency(dependency_test)
 
         # [L142] 3.2 Title Designer > Object Settings
