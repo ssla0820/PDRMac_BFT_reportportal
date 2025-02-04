@@ -2562,7 +2562,8 @@ class Test_BFT_365_OS14():
         '''
         # Ensure the dependency test is run and passed (start a new section, starts from "test_title_designer_func_4_1")
         dependency_test = "test_title_designer_func_4_1"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            self.test_title_designer_func_4_1()
 
         # [L142] 3.2 Title Designer > Object Settings
         # with uuid("adfdbb15-9d4a-4338-be3a-39d0922f896a") as case:
@@ -2860,90 +2861,96 @@ class Test_BFT_365_OS14():
             if current_time_code != '00:00:08:00':
                 assert False, f'Previous keyframe is not set correctly! Expected: 00:00:08:00, Actual: {current_time_code}'
         
+        with step('[Initialize] Close object setting tab for next test'):
+            # scroll upper (scroll bar)
+            title_designer_page.drag_object_vertical_slider(0.64)
+
+            # fold tab
+            title_designer_page.unfold_object_object_setting_tab(0)
+
         assert True
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
-    @pytest.mark.ease_in_out
-    @pytest.mark.object_settings
-    @pytest.mark.name('[test_title_designer_func_4_22] Ease out on Rotation keyframe')
+    @pytest.mark.special_effect
+    @pytest.mark.name('[test_title_designer_func_4_22] Apply Special Effect -- LED sign')
     @exception_screenshot
     def test_title_designer_func_4_22(self):
         '''
-        1. Set Ease out on Rotation keyframe
-        2. Check if keyframe settings are set correctly
+
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_21"
-        self.ensure_dependency(dependency_test)
+        # Start a new section, starts from "test_title_designer_func_4_1"
+
+        dependency_test = "test_title_designer_func_4_1"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            self.test_title_designer_func_4_1()
 
         # [L144] 3.2 Title Designer > Set in [Object] > Special Effect
-        with uuid("9019594e-a256-461d-9c2f-0657541e569a") as case:
-            # scroll upper (scroll bar)
-            title_designer_page.drag_object_vertical_slider(0.64)
-            time.sleep(DELAY_TIME)
+        # with uuid("9019594e-a256-461d-9c2f-0657541e569a") as case:
 
-            # fold tab
+        with step('[Action] Enter Special Effect tab'):
+            # fold object setting tab if opened
             title_designer_page.unfold_object_object_setting_tab(0)
+        
+            # unfold special effect tab if folded
+            title_designer_page.special_effects.set_unfold_tab(1)
             time.sleep(DELAY_TIME)
 
-            # unfold tab
-            title_designer_page.special_effects.set_unfold_tab(1)
-            time.sleep(DELAY_TIME * 2)
-
+        with step('[Action] Apply LED sign effect and check preview'):
             # Apply LED sign
             current_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
             title_designer_page.special_effects.apply_effect(4)
 
             # Warning: Do you want to continue?
             title_designer_page.handle_special_effect_want_to_continue(option=1)
-            time.sleep(DELAY_TIME*5)
             led_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
             is_applied_special_effect_led = not main_page.compare(current_title_preview, led_title_preview, similarity=0.95)
-            logger(is_applied_special_effect_led)
+            if not is_applied_special_effect_led:
+                assert False, "LED sign effect is not applied correctly on preview window!"
 
-            # scroll down (scroll bar)
-            title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
+        # scroll down (scroll bar)
+        title_designer_page.drag_object_vertical_slider(1)
+        time.sleep(DELAY_TIME)
 
-            # Check size value
-            get_current_value = title_designer_page.special_effects.size.value.get_value()
-            if get_current_value == '53':
-                check_default_size = True
-            else:
-                check_default_size = False
+        # Check size value
+        get_current_value = title_designer_page.special_effects.size.value.get_value()
+        if get_current_value == '53':
+            check_default_size = True
+        else:
+            check_default_size = False
 
-            # Apply LED > Look 4
-            title_designer_page.special_effects.set_look_menu(4)
-            time.sleep(DELAY_TIME * 2)
-            # Check current size
-            get_current_value = title_designer_page.special_effects.size.value.get_value()
-            if get_current_value == '49':
-                check_change_size = True
-            else:
-                check_change_size = False
+        # Apply LED > Look 4
+        title_designer_page.special_effects.set_look_menu(4)
+        time.sleep(DELAY_TIME * 2)
+        # Check current size
+        get_current_value = title_designer_page.special_effects.size.value.get_value()
+        if get_current_value == '49':
+            check_change_size = True
+        else:
+            check_change_size = False
 
-            # ----------
-            # Apply Electric Wave
-            title_designer_page.special_effects.apply_effect(6)
-            time.sleep(DELAY_TIME * 2)
+        # ----------
+        # Apply Electric Wave
+        title_designer_page.special_effects.apply_effect(6)
+        time.sleep(DELAY_TIME * 2)
 
-            # scroll down (scroll bar)
-            title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
+        # scroll down (scroll bar)
+        title_designer_page.drag_object_vertical_slider(1)
+        time.sleep(DELAY_TIME)
 
-            # Set size to 108
-            title_designer_page.special_effects.size.value.set_value(108)
-            # Set Length to 167
-            title_designer_page.special_effects.length.value.adjust_slider(167)
-            time.sleep(DELAY_TIME * 2)
+        # Set size to 108
+        title_designer_page.special_effects.size.value.set_value(108)
+        # Set Length to 167
+        title_designer_page.special_effects.length.value.adjust_slider(167)
+        time.sleep(DELAY_TIME * 2)
 
-            electric_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            is_applied_special_effect = not main_page.compare(electric_title_preview, led_title_preview, similarity=0.95)
-            logger(is_applied_special_effect)
+        electric_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
+        is_applied_special_effect = not main_page.compare(electric_title_preview, led_title_preview, similarity=0.95)
+        logger(is_applied_special_effect)
 
-            case.result = check_default_size and check_change_size and is_applied_special_effect_led and is_applied_special_effect
+        case.result = check_default_size and check_change_size and is_applied_special_effect_led and is_applied_special_effect
 
         # scroll down (scroll bar)
         title_designer_page.drag_object_vertical_slider(1)
