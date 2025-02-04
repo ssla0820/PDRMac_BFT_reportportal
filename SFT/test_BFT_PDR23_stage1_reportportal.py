@@ -2560,10 +2560,10 @@ class Test_BFT_365_OS14():
         1. Add keyframe on Position/ Scale/ Opacity/ Rotation
         2. Check if keyframe settings are set correctly as GT
         '''
-        # Ensure the dependency test is run and passed (start a new section, starts from "test_title_designer_func_4_1")
-        dependency_test = "test_title_designer_func_4_1"
-        if not self.ensure_dependency(dependency_test, run_dependency=False):
-            self.test_title_designer_func_4_1()
+
+        # Ensure the dependency test is run and passed
+        # Start a new section, starts from "test_title_designer_func_4_1"
+        self.test_title_designer_func_4_1()
 
         # [L142] 3.2 Title Designer > Object Settings
         # with uuid("adfdbb15-9d4a-4338-be3a-39d0922f896a") as case:
@@ -2882,10 +2882,7 @@ class Test_BFT_365_OS14():
         '''
         # Ensure the dependency test is run and passed
         # Start a new section, starts from "test_title_designer_func_4_1"
-
-        dependency_test = "test_title_designer_func_4_1"
-        if not self.ensure_dependency(dependency_test, run_dependency=False):
-            self.test_title_designer_func_4_1()
+        self.test_title_designer_func_4_1()
 
         # [L144] 3.2 Title Designer > Set in [Object] > Special Effect
         # with uuid("9019594e-a256-461d-9c2f-0657541e569a") as case:
