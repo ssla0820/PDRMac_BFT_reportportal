@@ -4,7 +4,7 @@ from .base_page import BasePage, AdjustSet, KEComboSet
 from .bft_Main_Page import Main_Page
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
 from .main_page import Main_Page
 from reportportal_client import step
@@ -26,7 +26,7 @@ def _checkbox_status(self, _locator, value=1, get_status=False, get_enable=False
             time.sleep(DELAY_TIME*1)
     except Exception as e:
         logger(f'Exception occurs. log={e}')
-        return False
+        return False(f'Exception occurs. log={e}')
     return True
 
 def _set_slider(self, _locator, value, is_int=True):
@@ -66,7 +66,7 @@ def _set_radio(self, _locator_radio_group, option=1, get_status=False):
             time.sleep(DELAY_TIME*1)
     except Exception as e:
         logger(f'Exception occurs. log={e}')
-        raise Exception
+        raise Exception(f'Exception occurs. log={e}')
     return True
 
 def _set_option(self, _locator_cbx, _locator_group, option=1, get_status=False, path=None):
@@ -247,28 +247,30 @@ class Title_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Title Designer] Get Title Text Content')
     def get_title_text_content(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             title_text = self.exist(L.title_designer.area.edittext_text_content).AXValue
             return title_text
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-        return True
+            raise Exception(f'Exception occurs. log={e}')
 
+    @step('[Action][Title Designer] Drag Vertical Slider')
     def drag_object_vertical_slider(self, value):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist(L.title_designer.object.slider_vertical_track).AXValue = float(value)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_animation_vertical_slider(self, value):
@@ -315,7 +317,8 @@ class Title_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Title Designer] Insert Title')
     def insert_title(self, text):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -328,15 +331,15 @@ class Title_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Title Designer] Edit Title')
     def edit_object_title(self, strText):
         target = self.exist(L.title_designer.area.edittext_text_content)
         self.el_click(target)
         self.tap_SelectAll_hotkey()
         time.sleep(DELAY_TIME)
         target.AXValue = str(strText)
-        time.sleep(DELAY_TIME * 0.5)
-        time.sleep(DELAY_TIME * 1)
+        time.sleep(DELAY_TIME * 1.5)
 
     def click_insert_particle_btn(self):
         try:
@@ -472,11 +475,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Switch mode')
     def switch_mode(self, mode=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             if mode == 1:
                 self.exist_click(L.title_designer.btn_basic)
             elif mode == 2:
@@ -484,7 +488,7 @@ class Title_Designer(Main_Page, BasePage):
             time.sleep(DELAY_TIME*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def get_current_mode(self):
@@ -584,6 +588,7 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Save template as')
     def save_as_name(self, name, click_ok=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -747,12 +752,13 @@ class Title_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Title Designer] Apply Character Presets')
     def apply_character_presets(self, index, character_type=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.character_presets.btn_character_presets).AXValue == 0:
                 self.exist_click(L.title_designer.character_presets.btn_character_presets)
@@ -762,16 +768,18 @@ class Title_Designer(Main_Page, BasePage):
             elif character_type == 2:
                 self.exist_click(L.title_designer.character_presets.option_my_presets)
             self.exist_click({'AXIdentifier': 'TitleCharPresetCollectionViewItem', 'index': index})
+            time.sleep(DELAY_TIME*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Font Type')
     def set_font_type(self, type):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -783,14 +791,15 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.font_paragraph.btn_font)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Font Size')
     def set_font_size(self, value):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -802,14 +811,15 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.font_paragraph.btn_font_size)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Line Spacing Amount')
     def set_line_spacing_amount(self, value):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -821,14 +831,15 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.font_paragraph.btn_line_spacing_amount)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Text Spacing Amount')
     def set_text_spacing_amount(self, value):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -840,14 +851,15 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.font_paragraph.btn_text_spacing_amount)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Font Face Color')
     def set_font_face_color(self, red='255', green='255', blue='255'):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -866,14 +878,15 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.font_paragraph.btn_close)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Kerning Check')
     def set_kerning_check(self, bCheck=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -888,7 +901,7 @@ class Title_Designer(Main_Page, BasePage):
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_bold_btn(self):
@@ -919,11 +932,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Set Align')
     def set_align(self, type):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.font_paragraph.btn_font_paragraph).AXValue == 0:
                 self.exist_click(L.title_designer.font_paragraph.btn_font_paragraph)
@@ -935,14 +949,15 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.font_paragraph.btn_align_right)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Check Font Face')
     def set_check_font_face(self, bCheck=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             value = self.exist(L.title_designer.font_face.chx_font_face).AXValue
             if value == 1 and bCheck == 1:
@@ -953,16 +968,17 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.font_face.chx_font_face)
             elif value == 0 and bCheck == 0:
                 return True
+            time.sleep(DELAY_TIME * 2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
+    @step('[Action][Title Designer] Enable/ Disable Check Shadow')
     def set_check_shadow(self, bCheck=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             value = self.exist(L.title_designer.shadow.chx_shadow).AXValue
             if value == 1 and bCheck == 1:
@@ -973,9 +989,10 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.shadow.chx_shadow)
             elif value == 0 and bCheck == 0:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def set_check_border(self, bCheck=1):
@@ -1196,12 +1213,13 @@ class Title_Designer(Main_Page, BasePage):
         btn_select_style = [0, L.title_designer.font_face.option_gradient_linear, L.title_designer.font_face.option_gradient_radial, L.title_designer.font_face.option_gradient_corner]
         self.click(btn_select_style[option])
         time.sleep(DELAY_TIME)
-
+    
+    @step('[Action][Title Designer] Enable/Disable Border')
     def apply_border(self, bApply):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             value = self.exist(L.title_designer.border.chx_border).AXValue
             if value == 0 and bApply == 0:
@@ -1212,9 +1230,10 @@ class Title_Designer(Main_Page, BasePage):
                 return True
             elif value == 1 and bApply == 0:
                 self.exist_click(L.title_designer.border.chx_border)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_border_size_slider(self, value, image=0):
@@ -1571,12 +1590,12 @@ class Title_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    @step('[Action][Title Designer] Enable/ Disable Check Shadow') 
     def apply_shadow(self, bApply):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             value = self.exist(L.title_designer.shadow.chx_shadow).AXValue
             if value == 0 and bApply == 0:
@@ -1587,9 +1606,10 @@ class Title_Designer(Main_Page, BasePage):
                 return True
             elif value == 1 and bApply == 0:
                 self.exist_click(L.title_designer.shadow.chx_shadow)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def apply_shadow_to(self, index, image=0):
@@ -1620,11 +1640,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Drag Shadow Distance Slider')
     def drag_shadow_distance_slider(self, value, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if image == 0:
                 if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
@@ -1633,9 +1654,10 @@ class Title_Designer(Main_Page, BasePage):
                 if self.exist(L.title_designer.shadow.btn_image_shadow).AXValue == 0:
                     self.exist_click(L.title_designer.shadow.btn_image_shadow)
             self.exist(L.title_designer.shadow.slider_distance).AXValue = float(value)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def input_shadow_distance_value(self, value, image=0):
@@ -1659,11 +1681,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Click Shadow Distance Arrow Button')
     def click_shadow_distance_arrow_btn(self, index, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if image == 0:
                 if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
@@ -1675,9 +1698,10 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.shadow.stepper_distance_value_up)
             elif index == 1:
                 self.exist_click(L.title_designer.shadow.stepper_distance_value_down)
+            time.sleep(DELAY_TIME*0.5)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_shadow_blur_slider(self, value, image=0):
@@ -1698,11 +1722,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Input Shadow Blur Value')
     def input_shadow_blur_value(self, value, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if image == 0:
                 if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
@@ -1714,9 +1739,10 @@ class Title_Designer(Main_Page, BasePage):
             self.mouse.click(times=3)
             self.keyboard.send(value)
             self.exist_click(L.title_designer.shadow.text_blur)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_shadow_blur_arrow_btn(self, index, image=0):
@@ -1740,11 +1766,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Drag Shadow Opacity Slider')
     def drag_shadow_opacity_slider(self, value, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if image == 0:
                 if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
@@ -1753,16 +1780,18 @@ class Title_Designer(Main_Page, BasePage):
                 if self.exist(L.title_designer.shadow.btn_image_shadow).AXValue == 0:
                     self.exist_click(L.title_designer.shadow.btn_image_shadow)
             self.exist(L.title_designer.shadow.slider_opacity).AXValue = float(value)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Input Shadow Opacity Value')
     def input_shadow_opacity_value(self, value, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if image == 0:
                 if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
@@ -1774,9 +1803,10 @@ class Title_Designer(Main_Page, BasePage):
             self.mouse.click(times=3)
             self.keyboard.send(value)
             self.exist_click(L.title_designer.shadow.text_opacity)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_shadow_opacity_arrow_btn(self, index, image=0):
@@ -1800,11 +1830,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Enable/ Disable Check Fill Shadow')
     def set_check_shadow_fill_shadow(self, bCheck=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
                 self.exist_click(L.title_designer.shadow.btn_shadow)
@@ -1817,16 +1848,18 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.shadow.chx_fill_shadow)
             elif bCheck == 1 and value == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Set Shadow Fill Shadow Color')
     def set_shadow_fill_shadow_color(self, red='255', green='255', blue='255', image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if image == 0:
                 if self.exist(L.title_designer.shadow.btn_shadow).AXValue == 0:
@@ -1860,9 +1893,10 @@ class Title_Designer(Main_Page, BasePage):
                 self.keyboard.send(blue)
                 self.exist_click(L.title_designer.shadow.edittext_red)
                 self.exist_click(L.title_designer.shadow.btn_close)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def input_shadow_direction_value(self, value):
@@ -2029,20 +2063,22 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Add Keyframe Control')
     def click_object_setting_position_add_keyframe_control(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.object_setting.btn_object_setting).AXValue == 0:
                 self.exist_click(L.title_designer.object_setting.btn_object_setting)
             self.exist_click(L.title_designer.object_setting.btn_position_keyframe_control)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Reset Keyframe Control in Position')
     def click_object_setting_position_reset_keyframe_control(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -2057,6 +2093,7 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Click Previous Keyframe Control in Position')
     def click_object_setting_position_previous_keyframe(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -2068,23 +2105,25 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.object_setting.btn_position_previous_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Click Next Keyframe Control in Position')
     def click_object_setting_position_next_keyframe(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.object_setting.btn_object_setting).AXValue == 0:
                 self.exist_click(L.title_designer.object_setting.btn_object_setting)
             self.exist_click(L.title_designer.object_setting.btn_position_next_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Input Object Setting Position X Value')
     def input_object_setting_x_position_value(self, value, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -2102,14 +2141,15 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.object_setting.text_image_x)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Click Object Setting Position X Arrow Button')
     def click_object_setting_x_position_arrow_btn(self, index):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.object_setting.btn_object_setting).AXValue == 0:
                 self.exist_click(L.title_designer.object_setting.btn_object_setting)
@@ -2119,14 +2159,15 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.object_setting.stepper_position_x_down)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
+    @step('[Action][Title Designer] Input Object Setting Position Y Value')
     def input_object_setting_y_position_value(self, value, image=0):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.object_setting.btn_object_setting).AXValue == 0:
                 self.exist_click(L.title_designer.object_setting.btn_object_setting)
@@ -2139,7 +2180,7 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.object_setting.text_image_y)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_object_setting_y_position_arrow_btn(self, index):
@@ -2313,18 +2354,19 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Add Keyframe Control in Scale')
     def click_object_setting_scale_add_keyframe_control(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_object)
             if self.exist(L.title_designer.object_setting.btn_object_setting).AXValue == 0:
                 self.exist_click(L.title_designer.object_setting.btn_object_setting)
             self.exist_click(L.title_designer.object_setting.btn_scale_keyframe_control)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_object_setting_scale_reset_keyframe_control(self):
@@ -2389,18 +2431,19 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Get Object Setting Scale Width Value')
     def get_object_setting_scale_width_value(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
 
             width_elem = self.exist(L.title_designer.object_setting.edittext_scale_width)
             if width_elem:
                 return width_elem.AXValue
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_object_setting_scale_width_arrow_btn(self, index):
@@ -2440,6 +2483,7 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Get Object Setting Scale Height Value')
     def get_object_setting_scale_height_value(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -2864,6 +2908,7 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Get Object Setting Rotation Value')
     def get_object_setting_rotation_value(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -3714,12 +3759,13 @@ class Title_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][TitleDesigner] Fold or Unfold [Font Face] Tab')
     def unfold_object_font_face_tab(self, unfold=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             value = self.exist(L.title_designer.font_face.btn_font_face).AXValue
             if value == 0 and unfold == 0:
                 return True
@@ -3729,16 +3775,17 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.font_face.btn_font_face)
             elif value == 1 and unfold == 1:
                 return True
+            time.sleep(DELAY_TIME * 2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def unfold_object_border_tab(self, unfold=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             value = self.exist(L.title_designer.border.btn_border).AXValue
             if value == 0 and unfold == 0:
                 return True
@@ -3750,14 +3797,15 @@ class Title_Designer(Main_Page, BasePage):
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][TitleDesigner] Fold/ Unfold [Shadow] Tab')
     def unfold_object_shadow_tab(self, unfold=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             value = self.exist(L.title_designer.shadow.btn_shadow).AXValue
             if value == 0 and unfold == 0:
                 return True
@@ -3767,16 +3815,18 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.shadow.btn_shadow)
             elif value == 1 and unfold == 1:
                 return True
+            time.sleep(DELAY_TIME * 2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][TitleDesigner] Fold/ Unfold [Object Setting] Tab')
     def unfold_object_object_setting_tab(self, unfold=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             value = self.exist(L.title_designer.object_setting.btn_object_setting).AXValue
             if value == 0 and unfold == 0:
                 return True
@@ -3786,9 +3836,10 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.object_setting.btn_object_setting)
             elif value == 1 and unfold == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def unfold_animation_in_animation_tab(self, unfold=1):
@@ -4897,12 +4948,14 @@ class Title_Designer(Main_Page, BasePage):
             self.offset_y = self.OffsetY(*args, *kwargs)
             self.curve_radius = self.CurveRadius(*args, *kwargs)
 
+        @step('[Action][TitleDesigner][Backdrop] Fold/ Unfold the tab')
         def set_unfold_tab(self, unfold=1):
             return _checkbox_status(self, L.title_designer.backdrop.btn_backdrop, unfold, get_status=False)
 
         def get_tab_status(self):
             return _checkbox_status(self, L.title_designer.backdrop.btn_backdrop, get_status=True)
-
+        
+        @step('[Action][TitleDesigner][Backdrop] Enable/ Disable the checkbox')
         def set_checkbox(self, bApply):
             return bool(_checkbox_status(self, L.title_designer.backdrop.chx_backdrop, bApply, get_status=False))
 
@@ -4915,11 +4968,13 @@ class Title_Designer(Main_Page, BasePage):
             _set_radio(self, target_radio, option=index)
             if index > 1 and fit_type is not None:
                 _set_option(self, L.title_designer.backdrop.cbx_fit_with_title, target_option, fit_type)
-
+        
+        @step('[Action][TitleDesigner][Backdrop] Get the type of backdrop')
         def get_type(self):
             target_radio = L.title_designer.backdrop.radio_group
             return _set_radio(self, target_radio, option=2, get_status=True)
-
+        
+        @step('[Action][TitleDesigner][Backdrop] Get the status of width')
         def check_width_disable(self):
             return bool(_checkbox_status(self, L.title_designer.backdrop.width.slider, get_enable=True))
 
@@ -4938,6 +4993,7 @@ class Title_Designer(Main_Page, BasePage):
             target_option = L.title_designer.backdrop.fill_type_group
             return _set_option(self, L.title_designer.backdrop.cbx_fill_type, target_option, get_status=True)
 
+        @step('[Action][TitleDesigner][Backdrop] Apply color to backdrop')
         def apply_uniform_color(self, HexColor):
             self.click(L.title_designer.backdrop.btn_uniform_color)
             return _set_color(self, HexColor)
@@ -5008,6 +5064,7 @@ class Title_Designer(Main_Page, BasePage):
                 super().__init__(*args, **kwargs)
                 self.value = AdjustSet(self, L.title_designer.backdrop.height.value.group)
 
+        @step('[Action][TitleDesigner][Backdrop] Enable/ Disable maintain aspect ratio')
         def set_maintain_aspect_ratio(self, bApply):
             return _checkbox_status(self, L.title_designer.backdrop.chx_maintain_aspect_ratio, bApply, get_status=False)
 
@@ -5207,6 +5264,7 @@ class AdjustTitleOnCanvas(Main_Page, BasePage):
         super().__init__(*args, **kwargs)
         self.adjust_in_canvas = AdjustInCanvas(*args, **kwargs)
 
+    @step('[Action][TitleDesigner][AdjustTitleOnCanvas] Resize the title to small')
     def resize_to_small(self, x, y, dot='lt'):
         return bool(self.adjust_in_canvas.resize(x, y, direction=dot, is_title=True))
 
@@ -5314,8 +5372,7 @@ class AdjustInCanvas(Main_Page, BasePage):
             self.mouse.drag_directly(ori_pos, des_pos)
             time.sleep(DELAY_TIME * 0.5)
         except Exception as e:
-            logger(f'Exception occurs. log={e}')
-            return False
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def move(self, drag_x=50, is_title=False, is_left=False):

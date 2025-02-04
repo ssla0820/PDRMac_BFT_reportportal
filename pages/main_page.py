@@ -901,7 +901,8 @@ class Main_Page(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
+    @step('[Action][Main_page] Click [Set User Preferences]')
     def click_set_user_preferences(self):
         try:
             self.exist_click(L.main.btn_set_user_preferences)

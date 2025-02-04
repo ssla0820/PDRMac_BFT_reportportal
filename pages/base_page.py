@@ -363,6 +363,7 @@ class BasePage(BasePage):
     def fold(self, locator):
         return self.unfold(locator, unfold=False)
 
+    @step("[Action][Base_page] Double click")
     def double_click(self, locator=None, btn="left"):
         self.click(locator, btn, times=2)
 
@@ -381,6 +382,7 @@ class BasePage(BasePage):
                 self.mouse.click(*tag.center)
                 return True
 
+    @step("[Action][Base_page] Select Library Room category")
     def select_LibraryRoom_category(self, name):
         category = self.exist(L.base.category)
         category._activate()
@@ -1025,10 +1027,10 @@ class BasePage(BasePage):
                 break
             if is_complete == 0:
                 logger(f'Fail to verify image change')
-                raise Exception
+                raise Exception(f'Fail to verify image change')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_mouse(self, start_pos, dest_pos):
@@ -1196,7 +1198,7 @@ class BasePage(BasePage):
             time.sleep(OPERATION_DELAY)
 
     # For Launcher related pages ------>
-    @step("[Action] click 'New Project' button on Launcher")
+    @step("[Action][Base_page] click 'New Project' button on Launcher")
     def click_new_project_on_launcher(self):
         # if find launcher
         if self.is_exist(L.base.launcher_window.main):
@@ -1359,10 +1361,11 @@ class AdjustSet:
         self.driver = driver
         self.locators = locators  # slider, value, arrow_up, arrow_down
 
+    @step("[Action][Base_page][AdjustSet] Adjust slider value")
     def adjust_slider(self, value):
         self.driver.exist(self.locators[0]).AXValue = value
         return True
-
+    @step("[Action][Base_page][AdjustSet] Set value")
     def set_value(self, value):
         target = self.driver.exist(self.locators[1])
         self.driver.mouse.click(*target.center)

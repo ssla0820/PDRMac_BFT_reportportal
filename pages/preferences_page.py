@@ -1,6 +1,7 @@
 import time, datetime, os, copy
 import os.path
 from os.path import expanduser
+from reportportal_client import step
 
 from .base_page import BasePage
 from ATFramework.utils import logger
@@ -43,7 +44,7 @@ def checkbox_set_check(obj, locator, is_check=1):
         raise Exception
     return True
 
-
+@step('[Action][Preferences_Page] Set editbox value')
 def editbox_set_value(obj, locator, value, verify=1):
     try:
         logger(f'input {value=}')
@@ -53,10 +54,10 @@ def editbox_set_value(obj, locator, value, verify=1):
         if verify:
             if obj.exist(locator).AXValue != str(value):
                 logger('Fail to verify after set value')
-                raise Exception
+                raise Exception('Fail to verify after set value')
     except Exception as e:
         logger(f'Exception occurs. log={e}')
-        raise Exception
+        raise Exception(f'Exception occurs. log={e}')
     return True
 
 
@@ -97,6 +98,7 @@ class Preferences_Page(BasePage):
         self.director_zone = self.DirectorZone(*args, **kwargs)
         self.cyberlink_cloud = self.CyberlinkCloud(*args, **kwargs)
 
+    @step('[Action][Preferences_Page] Click [OK] button')
     def click_ok(self):
         try:
             img_before = self.screenshot()
@@ -106,7 +108,7 @@ class Preferences_Page(BasePage):
             self.wait_for_image_changes(img_before, similarity=0.97)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_cancel(self):
@@ -147,13 +149,14 @@ class Preferences_Page(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Preferences_Page] Switch to [Editing] tab')
     def switch_to_editing(self):
         try:
             if not self.exist_click(L.preferences.tab_editing):
-                raise Exception
+                raise Exception('Fail to click [Editing] tab')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def switch_to_file(self):
@@ -615,6 +618,7 @@ class Preferences_Page(BasePage):
             locator.append(L.preferences.editbox_unit)
             return editbox_get_value(self, locator)
 
+        @step('[Action][Preferences_Page] Set Title default Duration')
         def durations_title_set_value(self, value):
             locator_parent = L.preferences.editing.duration.editbox_title_parent
             locator = locator_parent.copy()

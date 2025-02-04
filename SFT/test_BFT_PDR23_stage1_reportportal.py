@@ -725,6 +725,7 @@ class Test_BFT_365_OS14():
         assert True
 
     # 11 uuid
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.name('[test_media_room_func_2_1] Enter media room and check [Use Sample Media] shows')
     @exception_screenshot
@@ -743,7 +744,7 @@ class Test_BFT_365_OS14():
             assert main_page.exist(L.media_room.string_use_sample_media, timeout=7), "Use Sample Media not found!"
 
 
-
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.name('[test_media_room_func_2_2] Switch to another room (Particle Room) and back to Media Room')
     @exception_screenshot
@@ -772,7 +773,7 @@ class Test_BFT_365_OS14():
         with step("[Verify] Check [Use Sample Media] is shown on Media Room"):
             assert main_page.exist(L.media_room.string_use_sample_media, timeout=7), "Use Sample Media not found!"
 
-
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.import_media
     @pytest.mark.name('[test_media_room_func_2_3] Click [Use Sample Media] and select an imported media')
@@ -797,6 +798,7 @@ class Test_BFT_365_OS14():
         select_media = main_page.select_library_icon_view_media('Landscape 02.jpg')
         assert select_media, "Select media failed!"
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.import_media
     @pytest.mark.bubble
@@ -830,6 +832,7 @@ class Test_BFT_365_OS14():
 
             assert verify_bubble_1 and verify_bubble_2, f"Bubble not found after click [Insert] button!, media bubble= {verify_bubble_1}, tooltip bubble= {verify_bubble_2}"
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.bubble
     @pytest.mark.name('[test_media_room_func_2_5] Check bubble content is correct')
@@ -853,6 +856,7 @@ class Test_BFT_365_OS14():
         
         assert bubble_1_preview_result and bubble_2_preview_result, f"Bubble content is incorrect!, media bubble= {bubble_1_preview_result}, tooltip bubble= {bubble_2_preview_result}"
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.bubble
     @pytest.mark.name('[test_media_room_func_2_6] Click anywhere to close bubble')
@@ -877,6 +881,7 @@ class Test_BFT_365_OS14():
 
         assert verify_bubble_1 and verify_bubble_2, f"Bubble not closed after click anywhere!, media bubble= {verify_bubble_1}, tooltip bubble= {verify_bubble_2}"
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.stock_media
     @pytest.mark.name('[test_media_room_func_2_7] Check [Stock Media] button shows')
@@ -896,6 +901,7 @@ class Test_BFT_365_OS14():
             result = main_page.exist(L.media_room.btn_stock_media)
             assert result, "Stock Media button not found!"
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.pip_designer
     @pytest.mark.timeline
@@ -942,6 +948,7 @@ class Test_BFT_365_OS14():
         cutout_bubble_preview = main_page.compare(Ground_Truth_Folder + 'L407.png', blue_bubble_cutout, similarity=0.85)
         assert cutout_bubble_preview, "Cutout bubble content is not as expected!"
 
+    @pytest.mark.media_room_func
     @pytest.mark.pip_designer
     @pytest.mark.bubble
     @pytest.mark.name('[test_media_room_func_2_9] Check Cutout bubble is closed after clicking properties')
@@ -969,7 +976,7 @@ class Test_BFT_365_OS14():
                 verify_result = True
             assert verify_result, "Bubble is not closed after clicking properties!"
 
-
+    @pytest.mark.media_room_func
     @pytest.mark.pip_designer
     @pytest.mark.auto_cutout
     @pytest.mark.name('[test_media_room_func_2_10] Check Cutout button and close pip designer')
@@ -994,6 +1001,7 @@ class Test_BFT_365_OS14():
             pip_designer_page.click_ok()
         assert True
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.pip_designer
     @pytest.mark.timeline
@@ -1069,6 +1077,7 @@ class Test_BFT_365_OS14():
         pip_designer_page.click_ok()
         # time.sleep(DELAY_TIME * 2)
 
+    @pytest.mark.media_room_func
     @pytest.mark.media_room
     @pytest.mark.name('[test_media_room_func_2_z] Close AP due to the section is completed')
     def test_media_room_func_2_z(self):
@@ -1077,7 +1086,7 @@ class Test_BFT_365_OS14():
         assert True
 
     #  18 uuid
-
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.content_pack
     @pytest.mark.name('[test_intro_room_func_3_1] Enter Video Intro and select favorite template to enter designer')
@@ -1112,7 +1121,7 @@ class Test_BFT_365_OS14():
         with step("[Verify] Check if intro video designer is shown"):
             assert main_page.exist(L.intro_video_room.intro_video_designer.main_window, timeout=15), "Intro video designer not found!"
 
-
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.timeline
     @pytest.mark.name('[test_intro_room_func_3_2] Check preview intro video by Play/Pause/Stop/Enter timecode')
@@ -1153,7 +1162,7 @@ class Test_BFT_365_OS14():
         
         assert not designer_preview_result and timocode_check, f"Preview intro video failed!, Play/Pause={not designer_preview_result}, stop={timocode_check}"
 
-
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.duration
     @pytest.mark.name('[test_intro_room_func_3_3] Set Duration time')
@@ -1201,6 +1210,7 @@ class Test_BFT_365_OS14():
 
         assert default_duration and set_result, f"Duration time error! Default duration={default_duration}, set new duration={set_result}"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.replace_media
     @pytest.mark.color_board
@@ -1232,6 +1242,7 @@ class Test_BFT_365_OS14():
             else:
                 assert False, "Color changed failed!"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.replace_media
     @pytest.mark.color_board
@@ -1260,6 +1271,7 @@ class Test_BFT_365_OS14():
             designer_preview_result = main_page.compare(img_7B17FF, img_95C029, similarity=0.98)
             assert not designer_preview_result, "Preview is not change after modified color again! Similarity should<0.98"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.replace_media
     @pytest.mark.import_media
@@ -1313,6 +1325,7 @@ class Test_BFT_365_OS14():
 
             assert check_result, "Preview is not change after modified! Similarity should> 0.95"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.pip_object
     @pytest.mark.LUT
@@ -1394,6 +1407,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.text
     @pytest.mark.name('[test_intro_room_func_3_8] Add Text > Enable Backdrop Function > Set Backdrop Type to Rounded Rectangle')
@@ -1432,6 +1446,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.import_media
     @pytest.mark.stock_media
@@ -1485,6 +1500,7 @@ class Test_BFT_365_OS14():
             check_SS_result = main_page.compare(current_image, img_updated)
             assert not check_SS_result, "Replace media with SS content failed!"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.text
     @pytest.mark.name('[test_intro_room_func_3_10] Add Motion Graphics Template')
@@ -1506,6 +1522,7 @@ class Test_BFT_365_OS14():
         # Insert Speech bubble 01
         assert intro_video_page.motion_graphics.select_template(1, category=5), "Select MGT template failed!"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.text
     @pytest.mark.layer_order
@@ -1540,6 +1557,7 @@ class Test_BFT_365_OS14():
                 check_result = main_page.compare(before_img, after_img, similarity=0.98) # should return False
                 assert not check_result, "Change layer order failed! Similarity should< 0.98"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.crop
     @pytest.mark.name('[test_intro_room_func_3_12] Crop the layer to small')
@@ -1574,6 +1592,7 @@ class Test_BFT_365_OS14():
             check_result = main_page.compare(current_image, img_cancel_crop, similarity=0.99)
             assert not check_result, "Crop effect failed! Similarity should<0.99"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.import_media
     @pytest.mark.in_animation
@@ -1633,6 +1652,7 @@ class Test_BFT_365_OS14():
         # [L319] 3.1 Video Intro Designer > Edit > Add BGM
         # 2023/05/05 update: Skip this case << Download from Meta / Shutterstock (Music) >>
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.save_template
     @pytest.mark.timecode
@@ -1691,6 +1711,7 @@ class Test_BFT_365_OS14():
                 assert False, "Template is changed after play the video! Similarity should<0.99"
         assert True
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.text
     @pytest.mark.name('[test_intro_room_func_3_15] Move object to right upper > Edit text to Swimming ring > Share template')
@@ -1738,6 +1759,7 @@ class Test_BFT_365_OS14():
             share_result = intro_video_page.share_temp.click_share()
             assert share_result, "Share template failed!"
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.template
     @pytest.mark.shared_template
@@ -1811,6 +1833,7 @@ class Test_BFT_365_OS14():
             main_page.press_esc_key()
             time.sleep(DELAY_TIME * 2)
 
+    @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.name('[test_intro_room_func_3_z] Close AP due to the section is completed')
     def test_intro_room_func_3_z(self):
@@ -1818,30 +1841,33 @@ class Test_BFT_365_OS14():
         main_page.close_app()
         assert True
 
-    # 8 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.title_designer_func
+    @pytest.mark.preferences
+    @pytest.mark.title_designer
+    @pytest.mark.title
+    @pytest.mark.name('[test_title_designer_func_4_1] Set default Title duration to 10 > Open [Default] title designer by searching [Default] in library')
     @exception_screenshot
-    def test_1_1_3_a(self):
+    def test_title_designer_func_4_1(self):
+        '''
+        1. Set default Title duration to 10
+        2. Open [Default] title designer by searching [Default] in library
+        3. Check open [Default] title designer with title content/ caption bar
+        '''
         # launch APP
         main_page.start_app()
-        time.sleep(DELAY_TIME*5)
 
         # Open Preference > Editing > Set default Title duration to 10 (For v21.6.5303 PM request)
-        main_page.click_set_user_preferences()
-        time.sleep(DELAY_TIME * 2)
-        preferences_page.switch_to_editing()
-        time.sleep(DELAY_TIME)
-        preferences_page.editing.durations_title_set_value('10.0')
-        time.sleep(DELAY_TIME * 3)
-        preferences_page.click_ok()
-        time.sleep(DELAY_TIME)
+        with step('[Action] Set default Title duration to 10'):
+            main_page.click_set_user_preferences()
+            preferences_page.switch_to_editing()
+            preferences_page.editing.durations_title_set_value('10.0')
+            preferences_page.click_ok()
 
         # [L132] 3.2 Title Designer > Open Title designer
-        with uuid("7a0b1dbb-0c33-4634-8289-ad6a0acd92e1") as case:
+        # with uuid("7a0b1dbb-0c33-4634-8289-ad6a0acd92e1") as case:
+        with step('[Action] Open [Default] title designer by searching [Default] in library'):
             # enter Title room
             main_page.enter_room(1)
-            time.sleep(DELAY_TIME * 3)
 
             # Select default title (21.6.5219 : search then select default title)
             media_room_page.search_library('Default')
@@ -1849,6 +1875,7 @@ class Test_BFT_365_OS14():
             main_page.select_library_icon_view_media('Default')
             main_page.double_click()
 
+        with step('[Verify] Check open [Default] title designer'):
             # Verify Step
             check_selected_object = title_designer_page.get_title_text_content()
             if check_selected_object == 'My Title':
@@ -1862,38 +1889,70 @@ class Test_BFT_365_OS14():
             else:
                 check_caption_bar = False
 
-            case.result = selected_title_content and check_caption_bar
+        assert selected_title_content and check_caption_bar, f'Open [Default] title designer failed! text content: {check_selected_object} ({check_selected_object}), caption bar: {check_caption_bar_content} ({check_caption_bar_content})'
+    
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.title
+    @pytest.mark.name('[test_title_designer_func_4_2] Modify Text Title Content')
+    @exception_screenshot
+    def test_title_designer_func_4_2(self):
+        '''
+        1. Fold Font Face tab and switch to Express mode
+        2. Input text to title ('ÆÂÇÐÉÑ ØÜ Ýåþðìü')
+        3. Check if input text is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_1"
+        self.ensure_dependency(dependency_test)
 
         # if Font Face is already unfold, click arrow to fold
         title_designer_page.unfold_object_font_face_tab(0)
-        time.sleep(DELAY_TIME * 2)
 
         # [L133] 3.2 Title Designer > Modify > Input text case
-        with uuid("12487b29-26d5-469a-8b57-64cb21a89679") as case:
-            # Express mode
-            title_designer_page.switch_mode(1)
+        # with uuid("12487b29-26d5-469a-8b57-64cb21a89679") as case:
+        # Express mode
+        title_designer_page.switch_mode(1)
 
+        with step('[Action] Input text to title designer'):
             canvas_elem = main_page.exist(L.title_designer.area.frame_video_preview)
             main_page.mouse.click(*canvas_elem.center)
             main_page.double_click()
             title_designer_page.edit_object_title('ÆÂÇÐÉÑ ØÜ Ýåþðìü')
-            time.sleep(DELAY_TIME*4)
 
-            # Verify step
-            check_selected_object = title_designer_page.get_title_text_content()
-            if check_selected_object == 'ÆÂÇÐÉÑ ØÜ Ýåþðìü':
-                case.result = True
-            else:
-                case.result = False
+        # Verify step
+        check_selected_object = title_designer_page.get_title_text_content()
 
-            # Set text string to Two line
+        assert check_selected_object == 'ÆÂÇÐÉÑ ØÜ Ýåþðìü', f'Input text failed! Expected: ÆÂÇÐÉÑ ØÜ Ýåþðìü, Actual: {check_selected_object}'
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.title
+    @pytest.mark.name('[test_title_designer_func_4_3] Set Text to Two line > Set Font /Paragraph > Check if Font /Paragraph is set correctly by GT > Check if able to switch mode with applied effect correctly')
+    @exception_screenshot
+    def test_title_designer_func_4_3(self):
+        '''
+        1. Set Text to Two line
+        2. Set Font /Paragraph
+        3. Check if Font /Paragraph is set correctly by GT
+        4. Check if able to switch mode with applied effect correctly
+        '''
+        
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_2"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Text to Two line'):
             title_text_elem = main_page.exist(L.title_designer.area.edittext_text_content)
             main_page.mouse.click(*title_text_elem.center)
             main_page.press_enter_key()
             main_page.input_text('AWR')
 
+
         # [L137] 3.2 Title Designer > Set in [Object] > Font /Paragraph
-        with uuid("7b458139-00b3-4178-a4f6-8515fc581f6a") as case:
+        # with uuid("7b458139-00b3-4178-a4f6-8515fc581f6a") as case:
+        with step('[Action] Set Font /Paragraph'):
+            canvas_elem = main_page.exist(L.title_designer.area.frame_video_preview)
             main_page.mouse.click(*canvas_elem.center)
             main_page.double_click()
             # Set font
@@ -1916,377 +1975,668 @@ class Test_BFT_365_OS14():
 
             # Set align
             title_designer_page.set_align(2)
+        express_mode_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
 
-            express_mode_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+        with step('[Verify] Check if Font /Paragraph is set correctly by GT'):
             # [L135] 3.2 Title Designer > Switch to Advanced mode
-            with uuid("9337d05d-e71b-452b-88ed-accf281de8f5") as case:
-                # Advanced mode
-                title_designer_page.switch_mode(2)
+            # with uuid("9337d05d-e71b-452b-88ed-accf281de8f5") as case:
 
-                advance_mode_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
-                                                       file_name=Auto_Ground_Truth_Folder + 'L135.png')
-                compare_result = main_page.compare(Ground_Truth_Folder + 'L135.png',
-                                                        advance_mode_preview)
+            # Advanced mode
+            title_designer_page.switch_mode(2)
 
-                # express mode
-                title_designer_page.switch_mode(1)
-                change_mode = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-                compare_express = main_page.compare(change_mode, express_mode_preview)
-                case.result = compare_result and compare_express
+            advance_mode_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
+                                                    file_name=Auto_Ground_Truth_Folder + 'L135.png')
+            compare_result = main_page.compare(Ground_Truth_Folder + 'L135.png',
+                                                    advance_mode_preview)
+            
+            if not compare_result:
+                assert False, "Font /Paragraph is not set correctly by GT (L135.png)!"
 
-            case.result = compare_result
+        with step('[Verify] Check if switch mode with applied effect correctly'):
+            # express mode
+            compare_switch_advance_mode = main_page.compare(advance_mode_preview, express_mode_preview)
+            title_designer_page.switch_mode(1)
+            back_express_mode_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            compare_express = main_page.compare(back_express_mode_preview, express_mode_preview)
+            if compare_switch_advance_mode:
+                assert False, "Switch to Advanced mode with applied effect failed!"
+            if not compare_express:
+                assert False, "Switch back to Express mode with applied effect failed!"
+            assert True        
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.title
+    @pytest.mark.preset
+    @pytest.mark.name('[test_title_designer_func_4_4] Apply Character Presets')
+    @exception_screenshot
+    def test_title_designer_func_4_4(self):
+        '''
+        1. Apply Character Presets
+        2. Check if apply preset correctly by Preview window
+        '''
+
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_3"
+        self.ensure_dependency(dependency_test)
 
         # [L136] 3.2 Title Designer > Set in [Object] > Character Presets
-        with uuid("917276cd-2119-4f6e-a94b-10d03795a2cf") as case:
-            time.sleep(DELAY_TIME*2)
-            # Apply preset 18
-            title_designer_page.apply_character_presets(17)
-            time.sleep(DELAY_TIME*2)
-            preset_18 = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
-                                                       file_name=Auto_Ground_Truth_Folder + 'L136.png')
-            compare_preset_18 = main_page.compare(Ground_Truth_Folder + 'L136.png',
-                                                        preset_18)
+        # with uuid("917276cd-2119-4f6e-a94b-10d03795a2cf") as case:
 
-            # Apply preset 10
-            title_designer_page.apply_character_presets(9)
-            time.sleep(DELAY_TIME * 2)
+        preset_ori = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
 
+        # Apply preset 10
+        title_designer_page.apply_character_presets(9)
+
+        with step('[Verify] Check if preview changed correctly after applied preset 10 by preview window'):
             # Check preview change
             preset_x = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            compare_preset_x = main_page.compare(preset_x, preset_18, similarity=0.7)
+            compare_preset_x = main_page.compare(preset_x, preset_ori, similarity=0.7)
+            different_preset_x = not main_page.compare(preset_x, preset_ori, similarity=0.985)
+            if compare_preset_x and different_preset_x:
+                assert False, "Preview not changed after applied preset 10 by preview window! Similarity should be in 0.7~0.985"
 
-            # Check preview is NOT the same
-            different_preset_x = not main_page.compare(preset_x, preset_18, similarity=0.985)
-            case.result = compare_preset_18 and compare_preset_x and different_preset_x
+        if main_page.exist(L.title_designer.character_presets.btn_character_presets).AXValue == 1:
+            main_page.exist_click(L.title_designer.character_presets.btn_character_presets)
+            time.sleep(DELAY_TIME*1.5)
 
-            if main_page.exist(L.title_designer.character_presets.btn_character_presets).AXValue == 1:
-                main_page.exist_click(L.title_designer.character_presets.btn_character_presets)
-                time.sleep(DELAY_TIME*1.5)
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_5] Check default backdrop type')
+    @exception_screenshot
+    def test_title_designer_func_4_5(self):
+        '''
+        1. Enter Backdrop Menu
+        2. Check if default backdrop type is Fit with title
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_4"
+        self.ensure_dependency(dependency_test)
 
         # [L141] 3.2 Title Designer > Set in [Object] > Backdrop
-        with uuid("09c9be51-6a81-4087-9df3-fdd9af36cf60") as case:
+        # with uuid("09c9be51-6a81-4087-9df3-fdd9af36cf60") as case:
+        with step('[Action] Enter Backdrop'):
             title_designer_page.backdrop.set_unfold_tab()
-            time.sleep(DELAY_TIME)
             title_designer_page.backdrop.set_checkbox(bApply=1)
 
-            # Verify 1: Check apply type (Fit with title)
+        # Verify 1: Check apply type (Fit with title)
+        with step('[Verify] Check the default backdrop type'):
             get_backdrop_type= title_designer_page.backdrop.get_type()
-            if get_backdrop_type == 2:
-                default_backdrop_type = True
-            else:
-                default_backdrop_type = False
-            logger(default_backdrop_type)
+            if get_backdrop_type != 2:
+                assert False, f'Backdrop type is not default! Expected: 2, Actual: {get_backdrop_type}'
+        assert True
 
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_6] Set backdrop type to Solid background bar') 
+    @exception_screenshot
+    def test_title_designer_func_4_6(self):
+        '''
+        1. Set backdrop type to Solid background bar
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_5"
+        self.ensure_dependency(dependency_test)
+
+
+        with step('[Action] Set backdrop type to Solid background bar (1)'):
             # Switch backdrop type (Solid background bar)
             title_designer_page.backdrop.set_type(1)
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check if width is disabled due to backdrop type is Solid background bar'):
             # Verify 2: Check width disable
             check_width_disable_result = title_designer_page.backdrop.check_width_disable()
-            logger(check_width_disable_result)
+            assert check_width_disable_result, "Width is not disabled after set backdrop type as Solid background bar!"
 
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_7] Adjust Height value w & w/o maintain aspect ratio')
+    @exception_screenshot
+    def test_title_designer_func_4_7(self):
+        '''
+        1. Adjust Height value w maintain aspect ratio
+        2. Adjust Height value w/o maintain aspect ratio
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_6"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Adjust Height value'):
             # Adjust Height value
             title_designer_page.backdrop.height.value.adjust_slider(1.73)
             time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check Height value'):
+            # Check Height value
+            get_height_value = title_designer_page.backdrop.height.value.get_value()
+            if get_height_value != '1.73':
+                assert False, f'Height value is not set correctly! Expected: 1.73, Actual: {get_height_value}'
+
+        with step('[Action] Adjust Height value w/o maintain aspect ratio'):
             # Un-tick maintain aspect ratio
             title_designer_page.backdrop.set_maintain_aspect_ratio(0)
-
             title_designer_page.backdrop.height.value.click_arrow(0, 8)
+        
+        with step('[Verify] Check Height/ Width value w/o maintain aspect ratio'):
+            # Check Height value
             get_height_value = title_designer_page.backdrop.height.value.get_value()
-            if get_height_value == '1.81':
-                check_height_value = True
-            else:
-                logger(get_height_value)
-                check_height_value = False
-            logger(check_height_value)
+            if get_height_value != '1.81':
+                assert False, f'Height value is not set correctly! Expected: 1.81, Actual: {get_height_value}'
 
             # Check Width value
             get_width_value = title_designer_page.backdrop.width.value.get_value()
-            if get_width_value == '1.73':
-                check_width_value = True
-            else:
-                check_width_value = False
-            logger(check_width_value)
+            if get_width_value != '1.73':
+                assert False, f'Width value is not set correctly! Expected: 1.73, Actual: {get_width_value}'
+        assert True
 
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_8] Set Color > Set Opacity by textbox and slider')
+    @exception_screenshot
+    def test_title_designer_func_4_8(self):
+        '''
+        1. Set Color
+        2. Set Opacity by textbox and check value
+        3. Set Opacity by slider and check value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_7"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Color'):
             # Set uniform color
             title_designer_page.backdrop.apply_uniform_color('#3f24b2')
 
+        with step('[Action] Set Opacity by textbox'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
-
             # Set opacity
             title_designer_page.backdrop.opacity.value.set_value(88)
+
+        with step('[Verify] Check Opacity value (Modified by textbox)'):
+            get_opacity = title_designer_page.backdrop.opacity.value.get_value()
+            if get_opacity != '88':
+                assert False, f'Opacity value is not set correctly (Modified by textbox)! Expected: 88, Actual: {get_opacity}'
+        
+        with step('[Action] Adjust Opacity by slider'):
             title_designer_page.backdrop.opacity.value.adjust_slider(95)
 
-            # Check opacity value
+        with step('[Verify] Check Opacity value (Modified by slider)'):
             get_opacity = title_designer_page.backdrop.opacity.value.get_value()
-            if get_opacity == '95':
-                check_opacity_value = True
-            else:
-                check_opacity_value = False
-            logger(check_opacity_value)
+            if get_opacity != '95':
+                assert False, f'Opacity value is not set correctly (Modified by slider)! Expected: 95, Actual: {get_opacity}'
 
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_9] Adjust Offset Y')
+    @exception_screenshot
+    def test_title_designer_func_4_9(self):
+        '''
+        1. Adjust Offset X and check value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_8"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Adjust Offset Y'):
             # Adjust offset Y to -0.809
             title_designer_page.backdrop.offset_y.value.set_value('-0.809')
+
+        with step('[Verify] Check Offset Y value'):
             # Check offset Y value
             get_offset_y = title_designer_page.backdrop.offset_y.value.get_value()
-            if get_offset_y == '-0.809':
-                check_offset_value = True
-            else:
-                check_offset_value = False
-            logger(check_offset_value)
+            assert get_offset_y=='-0.809', f'Offset Y value is not set correctly! Expected: -0.809, Actual: {get_offset_y}'
 
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_10] Set backdrop type to Ellipse')
+    @exception_screenshot
+    def test_title_designer_func_4_10(self):
+        '''
+        1. Set backdrop type to Ellipse
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_9"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set backdrop type to Ellipse (2,1)'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(0.67)
-            time.sleep(DELAY_TIME * 2)
-
+            type_sloid = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             # Switch backdrop type (Fit with title) > Ellipse
             title_designer_page.backdrop.set_type(2,1)
-            time.sleep(DELAY_TIME)
             type_ellipse = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-
-            # Switch backdrop type (Solid background bar)
-            title_designer_page.backdrop.set_type(1)
-            time.sleep(DELAY_TIME)
-            type_sloid = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-
+        
+        with step('[Verify] Check backdrop type is changed'):
             different_type_result = not main_page.compare(type_ellipse, type_sloid, similarity=0.99999)
-            logger(different_type_result)
-            case.result = default_backdrop_type and check_width_disable_result and check_height_value and check_width_value and check_opacity_value and check_offset_value and different_type_result
+            if not different_type_result:
+                assert False, "Backdrop type is not changed after set backdrop type as Ellipse!"
 
+        with step('[Action] Set to Initial Condition'):
+            title_designer_page.backdrop.set_type(1)
             # fold tab
             title_designer_page.backdrop.set_unfold_tab(unfold=0)
-            time.sleep(DELAY_TIME * 6)
 
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.title
+    @pytest.mark.font_face_color
+    @pytest.mark.name('[test_title_designer_func_4_11] Apply Font Settings (Insert New > Size/ Font/ Color/ Space/ Kerning)')
+    @exception_screenshot
+    def test_title_designer_func_4_11(self):
+        '''
+        1. Set font settings and check if set correctly
+        2. Insert new title and set font settings and check if set correctly
+        3. Check if font settings are set correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_10"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Font settings'):
             # Set font face color
             title_designer_page.set_check_font_face(bCheck=1)
-            time.sleep(DELAY_TIME * 4)
+            ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             title_designer_page.set_font_face_color('128', '215', '144')
+            applied_color = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(ori_img, applied_color):
+                assert False, "Font face color is not set correctly!"
 
             # Set font
             title_designer_page.set_font_type('Barbaro')
+            applied_font = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(applied_color, applied_font):
+                assert False, "Font is not set correctly!"
 
-            # Disable Border
+            # Disable Border (no verfiy step due to might be disabled)
             title_designer_page.apply_border(bApply=0)
-
-            # Disable Shadow + fold tab
+            
+            # Disable Shadow + fold tab (no verfiy step due to might be disabled)
             title_designer_page.set_check_shadow(bCheck=0)
             title_designer_page.unfold_object_shadow_tab(unfold=0)
 
+
         # [L134] 3.2 Title Designer > Insert new title
-        with uuid("3675bbb6-5abb-4a0c-80a4-f17f0b55b590") as case:
+        # with uuid("3675bbb6-5abb-4a0c-80a4-f17f0b55b590") as case:
+        with step('[Action] Insert new title adn set font settings'):
+            ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             title_designer_page.insert_title(' suiod fw5')
+            added_text = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(ori_img, added_text):
+                assert False, "Insert new title failed!"
 
             # Set size
             title_designer_page.set_font_size('88')
+            size_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(added_text, size_changed):
+                assert False, "Font size is not set correctly!"
 
             # Title font: Mystery Quest
             title_designer_page.set_font_type('Mystery Quest')
+            font_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(size_changed, font_changed):
+                assert False, "Font is not set correctly!"
 
             # Set font face color
             title_designer_page.set_font_face_color('255', '27', '169')
+            color_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(font_changed, color_changed):
+                assert False, "Font face color is not set correctly!"
 
             # Set line spacing amount
             title_designer_page.set_line_spacing_amount('0')
+            line_spacing_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(color_changed, line_spacing_changed):
+                assert False, "Line spacing amount is not set correctly!"
 
             # Set text spacing amount
             title_designer_page.set_text_spacing_amount('0')
+            text_spacing_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(line_spacing_changed, text_spacing_changed):
+                assert False, "Text spacing amount is not set correctly!"
 
-            # Set kerning
+            # Set kerning (No verfiy step due to might be disabled at first)
             title_designer_page.set_kerning_check(0)
 
+        with step('[Verify] Check if font settings are set correctly as GT'):
             time.sleep(DELAY_TIME*2)
             second_title_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
-                                                      file_name=Auto_Ground_Truth_Folder + 'L134.png')
+                                                        file_name=Auto_Ground_Truth_Folder + 'L134.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L134.png',
-                                               second_title_preview)
-            case.result = compare_result
+                                                second_title_preview)
+            assert compare_result, "Font settings are not set correctly as GT! But preview changed step by step when applying effect"
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.title
+    @pytest.mark.shadow
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_title_designer_func_4_12] Adjust Shadow settings -- Distance/ Blur/ Opacity/ Fill Shadow/ Direction')
+    @exception_screenshot
+    def test_title_designer_func_4_12(self):
+        '''
+        1. Enable Shadow
+        2. Adjust Shadow settings -- Distance (Slider + Arrow) and check preview
+        3. Adjust Shadow settings -- Blur (Textbox + Arrow) and check preview
+        4. Adjust Shadow settings -- Opacity (Slider + Arrow) and check preview
+        5. Adjust Shadow settings -- Fill Shadow (Slider + Arrow) and check preview
+        6. Adjust Shadow settings -- Direction (Slider + Arrow) and check preview
+        7. Check if shadow settings are set correctly by GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_11"
+        self.ensure_dependency(dependency_test)
+
 
         # [L140] 3.2 Title Designer > Set in [Object] > Shadow
-        with uuid("cbe24c99-189b-4ce8-8255-16fd4f25e5a5") as case:
+        # with uuid("cbe24c99-189b-4ce8-8255-16fd4f25e5a5") as case:
+        with step('[Action] Enable Shadow'):
             # unfold tab
             title_designer_page.unfold_object_shadow_tab()
-            time.sleep(DELAY_TIME)
 
             # Set Shadow
             title_designer_page.apply_shadow(bApply=1)
-            time.sleep(DELAY_TIME)
 
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
 
-            # Set distance = 32.5
+        with step('[Action] Adjust Shadow settings -- Distance (Slider + Arrow)'):
+            before_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            # Set distance = 32.5 by slider and arrow
             title_designer_page.drag_shadow_distance_slider('32')
-            for x in range(5):
+            distance_changed_slider = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(before_img, distance_changed_slider):
+                assert False, "Shadow distance is not set correctly by slider!"
+
+            for _ in range(5):
                 title_designer_page.click_shadow_distance_arrow_btn(0)
                 time.sleep(DELAY_TIME*0.5)
+            distance_changed_arrow = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(distance_changed_slider, distance_changed_arrow):
+                assert False, "Shadow distance is not set correctly by arrow!"
 
+        with step('[Action] Adjust Shadow settings -- Blur (Textbox + Arrow)'):
+            before_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             # Set blur = 15
             title_designer_page.input_shadow_blur_value('16')
-            title_designer_page.click_shadow_blur_arrow_btn(1)
+            blur_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(before_img, blur_changed_textbox):
+                assert False, "Shadow blur is not set correctly by textbox!"
 
+            title_designer_page.click_shadow_blur_arrow_btn(1)
+            blur_changed_arrow = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(blur_changed_textbox, blur_changed_arrow):
+                assert False, "Shadow blur is not set correctly by arrow!"
+
+        with step('[Action] Adjust Shadow settings -- Opacity (Slider + Arrow)'):
+            before_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             # Set opacity = 87
             title_designer_page.drag_shadow_opacity_slider('19')
-            title_designer_page.input_shadow_opacity_value('87')
+            opacity_changed_slider = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(before_img, opacity_changed_slider):
+                assert False, "Shadow opacity is not set correctly by slider!"
 
+            title_designer_page.input_shadow_opacity_value('87')
+            opacity_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(opacity_changed_slider, opacity_changed_textbox):
+                assert False, "Shadow opacity is not set correctly by textbox!"
+
+        with step('[Action] Adjust Shadow settings -- Fill Shadow (Slider + Arrow)'):
             # Set fill shadow = 0
             title_designer_page.set_check_shadow_fill_shadow(bCheck=0)
             title_designer_page.set_shadow_fill_shadow_color('105','250', '5')
-            time.sleep(DELAY_TIME)
             no_fill_shadow_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
 
             # Set fill shadow = 1
             title_designer_page.set_check_shadow_fill_shadow(bCheck=1)
             title_designer_page.set_shadow_fill_shadow_color('33', '134', '215')
-            # Set distance = 76.8
-            title_designer_page.input_shadow_distance_value('76.8')
-            time.sleep(DELAY_TIME)
             fill_shadow_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
 
             # Check preview change
             compare_fill_preview = main_page.compare(no_fill_shadow_preview, fill_shadow_preview, similarity=0.94)
-
-            # Check preview is NOT the same
             different_fill = not main_page.compare(no_fill_shadow_preview, fill_shadow_preview, similarity=0.99)
+
+            assert compare_fill_preview and different_fill, "Fill shadow is not set correctly! similar should be 0.94~0.99"
+
+        with step('[Action] Adjust Shadow settings -- Direction (Slider + Arrow)'):
+            ori_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            # Set distance = 76.8
+            title_designer_page.input_shadow_distance_value('76.8')
+            distance_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(ori_preview, distance_changed_textbox):
+                assert False, "Shadow distance is not set correctly by textbox!"
 
             # Set shadow direction = 125
             title_designer_page.input_shadow_direction_value('130')
+            direction_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(distance_changed_textbox, direction_changed_textbox):
+                assert False, "Shadow direction is not set correctly by textbox!"
+
             title_designer_page.click_shadow_direction_arrow_btn(0)
-            for times in range(6):
+            for _ in range(6):
                 title_designer_page.click_shadow_direction_arrow_btn(1)
+            distance_changed_arrow = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(direction_changed_textbox, distance_changed_arrow):
+                assert False, "Shadow direction is not set correctly by arrow!"
+
+        with step('[Verify] Check if shadow settings are set correctly as GT'):
             main_page.move_mouse_to_0_0()
             time.sleep(DELAY_TIME)
             check_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
-                                                      file_name=Auto_Ground_Truth_Folder + 'L140.png')
+                                                        file_name=Auto_Ground_Truth_Folder + 'L140.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L140.png',
-                                               check_preview)
-            case.result = compare_fill_preview and different_fill and compare_result
+                                                check_preview)
+            if not compare_result:
+                assert False, "Shadow settings are not set correctly as GT! Preview changed step by step when applying effect"
+        
+        with step('[Action] Set to Initial Condition'):
             # fold tab
             title_designer_page.unfold_object_shadow_tab(unfold=0)
 
-        # Save Template
-        title_designer_page.save_as_name('test_1_1_3_a', click_ok=1)
+        with step('[Action] Save Template'):
+            # Save Template
+            title_designer_page.save_as_name('test_1_1_3_a', click_ok=1)
 
-        # Close title designer
-        title_designer_page.click_ok()
-        time.sleep(DELAY_TIME * 2)
+            # Close title designer
+            title_designer_page.click_ok()
+            time.sleep(DELAY_TIME * 2)
 
-    # 5 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+
+        
+        assert True
+
+            
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_title_designer_func_4_13] Reopen AP and add saved template')
     @exception_screenshot
-    def test_1_1_3_b(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_title_designer_func_4_13(self):
+        '''
+        1. Reopen AP and enter Title Room
+        2. Open [Custom] template "test_1_1_3_a"
+        '''
 
-        # enter Title Room
-        main_page.enter_room(1)
-        time.sleep(DELAY_TIME * 3)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_12"
+        self.ensure_dependency(dependency_test)
 
-        # Custom template
-        main_page.select_LibraryRoom_category('Custom')
+        with step('[Action] Relaunch AP and enter Title Room'):
+            # relaunch APP
+            main_page.close_app()
+            main_page.start_app()
 
-        # Select 1st Custom teplate "test_1_1_3_a"
-        main_page.select_library_icon_view_media('test_1_1_3_a')
-        main_page.double_click()
-        time.sleep(DELAY_TIME * 6)
+            # enter Title Room
+            main_page.enter_room(1)
+
+        with step('[Action] Open [Custom] template "test_1_1_3_a"'):
+
+            # Custom template
+            if not main_page.select_LibraryRoom_category('Custom'): 
+                assert False, "Select [Custom] category failed!"
+
+            # Select 1st Custom teplate "test_1_1_3_a"
+            main_page.select_library_icon_view_media('test_1_1_3_a')
+            main_page.double_click()
+            time.sleep(DELAY_TIME * 4) # wait for loading
+        
+        assert True # if unable to found the template, the test will be failed when searching
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.canva
+    @pytest.mark.name('[test_title_designer_func_4_14] Manual Adjust on canvas -- Resize and Rotate')
+    @exception_screenshot
+    def test_title_designer_func_4_14(self):
+        '''
+        1. Manual adjust on canvas -- Resize and Rotate
+        2. Enter Advance mode and reach panel
+        3. Check Adjusted width/ height/ rotate value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_13"
+        self.ensure_dependency(dependency_test)
 
         # [L149] 3.2 Title Designer > Manually adjust on canvas
-        with uuid("f54750cd-3f0e-463f-8b05-8b84ba456351") as case:
+        # with uuid("f54750cd-3f0e-463f-8b05-8b84ba456351") as case:
+
+        with step('[Action] Manually adjust on canvas -- Resize and Rotate'):
             # Resize
             title_designer_page.adjust_title_on_canvas.resize_to_small(x=5, y=3)
             time.sleep(DELAY_TIME * 2)
             # Rotate
             title_designer_page.adjust_title_on_canvas.drag_rotate_clockwise('45')
 
+        with step('[Action] Enter Advance mode and reach panel'):
             # Switch to Advance mode
             title_designer_page.switch_mode(2)
             time.sleep(DELAY_TIME)
 
             # Unfold Object
             title_designer_page.unfold_object_object_setting_tab()
-            time.sleep(DELAY_TIME * 2)
             title_designer_page.drag_object_vertical_slider(0.757)
-            time.sleep(DELAY_TIME * 0.5)
 
+        with step('[Verify] Check width value'):
             # Verify step
             check_scale_width_value = title_designer_page.get_object_setting_scale_width_value()
-            if float(check_scale_width_value) < 1:
-                check_resize_width = True
-            else:
-                check_resize_width = False
+            if float(check_scale_width_value) >= 1:
+                assert False, f'Width value is not set correctly! Expected: < 1, Actual: {check_scale_width_value}'
 
+        with step('[Verify] Check height value'):
             check_scale_height_value = title_designer_page.get_object_setting_scale_height_value()
-            if float(check_scale_height_value) < 1:
-                check_resize_height = True
-            else:
-                check_resize_height = False
+            if float(check_scale_height_value) >= 1:
+                assert False, f'Height value is not set correctly! Expected: < 1, Actual: {check_scale_height_value}'
 
+        with step('[Verify] Check rotate value'):
             check_rotate_value = title_designer_page.get_object_setting_rotation_value()
-            if float(check_rotate_value) > 50:
-                check_rotate = True
-            else:
-                check_rotate = False
+            if float(check_rotate_value) <= 50:
+                assert False, f'Rotate value is not set correctly! Expected: > 50, Actual: {check_rotate_value}'
 
-            case.result = check_resize_width and check_resize_height and check_rotate
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_title_designer_func_4_15] Add keyframe on Position/ Scale/ Opacity/ Rotation')
+    @exception_screenshot
+    def test_title_designer_func_4_15(self):
+        '''
+        1. Add keyframe on Position/ Scale/ Opacity/ Rotation
+        2. Check if keyframe settings are set correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_14"
+        self.ensure_dependency(dependency_test)
 
         # [L142] 3.2 Title Designer > Object Settings
-        with uuid("adfdbb15-9d4a-4338-be3a-39d0922f896a") as case:
+        # with uuid("adfdbb15-9d4a-4338-be3a-39d0922f896a") as case:
+
+        with step('[Action] Add First Position keyframe at (00:00)'):
             # Add position 1st keyframe
             title_designer_page.click_object_setting_position_add_keyframe_control()
 
+        with step('[Action] Add Second Position keyframe at (09:00) and adjust value'):
             title_designer_page.set_timecode('00_00_09_00')
             time.sleep(DELAY_TIME)
-            # Add position 2nd keyframe
             title_designer_page.input_object_setting_x_position_value('0.24')
             title_designer_page.input_object_setting_y_position_value('0.935')
-            # Add previous keyframe
+
+        with step('[Action] Switch to previous keyframe (00:00)'):
             title_designer_page.click_object_setting_position_previous_keyframe()
 
+        with step('[Action] Add First Scale keyframe at (00:00)'):
             # Add scale 1st keyframe
             title_designer_page.click_object_setting_scale_add_keyframe_control()
 
+        with step('[Action] Add Second Scale keyframe at (08:00) and adjust value'):
             title_designer_page.set_timecode('00_00_08_00')
             time.sleep(DELAY_TIME)
             # Add position 2nd keyframe
             title_designer_page.input_object_setting_scale_height_value('1.64')
 
+        with step('[Action] Add First Opacity keyframe at (08:00)'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
             time.sleep(DELAY_TIME)
-
             # Add opacity keyframe
             title_designer_page.click_object_setting_opacity_add_keyframe_control()
+        
+        with step('[Action] Add Second Opacity keyframe at (03:00) and adjust value'):
             # Add 2nd keyframe
             title_designer_page.set_timecode('00_00_03_00')
             time.sleep(DELAY_TIME)
             title_designer_page.drag_object_setting_opacity_slider('59')
+
+        with step('[Action] Add First Rotation keyframe and adjust value'):
             title_designer_page.drag_object_vertical_slider(1)
             time.sleep(DELAY_TIME)
-
             # Add rotate keyframe
             title_designer_page.input_object_setting_rotation_value('60')
             title_designer_page.click_object_setting_rotation_add_keyframe_control()
+
+        with step('[Action] Add Second Rotation keyframe at (09:00) and adjust value'):
             # Add 2nd keyframe
             title_designer_page.set_timecode('00_00_09_00')
             time.sleep(DELAY_TIME*2)
             title_designer_page.input_object_setting_rotation_value('260')
             time.sleep(DELAY_TIME*2)
 
-            # scroll simple track (scroll bar)
-            title_designer_page.drag_simple_track_vertical_slider(0.97)
+        with step('[Verify] Check if keyframe settings are set correctly as GT'):
+            with step('[Action] Initialize preview'):
+                # scroll simple track (scroll bar)
+                title_designer_page.drag_simple_track_vertical_slider(0.97)
+                title_designer_page.set_timecode('00_00_08_00')
 
             # Verify preview
-            title_designer_page.set_timecode('00_00_08_00')
             time.sleep(DELAY_TIME)
             check_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
-                                               file_name=Auto_Ground_Truth_Folder + 'L142.png')
+                                                file_name=Auto_Ground_Truth_Folder + 'L142.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L142.png', check_preview, similarity=0.9)
-            case.result = compare_result
+            assert compare_result, "Keyframe settings are not set correctly as GT!"
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_title_designer_func_4_16] Reopen AP and add saved template')
+    @exception_screenshot
+    def test_title_designer_func_4_16(self):
+        '''
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_14"
+        self.ensure_dependency(dependency_test)
 
         # [L143] 3.2 Title Designer > Object Settings > Ease in / Ease out work
         with uuid("94d981a1-511c-44b0-996f-ec255d2ce28a") as case:

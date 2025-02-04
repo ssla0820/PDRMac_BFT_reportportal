@@ -245,10 +245,10 @@ class Media_Room(BasePage):
             result_verify = self.compare(img_collection_view_before, img_collection_view_after)
             if result_verify:
                 logger('Fail to verify after clicked select all')
-                raise Exception
+                raise Exception('Fail to verify after clicked select all')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def search_SFX_library(self, name):
