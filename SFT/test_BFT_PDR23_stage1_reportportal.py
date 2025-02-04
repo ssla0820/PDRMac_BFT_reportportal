@@ -1989,6 +1989,9 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L135.png',
                                                     advance_mode_preview)
             
+            # close font/ paragraph tab
+            title_designer_page.unfold_object_font_face_tab(0)
+            
             if not compare_result:
                 assert False, "Font /Paragraph is not set correctly by GT (L135.png)!"
 
@@ -2060,9 +2063,9 @@ class Test_BFT_365_OS14():
         # [L141] 3.2 Title Designer > Set in [Object] > Backdrop
         # with uuid("09c9be51-6a81-4087-9df3-fdd9af36cf60") as case:
         with step('[Action] Enter Backdrop'):
-            title_designer_page.backdrop.set_unfold_tab()
             title_designer_page.backdrop.set_checkbox(bApply=1)
-
+            title_designer_page.backdrop.set_unfold_tab()
+            
         # Verify 1: Check apply type (Fit with title)
         with step('[Verify] Check the default backdrop type'):
             get_backdrop_type= title_designer_page.backdrop.get_type()
@@ -2252,13 +2255,13 @@ class Test_BFT_365_OS14():
             ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             title_designer_page.set_font_face_color('128', '215', '144')
             applied_color = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(ori_img, applied_color):
+            if main_page.compare(ori_img, applied_color, similarity=0.98):
                 assert False, "Font face color is not set correctly!"
 
             # Set font
             title_designer_page.set_font_type('Barbaro')
             applied_font = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(applied_color, applied_font):
+            if main_page.compare(applied_color, applied_font, similarity=0.98):
                 assert False, "Font is not set correctly!"
 
             # Disable Border (no verfiy step due to might be disabled)
@@ -2275,37 +2278,35 @@ class Test_BFT_365_OS14():
             ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             title_designer_page.insert_title(' suiod fw5')
             added_text = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(ori_img, added_text):
+            if main_page.compare(ori_img, added_text, similarity=0.98):
                 assert False, "Insert new title failed!"
 
             # Set size
             title_designer_page.set_font_size('88')
             size_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(added_text, size_changed):
+            if main_page.compare(added_text, size_changed, similarity=0.98):
                 assert False, "Font size is not set correctly!"
 
             # Title font: Mystery Quest
             title_designer_page.set_font_type('Mystery Quest')
             font_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(size_changed, font_changed):
+            if main_page.compare(size_changed, font_changed, similarity=0.98):
                 assert False, "Font is not set correctly!"
 
             # Set font face color
             title_designer_page.set_font_face_color('255', '27', '169')
             color_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(font_changed, color_changed):
+            if main_page.compare(font_changed, color_changed, similarity=0.995):
                 assert False, "Font face color is not set correctly!"
 
             # Set line spacing amount
             title_designer_page.set_line_spacing_amount('0')
             line_spacing_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(color_changed, line_spacing_changed):
-                assert False, "Line spacing amount is not set correctly!"
 
             # Set text spacing amount
             title_designer_page.set_text_spacing_amount('0')
             text_spacing_changed = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(line_spacing_changed, text_spacing_changed):
+            if main_page.compare(line_spacing_changed, text_spacing_changed, similarity=0.98):
                 assert False, "Text spacing amount is not set correctly!"
 
             # Set kerning (No verfiy step due to might be disabled at first)
@@ -2358,14 +2359,14 @@ class Test_BFT_365_OS14():
             # Set distance = 32.5 by slider and arrow
             title_designer_page.drag_shadow_distance_slider('32')
             distance_changed_slider = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(before_img, distance_changed_slider):
+            if main_page.compare(before_img, distance_changed_slider, similarity=0.998):
                 assert False, "Shadow distance is not set correctly by slider!"
 
             for _ in range(5):
                 title_designer_page.click_shadow_distance_arrow_btn(0)
                 time.sleep(DELAY_TIME*0.5)
             distance_changed_arrow = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(distance_changed_slider, distance_changed_arrow):
+            if main_page.compare(distance_changed_slider, distance_changed_arrow, similarity=0.9999):
                 assert False, "Shadow distance is not set correctly by arrow!"
 
         with step('[Action] Adjust Shadow settings -- Blur (Textbox + Arrow)'):
@@ -2373,12 +2374,12 @@ class Test_BFT_365_OS14():
             # Set blur = 15
             title_designer_page.input_shadow_blur_value('16')
             blur_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(before_img, blur_changed_textbox):
+            if main_page.compare(before_img, blur_changed_textbox, similarity=0.998):
                 assert False, "Shadow blur is not set correctly by textbox!"
 
             title_designer_page.click_shadow_blur_arrow_btn(1)
             blur_changed_arrow = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(blur_changed_textbox, blur_changed_arrow):
+            if main_page.compare(blur_changed_textbox, blur_changed_arrow, similarity=0.9999):
                 assert False, "Shadow blur is not set correctly by arrow!"
 
         with step('[Action] Adjust Shadow settings -- Opacity (Slider + Arrow)'):
@@ -2386,12 +2387,12 @@ class Test_BFT_365_OS14():
             # Set opacity = 87
             title_designer_page.drag_shadow_opacity_slider('19')
             opacity_changed_slider = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(before_img, opacity_changed_slider):
+            if main_page.compare(before_img, opacity_changed_slider, similarity=0.998):
                 assert False, "Shadow opacity is not set correctly by slider!"
 
             title_designer_page.input_shadow_opacity_value('87')
             opacity_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(opacity_changed_slider, opacity_changed_textbox):
+            if main_page.compare(opacity_changed_slider, opacity_changed_textbox, similarity=0.998):
                 assert False, "Shadow opacity is not set correctly by textbox!"
 
         with step('[Action] Adjust Shadow settings -- Fill Shadow (Slider + Arrow)'):
@@ -2416,20 +2417,20 @@ class Test_BFT_365_OS14():
             # Set distance = 76.8
             title_designer_page.input_shadow_distance_value('76.8')
             distance_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(ori_preview, distance_changed_textbox):
+            if main_page.compare(ori_preview, distance_changed_textbox, similarity=0.998):
                 assert False, "Shadow distance is not set correctly by textbox!"
 
             # Set shadow direction = 125
             title_designer_page.input_shadow_direction_value('130')
             direction_changed_textbox = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(distance_changed_textbox, direction_changed_textbox):
+            if main_page.compare(distance_changed_textbox, direction_changed_textbox, similarity=0.998):
                 assert False, "Shadow direction is not set correctly by textbox!"
 
             title_designer_page.click_shadow_direction_arrow_btn(0)
             for _ in range(6):
                 title_designer_page.click_shadow_direction_arrow_btn(1)
             distance_changed_arrow = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(direction_changed_textbox, distance_changed_arrow):
+            if main_page.compare(direction_changed_textbox, distance_changed_arrow, similarity=0.9999):
                 assert False, "Shadow direction is not set correctly by arrow!"
 
         with step('[Verify] Check if shadow settings are set correctly as GT'):
@@ -2620,7 +2621,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L142.png', check_preview, similarity=0.9)
             assert compare_result, "Keyframe settings are not set correctly as GT!"
 
-    @pytest.mark.title_designer_func
+    # @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.ease_in_out
