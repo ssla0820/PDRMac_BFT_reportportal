@@ -2449,7 +2449,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Save Template'):
             # Save Template
-            title_designer_page.save_as_name('test_1_1_3_a', click_ok=1)
+            title_designer_page.save_as_name('test_title_designer_func_4_12', click_ok=1)
 
             # Close title designer
             title_designer_page.click_ok()
@@ -2468,7 +2468,7 @@ class Test_BFT_365_OS14():
     def test_title_designer_func_4_13(self):
         '''
         1. Reopen AP and enter Title Room
-        2. Open [Custom] template "test_1_1_3_a"
+        2. Open [Custom] template "test_title_designer_func_4_12"
         '''
 
         # Ensure the dependency test is run and passed
@@ -2483,14 +2483,14 @@ class Test_BFT_365_OS14():
             # enter Title Room
             main_page.enter_room(1)
 
-        with step('[Action] Open [Custom] template "test_1_1_3_a"'):
+        with step('[Action] Open [Custom] template "test_title_designer_func_4_12"'):
 
             # Custom template
             if not main_page.select_LibraryRoom_category('Custom'): 
                 assert False, "Select [Custom] category failed!"
 
-            # Select 1st Custom teplate "test_1_1_3_a"
-            main_page.select_library_icon_view_media('test_1_1_3_a')
+            # Select 1st Custom teplate "test_title_designer_func_4_12"
+            main_page.select_library_icon_view_media('test_title_designer_func_4_12')
             main_page.double_click()
             time.sleep(DELAY_TIME * 4) # wait for loading
         
@@ -2507,6 +2507,9 @@ class Test_BFT_365_OS14():
         2. Enter Advance mode and reach panel
         3. Check Adjusted width/ height/ rotate value
         '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_13"
+        self.ensure_dependency(dependency_test)
 
         # [L149] 3.2 Title Designer > Manually adjust on canvas
         # with uuid("f54750cd-3f0e-463f-8b05-8b84ba456351") as case:
@@ -2872,13 +2875,13 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.keyframe
     @pytest.mark.special_effect
     @pytest.mark.name('[test_title_designer_func_4_22] Apply Special Effect -- LED sign')
     @exception_screenshot
     def test_title_designer_func_4_22(self):
         '''
-
+        1. Enter Special Effect tab
+        2. Apply LED sign effect and check preview
         '''
         # Ensure the dependency test is run and passed
         # Start a new section, starts from "test_title_designer_func_4_1"
@@ -2903,139 +2906,279 @@ class Test_BFT_365_OS14():
             # Warning: Do you want to continue?
             title_designer_page.handle_special_effect_want_to_continue(option=1)
             led_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            is_applied_special_effect_led = not main_page.compare(current_title_preview, led_title_preview, similarity=0.95)
+            is_applied_special_effect_led = not main_page.compare(current_title_preview, led_title_preview, similarity=0.995)
             if not is_applied_special_effect_led:
                 assert False, "LED sign effect is not applied correctly on preview window!"
+        assert True
 
-        # scroll down (scroll bar)
-        title_designer_page.drag_object_vertical_slider(1)
-        time.sleep(DELAY_TIME)
-
-        # Check size value
-        get_current_value = title_designer_page.special_effects.size.value.get_value()
-        if get_current_value == '53':
-            check_default_size = True
-        else:
-            check_default_size = False
-
-        # Apply LED > Look 4
-        title_designer_page.special_effects.set_look_menu(4)
-        time.sleep(DELAY_TIME * 2)
-        # Check current size
-        get_current_value = title_designer_page.special_effects.size.value.get_value()
-        if get_current_value == '49':
-            check_change_size = True
-        else:
-            check_change_size = False
-
-        # ----------
-        # Apply Electric Wave
-        title_designer_page.special_effects.apply_effect(6)
-        time.sleep(DELAY_TIME * 2)
-
-        # scroll down (scroll bar)
-        title_designer_page.drag_object_vertical_slider(1)
-        time.sleep(DELAY_TIME)
-
-        # Set size to 108
-        title_designer_page.special_effects.size.value.set_value(108)
-        # Set Length to 167
-        title_designer_page.special_effects.length.value.adjust_slider(167)
-        time.sleep(DELAY_TIME * 2)
-
-        electric_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-        is_applied_special_effect = not main_page.compare(electric_title_preview, led_title_preview, similarity=0.95)
-        logger(is_applied_special_effect)
-
-        case.result = check_default_size and check_change_size and is_applied_special_effect_led and is_applied_special_effect
-
-        # scroll down (scroll bar)
-        title_designer_page.drag_object_vertical_slider(1)
-        time.sleep(DELAY_TIME)
-
-        # fold special effect
-        title_designer_page.special_effects.set_unfold_tab(0)
-        time.sleep(DELAY_TIME)
-
-        # Save Template
-        title_designer_page.save_as_name('test_1_1_3_b', click_ok=1)
-
-        # Close title designer
-        title_designer_page.click_ok()
-        time.sleep(DELAY_TIME * 2)
-
-    # 10 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.special_effect
+    @pytest.mark.name('[test_title_designer_func_4_23] Check default size value and look 4 size value')
     @exception_screenshot
-    def test_1_1_3_c(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_title_designer_func_4_23(self):
+        '''
+        1. Check default size value
+        2. Apply Look 4 and check size value
+        '''
 
-        # If test_case_1_1_2 doesn't exist, return skip
-        if not main_page.exist_file(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_2.pds'):
-            logger('CAN NOT find test_case_1_1_2.pds')
-            return
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_22"
+        self.ensure_dependency(dependency_test)
 
-        # Open project: test_case_1_1_2
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_2.pds')
-        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+        with step('[Verify] Check default size value'):
+            # scroll down (scroll bar)
+            title_designer_page.drag_object_vertical_slider(1)
+            time.sleep(DELAY_TIME)
 
-        # enter Title Room
-        main_page.enter_room(1)
-        time.sleep(DELAY_TIME * 3)
+            # Check size value
+            get_current_value = title_designer_page.special_effects.size.value.get_value()
+            if get_current_value != '53':
+                assert False, f'Default size value is not set correctly! Expected: 53, Actual: {get_current_value}'
 
-        # Custom template
-        main_page.select_LibraryRoom_category('Custom')
+        with step('[Action] Set to the 4th looks in LED sign'):
+            # Apply LED > Look 4
+            title_designer_page.special_effects.set_look_menu(4)
+            time.sleep(DELAY_TIME * 2)
+            # Check current size
+            get_current_value = title_designer_page.special_effects.size.value.get_value()
+            if get_current_value != '49':
+                assert False, f'Look 4 size value is not set correctly! Expected: 49, Actual: {get_current_value}'
+        assert True
 
-        # Select 1st Custom template "test_1_1_3_b"
-        main_page.select_library_icon_view_media('test_1_1_3_b')
-        main_page.double_click()
-        time.sleep(DELAY_TIME * 6)
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.special_effect
+    @pytest.mark.name('[test_title_designer_func_4_24] Apply Electric Wave effect and adjust size and length value')
+    @exception_screenshot
+    def test_title_designer_func_4_24(self):
+        '''
+        1. Apply Electric Wave effect and check preview
+        2. Adjust size and length value and check preview
+        '''
+
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_23"
+        self.ensure_dependency(dependency_test)
+        
+        with step('[Action] Apply Electric Wave effect'):
+            before_img = main_page.snapshot(locator=L.title_designer.area.obj_title)
+            # Apply Electric Wave
+            title_designer_page.special_effects.apply_effect(6)
+            time.sleep(DELAY_TIME * 2)
+
+
+        with step('[Verify] Check apply effect correctly by preview'):
+            applied_electric = main_page.snapshot(locator=L.title_designer.area.obj_title)
+            if main_page.compare(before_img, applied_electric, similarity=0.99):
+                assert False, "Electric Wave effect is not applied correctly on preview window! Similarity should < 0.99"
+
+        with step('[Action] Adjust size and length value'):
+            # scroll down (scroll bar)
+            title_designer_page.drag_object_vertical_slider(1)
+            time.sleep(DELAY_TIME)
+            # Set size to 108
+            title_designer_page.special_effects.size.value.set_value(108)
+            # Set Length to 167
+            title_designer_page.special_effects.length.value.adjust_slider(167)
+            time.sleep(DELAY_TIME * 2)
+
+        with step('[Verify] Check if preview changed correctly'):
+            electric_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
+            if main_page.compare(electric_title_preview, applied_electric, similarity=0.95):
+                assert False, "Electric Wave effect is not applied correctly on preview window! Similarity should < 0.95"
+        
+        with step('[Initialize] Close special effect tab and save project'):
+            # scroll down (scroll bar)
+            title_designer_page.drag_object_vertical_slider(1)
+            time.sleep(DELAY_TIME)
+
+            # fold special effect
+            title_designer_page.special_effects.set_unfold_tab(0)
+            time.sleep(DELAY_TIME)
+
+            # Save Template
+            title_designer_page.save_as_name('title_designer_func_4_24', click_ok=1)
+
+            # Close title designer
+            title_designer_page.click_ok()
+            time.sleep(DELAY_TIME * 2)
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.timecode
+    @pytest.mark.in_out_animation
+    @pytest.mark.name('[test_title_designer_func_4_25] Reopen AP and open saved template > Apply In animation')
+    @exception_screenshot
+    def test_title_designer_func_4_25(self):
+        '''
+        1. Reopen AP and open saved template
+        2. Enter Title Room and select saved template
+        3. Apply In animation
+        4. Check if preview changed correctly at (02:18)
+        '''
+
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_24"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Reopen AP and open saved template'):
+            main_page.close_app()
+            main_page.start_app()
+
+            project_name = 'BFT_21_Stage1/test_title_designer_func_4_25.pdk'
+
+            if not main_page.exist_file(Test_Material_Folder + project_name):
+                assert False, f"Project file {project_name} doesn't exist!"
+
+            # Open project
+            main_page.top_menu_bar_file_open_project(save_changes='no')
+            main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+
+        with step('[Action] Enter title room and select saved template'):
+            # enter Title Room
+            main_page.enter_room(1)
+
+            # Custom template
+            main_page.select_LibraryRoom_category('Custom')
+
+            # Select 1st Custom template "title_designer_func_4_24"
+            main_page.select_library_icon_view_media('title_designer_func_4_24')
+            main_page.double_click()
+            time.sleep(DELAY_TIME * 3)
 
         # Current status: Open Title Designer (Advanced) and only unfold "Font / Paragraph"
 
         # [L145] 3.2 Title Designer > Set Animation > Starting Effect
-        with uuid("bb27103b-0bd1-4f73-9eb5-948375335ba1") as case:
-            # Set timecode to snapshot before apply animation
-            title_designer_page.set_timecode('00_00_02_18')
-            time.sleep(DELAY_TIME * 2)
-            no_in_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-
+        # with uuid("bb27103b-0bd1-4f73-9eb5-948375335ba1") as case:
+        with step('[Action] Enter In Animation tab'):
             # Switch to Animation tab > Unfold
             title_designer_page.click_animation_tab()
             title_designer_page.unfold_animation_in_animation_tab()
-            title_designer_page.set_timecode('00_00_00_00')
+            
+        with step('[Action] Apply effect'):
 
+            # Set timecode to snapshot before apply animation
+            title_designer_page.set_timecode('00_00_02_18')
+            no_in_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            # title_designer_page.set_timecode('00_00_00_00')
             # Apply In animation: Popup > Magnets II
             title_designer_page.select_animation_in_animation_effect(4, 4)
 
             # Warning: Do you want to continue?
             title_designer_page.handle_special_effect_want_to_continue(option=1)
-            time.sleep(DELAY_TIME*2)
+            time.sleep(DELAY_TIME)
+
+        # check if preview changed
+        with step('[Verify] Check if preview changed correctly at (02:18)'):
+            in_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(in_animation_preview, no_in_animation_preview, similarity=0.98):
+                assert False, "In animation effect is not applied correctly on preview window! Similarity should < 0.98"
+        assert True
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.timecode
+    @pytest.mark.in_out_animation
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_designer_func_4_26] Play video by press space key and check preview')
+    @exception_screenshot
+    def test_title_designer_func_4_26(self):
+        '''
+        1. Play the vedio by press space key and check if preview changed at (00:00)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_25"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Play the vedio by press space key and check if preview changed at (00:00)'):
+            title_designer_page.set_timecode('00_00_00_00')
+
+            before_play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
             # Preview play > Pause
             main_page.press_space_key()
             time.sleep(DELAY_TIME*2)
             main_page.press_space_key()
 
+            # check if preview changed
+            play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(play_preview, before_play_preview, similarity=0.98):
+                assert False, "Not preview in animation correctly when playing the video by press space key! Similarity should < 0.98"
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.timecode
+    @pytest.mark.in_out_animation
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_designer_func_4_27] Click Stop and check if go to (00:00)')
+    @exception_screenshot
+    def test_title_designer_func_4_27(self):
+        '''
+        1. Set timecode to (02:18) and click [Stop] button
+        2. Check if go to (00:00) after click [Stop] button
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_26"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] set timecode to (02:18) and click [Stop] button'):
             # Set timecode :
             title_designer_page.set_timecode('00_00_02_18')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify preview 1
-            animation_4_title_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            is_applied_in_Magnets_ii = not main_page.compare(animation_4_title_preview, no_in_animation_preview, similarity=0.96)
-            logger(is_applied_in_Magnets_ii)
-
             # Click [Stop]
             title_designer_page.click_preview_operation('Stop')
-            time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check if go to (00:00) after click [Stop] button'):
+            current_time_code = title_designer_page.get_timecode()
+            if current_time_code != '00:00:00:00':
+                assert False, f'Not go to (00:00) after click [Stop] button! Expected: 00:00:00:00, Actual: {current_time_code}'
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.in_out_animation
+    @pytest.mark.name('[test_title_designer_func_4_28] Apply another effect and check preview')
+    @exception_screenshot
+    def test_title_designer_func_4_28(self):
+        '''
+        1. Apply another effect and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_27"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Apply another effect and check preview'):
+            before_img = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
             # Apply In animation: Video rotation > Rotate Counterclockwise
             title_designer_page.select_animation_in_animation_effect(8, 3)
+            applied_effect = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_img, applied_effect, similarity=0.98):
+                assert False, "Effect is not applied correctly on preview window! Similarity should < 0.98"
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.timecode
+    @pytest.mark.in_out_animation
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_designer_func_4_29] Stop playing video and check if go to (00:00)')
+    @exception_screenshot
+    def test_title_designer_func_4_29(self):
+        '''
+        1. Press space key to play video and click [Stop] button
+        2. Check if go to (00:00) after click [Stop] button when playing video
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_28"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Press space key to play video and click [Stop] button'):
+
             # Preview play > Pause
             main_page.press_space_key()
             time.sleep(DELAY_TIME*1.6)
@@ -3044,153 +3187,273 @@ class Test_BFT_365_OS14():
             title_designer_page.click_preview_operation('Stop')
             time.sleep(DELAY_TIME)
 
-            # Verify preview 2
-            animation_3_title_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            is_applied_in_Counterclockwise = not main_page.compare(animation_3_title_preview, animation_4_title_preview, similarity=0.98)
-            logger(is_applied_in_Counterclockwise)
-            case.result = is_applied_in_Magnets_ii and is_applied_in_Counterclockwise
+        with step('[Verify] Check if go to (00:00) after click [Stop] button when playing video'):
+            current_time_code = title_designer_page.get_timecode()
+            if current_time_code != '00:00:00:00':
+                assert False, f'Not go to (00:00) after click [Stop] button! Expected: 00:00:00:00, Actual: {current_time_code}'
+        
+        with step('[Initialize] Close APP for next test'):
+            # Close title designer
+            title_designer_page.click_ok()
+            time.sleep(DELAY_TIME * 2)
+            # Close APP
+            main_page.close_app()
 
-        # ---------------------------------
-        # Move 2nd title to left
-        # Switch to Object tab > Unfold
-        title_designer_page.click_object_tab()
+        assert True
 
-        # Unfold tab
-        title_designer_page.unfold_object_object_setting_tab(1)
-        time.sleep(DELAY_TIME)
 
-        # Set x position = 0
-        title_designer_page.input_object_setting_x_position_value('0')
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.object_settings
+    @pytest.mark.name('[test_title_designer_func_4_30] Insert new title and set x position = 0 and rotation = 90')
+    @exception_screenshot
+    def test_title_designer_func_4_30(self):
+        '''
+        1. Insert new title
+        2. Enter Object setting tab
+        3. set x position = 0 and check preview
+        4. set rotation = 90 and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        # Start a new section, starts from "test_title_designer_func_4_1"
+        self.test_title_designer_func_4_1()
 
-        # Set roation = 90
-        title_designer_page.input_object_setting_rotation_value('90')
+        with step('[Action] Insert new title'):
+            ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            title_designer_page.insert_title(' suiod fw5')
+            added_text = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+            if main_page.compare(ori_img, added_text, similarity=0.98):
+                assert False, "Insert new title failed!"
 
-        # fold tab
-        title_designer_page.unfold_object_object_setting_tab(0)
-        time.sleep(DELAY_TIME)
-        # ---------------------------------
-        # Switch highlight to 1st title
-        canvas_elem = main_page.exist(L.title_designer.area.frame_video_preview)
-        main_page.mouse.click(*canvas_elem.center)
+        with step('[Action] Enter object setting tab'):
+            # ---------------------------------
+            # Move 2nd title to left
+            # Switch to Object tab > Unfold
+            title_designer_page.click_object_tab()
+            # Unfold tab
+            title_designer_page.unfold_object_object_setting_tab(1)
 
-        # Switch to Animation tab > Unfold
-        title_designer_page.click_animation_tab()
+        with step('[Action] Set x position = 0 of new added title'):
+            before_img = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            # Set x position = 0
+            title_designer_page.input_object_setting_x_position_value('0')
+        
+        with step('[Verify] Check if preview changed correctly for x position = 0'):
+            x_value_changed = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_img, x_value_changed, similarity=0.98):
+                assert False, "Set x position failed!"
 
-        # Warning: Do you want to continue?
-        title_designer_page.handle_special_effect_want_to_continue(option=1)
-        time.sleep(DELAY_TIME * 2)
+        with step('[Action] Set rotation = 90 of new added title'):
+            # Set roation = 90
+            title_designer_page.input_object_setting_rotation_value('90')
+
+        with step('[Verify] Check if preview changed correctly for rotation = 90'):
+            rotation_value_changed = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_img, rotation_value_changed, similarity=0.98):
+                assert False, "Set rotation failed!"
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.in_out_animation
+    @pytest.mark.name('[test_title_designer_func_4_31] Apply out animation effect on 1st title')
+    @exception_screenshot
+    def test_title_designer_func_4_31(self):
+        '''
+        1. Highlight the 1st title
+        2. Apply Out animation: Pop up III
+        3. Check if preview changed correctly at (09:08)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_30"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Highlight the 1st title'):
+            # fold tab
+            title_designer_page.unfold_object_object_setting_tab(0)
+
+            # ---------------------------------
+            # Switch highlight to 1st title
+            canvas_elem = main_page.exist(L.title_designer.area.frame_video_preview)
+            main_page.mouse.click(*canvas_elem.center)
+
+            # Switch to Animation tab > Unfold
+            title_designer_page.click_animation_tab()
+
+            # Warning: Do you want to continue?
+            title_designer_page.handle_special_effect_want_to_continue(option=1)
+            time.sleep(DELAY_TIME * 2)
 
         # [L146] 3.2 Title Designer > Set Animation > Ending Effect
-        with uuid("df9f83b6-b009-4cbe-9180-2168fd1ad35c") as case:
+        # with uuid("df9f83b6-b009-4cbe-9180-2168fd1ad35c") as case:
+
+        with step('[Action] Enter out animation tab'):
             # Fold (In animation)
             title_designer_page.unfold_animation_in_animation_tab(0)
 
             # UnFold (Out animation)
             title_designer_page.unfold_animation_out_animation_tab()
 
+        with step('[Action] Apply Out animation: Pop up III'):
+
             # Set timecode to snapshot before apply out animation
             title_designer_page.set_timecode('00_00_09_08')
-            time.sleep(DELAY_TIME * 2)
             no_out_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            title_designer_page.set_timecode('00_00_00_00')
 
             # Apply Out animation: Pop up III
             title_designer_page.select_animation_out_animation_effect(6, 5)
 
             # Warning: Do you want to continue?
             title_designer_page.handle_special_effect_want_to_continue(option=1)
-            time.sleep(DELAY_TIME*2)
+
+
+        # check if preview changed
+        with step('[Verify] Check if preview changed correctly at (09:08)'):
+            out_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(out_animation_preview, no_out_animation_preview, similarity=0.98):
+                assert False, "out animation effect is not applied correctly on preview window! Similarity should < 0.98"
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.in_out_animation
+    @pytest.mark.play_video
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_title_designer_func_4_32] Play video by press space key and check preview')
+    @exception_screenshot
+    def test_title_designer_func_4_32(self):
+        '''
+        1. Play the vedio by press space key and check if preview changed correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_31"
+        self.ensure_dependency(dependency_test)
+
+
+        with step('[Action] Play the vedio by press space key and check if preview changed at (07:50)'):
+            title_designer_page.set_timecode('00_00_07_50')
+
+            before_play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
             # Preview play > Pause
             main_page.press_space_key()
             time.sleep(DELAY_TIME*2)
             main_page.press_space_key()
 
-            # Set timecode :
-            title_designer_page.set_timecode('00_00_09_08')
-            time.sleep(DELAY_TIME * 2)
+            # check if preview changed
+            play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(play_preview, before_play_preview, similarity=0.98):
+                assert False, "Not preview out animation correctly when playing the video by press space key! Similarity should < 0.98"
+        assert True
 
-            # Verify preview 1
-            animation_5_title_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            is_applied_out_slide = not main_page.compare(animation_5_title_preview, no_out_animation_preview, similarity=0.82)
-            logger(is_applied_out_slide)
-
-            # Click [Stop]
-            title_designer_page.click_preview_operation('Stop')
-            time.sleep(DELAY_TIME)
-
-            # Apply Out animation: Vanish
-            title_designer_page.select_animation_out_animation_effect(9, 2)
-
-            # Preview play > Pause
-            title_designer_page.click_preview_operation('Play')
-            time.sleep(DELAY_TIME * 2)
-            title_designer_page.click_preview_operation('Pause')
-
-            # Set timecode :
-            title_designer_page.set_timecode('00_00_09_08')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify preview 1
-            animation_4_title_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            is_applied_out_wipe = not main_page.compare(animation_4_title_preview, animation_5_title_preview,
-                                                        similarity=0.98)
-            logger(is_applied_out_wipe)
-
-            case.result = is_applied_out_slide and is_applied_out_wipe
-
-        # ---------------------------------
-        # Click [Stop]
-        title_designer_page.click_preview_operation('Stop')
-        time.sleep(DELAY_TIME)
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.motion
+    @pytest.mark.path_effect
+    @pytest.mark.name('[test_title_designer_func_4_33] Apply Motion -- Path effect twice')
+    @exception_screenshot
+    def test_title_designer_func_4_33(self):
+        '''
+        1. Enter Motion tab
+        2. Apply path effect and check if preview
+        3. Apply another path effect and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        # Start a new section, starts from "test_title_designer_func_4_1"
+        self.test_title_designer_func_4_1()
 
         # [L147] 3.2 Title Designer > Set Motion
-        with uuid("c37a6bbf-5989-49ce-bb91-47aac338ddb0") as case:
+        # with uuid("c37a6bbf-5989-49ce-bb91-47aac338ddb0") as case:
+        with step('[Action] Set Enter Path Tab'):
             # Switch to Motion tab > Unfold
             title_designer_page.click_motion_tab()
-
             # UnFold Path
             title_designer_page.path.set_unfold()
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Apply path'):
+            original_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
-
             # Apply path
             title_designer_page.path.select_path(25)
-            time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check if preview changed correctly'):
             # Verify preview 1
             path_25_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(original_preview, path_25_preview, similarity=0.98):
+                assert False, "Path effect is not applied correctly on preview window! Similarity should < 0.98"
 
+        with step('[Action] Apply another path effect again'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME)
-
             # Apply path
             title_designer_page.path.select_path(10)
-            time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check if preview changed correctly'):
             # Verify preview 2
             path_10_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            is_different_path = not main_page.compare(path_25_preview, path_10_preview, similarity=0.9)
-            logger(is_different_path)
+            if main_page.compare(path_25_preview, path_10_preview, similarity=0.9):
+                assert False, "Path effect is not applied correctly on preview window! Similarity should < 0.9"
 
-            # Preview play > Pause
-            main_page.press_space_key()
-            time.sleep(DELAY_TIME * 4)
-            main_page.press_space_key()
 
+        with step('[Verify] Check if preview changed correctly as GT'):
             # Set timecode :
             title_designer_page.set_timecode('00_00_02_29')
-            time.sleep(DELAY_TIME * 2)
 
             # Verify preview 3
             check_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview,
                                                file_name=Auto_Ground_Truth_Folder + 'L147.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L147.png', check_preview, similarity=0.9)
-            case.result = compare_result and is_different_path
+            if not compare_result:
+                assert False, "Path effect is not applied correctly on preview window as GT (L147.png)!"
+
+        assert True
+            
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.motion
+    @pytest.mark.path_effect
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_designer_func_4_34] Play the video and check path effect changed on preview')
+    @exception_screenshot
+    def test_title_designer_func_4_34(self):
+        '''
+        1. Play the video by press space key
+        2. Check if preview changed correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_33"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Play the video by press space key'):
+            before_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            # Preview play > Pause
+            main_page.press_space_key()
+            time.sleep(DELAY_TIME * 4)
+            main_page.press_space_key()
+
+        with step('[Verify] Check if preview changed correctly'):
+            after_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_preview, after_preview, similarity=0.98):
+                assert False, "Not preview path effect correctly when playing the video by press space key! Similarity should < 0.98"
+
+        assert True
+
+    # @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.motion
+    @pytest.mark.path_effect
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_designer_func_4_35] Play the video and check path effect changed on preview')
+    @exception_screenshot
+    def test_title_designer_func_4_35(self):
+        '''
+        1. Play the video by press space key
+        2. Check if preview changed correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_33"
+        self.ensure_dependency(dependency_test)
 
         # [L150] 3.2 Title Designer > Insert object > Particle
         with uuid("01518edc-0a14-4a92-95c5-baaed5ae0c51") as case:
