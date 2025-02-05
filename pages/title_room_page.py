@@ -6,6 +6,7 @@ from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -410,29 +411,31 @@ class Title_room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][TitleRoom] Click "Download Content from DirectorZone/Cloud"')
     def click_DownloadContent_from_DZCL(self):
         try:
             if not self.exist_click(L.title_room.btn_import_media):
-                raise Exception
+                raise Exception('Cannot find btn_import_media')
             time.sleep(DELAY_TIME*2)
 
             if not self.exist(L.title_room.btn_import_title_templates):
                 logger('not in Title Room')
-                raise Exception
+                raise Exception('not in Title Room')
 
             if not self.exist_click(L.title_room.btn_download_from_DZ_cloud):
-                raise Exception
+                raise Exception('Unable to find btn_download_from_DZ_cloud')
             time.sleep(DELAY_TIME*2)
 
             # Verify Step
             if not self.exist(L.title_room.download_dialog.main):
-                raise Exception
+                raise Exception('Cannot find download_dialog')
             # For v2922 workaround .. skip this check (exception -25200)
             #if not self.exist(L.title_room.download_dialog.str_Title):
             #    raise Exception
+            time.sleep(DELAY_TIME*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def download_content_from_cloud(self, name, close_win=True):

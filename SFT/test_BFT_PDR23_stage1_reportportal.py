@@ -1655,7 +1655,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
     @pytest.mark.save_template
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.name('[test_intro_room_func_3_14] Save/ Apply the template')
     @exception_screenshot
     def test_intro_room_func_3_14(self):
@@ -2554,7 +2554,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.object_settings
     @pytest.mark.name('[test_title_designer_func_4_15] Add keyframe on Position/ Scale/ Opacity/ Rotation')
     @exception_screenshot
@@ -2755,7 +2755,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.object_settings
     @pytest.mark.name('[test_title_designer_func_4_19] Switch to next/ previous keyframe')
     @exception_screenshot
@@ -2801,7 +2801,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.object_settings
     @pytest.mark.name('[test_title_designer_func_4_20] Click [Previous] keyframe when no previous keyframe')
     @exception_screenshot
@@ -2835,7 +2835,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.object_settings
     @pytest.mark.name('[test_title_designer_func_4_21] Add Opacity keyframe at (09:00) and click [Previous] keyframe')
     @exception_screenshot
@@ -3008,7 +3008,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.save_template
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.in_out_animation
     @pytest.mark.name('[test_title_designer_func_4_25] Reopen AP and open saved template > Apply In animation')
     @exception_screenshot
@@ -3063,7 +3063,7 @@ class Test_BFT_365_OS14():
 
             # Set timecode to snapshot before apply animation
             title_designer_page.set_timecode('00_00_02_18')
-            no_in_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            no_in_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             # title_designer_page.set_timecode('00_00_00_00')
             # Apply In animation: Popup > Magnets II
             title_designer_page.select_animation_in_animation_effect(4, 4)
@@ -3074,7 +3074,7 @@ class Test_BFT_365_OS14():
 
         # check if preview changed
         with step('[Verify] Check if preview changed correctly at (02:18)'):
-            in_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            in_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             if main_page.compare(in_animation_preview, no_in_animation_preview, similarity=0.98):
                 assert False, "In animation effect is not applied correctly on preview window! Similarity should < 0.98"
         assert True
@@ -3082,7 +3082,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.in_out_animation
     @pytest.mark.play_video
     @pytest.mark.name('[test_title_designer_func_4_26] Play video by press space key and check preview')
@@ -3098,7 +3098,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Play the vedio by press space key and check if preview changed at (00:00)'):
             title_designer_page.set_timecode('00_00_00_00')
 
-            before_play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            before_play_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
 
             # Preview play > Pause
             main_page.press_space_key()
@@ -3106,14 +3106,14 @@ class Test_BFT_365_OS14():
             main_page.press_space_key()
 
             # check if preview changed
-            play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            play_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             if main_page.compare(play_preview, before_play_preview, similarity=0.98):
                 assert False, "Not preview in animation correctly when playing the video by press space key! Similarity should < 0.98"
         assert True
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.in_out_animation
     @pytest.mark.play_video
     @pytest.mark.name('[test_title_designer_func_4_27] Click Stop and check if go to (00:00)')
@@ -3153,17 +3153,17 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Apply another effect and check preview'):
-            before_img = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            before_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             # Apply In animation: Video rotation > Rotate Counterclockwise
             title_designer_page.select_animation_in_animation_effect(8, 3)
-            applied_effect = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            applied_effect = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             if main_page.compare(before_img, applied_effect, similarity=0.98):
                 assert False, "Effect is not applied correctly on preview window! Similarity should < 0.98"
         assert True
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.in_out_animation
     @pytest.mark.play_video
     @pytest.mark.name('[test_title_designer_func_4_29] Stop playing video and check if go to (00:00)')
@@ -3298,7 +3298,8 @@ class Test_BFT_365_OS14():
 
             # Set timecode to snapshot before apply out animation
             title_designer_page.set_timecode('00_00_09_08')
-            no_out_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            no_out_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
+
 
             # Apply Out animation: Pop up III
             title_designer_page.select_animation_out_animation_effect(6, 5)
@@ -3309,7 +3310,7 @@ class Test_BFT_365_OS14():
 
         # check if preview changed
         with step('[Verify] Check if preview changed correctly at (09:08)'):
-            out_animation_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            out_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             if main_page.compare(out_animation_preview, no_out_animation_preview, similarity=0.98):
                 assert False, "out animation effect is not applied correctly on preview window! Similarity should < 0.98"
         assert True
@@ -3318,7 +3319,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.in_out_animation
     @pytest.mark.play_video
-    @pytest.mark.timecode
+    @pytest.mark.timeline
     @pytest.mark.name('[test_title_designer_func_4_32] Play video by press space key and check preview')
     @exception_screenshot
     def test_title_designer_func_4_32(self):
@@ -3333,7 +3334,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Play the vedio by press space key and check if preview changed at (07:50)'):
             title_designer_page.set_timecode('00_00_07_50')
 
-            before_play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            before_play_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
 
             # Preview play > Pause
             main_page.press_space_key()
@@ -3341,7 +3342,7 @@ class Test_BFT_365_OS14():
             main_page.press_space_key()
 
             # check if preview changed
-            play_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            play_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             if main_page.compare(play_preview, before_play_preview, similarity=0.98):
                 assert False, "Not preview out animation correctly when playing the video by press space key! Similarity should < 0.98"
         assert True
@@ -3442,12 +3443,15 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.particle
-    @pytest.mark.play_video
-    @pytest.mark.name('[test_title_designer_func_4_35] ')
+    @pytest.mark.name('[test_title_designer_func_4_35] Insert a particle twice and check preview/ particle title')
     @exception_screenshot
     def test_title_designer_func_4_35(self):
         '''
-
+        1. Insert a particle
+        2. Check if preview changed correctly
+        3. Undo and insert another particle
+        4. Check if preview changed correctly
+        5. Check if inserted particle template title is Bamboo
         '''
         # Ensure the dependency test is run and passed
         # Start a new section, starts from "test_title_designer_func_4_1"
@@ -3456,26 +3460,30 @@ class Test_BFT_365_OS14():
         # [L150] 3.2 Title Designer > Insert object > Particle
         # with uuid("01518edc-0a14-4a92-95c5-baaed5ae0c51") as case:
 
-        with step('[Action] Open particle tab'):
+        with step('[Action] Insert a particle'):
+            # Switch to Advance mode
+            title_designer_page.switch_mode(2)
 
             # Switch to Object tab > Unfold
             title_designer_page.click_object_tab()
-            time.sleep(DELAY_TIME * 2)
+
+            # Set timecode :
+            title_designer_page.set_timecode('00_00_05_28')
+
+            before_applied_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
             # Click [Insert particle]
             title_designer_page.click_insert_particle_btn()
 
-        
             # Select Frame > 6th template
             title_designer_page.insert_particle(menu_index=6, particle_index=5)
 
-            # Set timecode :
-            title_designer_page.set_timecode('00_00_05_28')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify preview 1
+        with step('[Verify] Check if preview changed correctly for the first particle'):
             frame_6_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_applied_preview, frame_6_preview, similarity=0.98):
+                assert False, "Particle effect is not applied correctly on preview window! Similarity should < 0.98"
 
+        with step('[Action] Undo and insert another particle'):
             title_designer_page.click_undo_btn()
             time.sleep(DELAY_TIME * 2)
 
@@ -3484,162 +3492,364 @@ class Test_BFT_365_OS14():
             # Select Holiday > 1st template (naming: Bamboo)
             title_designer_page.insert_particle(menu_index=4, particle_index=0)
 
+        with step('[Verify] Check if preview changed correctly for the second particle'):
             # Verify preview 2
             hodiday_4_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            is_different_particle = not main_page.compare(frame_6_preview, hodiday_4_preview, similarity=0.9)
-            logger(is_different_particle)
+            if main_page.compare(frame_6_preview, hodiday_4_preview, similarity=0.9):
+                assert False, "Particle effect is not applied correctly on preview window for the second time! Similarity should < 0.9"
 
+        with step('[Verify] Check if inserted particle template title is Bamboo'):
             # Check insert template title
             elem = main_page.exist(L.title_designer.area.edittext_text_content)
-            if elem.AXValue == 'Bamboo':
-                check_title = True
-            else:
-                check_title = False
-                logger(elem.AXValue)
-            case.result = is_different_particle and check_title
+            if elem.AXValue != 'Bamboo':
+                assert False, f"Particle template title is not Bamboo! Expected: Bamboo, Actual: {elem.AXValue}"
+
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.image
+    @pytest.mark.name('[test_title_designer_func_4_36] Insert image and check preview/ image title')
+    @exception_screenshot
+    def test_title_designer_func_4_36(self):
+        '''
+        1. Insert an image
+        2. Check if preview changed correctly
+        3. Check if image title is beauty.jpg
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_35"
+        self.ensure_dependency(dependency_test)
 
         # [L151] 3.2 Title Designer > Insert object > Image
-        with uuid("941b1888-0447-45df-b9fd-51f984b219b2") as case:
+        # with uuid("941b1888-0447-45df-b9fd-51f984b219b2") as case:
+
+        with step('[Action] Insert an image'):
+            before_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
             # Click [Insert image]
             title_designer_page.insert_image(Test_Material_Folder + 'BFT_21_Stage1/beauty.jpg')
 
+        with step('[Verify] Check if preview changed correctly'):
+            # Check preview update:
+            inserted_image_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_preview, inserted_image_preview, similarity=0.98):
+                assert False, "Image is not inserted correctly on preview window! Similarity should < 0.98"
+
+        with step('[Verify] Check if image title is beauty.jpg'):
             # Check insert template title
             elem = main_page.exist(L.title_designer.area.edittext_text_content)
-            if elem.AXValue == 'beauty.jpg':
-                check_image_title = True
-            else:
-                check_image_title = False
+            assert elem.AXValue == 'beauty.jpg', f'Image title is not beauty.jpg! Expected: beauty.jpg, Actual: {elem.AXValue}'
 
-            time.sleep(DELAY_TIME * 2)
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.image
+    @pytest.mark.name('[test_title_designer_func_4_37] Move/ Resize/ Rotate the Image object and check preview')
+    @exception_screenshot
+    def test_title_designer_func_4_37(self):
+        '''
+        1. Move the Image object and check preview
+        2. Resize the Image object and check preview
+        3. Rotate the Image object and check preview
+        4. Check if preview changed correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_36"
+        self.ensure_dependency(dependency_test)
 
-            # Resize / move the Image object
-            title_designer_page.adjust_title_on_canvas.drag_move_to_left(x=120)
-            title_designer_page.adjust_title_on_canvas.resize_to_large(x=80, y=80)
-            title_designer_page.adjust_title_on_canvas.drag_rotate_clockwise(45)
-
+        with step('[Action] Move the Image object'):
             # Set timecode :
             title_designer_page.set_timecode('00_00_02_06')
-            time.sleep(DELAY_TIME * 2)
+            before_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            # Resize / move the Image object
+            title_designer_page.adjust_title_on_canvas.drag_move_to_left(x=120)
 
+        with step('[Verify] Check if preview changed correctly after move the image'):
+            moved_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_preview, moved_preview, similarity=0.98):
+                assert False, "Image is not moved correctly on preview window! Similarity should < 0.98"
+
+        with step('[Action] Resize the Image object'):
+            title_designer_page.adjust_title_on_canvas.resize_to_large(x=80, y=80)
+
+        with step('[Verify] Check if preview changed correctly after resize the image'):
+            resized_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(moved_preview, resized_preview, similarity=0.98):
+                assert False, "Image is not resized correctly on preview window! Similarity should < 0.98"
+
+        with step('[Action] Rotate the Image object'):
+            title_designer_page.adjust_title_on_canvas.drag_rotate_clockwise(45)
+
+        with step('[Verify] Check if preview changed correctly after rotate the image'):
+            rotated_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(resized_preview, rotated_preview, similarity=0.98):
+                assert False, "Image is not rotated correctly on preview window! Similarity should < 0.98"
+
+        with step('[Verify] Check if preview changed correctly as GT'):
             current_image = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L151.png')
             check_image = main_page.compare(Ground_Truth_Folder + 'L151.png', current_image, similarity=0.9)
-            case.result = check_image_title and check_image
+            if not check_image:
+                assert False, "Image is not resized/ moved/ rotated correctly on preview window as GT! But checked preview changed step by step in previous steps"
+
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.bg_image
+    @pytest.mark.name('[test_title_designer_func_4_38] Insert Background Image and Delete Background Image')
+    @exception_screenshot
+    def test_title_designer_func_4_38(self):
+        '''
+        1. Insert Background Image
+        2. Check if preview changed correctly
+        3. Delete Background Image
+        4. Check if preview changed correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_37"
+        self.ensure_dependency(dependency_test)
 
         # [L152] 3.2 Title Designer > Insert object > Background Image
-        with uuid("ea00aff9-e85e-447f-981a-ecd745ad0838") as case:
+        # with uuid("ea00aff9-e85e-447f-981a-ecd745ad0838") as case:
+
+        with step('[Action] Insert Background Image'):
+            before_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
             # Click [Insert BG]
             title_designer_page.insert_background(Test_Material_Folder + 'BFT_21_Stage1/outside.jpg')
-
             title_designer_page.insert_background_adjust_setting(0)
-            time.sleep(DELAY_TIME*2)
-            # Check preview update:
-            current_image = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            check_BG = not main_page.compare(Ground_Truth_Folder + 'L151.png', current_image, similarity=0.9)
 
+        with step('[Verify] Check if preview changed correctly'):
+            inserted_BG_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_preview, inserted_BG_preview, similarity=0.98):
+                assert False, "Background Image is not inserted correctly on preview window! Similarity should < 0.98"
+
+        with step('[Verify] Check if preview changed correctly as GT'):
+            # Check preview update:
+            if not main_page.compare(Ground_Truth_Folder + 'L152.png', inserted_BG_preview, similarity=0.9):
+                assert False, "Background Image is not inserted correctly on preview window as GT!"
+
+        with step('[Action] Delete Background Image'):
             # Click (Delete BG) button
             title_designer_page.click_delete_background_btn()
-            time.sleep(DELAY_TIME)
 
-            current_image = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            check_no_BG = main_page.compare(Ground_Truth_Folder + 'L151.png', current_image)
-            case.result = check_BG and check_no_BG
+        with step('[Verify] Check if preview changed correctly'):
+            deleted_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(inserted_BG_preview, deleted_preview, similarity=0.98):
+                assert False, "Background Image is not deleted correctly on preview window! Similarity should < 0.98"
 
+        with step('[Initialize] Undo for next test'):
             # Undo
             title_designer_page.click_undo_btn()
+        
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.max_min_window
+    @pytest.mark.name('[test_title_designer_func_4_39] Maximize/ Minimize screen and check preview')
+    @exception_screenshot
+    def test_title_designer_func_4_39(self):
+        '''
+        1. Maximize screen
+        2. Check if preview changed correctly as GT
+        3. Minimize screen
+        4. Check if preview changed correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_38"
+        self.ensure_dependency(dependency_test)
 
         # [L153] 3.2 Title Designer > Preview > in designer & full screen
-        with uuid("609fda02-864a-4c71-900b-6bf39f7b54ac") as case:
+        # with uuid("609fda02-864a-4c71-900b-6bf39f7b54ac") as case:
+
+        with step('[Action] Maximize screen'):
+            # Click [Stop]
+            title_designer_page.click_preview_operation('Stop')
             # Click [full screen]
             title_designer_page.click_maximize_btn()
 
-            # Preview play > Pause
-            main_page.press_space_key()
-            time.sleep(DELAY_TIME*7)
-
-            # Click [Stop]
-            title_designer_page.click_preview_operation('Stop')
-            time.sleep(DELAY_TIME*2)
-
+        with step('[Verify] Check if preview changed correctly as GT'):
             full_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L153_full.png')
             check_result_full = main_page.compare(Ground_Truth_Folder + 'L153_full.png', full_preview, similarity=0.9)
+            if not check_result_full:
+                assert False, "Preview is not maximized correctly on preview window as GT!"
 
+        with step('[Action] Minimize screen'):
             # Click [restore button]
             title_designer_page.click_maximize_btn()
-            time.sleep(DELAY_TIME*2)
 
+        with step('[Verify] Check if preview changed correctly as GT'):
             restore_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L153.png')
             check_result_restore = main_page.compare(Ground_Truth_Folder + 'L153.png', restore_preview, similarity=0.9)
-            case.result = check_result_full and check_result_restore
+            if not check_result_restore:
+                assert False, "Preview is not minimized correctly on preview window as GT!"
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.dz
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.name('[test_title_designer_func_4_40] Share to DZ (Completed Window pops up)')
+    @exception_screenshot
+    def test_title_designer_func_4_40(self):
+        '''
+        1. Share to DZ (check till completed window pops up)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_39"
+        self.ensure_dependency(dependency_test)
 
         # [L154] 3.2 Title Designer > Share template DZ and Cloud
-        with uuid("441355f4-e673-45fc-b3e4-1b8189a15db8") as case:
+        # with uuid("441355f4-e673-45fc-b3e4-1b8189a15db8") as case:
+
+        with step('[Action] Share template to DZ'):
             # Click [Share] > Upload to "Cyberlink Cloud and DZ"
             # Verify DZ link
             check_upload = title_designer_page.share_to_dz(name='title_particle_text', upload_option=0, style='Romance', tags='123', collection='test', description='Great', verify_dz_link=1)
-            check_dz_result = check_upload
-            logger(check_dz_result)
+            if not check_upload:
+                assert False, "Share template to DZ failed!"
 
+        with step('[Initialize] Close title designer window for next test'):
             # Click [Cancel] to close title designer
             title_designer_page.click_cancel()
 
+        assert True
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.dz
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.name('[test_title_designer_func_4_41] Show uploaded content on download from CL/DZ window')
+    @exception_screenshot
+    def test_title_designer_func_4_41(self):
+        '''
+        1. Download the uploaded content form CL/DZ
+        2. Delete the uploaded content form CL/DZ
+        3. Check if show uploaded content on download from CL/DZ window
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_40"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Download the uploaded content form CL/DZ'):
             # Click download content form CL/DZ
             title_room_page.click_DownloadContent_from_DZCL()
-            time.sleep(DELAY_TIME * 2)
 
             # Already enter "Download Title Templates" > Open My Cyberlink Cloud
             # Select template name "title_particle_text"
             check_CL_content = download_from_cl_dz_page.select_template('title_particle_text')
-            logger(check_CL_content)
-            time.sleep(DELAY_TIME)
-            download_from_cl_dz_page.tap_delete_button()
-            time.sleep(DELAY_TIME*3)
 
+        with step('[Action] Delete the uploaded content form CL/DZ'):
+            download_from_cl_dz_page.tap_delete_button()
             # Close "Download Title Templates" window
             # download_from_cl_dz_page.tap_close_button()
             main_page.press_esc_key()
             time.sleep(DELAY_TIME)
 
-            case.result = check_dz_result and check_CL_content
+        with step('[Verify] Check if show uploaded content on download from CL/DZ window'):
+            assert check_CL_content, "Show uploaded content on download from CL/DZ window failed!"
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.font_face
+    @pytest.mark.name('[test_title_designer_func_4_42] Adjust font face color of the saved template')
+    @exception_screenshot
+    def test_title_designer_func_4_42(self):
+        '''
+        1. Open title designer with the saved template
+        2. Adjust font face color the saved template
+        3. Check if preview changed correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_41"
+        self.ensure_dependency(dependency_test)
 
         # [L155] 3.2 Title Designer > Save template
-        with uuid("5ce4dc5e-1d12-4e48-83f2-ffcc25408da0") as case:
+        # with uuid("5ce4dc5e-1d12-4e48-83f2-ffcc25408da0") as case:
+
+        with step('[Action] Open title designer with the saved template'):
             # Click "title_particle_text" template to title designer
             main_page.select_library_icon_view_media('title_particle_text')
             main_page.right_click()
             main_page.select_right_click_menu('Modify Template')
 
+        with step('[Action] Adjust font face color the saved template'):
+            before_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+
             # Enter title designer > Modify font face
             # Set font face color
             title_designer_page.set_font_face_color('85', '6', '208')
 
-            time.sleep(DELAY_TIME)
+        with step('[Verify] Check if preview changed correctly'):
+            font_face_color_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(before_preview, font_face_color_preview, similarity=0.98):
+                assert False, "Font face color is not adjusted correctly on preview window! Similarity should < 0.98"
 
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_title_designer_func_4_43] Reopen the saved template and check preview')
+    @exception_screenshot
+    def test_title_designer_func_4_43(self):
+        '''
+        1. Save the modified template
+        2. Reopen the saved template again
+        3. Check if preview changed after reopen the saved template
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_42"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Save the modified template'):
             # Save template
             main_page.click(L.title_designer.btn_save_as)
             title_designer_page.click_custom_name_ok('BFT_title_Save')
 
-            current_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            before_reopen_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
+        with step('[Action] Reopen the saved template again'):
             # Click [Cancel]
             title_designer_page.click_cancel()
-
             # Verify Step
             main_page.select_library_icon_view_media('BFT_title_Save')
             main_page.right_click()
             main_page.select_right_click_menu('Modify Template')
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check if preview changed after reopen the saved template (Should not change)'):
             # Set timecode :
             title_designer_page.set_timecode('00_00_05_00')
             time.sleep(DELAY_TIME * 4)
 
-            saved_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            check_save_result = main_page.compare(current_preview, saved_preview, similarity=0.99)
-            case.result = check_save_result
+            after_reopen_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            check_save_result = main_page.compare(before_reopen_preview, after_reopen_preview, similarity=0.99)
+            assert check_save_result, "Preview is changed after reopen the saved template!"
 
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_title_designer_func_4_44] Add saved title template to timeline at (10:00)')
+    @exception_screenshot
+    def test_title_designer_func_4_44(self):
+        '''
+        1. Add saved title template to timeline at (10:00)
+        2. Check if preview changed correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_43"
+        self.ensure_dependency(dependency_test)
 
         # [L156] 3.2 Title Designer > Add saved title template to timeline
-        with uuid("fb5b54c4-d0a8-4a3d-ac92-09e88ccf330b") as case:
+        # with uuid("fb5b54c4-d0a8-4a3d-ac92-09e88ccf330b") as case:
+
+        with step('[Action] Add saved title template to timeline at (10:00)'):
             # Click [Cancel] to close title designer
             title_designer_page.click_cancel()
 
@@ -3652,25 +3862,65 @@ class Test_BFT_365_OS14():
 
             # Drag BFT_title_Save to timeline track1
             main_page.drag_media_to_timeline_playhead_position('BFT_title_Save')
-
-            # Play timeline preview
-            main_page.press_space_key()
-            time.sleep(DELAY_TIME * 6)
-            main_page.press_space_key()
-
+            
+        with step('[Verify] Check if preview changed correctly as GT'):
             # Set timecode :
             main_page.set_timeline_timecode('00_00_16_23')
             time.sleep(DELAY_TIME * 2)
 
             timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L156.png')
             check_current_title = main_page.compare(Ground_Truth_Folder + 'L156.png', timeline_preview, similarity=0.9)
-            case.result = check_current_title
+            assert check_current_title, "Preview is not added to timeline correctly as GT (L156.png)!"
 
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_3',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-        time.sleep(DELAY_TIME * 2)
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_designer
+    @pytest.mark.save_template
+    @pytest.mark.timeline
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_designer_func_4_45] Play title with press space key > Save project')
+    @exception_screenshot
+    def test_title_designer_func_4_45(self):
+        '''
+        1. Play the title with press space key
+        2. Check if preview changed correctly
+        3. Save project
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_44"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Play timeline preview'):
+            before_play_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            # Set timecode :
+            main_page.set_timeline_timecode('00_00_10_00')
+            # Play timeline preview
+            main_page.press_space_key()
+            time.sleep(DELAY_TIME * 6)
+            main_page.press_space_key()
+
+        with step('[Verify] Check if preview changed correctly'):
+            played_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(before_play_preview, played_preview, similarity=0.98):
+                assert False, "Not preview timeline correctly when playing the video by press space key! Similarity should < 0.98"
+
+        with step('[Action] Save project'):
+            # Save project:
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name='test_case_1_1_3',
+                                            folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+            time.sleep(DELAY_TIME * 2)
+
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.name('[test_title_designer_func_4_z] Close AP due to the section is completed')
+    @exception_screenshot
+    def test_title_designer_func_4_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
+
 
     # 13 uuid
     # @pytest.mark.skip
