@@ -2627,7 +2627,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L142.png', check_preview, similarity=0.9)
             assert compare_result, "Keyframe settings are not set correctly as GT!"
 
-    # @pytest.mark.title_designer_func
+    @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.ease_in_out
@@ -2896,7 +2896,7 @@ class Test_BFT_365_OS14():
         
             # unfold special effect tab if folded
             title_designer_page.special_effects.set_unfold_tab(1)
-            time.sleep(DELAY_TIME)
+            time.sleep(DELAY_TIME*2)
 
         with step('[Action] Apply LED sign effect and check preview'):
             # Apply LED sign
@@ -3439,27 +3439,24 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    # @pytest.mark.title_designer_func
+    @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.motion
-    @pytest.mark.path_effect
+    @pytest.mark.particle
     @pytest.mark.play_video
-    @pytest.mark.name('[test_title_designer_func_4_35] Play the video and check path effect changed on preview')
+    @pytest.mark.name('[test_title_designer_func_4_35] ')
     @exception_screenshot
     def test_title_designer_func_4_35(self):
         '''
-        1. Play the video by press space key
-        2. Check if preview changed correctly
+
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_33"
-        self.ensure_dependency(dependency_test)
+        # Start a new section, starts from "test_title_designer_func_4_1"
+        self.test_title_designer_func_4_1()
 
         # [L150] 3.2 Title Designer > Insert object > Particle
-        with uuid("01518edc-0a14-4a92-95c5-baaed5ae0c51") as case:
-            # Click [Stop]
-            title_designer_page.click_preview_operation('Stop')
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("01518edc-0a14-4a92-95c5-baaed5ae0c51") as case:
+
+        with step('[Action] Open particle tab'):
 
             # Switch to Object tab > Unfold
             title_designer_page.click_object_tab()
@@ -3467,6 +3464,8 @@ class Test_BFT_365_OS14():
 
             # Click [Insert particle]
             title_designer_page.click_insert_particle_btn()
+
+        
             # Select Frame > 6th template
             title_designer_page.insert_particle(menu_index=6, particle_index=5)
 
