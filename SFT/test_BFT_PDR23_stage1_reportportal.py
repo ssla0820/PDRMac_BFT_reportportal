@@ -1819,19 +1819,19 @@ class Test_BFT_365_OS14():
             main_page.handle_save_file_dialog(name='test_intro_room_func_3',
                                                 folder_path=Export_Folder + 'BFT_21_Stage1/')
 
-        # Remove (share Video Intro template)
-        # If share successfully, then delete template
-        with step('[Action] Remove shared template'):
-            # Open (My Profile)
-            intro_video_page.enter_my_profile()
-            time.sleep(DELAY_TIME * 8)
+        # # Remove (share Video Intro template)
+        # # If share successfully, then delete template
+        # with step('[Action] Remove shared template'):
+        #     # Open (My Profile)
+        #     intro_video_page.enter_my_profile()
+        #     time.sleep(DELAY_TIME * 8)
 
-            intro_video_page.my_profile.delete_1st_template()
-            time.sleep(DELAY_TIME * 5)
+        #     intro_video_page.my_profile.delete_1st_template()
+        #     time.sleep(DELAY_TIME * 5)
 
-            # close (My Profile)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
+        #     # close (My Profile)
+        #     main_page.press_esc_key()
+        #     time.sleep(DELAY_TIME * 2)
 
     @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
@@ -2441,7 +2441,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L140.png',
                                                 check_preview)
             if not compare_result:
-                assert False, "Shadow settings are not set correctly as GT! Preview changed step by step when applying effect"
+                assert False, "Shadow settings are not set correctly as GT (L140)! Preview changed step by step when applying effect"
         
         with step('[Action] Set to Initial Condition'):
             # fold tab
@@ -2625,7 +2625,7 @@ class Test_BFT_365_OS14():
             check_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer,
                                                 file_name=Auto_Ground_Truth_Folder + 'L142.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L142.png', check_preview, similarity=0.9)
-            assert compare_result, "Keyframe settings are not set correctly as GT!"
+            assert compare_result, "Keyframe settings are not set correctly as GT (L142)!"
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
@@ -2696,7 +2696,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if Scale keyframe is reset'):
             reseted_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if not main_page.compare(ori_img, reseted_img, similarity=0.9999):
+            if main_page.compare(ori_img, reseted_img, similarity=0.98):
                 assert False, "Scale keyframe is not reset!"
             
         with step('[Action] Reset Position keyframe'):
@@ -2714,7 +2714,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if Position keyframe is reset'):
             reseted_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if not main_page.compare(ori_img, reseted_img, similarity=0.9999):
+            if main_page.compare(ori_img, reseted_img, similarity=0.98):
                 assert False, "Position keyframe is not reset!"
         assert True
 
@@ -2779,7 +2779,7 @@ class Test_BFT_365_OS14():
             title_designer_page.drag_simple_track_vertical_slider(1)
 
             # Click simple track : Opacity next keyframe
-            title_designer_page.click_simple_track_opacity_next_keyframe(track_no=8)
+            title_designer_page.click_simple_track_opacity_next_keyframe(track_no=3)
 
         with step('[Verify] Check if switch to correct keyframe (08:00)'):
             # Verify next keyframe button
@@ -2789,7 +2789,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Switch to previous keyframe on Rotation keyframe'):
             # Click simple track : Rotation previous keyframe
-            title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=9)
+            title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=4)
 
         with step('[Verify] Check if switch to correct keyframe (03:00)'):
             # Verify previous keyframe button
@@ -2817,13 +2817,13 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Cancel Opacity keyframe at (03:00) by click again'):
             # Click simple track : Opacity keyframe [Reset] on the 3s keyframe
-            title_designer_page.click_simple_track_opacity_keyframe_control(track_no=8)
+            title_designer_page.click_simple_track_opacity_keyframe_control(track_no=3)
             time.sleep(DELAY_TIME*2)
 
         with step('[Action] Jumps to 08:00 and click [Previous] keyframe'):
             # Jump to 8s keyframe > Then click [Previous] keyframe to check previous keyframe
             current_time_code = title_designer_page.set_timecode('00_00_08_00')
-            title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=8)
+            title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=3)
 
         with step('[Verify] Check if stay in 08:00 correctly (No previous keyframe)'):
             # Verify  keyframe Reset button
@@ -2851,12 +2851,12 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Add Opacity keyframe at (09:00)'):
             # Click simple track : Opacity keyframe [Add] for Rotation keyframe
-            title_designer_page.click_simple_track_opacity_keyframe_control(track_no=9)
+            title_designer_page.set_timecode('00_00_09_00')
+            title_designer_page.click_simple_track_opacity_keyframe_control(track_no=3)
         
         with step('[Action] Click [Previous] keyframe to check previous keyframe'):
-            # Jump to 9s keyframe > Then click [Previous] keyframe to check previous keyframe
-            title_designer_page.set_timecode('00_00_09_00')
-            title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=9)
+            # Then click [Previous] keyframe to check previous keyframe
+            title_designer_page.click_simple_track_opacity_previous_keyframe(track_no=3)
 
         with step('[Verify] Check if changed to 08:00 correctly'):
             # Verify  keyframe Add button
