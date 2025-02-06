@@ -1816,7 +1816,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Save the project'):
             # Save project:
             main_page.top_menu_bar_file_save_project_as()
-            main_page.handle_save_file_dialog(name='test_intro_room_func_3',
+            main_page.handle_save_file_dialog(name='test_intro_room_func_3_16',
                                                 folder_path=Export_Folder + 'BFT_21_Stage1/')
 
         # Remove (share Video Intro template)
@@ -2988,7 +2988,7 @@ class Test_BFT_365_OS14():
             if main_page.compare(electric_title_preview, applied_electric, similarity=0.95):
                 assert False, "Electric Wave effect is not applied correctly on preview window! Similarity should < 0.95"
         
-        with step('[Initialize] Close special effect tab and save project'):
+        with step('[Initialize] Close special effect tab and save template'):
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
             time.sleep(DELAY_TIME)
@@ -3024,11 +3024,11 @@ class Test_BFT_365_OS14():
         dependency_test = "test_title_designer_func_4_24"
         self.ensure_dependency(dependency_test)
 
-        with step('[Action] Reopen AP and open saved template'):
+        with step('[Action] Reopen AP and open saved project'):
             main_page.close_app()
             main_page.start_app()
 
-            project_name = 'BFT_21_Stage1/test_title_designer_func_4_25.pdk'
+            project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
 
             if not main_page.exist_file(Test_Material_Folder + project_name):
                 assert False, f"Project file {project_name} doesn't exist!"
@@ -3921,26 +3921,36 @@ class Test_BFT_365_OS14():
 
 
     # 13 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_title_mgt_func_5_1] ')
     @exception_screenshot
-    def test_1_1_4(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_title_mgt_func_5_1(self):
+        '''
 
-        # Open project: test_case_1_1_3
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_3.pds')
-        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+        '''
+
+        with step('[Action] Open AP and open saved project'):
+            main_page.start_app()
+
+            project_name = 'BFT_21_Stage1/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk'
+
+            if not main_page.exist_file(Test_Material_Folder + project_name):
+                assert False, f"Project file {project_name} doesn't exist!"
+
+            # Open project
+            main_page.top_menu_bar_file_open_project(save_changes='no')
+            main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
-        with uuid("f36c7d26-cec9-47aa-a29c-9aff9bb61e6c") as case:
+        # with uuid("f36c7d26-cec9-47aa-a29c-9aff9bb61e6c") as case:
+        with step('[Action] Open Title designer with Motion Graphics title'):
             # enter Title room
             main_page.enter_room(1)
-            time.sleep(DELAY_TIME * 3)
             main_page.select_LibraryRoom_category('Motion Graphics')
-            time.sleep(DELAY_TIME)
             main_page.select_library_icon_view_media('Motion Graphics 002')
 
             # Enter title designer
