@@ -3032,12 +3032,11 @@ class Test_BFT_365_OS14():
 
             if not main_page.exist_file(Test_Material_Folder + project_name):
                 assert False, f"Project file {project_name} doesn't exist!"
-
-            # Open project
-            main_page.top_menu_bar_file_open_project(save_changes='no')
-            main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            # Select extract path
+            main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
+            main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
             main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
-
+            
         with step('[Action] Enter title room and select saved template'):
             # enter Title Room
             main_page.enter_room(1)
@@ -3925,11 +3924,13 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.mgt
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_title_mgt_func_5_1] ')
+    @pytest.mark.name('[test_title_mgt_func_5_1] Open Project > Motion Graphics title')
     @exception_screenshot
     def test_title_mgt_func_5_1(self):
         '''
-
+        1. Open AP with project: BFT_21_Stage1/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk
+        2. Open Title designer with Motion Graphics title
+        3. Check if title of title designer is correct
         '''
 
         with step('[Action] Open AP and open saved project'):
@@ -3958,37 +3959,66 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME * 2)
             title_designer_page.mgt.click_warning_msg_ok()
 
+        with step('[Verify] Check if title of title designer is correct'):
             check_title_caption = title_designer_page.get_title()
-            logger(check_title_caption)
 
-            if check_title_caption == 'Motion Graphics 002':
-                case.result = True
-            else:
-                case.result = False
+            if check_title_caption != 'Motion Graphics 002':
+                assert False, f"Title designer is not opened correctly! Expected: Motion Graphics 002, Actual: {check_title_caption}"
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.name('[test_title_mgt_func_5_2] Check title track')
+    @exception_screenshot
+    def test_title_mgt_func_5_2(self):
+        '''
+        1. Enter MGT -- Title tab
+        2. Check if title track is correct
+        3. Switch to other track
+        4. Check if title track is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_1"
+        self.ensure_dependency(dependency_test)
 
         # [L159] 3.3 Title Designer (motion graphics title) > Title > Select title track
-        with uuid("1819ea47-ec11-402e-ab01-bf894b84a615") as case:
+        # with uuid("1819ea47-ec11-402e-ab01-bf894b84a615") as case:
+
+        with step('[Action] Enter mgt -- title tab'):
             # Unfold Title
             title_designer_page.mgt.unfold_title_tab()
 
+        with step('[Verify] Check if title track is correct'):
             # Get current selected track
             selected_track_elem = main_page.exist(L.title_designer.title.cbx_select_title).AXTitle
-            if selected_track_elem == 'PowerDirector':
-                default_status = True
-            else:
-                default_status = False
-
+            if selected_track_elem != 'PowerDirector':
+                assert False, f"Current selected track is not correct! Expected: PowerDirector, Actual: {selected_track_elem}"
+            
+        with step('[Action] Switch to other track'):
             # Switch to other track
             title_designer_page.mgt.select_title_track('By CyberLink')
 
+        with step('[Verify] Check if title track is correct'):
             # Check current selected track
             selected_track_elem = main_page.exist(L.title_designer.title.cbx_select_title).AXTitle
-            if selected_track_elem == 'By CyberLink':
-                selected_status = True
-            else:
-                selected_status = False
+            if selected_track_elem != 'By CyberLink':
+                assert False, f"Current selected track is not correct! Expected: By CyberLink, Actual: {selected_track_elem}"
+        assert True
 
-            case.result = default_status and selected_status
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_title_mgt_func_5_2] ')
+    @exception_screenshot
+    def test_title_mgt_func_5_2(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_2"
+        self.ensure_dependency(dependency_test)
 
         # [L160] 3.3 Title Designer (motion graphics title) > Title > Edit text
         with uuid("b7e68c42-15cc-4296-92c2-8ed8ff57bbe1") as case:
