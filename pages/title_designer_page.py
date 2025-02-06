@@ -561,28 +561,29 @@ class Title_Designer(Main_Page, BasePage):
     def click_motion_tab(self):
         return bool(self.exist_click(L.title_designer.btn_motion))
 
+    @step('[Action][Title Designer] Click [OK] button')
     def click_ok(self):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click(L.title_designer.btn_ok)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
+    @step('[Action][Title Designer] Set template name when saving template')
     def click_custom_name_ok(self, name):
         try:
             if not self.exist(L.title_designer.save_as_template.window_save_as_template, timeout=10):
                 logger("No save as template window show up")
-                raise Exception
+                raise Exception("No save as template window show up")
             self.exist_click(L.title_designer.save_as_template.edittext_save_as_template)
             self.keyboard.send(name)
             self.exist_click(L.title_designer.save_as_template.btn_ok)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     @step('[Action][Title Designer] Click [Cancel] Button')
@@ -4922,12 +4923,12 @@ class Title_Designer(Main_Page, BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception(f'Exception occurs. log={e}')
             return True
-
+        @step('[Action][Title Designer][MGT] Click preview operation -- play, pause, stop, previous frame, next frame, fast forward')
         def click_preview_operation(self, operation):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 if operation == 'Play':
                     self.exist_click(L.title_designer.operation.btn_play)
                 elif operation == 'Pause':
@@ -4942,7 +4943,7 @@ class Title_Designer(Main_Page, BasePage):
                     self.exist_click(L.title_designer.operation.btn_fast_forward)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def click_menu_bar_edit(self, index):
@@ -5373,6 +5374,7 @@ class AdjustTitleOnCanvas(Main_Page, BasePage):
     def drag_rotate_anticlockwise(self, angle):
         return bool(self.adjust_in_canvas.rotate(angle=angle, is_title=False, is_clock=False))
 
+    @step('[Action][TitleDesigner][AdjustTitleOnCanvas] Move the title to right')
     def drag_move_MGT_to_right(self, drag_x=50, mouse_default_multiple=0.5):
         try:
             target = self.exist(L.title_designer.area.obj_title)

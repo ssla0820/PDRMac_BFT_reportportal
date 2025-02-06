@@ -813,7 +813,8 @@ class BasePage(BasePage):
     def tap_close_chrome_tab_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.cmd, "w"):
             pass
-
+    
+    @step("[Action][Base_page] Check if the preview window is different")
     def Check_PreviewWindow_is_different(self, area=None, sec=1):
         area = area or self.area.preview.main
         old_img = self.snapshot(area)

@@ -4446,12 +4446,16 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.mgt
     @pytest.mark.object_setting
-    @pytest.mark.name('[test_title_mgt_func_5_14] ')
+    @pytest.mark.canva
+    @pytest.mark.name('[test_title_mgt_func_5_14] Undo Rotation > Resize MGT to small')
     @exception_screenshot
     def test_title_mgt_func_5_14(self):
         '''
-        1. 
-
+        1. Zoom out to 67%
+        2. Click undo button to set rotation = 0
+        3. Check rotation value =0
+        4. Resize MGT to small
+        5. Check if preview changed correctly after resize
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_title_mgt_func_5_13"
@@ -4490,136 +4494,249 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_mgt_func
     @pytest.mark.title_designer
     @pytest.mark.mgt
-    @pytest.mark.object_setting
-    @pytest.mark.name('[test_title_mgt_func_5_15] ')
+    @pytest.mark.canva
+    @pytest.mark.name('[test_title_mgt_func_5_15] Move MGT to right')
     @exception_screenshot
     def test_title_mgt_func_5_15(self):
         '''
-        1. 
-
+        1. Select to other track
+        2. Move MGT to right
+        3. Check if preview changed correctly after move
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_title_mgt_func_5_13"
+        dependency_test = "test_title_mgt_func_5_14"
         self.ensure_dependency(dependency_test)
         
-
         # [L167] 3.3 Title Designer (motion graphics title) > Adjust object on preview > Move
-        with uuid("8a0620c0-7a8a-48c6-945d-640efcf63cbf") as case:
+        # with uuid("8a0620c0-7a8a-48c6-945d-640efcf63cbf") as case:
+
+        with step('[Action] Select to other track'):
             # Scroll up
             title_designer_page.drag_object_vertical_slider(0)
 
             # Switch to other track
             title_designer_page.mgt.select_title_track('がぎぐげご さしすせ')
 
-            time.sleep(DELAY_TIME*2)
+        with step('[Action] Move MGT to right'):
+            before_move_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
             # Move right
             title_designer_page.adjust_title_on_canvas.drag_move_MGT_to_right(drag_x=55)
 
+        with step('[Verify] Check if preview changed correctly after move'):
             mgt_move_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            check_move_result = main_page.compare(mgt_resize_preview, mgt_move_preview)
+            if main_page.compare(before_move_preview, mgt_move_preview):
+                assert False, "MGT is not moved correctly! Similarity should < 0.95"
+        assert True
 
-            case.result = not check_move_result
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.canva
+    @pytest.mark.name('[test_title_mgt_func_5_16] Rotate MGT clockwise on canva')
+    @exception_screenshot
+    def test_title_mgt_func_5_16(self):
+        '''
+        1. Rotate MGT clockwise on canva
+        2. Check if preview changed correctly after rotate
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_15"
+        self.ensure_dependency(dependency_test)
 
         # [L166] 3.3 Title Designer (motion graphics title) > Adjust object on preview > Rotate
 
-        with uuid("ffe8e1ca-1579-4072-a267-44c543fc7f43") as case:
+        # with uuid("ffe8e1ca-1579-4072-a267-44c543fc7f43") as case:
             # Max window (VDE224621-0024)
             # title_designer_page.click_maximize_btn()
-            time.sleep(DELAY_TIME)
+        with step('[Action] Rotate MGT clockwise on canva'):
             before_rotate_preview = main_page.snapshot(locator=L.title_designer.main_window)
-            if before_rotate_preview is None:
-                case.result = False
-                case.fail_log = 'VDE224621-0024'
-            else:
-                # Rotate
-                title_designer_page.adjust_title_on_canvas.drag_rotate_clockwise('120')
-                time.sleep(DELAY_TIME)
-                after_rotate_preview = main_page.snapshot(locator=L.title_designer.main_window)
+            # Rotate
+            title_designer_page.adjust_title_on_canvas.drag_rotate_clockwise('120')
+        
+        with step('[Verify] Check if preview changed correctly after rotate'):
+            after_rotate_preview = main_page.snapshot(locator=L.title_designer.main_window)
 
-                check_rotate_result = main_page.compare(before_rotate_preview, after_rotate_preview)
-                case.result = not check_rotate_result
+            if main_page.compare(before_rotate_preview, after_rotate_preview):
+                assert False, "MGT is not rotated correctly! Similarity should < 0.95"
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_mgt_func_5_17] Play the video > Check if preview changed correctly after play')
+    @exception_screenshot
+    def test_title_mgt_func_5_17(self):
+        '''
+        1. Play the video
+        2. Check if preview changed correctly after play
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_16"
+        self.ensure_dependency(dependency_test)
 
         # [L168] 3.3 Title Designer (motion graphics title) > Preview in designer
-        with uuid("eaaca4e6-220a-4e9f-bf56-15612cc92425") as case:
+        # with uuid("eaaca4e6-220a-4e9f-bf56-15612cc92425") as case:
+        with step('[Action] Play the video'):
             # Play then stop
             title_designer_page.mgt.click_preview_operation('Play')
+        
+        with step('[Verify] Check if preview changed correctly after play'):
             check_preview_update = main_page.Check_PreviewWindow_is_different(L.title_designer.area.frame_preview, sec=2)
-            logger(check_preview_update)
+            if not check_preview_update:
+                assert False, "Preview is not updated after play in 2 secs!"
+        assert True
 
-            time.sleep(DELAY_TIME*4)
-            #main_page.press_space_key()
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_title_mgt_func_5_18] Stop the video')
+    @exception_screenshot
+    def test_title_mgt_func_5_18(self):
+        '''
+        1. Stop the video
+        2. Check back to 00:00 after stop video
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_17"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Stop the video'):
             title_designer_page.mgt.click_preview_operation('Stop')
             time.sleep(DELAY_TIME)
+        
+        with step('[Verify] Check back to 00:00 after stop video'):
+            current_timecode = title_designer_page.get_timecode()
+            if current_timecode != '00_00_00_00':
+                assert False, f"Current timecode is not correct after stop video! Expected: 00_00_00_00, Actual: {current_timecode}"
+        assert True
 
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.name('[test_title_mgt_func_5_19] Check preview at 08:16 (from test_title_mgt_func_5_7~18)')
+    @exception_screenshot
+    def test_title_mgt_func_5_19(self):
+        '''
+        1. Set timecode to 00:00:08:16
+        2. Check if preview changed correctly after set timecode as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_18"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set timecode to 00:00:08:16'):
             # Set timecode :
             title_designer_page.set_timecode('00_00_08_16')
-            time.sleep(DELAY_TIME * 2)
+
+        with step('[Verify] Check if preview changed correctly after set timecode as GT'):
 
             current_timecode_preview = main_page.snapshot(locator=L.title_designer.area.frame_preview, file_name=Auto_Ground_Truth_Folder + 'L168.png')
 
-            check_preview = main_page.compare(Ground_Truth_Folder + 'L168.png', current_timecode_preview)
-            case.result = check_preview
+            if not main_page.compare(Ground_Truth_Folder + 'L168.png', current_timecode_preview):
+                assert False, "Preview is not changed correctly as GT (L168.png) !"
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.timecode
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_title_mgt_func_5_20] Check preview at 08:16 (from test_title_mgt_func_5_7~18)')
+    @exception_screenshot
+    def test_title_mgt_func_5_20(self):
+        '''
+        1. Set timecode to 00:00:08:16
+        2. Check if preview changed correctly after set timecode as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_19"
+        self.ensure_dependency(dependency_test)
 
         # [L169] 3.3 Title Designer (motion graphics title) > Save / Save as template
-        with uuid("c95ee09b-deb2-48b5-a606-e08332a79148") as case:
+        # with uuid("c95ee09b-deb2-48b5-a606-e08332a79148") as case:
+
+        with step('[Action] Save template'):
             # Save template
             main_page.click(L.title_designer.btn_save_as)
             title_designer_page.click_custom_name_ok('BFT_MGT_Save')
-
-            current_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-
             # Click [OK]
             title_designer_page.click_ok()
 
-            # Verify Step
+        with step('[Action] Apply the saved template'):
             main_page.select_library_icon_view_media('BFT_MGT_Save')
             main_page.double_click()
             time.sleep(DELAY_TIME * 2)
             title_designer_page.mgt.click_warning_msg_ok()
 
+        with step('[Verify] Check if preview changed correctly after apply the saved template as GT'):
             # Set timecode :
             title_designer_page.set_timecode('00_00_08_16')
             time.sleep(DELAY_TIME*2)
 
-            # Set zoom menu to 67%
-            title_designer_page.mgt.click_zoom_in()
-            time.sleep(DELAY_TIME)
+            # # Set zoom menu to 67%
+            # title_designer_page.mgt.click_zoom_in()
+            # time.sleep(DELAY_TIME)
 
             saved_preview = main_page.snapshot(locator=L.title_designer.area.frame_preview,  file_name=Auto_Ground_Truth_Folder + 'L169.png')
             check_save_result = main_page.compare(Ground_Truth_Folder + 'L168.png', saved_preview, similarity=0.98)
-            case.result = check_save_result
-        # Click [OK]
-        title_designer_page.click_ok()
+            assert check_save_result, "Preview is not changed correctly as GT (L168.png) !"
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.timeline
+    @pytest.mark.save_project
+    @pytest.mark.name('[test_title_mgt_func_5_21] Add saved template to timeline')
+    @exception_screenshot
+    def test_title_mgt_func_5_21(self):
+        '''
+        1. Add saved template to timeline
+        2. Check if preview changed correctly after set timecode as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_20"
+        self.ensure_dependency(dependency_test)
 
         # [L170] 3.3 Title Designer (motion graphics title) > Add saved
-        with uuid("6f207683-e25a-43e9-96d0-dde73bc9db9b") as case:
+        # with uuid("6f207683-e25a-43e9-96d0-dde73bc9db9b") as case:
+
+        with step('[Action] Add saved template to timeline'):
+            # Click [OK]
+            title_designer_page.click_ok()
             # select timeline track 2
             main_page.timeline_select_track(2)
-
             # Set timecode :
             main_page.set_timeline_timecode('00_00_09_00')
-            time.sleep(DELAY_TIME * 2)
-
             # Drag BFT_title_Save to timeline track 2
             main_page.drag_media_to_timeline_playhead_position('BFT_MGT_Save', track_no=2)
 
-            # Play timeline preview
-            playback_window_page.Edit_Timeline_PreviewOperation('Play')
-            time.sleep(DELAY_TIME * 5.5)
-            playback_window_page.Edit_Timeline_PreviewOperation('STOP')
-
+        with step('[Verify] Check if preview changed correctly after set timecode as GT'):
             # Set timecode :
             main_page.set_timeline_timecode('00_00_17_19')
-            time.sleep(DELAY_TIME * 2)
 
             timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L170.png')
             check_current_title = main_page.compare(Ground_Truth_Folder + 'L170.png', timeline_preview, similarity=0.85)
-            case.result = check_current_title
+            if not check_current_title:
+                assert False, "Preview is not changed correctly as GT (L170.png) !"
 
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_4',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+        with step('[Action] Save project'):
+            # Save project:
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name='test_title_mgt_func_5_21',
+                                            folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+            
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
+    @exception_screenshot
+    def test_title_mgt_func_5_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
+
 
     # 5 uuid
     # @pytest.mark.skip
