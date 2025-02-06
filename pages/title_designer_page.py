@@ -4429,30 +4429,32 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Select title track')
         def select_title_track(self, value):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.title.cbx_select_title)
                 self.exist_click({'AXRole': 'AXStaticText', 'AXValue': value})
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Input title text')
         def input_title_text(self, text):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 target = self.exist(L.title_designer.title.edittext_title_text)
                 self.exist_click(L.title_designer.title.edittext_title_text)
                 self.mouse.click(times=3)
                 target.AXValue = str(text)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def get_title_editbox(self):
@@ -4467,11 +4469,12 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][TitleDesigner][MGT] Apply font type')
         def apply_font_type(self, text):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.title.btn_font_type)
                 x, y = self.exist(L.title_designer.title.cbx_font_type).AXPosition
                 self.mouse.move(int(x+20), int(y+10))
@@ -4483,18 +4486,19 @@ class Title_Designer(Main_Page, BasePage):
                 self.mouse.click(times=1)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Click Bold button')
         def click_bold_btn(self):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.title.btn_bold)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def click_italic_btn(self):
@@ -4508,11 +4512,12 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][TitleDesigner][MGT] Apply font face color')
         def apply_font_face_color(self, HexColor):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.title.btn_font_color)
                 self.color_picker_switch_category_to_RGB()
                 self.exist_click(L.title_designer.title.edittext_hex)
@@ -4522,7 +4527,7 @@ class Title_Designer(Main_Page, BasePage):
                 self.exist_click(L.title_designer.title.btn_color_close)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def apply_graphics_color(self, group_no, HexColor):
@@ -4818,11 +4823,12 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][TitleDesigner][MGT] Fold/ Unfold Title Tab')
         def unfold_title_tab(self, unfold=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.motion_graphic_title.btn_title).AXValue
                 if value == 0 and unfold == 0:
                     return True
@@ -4834,7 +4840,7 @@ class Title_Designer(Main_Page, BasePage):
                     return True
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def unfold_graphics_color_tab(self, unfold=1):
