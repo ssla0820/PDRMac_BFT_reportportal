@@ -3810,7 +3810,6 @@ class Test_BFT_365_OS14():
             # Save template
             main_page.click(L.title_designer.btn_save_as)
             title_designer_page.click_custom_name_ok('BFT_title_Save')
-
             before_reopen_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
         with step('[Action] Reopen the saved template again'):
@@ -3907,10 +3906,9 @@ class Test_BFT_365_OS14():
         with step('[Action] Save project'):
             # Save project:
             main_page.top_menu_bar_file_save_project_as()
-            main_page.handle_save_file_dialog(name='test_case_1_1_3',
+            main_page.handle_save_file_dialog(name='test_title_designer_func_4_45',
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
             time.sleep(DELAY_TIME * 2)
-
         assert True
 
     @pytest.mark.title_designer_func
