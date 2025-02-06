@@ -607,6 +607,7 @@ class Main_Page(BasePage):
                 curr_depth += 1
         return item if return_elem else True
 
+    @step('[Action][Main_page] Open Project from top menu bar')
     def top_menu_bar_file_open_project(self, save_changes=None):
         try:
             self.exist_click(L.main.top_menu_bar.btn_file)
@@ -643,6 +644,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return title
 
+    @step('[Action][Main_page] Deal with [Open Project] dialog')
     def handle_open_project_dialog(self, file_path, uncompress_folder_path=''):
         try:
             if os.path.exists(uncompress_folder_path):
@@ -658,6 +660,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Deal with merge media to current library dialog')
     def handle_merge_media_to_current_library_dialog(self, option='yes', do_not_show_again='yes', timeout=30):
         try:
             # img_before = self.screenshot()
@@ -940,7 +943,8 @@ class Main_Page(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
+    @step('[Action][Main_page] Drag media to timeline playhead position')
     def drag_media_to_timeline_playhead_position(self, name, track_no=1): # track_no: 1, 2, 3
         try:
             # hover to media

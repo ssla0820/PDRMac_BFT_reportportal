@@ -5,6 +5,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -120,17 +121,21 @@ class DownloadFromCLDZ(BasePage):
         self.exist(L.download_from_cl_dz.signin.yes).press()
         return True
 
+    @step('[Action][DownloadFromCLDZ] Select template')
     def select_template(self, name):
         locator = copy.deepcopy(L.download_from_cl_dz.template)
         locator[-1]["AXValue"] = name
         time.sleep(3)
         self.mouse.click(*self.exist(locator).center)
+        time.sleep(OPERATION_DELAY)
         return True
-
+    
+    @step('[Action][DownloadFromCLDZ] Delete template')
     def tap_delete_button(self):
         self.exist_click(L.download_from_cl_dz.delete)
         time.sleep(OPERATION_DELAY*2)
         self.click(L.download_from_cl_dz.delete_dialog.ok)
+        time.sleep(OPERATION_DELAY*2)
         return True
 
     def is_selected_templates(self, number):
