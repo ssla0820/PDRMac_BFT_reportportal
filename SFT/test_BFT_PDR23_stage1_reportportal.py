@@ -3035,11 +3035,14 @@ class Test_BFT_365_OS14():
 
             if not main_page.exist_file(Test_Material_Folder + project_name):
                 assert False, f"Project file {project_name} doesn't exist!"
+            # Open recent project
+            main_page.top_menu_bar_file_open_recent_projects(Test_Material_Folder + project_name)
+
             # Select extract path
             main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
             main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
             main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
-            
+
         with step('[Action] Enter title room and select saved template'):
             # enter Title Room
             main_page.enter_room(1)
