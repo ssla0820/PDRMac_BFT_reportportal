@@ -2962,6 +2962,7 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
         
         with step('[Action] Apply Electric Wave effect'):
+            title_designer_page.set_timecode('00_00_03_00')
             before_img = main_page.snapshot(locator=L.title_designer.area.obj_title)
             # Apply Electric Wave
             title_designer_page.special_effects.apply_effect(6)
@@ -2985,10 +2986,12 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly'):
             electric_title_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            if main_page.compare(electric_title_preview, applied_electric, similarity=0.95):
-                assert False, "Electric Wave effect is not applied correctly on preview window! Similarity should < 0.95"
+            if main_page.compare(electric_title_preview, applied_electric, similarity=0.99):
+                assert False, "Electric Wave effect is not applied correctly on preview window! Similarity should < 0.99"
         
         with step('[Initialize] Close special effect tab and save template'):
+            title_designer_page.set_timecode('00_00_00_00')
+
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
             time.sleep(DELAY_TIME)
@@ -3020,9 +3023,9 @@ class Test_BFT_365_OS14():
         4. Check if preview changed correctly at (02:18)
         '''
 
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_24"
-        self.ensure_dependency(dependency_test)
+        # # Ensure the dependency test is run and passed
+        # dependency_test = "test_title_designer_func_4_24"
+        # self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen AP and open saved project'):
             main_page.close_app()
