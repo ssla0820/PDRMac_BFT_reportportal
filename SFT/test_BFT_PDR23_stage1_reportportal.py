@@ -2571,6 +2571,9 @@ class Test_BFT_365_OS14():
         # [L142] 3.2 Title Designer > Object Settings
         # with uuid("adfdbb15-9d4a-4338-be3a-39d0922f896a") as case:
 
+        with step('[Action] Enter Advanced mode'):
+            title_designer_page.switch_mode(2)
+
         with step('[Action] Add First Position keyframe at (00:00)'):
             # Add position 1st keyframe
             title_designer_page.click_object_setting_position_add_keyframe_control()
@@ -2890,6 +2893,9 @@ class Test_BFT_365_OS14():
         # [L144] 3.2 Title Designer > Set in [Object] > Special Effect
         # with uuid("9019594e-a256-461d-9c2f-0657541e569a") as case:
 
+        with step('[Action] Enter Advanced mode'):
+            title_designer_page.switch_mode(2)
+
         with step('[Action] Enter Special Effect tab'):
             # fold object setting tab if opened
             title_designer_page.unfold_object_object_setting_tab(0)
@@ -3036,8 +3042,11 @@ class Test_BFT_365_OS14():
 
             if not main_page.exist_file(Test_Material_Folder + project_name):
                 assert False, f"Project file {project_name} doesn't exist!"
-            # Open recent project
-            main_page.top_menu_bar_file_open_recent_projects(Test_Material_Folder + project_name)
+
+            main_page.top_menu_bar_file_open_project(save_changes='no')
+            check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            if not check_open_result:
+                assert False, "Dealing with Open project dialog FAIL!"
 
             # Select extract path
             main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
@@ -3224,6 +3233,9 @@ class Test_BFT_365_OS14():
         # Start a new section, starts from "test_title_designer_func_4_1"
         self.test_title_designer_func_4_1()
 
+        with step('[Action] Enter Advanced mode'):
+            title_designer_page.switch_mode(2)
+
         with step('[Action] Insert new title'):
             ori_img = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
             title_designer_page.insert_title(' suiod fw5')
@@ -3368,6 +3380,9 @@ class Test_BFT_365_OS14():
         # Ensure the dependency test is run and passed
         # Start a new section, starts from "test_title_designer_func_4_1"
         self.test_title_designer_func_4_1()
+
+        with step('[Action] Enter Advanced mode'):
+            title_designer_page.switch_mode(2)
 
         # [L147] 3.2 Title Designer > Set Motion
         # with uuid("c37a6bbf-5989-49ce-bb91-47aac338ddb0") as case:
@@ -3594,7 +3609,7 @@ class Test_BFT_365_OS14():
             current_image = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L151.png')
             check_image = main_page.compare(Ground_Truth_Folder + 'L151.png', current_image, similarity=0.9)
             if not check_image:
-                assert False, "Image is not resized/ moved/ rotated correctly on preview window as GT! But checked preview changed step by step in previous steps"
+                assert False, "Image is not resized/ moved/ rotated correctly on preview window as GT (L151.png)! But checked preview changed step by step in previous steps"
 
         assert True
 
@@ -3951,6 +3966,14 @@ class Test_BFT_365_OS14():
             # Open project
             main_page.top_menu_bar_file_open_project(save_changes='no')
             main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            main_page.top_menu_bar_file_open_project(save_changes='no')
+            check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            if not check_open_result:
+                assert False, "Dealing with Open project dialog FAIL!"
+
+            # Select extract path
+            main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
+            main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
             main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
