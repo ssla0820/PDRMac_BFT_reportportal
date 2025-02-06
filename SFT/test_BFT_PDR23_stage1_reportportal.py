@@ -987,8 +987,8 @@ class Test_BFT_365_OS14():
         2. Close pip designer
         '''
         # # Ensure the dependency test is run and passed
-        # dependency_test = "test_media_room_func_2_9"
-        # self.ensure_dependency(dependency_test)
+        dependency_test = "test_media_room_func_2_9"
+        self.ensure_dependency(dependency_test)
 
         # # [L406] 3.4 Pip designer > Auto cutout > Display cutout setting
         # with uuid("00f15326-015a-4964-b04a-02ab6761d196") as case:
@@ -1819,19 +1819,19 @@ class Test_BFT_365_OS14():
             main_page.handle_save_file_dialog(name='test_intro_room_func_3_16',
                                                 folder_path=Export_Folder + 'BFT_21_Stage1/')
 
-        # # Remove (share Video Intro template)
-        # # If share successfully, then delete template
-        # with step('[Action] Remove shared template'):
-        #     # Open (My Profile)
-        #     intro_video_page.enter_my_profile()
-        #     time.sleep(DELAY_TIME * 8)
+        # Remove (share Video Intro template)
+        # If share successfully, then delete template
+        with step('[Action] Remove shared template'):
+            # Open (My Profile)
+            intro_video_page.enter_my_profile()
+            time.sleep(DELAY_TIME * 8)
 
-        #     intro_video_page.my_profile.delete_1st_template()
-        #     time.sleep(DELAY_TIME * 5)
+            intro_video_page.my_profile.delete_1st_template()
+            time.sleep(DELAY_TIME * 5)
 
-        #     # close (My Profile)
-        #     main_page.press_esc_key()
-        #     time.sleep(DELAY_TIME * 2)
+            # close (My Profile)
+            main_page.press_esc_key()
+            time.sleep(DELAY_TIME * 2)
 
     @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
@@ -3024,8 +3024,8 @@ class Test_BFT_365_OS14():
         '''
 
         # # Ensure the dependency test is run and passed
-        # dependency_test = "test_title_designer_func_4_24"
-        # self.ensure_dependency(dependency_test)
+        dependency_test = "test_title_designer_func_4_24"
+        self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen AP and open saved project'):
             main_page.close_app()
@@ -3947,9 +3947,12 @@ class Test_BFT_365_OS14():
             if not main_page.exist_file(Test_Material_Folder + project_name):
                 assert False, f"Project file {project_name} doesn't exist!"
 
-            # Open project
-            main_page.top_menu_bar_file_open_project(save_changes='no')
-            main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+            # Open recent project
+            main_page.top_menu_bar_file_open_recent_projects(Test_Material_Folder + project_name)
+
+            # Select extract path
+            main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
+            main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
             main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
@@ -3975,6 +3978,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_mgt_func
     @pytest.mark.title_designer
     @pytest.mark.mgt
+    @pytest.mark.title
     @pytest.mark.name('[test_title_mgt_func_5_2] Check title track')
     @exception_screenshot
     def test_title_mgt_func_5_2(self):
@@ -4015,82 +4019,213 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_mgt_func
     @pytest.mark.title_designer
     @pytest.mark.mgt
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_title_mgt_func_5_2] ')
+    @pytest.mark.title
+    @pytest.mark.name('[test_title_mgt_func_5_3] Enter Text to MGT')
     @exception_screenshot
-    def test_title_mgt_func_5_2(self):
+    def test_title_mgt_func_5_3(self):
         '''
-
+        1. Enter text to MGT
+        2. Check if text is entered correctly
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_title_mgt_func_5_2"
         self.ensure_dependency(dependency_test)
 
         # [L160] 3.3 Title Designer (motion graphics title) > Title > Edit text
-        with uuid("b7e68c42-15cc-4296-92c2-8ed8ff57bbe1") as case:
+        # with uuid("b7e68c42-15cc-4296-92c2-8ed8ff57bbe1") as case:
+
+        with step('[Action] Enter text to MGT'):
             title_designer_page.mgt.input_title_text('がぎぐげご さしすせ')
 
+        with step('[Verify] Check if text is entered correctly'):
             # Check current selected track
             selected_track_elem = main_page.exist(L.title_designer.title.cbx_select_title).AXTitle
-            if selected_track_elem == 'がぎぐげご さしすせ':
-                edit_result = True
-            else:
-                edit_result = False
+            if selected_track_elem != 'がぎぐげご さしすせ':
+                assert False, f"Current selected track is not correct! Expected: がぎぐげご さしすせ, Actual: {selected_track_elem}"
 
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.name('[test_title_mgt_func_5_4] Modify font type/ Apply Bold/ Apply Font Color')
+    @exception_screenshot
+    def test_title_mgt_func_5_4(self):
+        '''
+        1. Modify font type and check preview
+        2. Apply Bold and check preview
+        3. Apply Font Color and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_3"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Modify font type'):
+            before_img = main_page.snapshot(locator=L.title_designer.main_window)
             # Modify font type
             title_designer_page.mgt.apply_font_type('Trebuchet MS Regular')
-
+            
+        with step('[Verify] Check if preview changed correctly after modify font type'):
+            applied_font_type = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(before_img, applied_font_type, similarity=0.98):
+                assert False, "Font type is not applied correctly on preview window! Similarity should < 0.98"
+        
+        with step('[Action] Apply Bold'):
             # Apply Bold
             title_designer_page.mgt.click_bold_btn()
 
+        with step('[Verify] Check if preview changed correctly after apply bold'):
+            applied_bold = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(applied_font_type, applied_bold, similarity=0.98):
+                assert False, "Bold is not applied correctly on preview window! Similarity should < 0.98"
+        
+        with step('[Action] Apply Font Color'):
             # Apply font color
             title_designer_page.mgt.apply_font_face_color('2200E9')
 
+        with step('[Verify] Check if preview changed correctly after apply font color'):
+            applied_font_color = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(applied_bold, applied_font_color, similarity=0.98):
+                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.98"
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.title
+    @pytest.mark.name('[test_title_mgt_func_5_5] Adjust Text/ Font Type/ Font Face Color for other track')
+    @exception_screenshot
+    def test_title_mgt_func_5_5(self):
+        '''
+        1. Switch to other track
+        2. Enter text to MGT and check title
+        3. Modify font type and check preview
+        4. Apply Font Face Color and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_4"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Switch to other track'):
             # Switch to other track -----------------------------------
             title_designer_page.mgt.select_title_track('PowerDirector')
 
+        with step('[Action] Enter text to MGT'):
             title_designer_page.mgt.input_title_text('許功蓋＠＃&*_-<>?')
 
+        with step('[Verify] Check if text is entered correctly'):
+            # Check current selected track
+            selected_track_elem = main_page.exist(L.title_designer.title.cbx_select_title).AXTitle
+            if selected_track_elem != '許功蓋＠＃&*_-<>?':
+                assert False, f"Current selected track is not correct! Expected: 許功蓋＠＃&*_-<>?, Actual: {selected_track_elem}"
+
+        with step('[Action] Modify font type'):
+            before_preview = main_page.snapshot(locator=L.title_designer.main_window)
             # Modify font type
             title_designer_page.mgt.apply_font_type('Hoefler Text Regular')
 
+        with step('[Verify] Check if preview changed correctly after modify font type'):
+            applied_font_type = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(before_preview, applied_font_type, similarity=0.98):
+                assert False, "Font type is not applied correctly on preview window! Similarity should < 0.98"
+
+        with step('[Action] Apply Font Face Color'):
             # Apply font color
             title_designer_page.mgt.apply_font_face_color('EA10D7')
 
-            # Check current selected track
-            selected_track_elem = main_page.exist(L.title_designer.title.cbx_select_title).AXTitle
-            if selected_track_elem == '許功蓋＠＃&*_-<>?':
-                modify_result = True
-            else:
-                modify_result = False
+        with step('[Verify] Check if preview changed correctly after apply font color'):
+            applied_font_face_color = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(applied_font_type, applied_font_face_color, similarity=0.98):
+                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.98"
+        assert True
 
-            case.result = edit_result and modify_result
 
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.graphics_color
+    @pytest.mark.name('[test_title_mgt_func_5_6] Apply Graphics Color')
+    @exception_screenshot
+    def test_title_mgt_func_5_6(self):
+        '''
+        1. Room in
+        2. Enter Graphics Color tab
+        3. Apply Graphics Color -- A81B22 and check preview
+        4. Apply Graphics Color -- C8D996 and check preview
+        5. Apply Graphics Color -- 18FA4F and check preview
+        6. Check if preview changed correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_5"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Room in'):
             # Click [Zoom in] > 87%
             for x in range(3):
                 title_designer_page.click_zoom_in()
 
         # [L161] 3.3 Title Designer (motion graphics title) > Able to change group color
-        with uuid("d8e3d3ad-3758-42e4-922b-6f74d499130a") as case:
+        # with uuid("d8e3d3ad-3758-42e4-922b-6f74d499130a") as case:
+
+        with step('[Action] UnFold Graphics Color tab'):
+            # Fold Title tab
+            title_designer_page.mgt.unfold_title_tab(unfold=0)
             # Unfold Graphics Color
             title_designer_page.mgt.unfold_graphics_color_tab()
-
+        with step('[Action] Apply Graphics Color -- A81B22'):
+            before_preview = main_page.snapshot(locator=L.title_designer.main_window)
             # Change color 1
             title_designer_page.mgt.apply_graphics_color(group_no=1, HexColor='A81B22')
+        
+        with step('[Verify] Check if preview changed correctly after apply graphics color -- A81B22'):
+            applied_color_1 = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(before_preview, applied_color_1, similarity=0.98):
+                assert False, "Color 1 is not applied correctly on preview window! Similarity should < 0.98"
 
+        with step('[Action] Apply Graphics Color -- C8D996'):
             # Change color 2
             title_designer_page.mgt.apply_graphics_color(group_no=2, HexColor='C8D996')
 
+        with step('[Verify] Check if preview changed correctly after apply graphics color -- C8D996'):
+            applied_color_2 = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(applied_color_1, applied_color_2, similarity=0.98):
+                assert False, "Color 2 is not applied correctly on preview window! Similarity should < 0.98"
+
+        with step('[Action] Apply Graphics Color -- 18FA4F'):
             # Change color 3
             title_designer_page.mgt.apply_graphics_color(group_no=3, HexColor='18FA4F')
 
+        with step('[Verify] Check if preview changed correctly after apply graphics color -- 18FA4F'): 
+            applied_color_3 = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(applied_color_2, applied_color_3, similarity=0.98):
+                assert False, "Color 3 is not applied correctly on preview window! Similarity should < 0.98"
+
+        with step('[Verfiy] Check if preview changed correctly as GT'):
             time.sleep(DELAY_TIME*1.5)
             mgt_preview = main_page.snapshot(locator=L.title_designer.main_window, file_name=Auto_Ground_Truth_Folder + 'L161.png')
             check_current_title = main_page.compare(Ground_Truth_Folder + 'L161.png', mgt_preview)
-            case.result = check_current_title
+            if not check_current_title:
+                assert False, "Preview is not changed correctly as GT (L161.png) !"
+        assert True
+
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_6] ')
+    @exception_screenshot
+    def test_title_mgt_func_5_7(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_6"
+        self.ensure_dependency(dependency_test)
 
         # [L162] 3.3 Title Designer (motion graphics title) > Object Settings > Position
-        with uuid("14b89fd0-4bcb-4247-abaf-011187aa74e2") as case:
+        # with uuid("14b89fd0-4bcb-4247-abaf-011187aa74e2") as case:
+
+        with step('[Action] Enter Object Setting'):
             # Unfold Object Setting
             title_designer_page.mgt.unfold_object_setting_tab()
             default_x_value = title_designer_page.mgt.get_position_x_value()
