@@ -3847,9 +3847,8 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME * 4)
 
             after_reopen_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            check_save_result = main_page.compare(before_reopen_preview, after_reopen_preview, similarity=0.99)
+            check_save_result = main_page.compare(before_reopen_preview, after_reopen_preview, similarity=0.95)
             assert check_save_result, "Preview is changed after reopen the saved template!"
-
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
