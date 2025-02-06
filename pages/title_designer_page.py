@@ -352,8 +352,8 @@ class Title_Designer(Main_Page, BasePage):
             self.exist_click(L.title_designer.btn_insert_particle)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-        return True(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+        return True
 
     @step('[Action][Title Designer] Insert Particle')
     def insert_particle(self, menu_index, particle_index):
