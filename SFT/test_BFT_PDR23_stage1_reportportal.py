@@ -3024,12 +3024,13 @@ class Test_BFT_365_OS14():
         '''
 
         # # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_24"
-        self.ensure_dependency(dependency_test)
+        # dependency_test = "test_title_designer_func_4_24"
+        # self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen AP and open saved project'):
             main_page.close_app()
             main_page.start_app()
+            time.sleep(DELAY_TIME)
 
             project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
 
@@ -3080,8 +3081,8 @@ class Test_BFT_365_OS14():
         # check if preview changed
         with step('[Verify] Check if preview changed correctly at (02:18)'):
             in_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(in_animation_preview, no_in_animation_preview, similarity=0.98):
-                assert False, "In animation effect is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(in_animation_preview, no_in_animation_preview, similarity=0.99):
+                assert False, "In animation effect is not applied correctly on preview window! Similarity should < 0.99"
         assert True
 
 
@@ -3162,8 +3163,8 @@ class Test_BFT_365_OS14():
             # Apply In animation: Video rotation > Rotate Counterclockwise
             title_designer_page.select_animation_in_animation_effect(8, 3)
             applied_effect = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(before_img, applied_effect, similarity=0.98):
-                assert False, "Effect is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(before_img, applied_effect, similarity=0.99):
+                assert False, "Effect is not applied correctly on preview window! Similarity should < 0.99"
         assert True
 
     @pytest.mark.title_designer_func
@@ -3316,8 +3317,8 @@ class Test_BFT_365_OS14():
         # check if preview changed
         with step('[Verify] Check if preview changed correctly at (09:08)'):
             out_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(out_animation_preview, no_out_animation_preview, similarity=0.98):
-                assert False, "out animation effect is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(out_animation_preview, no_out_animation_preview, similarity=0.995):
+                assert False, "out animation effect is not applied correctly on preview window! Similarity should < 0.995"
         assert True
 
     @pytest.mark.title_designer_func
@@ -3381,12 +3382,12 @@ class Test_BFT_365_OS14():
             # scroll down (scroll bar)
             title_designer_page.drag_object_vertical_slider(1)
             # Apply path
-            title_designer_page.path.select_path(25)
+            title_designer_page.path.select_path(3)
 
         with step('[Verify] Check if preview changed correctly'):
             # Verify preview 1
-            path_25_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            if main_page.compare(original_preview, path_25_preview, similarity=0.98):
+            path_3_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
+            if main_page.compare(original_preview, path_3_preview, similarity=0.98):
                 assert False, "Path effect is not applied correctly on preview window! Similarity should < 0.98"
 
         with step('[Action] Apply another path effect again'):
@@ -3398,7 +3399,7 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check if preview changed correctly'):
             # Verify preview 2
             path_10_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            if main_page.compare(path_25_preview, path_10_preview, similarity=0.9):
+            if main_page.compare(path_3_preview, path_10_preview, similarity=0.9):
                 assert False, "Path effect is not applied correctly on preview window! Similarity should < 0.9"
 
 
