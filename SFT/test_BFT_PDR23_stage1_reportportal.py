@@ -986,7 +986,7 @@ class Test_BFT_365_OS14():
         1. Check if cutout button is shown
         2. Close pip designer
         '''
-        # # Ensure the dependency test is run and passed
+        # Ensure the dependency test is run and passed
         dependency_test = "test_media_room_func_2_9"
         self.ensure_dependency(dependency_test)
 
@@ -3023,9 +3023,9 @@ class Test_BFT_365_OS14():
         4. Check if preview changed correctly at (02:18)
         '''
 
-        # # Ensure the dependency test is run and passed
-        # dependency_test = "test_title_designer_func_4_24"
-        # self.ensure_dependency(dependency_test)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_24"
+        self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen AP and open saved project'):
             main_page.close_app()
@@ -3948,12 +3948,9 @@ class Test_BFT_365_OS14():
             if not main_page.exist_file(Test_Material_Folder + project_name):
                 assert False, f"Project file {project_name} doesn't exist!"
 
-            # Open recent project
-            main_page.top_menu_bar_file_open_recent_projects(Test_Material_Folder + project_name)
-
-            # Select extract path
-            main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
-            main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
+            # Open project
+            main_page.top_menu_bar_file_open_project(save_changes='no')
+            main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
             main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
@@ -4213,15 +4210,15 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.mgt
     @pytest.mark.object_setting
-    @pytest.mark.name('[test_title_mgt_func_5_6] ')
+    @pytest.mark.name('[test_title_mgt_func_5_7] Object Settings > Check default position')
     @exception_screenshot
     def test_title_mgt_func_5_7(self):
         '''
-
+        1. Enter Object settings
+        2. Check default position
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_title_mgt_func_5_6"
-        self.ensure_dependency(dependency_test)
+        self.test_title_mgt_func_5_1()
 
         # [L162] 3.3 Title Designer (motion graphics title) > Object Settings > Position
         # with uuid("14b89fd0-4bcb-4247-abaf-011187aa74e2") as case:
@@ -4229,133 +4226,260 @@ class Test_BFT_365_OS14():
         with step('[Action] Enter Object Setting'):
             # Unfold Object Setting
             title_designer_page.mgt.unfold_object_setting_tab()
+
+        with step('[Verify] Check if default position is correct'):
             default_x_value = title_designer_page.mgt.get_position_x_value()
-
-            if default_x_value == '0.500':
-                default_x_status = True
-            else:
-                default_x_status = False
-
             default_y_value = title_designer_page.mgt.get_position_y_value()
+            assert default_x_value == '0.500' and default_y_value == '0.500', f"Default position is not correct! Expected: x=0.500, y=0.500; Actual: x={default_x_value}, y={default_y_value}"
 
-            if default_y_value == '0.500':
-                default_y_status = True
-            else:
-                default_y_status = False
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_8] Set Position vale by textbox/ arrow')
+    @exception_screenshot
+    def test_title_mgt_func_5_8(self):
+        '''
+        1. Set x position -- by textbox/ arrow
+        2. Check x position value is correct
+        3. Set y position -- by textbox/ arrow
+        4. Check y position value is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_7"
+        self.ensure_dependency(dependency_test)
 
-            # Set x = 0.603, y = 0.531
+        with step('[Action] Set x position -- by textbox/ arrow'):
+            before_preview = main_page.snapshot(locator=L.title_designer.main_window)
+            # Set x = 0.603
             title_designer_page.mgt.set_position_x_value('0.60')
-            title_designer_page.mgt.set_position_y_value('0.53')
+            adjusted_by_textbox = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(before_preview, adjusted_by_textbox, similarity=0.98):
+                assert False, "Position x is not adjusted correctly by textbox! Similarity should < 0.98"
+            
             title_designer_page.mgt.click_position_x_arrow_btn(0, 3)
-            title_designer_page.mgt.click_position_y_arrow_btn(0, 1)
-
-            time.sleep(DELAY_TIME)
+            adjusted_by_arrow = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(adjusted_by_textbox, adjusted_by_arrow, similarity=0.995):
+                assert False, "Position x is not adjusted correctly by arrow! Similarity should < 0.995"
+                
+        with step('[Verify] Check x position value is correct'):
             check_x_value = title_designer_page.mgt.get_position_x_value()
+            if check_x_value != '0.603':
+                assert False, f"Position x is not correct! Expected: 0.603, Actual: {check_x_value}"
+                
+        with step('[Action] Set y position -- by textbox/ arrow'):
+            # Set y = 0.531
+            before_preview = main_page.snapshot(locator=L.title_designer.main_window)
+            title_designer_page.mgt.set_position_y_value('0.53')
+            adjusted_by_textbox = main_page.snapshot(locator=L.title_designer.main_window)
+            if main_page.compare(before_preview, adjusted_by_textbox, similarity=0.98):
+                assert False, "Position y is not adjusted correctly by textbox! Similarity should < 0.98"
+            title_designer_page.mgt.click_position_y_arrow_btn(0, 1)
+            if main_page.compare(adjusted_by_textbox, adjusted_by_arrow, similarity=0.995):
+                assert False, "Position yx is not adjusted correctly by arrow! Similarity should < 0.995"
 
-            if check_x_value == '0.603':
-                modify_x = True
-            else:
-                modify_x = False
-
+        with step('[Verify] Check y position value is correct'):
             check_y_value = title_designer_page.mgt.get_position_y_value()
+            if check_y_value != '0.531':
+                assert False, f"Position y is not correct! Expected: 0.531, Actual: {check_y_value}"
+                
+        assert True
 
-            if check_y_value == '0.531':
-                modify_y = True
-            else:
-                modify_y = False
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_9] Check Default Scale value')
+    @exception_screenshot
+    def test_title_mgt_func_5_9(self):
+        '''
+        1. Check if default scale is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_8"
+        self.ensure_dependency(dependency_test)
 
-            case.result = default_x_status and default_y_status and modify_x and modify_y
-        # Scroll down
-        title_designer_page.drag_object_vertical_slider(1)
+        with step('[Verify] Check if default scale is correct'):
+            # Scroll down
+            title_designer_page.drag_object_vertical_slider(1)
 
-        # [L163] 3.3 Title Designer (motion graphics title) > Object Settings > Scale
-        with uuid("b30d1cc7-6482-472d-8a2f-382ed7bf011b") as case:
+            # [L163] 3.3 Title Designer (motion graphics title) > Object Settings > Scale
+            # with uuid("b30d1cc7-6482-472d-8a2f-382ed7bf011b") as case:
             default_w_value = title_designer_page.mgt.get_scale_width_value()
-
-            if default_w_value == '1.25':
-                default_w_status = True
-            else:
-                default_w_status = False
-
             default_h_value = title_designer_page.mgt.get_scale_height_value()
 
-            if default_h_value == '1.25':
-                default_h_status = True
-            else:
-                default_h_status = False
+            assert default_w_value == '1.25' and default_h_value == '1.25', f'Default scale is not correct! Expected: w=1.25, h=1.25; Actual: w={default_w_value}, h={default_h_value}'
 
-            # Set w = 2.01, h = 3.26
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_10] Set Scale width/ height value by textbox/ arrow')
+    @exception_screenshot
+    def test_title_mgt_func_5_10(self):
+        '''
+        1. Set Scale width value by textbox/ arrow with untick maintain_aspect_ratio
+        2. Check scale width value is correct
+        3. Set Scale height value by textbox/ arrow with untick maintain_aspect_ratio
+        4. Check scale height value is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_9"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Adjust Scale width value by textbox/ arrow with untick maintain_aspect_ratio'):
+            # Set w = 2.01
             title_designer_page.mgt.set_scale_width_value('2.1')
             title_designer_page.mgt.click_maintain_aspect_ratio(0)
-
-            title_designer_page.mgt.set_scale_height_value('3.3')
             title_designer_page.mgt.click_scale_width_arrow_btn(1, 9)
-            title_designer_page.mgt.click_scale_height_arrow_btn(1, 4)
-
-            time.sleep(DELAY_TIME)
-
+            
+        with step('[Verify] Check scale width value is correct'):
             # Verify Step
             check_w_value = title_designer_page.mgt.get_scale_width_value()
+            if check_w_value != '2.01':
+                assert False, f"Scale width value is not correct! Expected: 2.01, Actual: {check_w_value}"
 
-            if check_w_value == '2.01':
-                modify_w = True
-            else:
-                modify_w = False
+        with step('[Action] Adjust Scale height value by textbox/ arrow with untick maintain_aspect_ratio'):
+            # Set h = 3.26
+            title_designer_page.mgt.set_scale_height_value('3.3')
+            title_designer_page.mgt.click_scale_height_arrow_btn(1, 4)
 
+        with step('[Verify] Check scale height value is correct'):
             check_h_value = title_designer_page.mgt.get_scale_height_value()
+            if check_h_value != '3.26':
+                assert False, f"Scale height value is not correct! Expected: 3.26, Actual: {check_h_value}"
+        assert True
 
-            if check_h_value == '3.26':
-                modify_h = True
-            else:
-                modify_h = False
 
-            case.result = default_w_status and default_h_status and modify_w and modify_h
-
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_11] Check Default Rotation value')
+    @exception_screenshot
+    def test_title_mgt_func_5_11(self):
+        '''
+        1. Check if default rotation value is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_10"
+        self.ensure_dependency(dependency_test)
+        
         # [L164] 3.3 Title Designer (motion graphics title) > Object Settings > Rotation
-        with uuid("a4cd66bc-3eb9-4e64-b37c-92ed9118657e") as case:
+        # with uuid("a4cd66bc-3eb9-4e64-b37c-92ed9118657e") as case:
+
+        with step('[Verify] Check default rotation value'):
             default_rotation_value = title_designer_page.mgt.get_rotation_value()
-            if default_rotation_value == '0.00':
-                default_rotation = True
-            else:
-                default_rotation = False
+            assert default_rotation_value == '0.00', f"Default rotation value is not correct! Expected: 0.00, Actual: {default_rotation_value}"
 
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_12] Set Rotation value by textbox > Check ')
+    @exception_screenshot
+    def test_title_mgt_func_5_12(self):
+        '''
+        1. Set Rotation value by textbox
+        2. Check rotation value is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_11"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Rotation value by textbox'):
             title_designer_page.mgt.set_rotation_value('146')
-            time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check rotation value is correct'):
             check_rotation_value = title_designer_page.mgt.get_rotation_value()
-            if check_rotation_value == '146.00':
-                check_rotation = True
-            else:
-                check_rotation = False
+            if check_rotation_value != '146.00':
+                assert False, f"Rotation value is not correct! Expected: 146.00, Actual: {check_rotation_value}"
+        assert True
+        
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_13] Check if preview changed correctly as GT (from test_title_mgt_func_5_7~11)')
+    @exception_screenshot
+    def test_title_mgt_func_5_13(self):
+        '''
+        1. Check if preview changed correctly as GT (from test_title_mgt_func_5_7~12)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_12"
+        self.ensure_dependency(dependency_test)
 
+        with step('[Verify] Check Preview is correct as GT'):
             rotate_preview = main_page.snapshot(locator=L.title_designer.main_window,
                                                   file_name=Auto_Ground_Truth_Folder + 'L164.png')
             check_current_title = main_page.compare(Ground_Truth_Folder + 'L164.png', rotate_preview)
 
+            if not check_current_title:
+                assert False, "Preview is not changed correctly as GT (L164.png) !"
+            assert True
+
+        
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_14] ')
+    @exception_screenshot
+    def test_title_mgt_func_5_14(self):
+        '''
+        1. 
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_13"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Initial] Reset zoom to 67%'):
             # Click [Zoom out] twice : 67%
-            for x in range(2):
-                title_designer_page.click_zoom_out()
-
-            case.result = default_rotation and check_rotation and check_current_title
-
+            for _ in range(2):
+                title_designer_page.click_viewer_zoom_menu('67%')
+                
         # [L165] 3.3 Title Designer (motion graphics title) > Adjust object on preview > Resize
+        # with uuid("1ca3cc38-c3b0-4e76-a6dd-d29e2d813324") as case:
 
-        with uuid("1ca3cc38-c3b0-4e76-a6dd-d29e2d813324") as case:
+        with step('[Action] Click undo button to set rotation = 0'):
             # Click [Undo] button > Rotation = 0
             title_designer_page.click_undo_btn()
             time.sleep(DELAY_TIME)
 
-            mgt_default_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            #logger(mgt_default_preview)
+        with step('[Verify] Check rotation value =0'):
+            check_rotation_value = title_designer_page.mgt.get_rotation_value()
+            if check_rotation_value != '0.00':
+                assert False, f"Rotation value is not correct after undo! Expected: 0.00, Actual: {check_rotation_value}"
 
+        with step('[Action] Resize MGT to small'):
+            mgt_default_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
             # Resize
             title_designer_page.adjust_title_on_canvas.resize_to_small(x=25, y=30)
+
+        with step('[Verify] Check if preview changed correctly after resize'):
             mgt_resize_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            #logger(mgt_resize_preview)
+            if main_page.compare(mgt_default_preview, mgt_resize_preview):
+                assert False, "MGT is not resized correctly! Similarity should < 0.95"
+        assert True
+                
 
-            check_resize_result = main_page.compare(mgt_default_preview, mgt_resize_preview)
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_title_mgt_func_5_15] ')
+    @exception_screenshot
+    def test_title_mgt_func_5_15(self):
+        '''
+        1. 
 
-            case.result = not check_resize_result
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_13"
+        self.ensure_dependency(dependency_test)
+        
 
         # [L167] 3.3 Title Designer (motion graphics title) > Adjust object on preview > Move
         with uuid("8a0620c0-7a8a-48c6-945d-640efcf63cbf") as case:

@@ -4561,37 +4561,40 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][TitleDesigner][MGT] Set Position X value')
         def set_position_x_value(self, value):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.mgt_object_settings.edittext_position_x)
                 self.mouse.click(times=3)
                 self.keyboard.send(value)
                 self.exist_click(L.title_designer.mgt_object_settings.text_position)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Get position x value')
         def get_position_x_value(self):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.mgt_object_settings.edittext_position_x).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Click position x arrow button')
         def click_position_x_arrow_btn(self, index, times=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 if index == 0:
                     x, y = self.exist(L.title_designer.mgt_object_settings.stepper_position_x_up).AXPosition
                     self.mouse.move(x,y)
@@ -4602,40 +4605,43 @@ class Title_Designer(Main_Page, BasePage):
                     self.mouse.click(times=times)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Set Position Y value')
         def set_position_y_value(self, value):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.mgt_object_settings.edittext_position_y)
                 self.mouse.click(times=3)
                 self.keyboard.send(value)
                 self.exist_click(L.title_designer.mgt_object_settings.text_position)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Get position y value')
         def get_position_y_value(self):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.mgt_object_settings.edittext_position_y).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Click position y arrow button')
         def click_position_y_arrow_btn(self, index, times=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 if index == 0:
                     x, y = self.exist(L.title_designer.mgt_object_settings.stepper_position_y_up).AXPosition
                     self.mouse.move(x,y)
@@ -4646,7 +4652,7 @@ class Title_Designer(Main_Page, BasePage):
                     self.mouse.click(times=times)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_scale_width_value(self, value):
@@ -4662,24 +4668,26 @@ class Title_Designer(Main_Page, BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception
             return True
-
+        
+        @step('[Action][TitleDesigner][MGT] Get scale width value')
         def get_scale_width_value(self):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.mgt_object_settings.edittext_width).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
-
+        
+        @step('[Action][TitleDesigner][MGT] Click scale width arrow button')
         def click_scale_width_arrow_btn(self, index, times=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 if index == 0:
                     x, y = self.exist(L.title_designer.mgt_object_settings.stepper_width_up).AXPosition
                     self.mouse.move(x,y)
@@ -4690,51 +4698,55 @@ class Title_Designer(Main_Page, BasePage):
                     self.mouse.click(times=times)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Drag scale width slider')
         def drag_scale_width_slider(self, value):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist(L.title_designer.mgt_object_settings.slider_width).AXValue = float(value)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Set scale height value')
         def set_scale_height_value(self, value):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.mgt_object_settings.edittext_height)
                 self.mouse.click(times=3)
                 self.keyboard.send(value)
                 self.exist_click(L.title_designer.mgt_object_settings.text_scale)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Get scale height value')
         def get_scale_height_value(self):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.mgt_object_settings.edittext_height).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Click scale height arrow button')
         def click_scale_height_arrow_btn(self, index, times=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 if index == 0:
                     x, y = self.exist(L.title_designer.mgt_object_settings.stepper_height_up).AXPosition
                     self.mouse.move(x,y)
@@ -4745,25 +4757,27 @@ class Title_Designer(Main_Page, BasePage):
                     self.mouse.click(times=times)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Drag scale height slider')
         def drag_scale_height_slider(self, value):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist(L.title_designer.mgt_object_settings.slider_height).AXValue = float(value)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Tick/ Untick Maintain Aspect Ratio')
         def click_maintain_aspect_ratio(self, bCheck=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.mgt_object_settings.chx_maintain_aspect_ratio).AXValue
                 if value == 0 and bCheck == 0:
                     return True
@@ -4775,7 +4789,7 @@ class Title_Designer(Main_Page, BasePage):
                     return True
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_rotation_value(self, value):
@@ -4862,11 +4876,12 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][TitleDesigner][MGT] Fold/ Unfold Object Setting Tab')
         def unfold_object_setting_tab(self, unfold=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 value = self.exist(L.title_designer.motion_graphic_title.btn_object_setting).AXValue
                 if value == 0 and unfold == 0:
                     return True
@@ -4878,32 +4893,34 @@ class Title_Designer(Main_Page, BasePage):
                     return True
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Set zoom value by menu')
         def click_viewer_zoom_menu(self, value='Fit'):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.viewer_zoom.cbx_viewer_zoom)
                 self.exist_click({'AXRole': 'AXStaticText', 'AXValue': value})
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Click Zoom in button')
         def click_zoom_in(self, times=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 x, y = self.exist(L.title_designer.btn_zoom_in).AXPosition
                 self.mouse.move(x, y)
                 self.mouse.click(times=times)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def click_preview_operation(self, operation):
@@ -4952,16 +4969,17 @@ class Title_Designer(Main_Page, BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception
             return True
-        
+        @step('[Action][TitleDesigner][MGT] Click Undo button')
         def click_undo_btn(self):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(L.title_designer.mgt_function_buttons.undo)
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
     
         def click_redo_btn(self):
@@ -4975,15 +4993,16 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][TitleDesigner][MGT] Click Zoom out button')
         def click_zoom_out_btn(self, times=1):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click(locator=L.title_designer.mgt_function_buttons.zoom_out, times=times)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
     def handle_keyframe_want_to_continue(self, option=1):
