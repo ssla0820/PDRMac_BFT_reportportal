@@ -3577,28 +3577,28 @@ class Title_Designer(Main_Page, BasePage):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click([{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW', 'AXRole': 'AXOutline'},
                                        {'AXRole': 'AXRow', 'index': track_no},
                                        {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_NEXT_KEYFRAME',
                                         'AXRole': 'AXButton'}])
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_simple_track_rotation_keyframe_control(self, track_no):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.exist_click([{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_HEADER_OUTLINEVIEW', 'AXRole': 'AXOutline'},
                                        {'AXRole': 'AXRow', 'index': track_no},
                                        {'AXIdentifier': 'IDC_SIMPLE_TIMELINE_BTN_ADD_REMOVE_KEYFRAME',
                                         'AXRole': 'AXButton'}])
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_simple_track_rotation_previous_keyframe(self, track_no):
@@ -4968,6 +4968,7 @@ class Title_Designer(Main_Page, BasePage):
             _set_radio(self, target_radio, option=index)
             if index > 1 and fit_type is not None:
                 _set_option(self, L.title_designer.backdrop.cbx_fit_with_title, target_option, fit_type)
+            time.sleep(DELAY_TIME*2)
         
         @step('[Action][TitleDesigner][Backdrop] Get the type of backdrop')
         def get_type(self):
