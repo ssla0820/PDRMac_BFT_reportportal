@@ -4752,13 +4752,13 @@ class Test_BFT_365_OS14():
             
         assert True
 
-    @pytest.mark.title_mgt_func
-    @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
-    @exception_screenshot
-    def test_title_mgt_func_5_z(self):
-        # close ap due to the section is completed
-        main_page.close_app()
-        assert True
+    # @pytest.mark.title_mgt_func
+    # @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
+    # @exception_screenshot
+    # def test_title_mgt_func_5_z(self):
+    #     # close ap due to the section is completed
+    #     main_page.close_app()
+    #     assert True
 
 
     # 5 uuid
