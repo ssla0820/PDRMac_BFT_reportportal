@@ -346,6 +346,25 @@ class Test_BFT_365_OS14():
         logger('12133')
         main_page.refresh_top()
 
+    @step('[Action] Open packed project')
+    def open_packed_project(self, project_name, save_name):
+        if not main_page.exist_file(Test_Material_Folder + project_name):
+            assert False, f"Project file {project_name} doesn't exist!"
+
+        # Open project
+        main_page.top_menu_bar_file_open_project(save_changes='no')
+        main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+        main_page.top_menu_bar_file_open_project(save_changes='no')
+        check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+        if not check_open_result:
+            return False
+
+        # Select extract path
+        main_page.delete_folder(Test_Material_Folder + save_name)
+        main_page.select_file(Test_Material_Folder + save_name)
+        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+        return True
+    
     def check_download_body_effect(self, wait_time=900):
         return self.body_effect_download_complete(wait_time)
 
@@ -3039,19 +3058,8 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME)
 
             project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
-
-            if not main_page.exist_file(Test_Material_Folder + project_name):
-                assert False, f"Project file {project_name} doesn't exist!"
-
-            main_page.top_menu_bar_file_open_project(save_changes='no')
-            check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
-            if not check_open_result:
-                assert False, "Dealing with Open project dialog FAIL!"
-
-            # Select extract path
-            main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
-            main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
-            main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+            save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
+            self.open_packed_project(project_name, save_name)
 
         with step('[Action] Enter title room and select saved template'):
             # enter Title Room
@@ -3484,20 +3492,9 @@ class Test_BFT_365_OS14():
                 time.sleep(DELAY_TIME)
 
                 project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
-
-                if not main_page.exist_file(Test_Material_Folder + project_name):
-                    assert False, f"Project file {project_name} doesn't exist!"
-
-                main_page.top_menu_bar_file_open_project(save_changes='no')
-                check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
-                if not check_open_result:
-                    assert False, "Dealing with Open project dialog FAIL!"
-
-                # Select extract path
-                main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
-                main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
-                main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
-
+                save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
+                self.open_packed_project(project_name, save_name)
+                
             with step('[Action] Open [Default] title designer by searching [Default] in library'):
                 # enter Title room
                 main_page.enter_room(1)
@@ -3998,22 +3995,8 @@ class Test_BFT_365_OS14():
             main_page.start_app()
 
             project_name = 'BFT_21_Stage1/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk'
-
-            if not main_page.exist_file(Test_Material_Folder + project_name):
-                assert False, f"Project file {project_name} doesn't exist!"
-
-            # Open project
-            main_page.top_menu_bar_file_open_project(save_changes='no')
-            main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
-            main_page.top_menu_bar_file_open_project(save_changes='no')
-            check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
-            if not check_open_result:
-                assert False, "Dealing with Open project dialog FAIL!"
-
-            # Select extract path
-            main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
-            main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_mgt_func_5_1')
-            main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+            save_name = 'BFT_21_Stage1/test_title_mgt_func_5_1'
+            self.open_packed_project(project_name, save_name)
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
         # with uuid("f36c7d26-cec9-47aa-a29c-9aff9bb61e6c") as case:
@@ -4779,10 +4762,25 @@ class Test_BFT_365_OS14():
 
 
     # 5 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.title_mgt_func
+    @pytest.mark.title_designer
+    @pytest.mark.mgt
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_media_search_func_6_1] Open Project > Motion Graphics title')
     @exception_screenshot
-    def test_1_1_4_b(self):
+    def test_media_search_func_6_1(self):
+        '''
+
+        '''
+
+        with step('[Action] Open project and close AP (Show in recent project)'):
+            test_title_mgt_func_5_21
+
+
+
+        with step('[Action] Open AP and open saved project'):
+            main_page.start_app()
+
         # launch APP
         main_page.launch_app()
         time.sleep(DELAY_TIME*3)
