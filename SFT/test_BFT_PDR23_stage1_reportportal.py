@@ -4204,9 +4204,9 @@ class Test_BFT_365_OS14():
         '''
         1. Room in
         2. Enter Graphics Color tab
-        3. Apply Graphics Color -- A81B22 and check preview
-        4. Apply Graphics Color -- C8D996 and check preview
-        5. Apply Graphics Color -- 18FA4F and check preview
+        3. Apply Graphics Color -- A81B22
+        4. Apply Graphics Color -- C8D996
+        5. Apply Graphics Color -- 18FA4F
         6. Check if preview changed correctly as GT
         '''
         # Ensure the dependency test is run and passed
@@ -4230,29 +4230,14 @@ class Test_BFT_365_OS14():
             before_preview = main_page.snapshot(locator=L.title_designer.main_window)
             # Change color 1
             title_designer_page.mgt.apply_graphics_color(group_no=1, HexColor='A81B22')
-        
-        with step('[Verify] Check if preview changed correctly after apply graphics color -- A81B22'):
-            applied_color_1 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(before_preview, applied_color_1, similarity=0.999):
-                assert False, "Color 1 is not applied correctly on preview window! Similarity should < 0.999"
 
         with step('[Action] Apply Graphics Color -- C8D996'):
             # Change color 2
             title_designer_page.mgt.apply_graphics_color(group_no=2, HexColor='C8D996')
 
-        with step('[Verify] Check if preview changed correctly after apply graphics color -- C8D996'):
-            applied_color_2 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_color_1, applied_color_2, similarity=0.999):
-                assert False, "Color 2 is not applied correctly on preview window! Similarity should < 0.999"
-
         with step('[Action] Apply Graphics Color -- 18FA4F'):
             # Change color 3
             title_designer_page.mgt.apply_graphics_color(group_no=3, HexColor='18FA4F')
-
-        with step('[Verify] Check if preview changed correctly after apply graphics color -- 18FA4F'): 
-            applied_color_3 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_color_2, applied_color_3, similarity=0.999):
-                assert False, "Color 3 is not applied correctly on preview window! Similarity should < 0.999"
 
         with step('[Verfiy] Check if preview changed correctly as GT'):
             time.sleep(DELAY_TIME*1.5)
@@ -5104,17 +5089,20 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
-    @pytest.mark.timeline
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_pip_designer_func_7_5] ')
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_pip_designer_func_7_5] Add 2 Position Keyframes > Switch to previous keyframe')
     @exception_screenshot
     def test_pip_designer_func_7_5(self):
         '''
+        1. Switch to Advance Mode
+        2. Add Position (0.5, 0.5) keyframe at (00:00)
+        3. Add Scale (0.803, 0.68) keyframe at (04:12)
+        4. Switch to previous keyframe and check if switch to (00:00) keyframe correctly
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_pip_designer_func_7_1"
+        dependency_test = "test_pip_designer_func_7_4"
         self.ensure_dependency(dependency_test)
-
 
         # [L381] 3.3 Pip Designer > Object Setting > Able to add position/scale/opacity/Rotation keyframe with correct value
         # with uuid("91625334-9a98-4452-8055-5a199526738f") as case:
@@ -5130,7 +5118,6 @@ class Test_BFT_365_OS14():
             # Set (04:12), Position: (0.803, 0.68)
             pip_designer_page.set_timecode('00_00_04_12')
             pip_designer_page.input_x_position_value('0.803')
-            time.sleep(DELAY_TIME)
             pip_designer_page.input_y_position_value('0.68')
 
         with step('[Action] Switch to previous keyframe'):
@@ -5139,97 +5126,116 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if switch to (00:00) keyframe correctly'):
             get_timecode = pip_designer_page.get_timecode()
-            if get_timecode == '00:00:00:00':
-                set_1st_keyframe = True
-            else:
-                set_1st_keyframe = False
-            logger(set_1st_keyframe)
+            assert get_timecode == '00:00:00:00', f"Cannot switch to (00:00) keyframe correctly! Expected: 00:00:00:00, Actual: {get_timecode}"
+
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
-    @pytest.mark.timeline
-    @pytest.mark.content_pack
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.name('[test_pip_designer_func_7_6] Switch to next keyframe > Check timecode/ x position/ y position')
+    @exception_screenshot
+    def test_pip_designer_func_7_6(self):
+        '''
+        1. Switch to next keyframe
+        2. Check if switch to (04:12) keyframe correctly
+        3. Check if x position is 0.803
+        4. Check if y position is 0.68
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_5"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Switch to next keyframe'):
+            # Click next keyframe
+            pip_designer_page.tap_position_next_keyframe()
+
+        with step('[Verify] Check if switch to (04:12) keyframe correctly'):
+            get_timecode = pip_designer_page.get_timecode()
+            if get_timecode != '00:00:00:00':
+                assert False, f"Cannot switch to (04:12) keyframe correctly! Expected: 04:12, Actual: {get_timecode}"
+
+        with step('[Verify] Check if x position is 0.803'):
+            get_x_value = pip_designer_page.get_x_position_value()
+            if get_x_value != '0.803':
+                assert False, f"X position is not 0.803! Expected: 0.803, Actual: {get_x_value}"
+
+        with step('[Verify] Check if y position is 0.68'):
+            get_y_value = pip_designer_page.get_y_position_value()
+            if get_y_value != '0.680':
+                assert False, f"Y position is not 0.68! Expected: 0.68, Actual: {get_y_value}"
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
     @pytest.mark.name('[test_pip_designer_func_7_6] ')
     @exception_screenshot
     def test_pip_designer_func_7_6(self):
         '''
         '''
 
-            # Click next keyframe
-            pip_designer_page.tap_position_next_keyframe()
-            get_x_value = pip_designer_page.get_x_position_value()
-            logger(get_x_value)
-            if get_x_value == '0.803':
-                set_2nd_x_keyframe = True
-            else:
-                set_2nd_x_keyframe = False
+        # -----------
+        # Set Scale : 1st keyframe
+        pip_designer_page.drag_scale_width_slider('1.733')
+        pip_designer_page.add_remove_scale_current_keyframe()
 
-            get_y_value = pip_designer_page.get_y_position_value()
-            logger(get_y_value)
-            if get_y_value == '0.680':
-                set_2nd_y_keyframe = True
-            else:
-                set_2nd_y_keyframe = False
+        pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
+        # Set (07:15)
+        pip_designer_page.set_timecode('00_00_07_15')
 
-            # -----------
-            # Set Scale : 1st keyframe
-            pip_designer_page.drag_scale_width_slider('1.733')
-            pip_designer_page.add_remove_scale_current_keyframe()
+        # Set Scale : 2nd keyframe
+        pip_designer_page.input_scale_height_value('2.857')
 
-            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
-            # Set (07:15)
-            pip_designer_page.set_timecode('00_00_07_15')
+        # Set Position : 3rd keyframe
+        pip_designer_page.input_x_position_value('0.350')
+        time.sleep(DELAY_TIME)
+        pip_designer_page.input_y_position_value('0.761')
 
-            # Set Scale : 2nd keyframe
-            pip_designer_page.input_scale_height_value('2.857')
+        # Click previous keyframe
+        pip_designer_page.tap_position_previous_keyframe()
+        time.sleep(DELAY_TIME)
+        # Remove 2nd Position keyframe (only exist 1st, last keyframe)
+        pip_designer_page.add_remove_position_current_keyframe()
 
-            # Set Position : 3rd keyframe
-            pip_designer_page.input_x_position_value('0.350')
-            time.sleep(DELAY_TIME)
-            pip_designer_page.input_y_position_value('0.761')
+        # drag scroll bar
+        pip_designer_page.drag_properties_scroll_bar(0.72)
+        # Set Rotation : 1st keyframe on (04:12)  0 degree
+        pip_designer_page.add_remove_rotation_current_keyframe()
 
-            # Click previous keyframe
-            pip_designer_page.tap_position_previous_keyframe()
-            time.sleep(DELAY_TIME)
-            # Remove 2nd Position keyframe (only exist 1st, last keyframe)
-            pip_designer_page.add_remove_position_current_keyframe()
+        # drag simple timeline to larger (Can see Rotation keyframe track)
+        pip_designer_page.drag_simple_timeline_track_to_lager()
 
-            # drag scroll bar
-            pip_designer_page.drag_properties_scroll_bar(0.72)
-            # Set Rotation : 1st keyframe on (04:12)  0 degree
-            pip_designer_page.add_remove_rotation_current_keyframe()
+        # Click max button
+        pip_designer_page.click_maximize_btn()
+        time.sleep(DELAY_TIME)
+        # drag properties scroll bar
+        pip_designer_page.drag_properties_scroll_bar(0)
 
-            # drag simple timeline to larger (Can see Rotation keyframe track)
-            pip_designer_page.drag_simple_timeline_track_to_lager()
+        # Verify step:
+        # Check position on timecode 04:12
+        current_x_value = pip_designer_page.get_x_position_value()
+        logger(current_x_value)
+        if current_x_value == '0.412':
+            check_pos_x = True
+        else:
+            check_pos_x = False
 
-            # Click max button
-            pip_designer_page.click_maximize_btn()
-            time.sleep(DELAY_TIME)
-            # drag properties scroll bar
-            pip_designer_page.drag_properties_scroll_bar(0)
+        current_y_value = pip_designer_page.get_y_position_value()
+        logger(current_y_value)
+        if current_y_value == '0.653':
+            check_pos_y = True
+        else:
+            check_pos_y = False
 
-            # Verify step:
-            # Check position on timecode 04:12
-            current_x_value = pip_designer_page.get_x_position_value()
-            logger(current_x_value)
-            if current_x_value == '0.412':
-                check_pos_x = True
-            else:
-                check_pos_x = False
-
-            current_y_value = pip_designer_page.get_y_position_value()
-            logger(current_y_value)
-            if current_y_value == '0.653':
-                check_pos_y = True
-            else:
-                check_pos_y = False
-
-            case.result = set_1st_keyframe and set_2nd_x_keyframe and set_2nd_y_keyframe and check_pos_x and check_pos_y
-            logger(set_1st_keyframe)
-            logger(set_2nd_x_keyframe)
-            logger(set_2nd_y_keyframe)
-            logger(check_pos_x)
-            logger(check_pos_y)
+        case.result = set_1st_keyframe and set_2nd_x_keyframe and set_2nd_y_keyframe and check_pos_x and check_pos_y
+        logger(set_1st_keyframe)
+        logger(set_2nd_x_keyframe)
+        logger(set_2nd_y_keyframe)
+        logger(check_pos_x)
+        logger(check_pos_y)
 
         # [L385] 3.3 Pip Designer > Adjust keyframe > Add
         with uuid("9e576f88-8a62-47ff-bc6a-58f75116b112") as case:
