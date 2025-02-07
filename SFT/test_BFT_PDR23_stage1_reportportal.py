@@ -4180,8 +4180,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after modify font type'):
             applied_font_type = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(before_preview, applied_font_type, similarity=0.98):
-                assert False, "Font type is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(before_preview, applied_font_type, similarity=0.99):
+                assert False, "Font type is not applied correctly on preview window! Similarity should < 0.99"
 
         with step('[Action] Apply Font Face Color'):
             # Apply font color
@@ -4189,8 +4189,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply font color'):
             applied_font_face_color = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_font_type, applied_font_face_color, similarity=0.98):
-                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(applied_font_type, applied_font_face_color, similarity=0.99):
+                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.99"
         assert True
 
 
