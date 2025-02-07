@@ -4233,8 +4233,8 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check if preview changed correctly after apply graphics color -- A81B22'):
             applied_color_1 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(before_preview, applied_color_1, similarity=0.995):
-                assert False, "Color 1 is not applied correctly on preview window! Similarity should < 0.995"
+            if main_page.compare(before_preview, applied_color_1, similarity=0.999):
+                assert False, "Color 1 is not applied correctly on preview window! Similarity should < 0.999"
 
         with step('[Action] Apply Graphics Color -- C8D996'):
             # Change color 2
@@ -4242,8 +4242,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply graphics color -- C8D996'):
             applied_color_2 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_color_1, applied_color_2, similarity=0.995):
-                assert False, "Color 2 is not applied correctly on preview window! Similarity should < 0.995"
+            if main_page.compare(applied_color_1, applied_color_2, similarity=0.999):
+                assert False, "Color 2 is not applied correctly on preview window! Similarity should < 0.999"
 
         with step('[Action] Apply Graphics Color -- 18FA4F'):
             # Change color 3
@@ -4251,8 +4251,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply graphics color -- 18FA4F'): 
             applied_color_3 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_color_2, applied_color_3, similarity=0.995):
-                assert False, "Color 3 is not applied correctly on preview window! Similarity should < 0.995"
+            if main_page.compare(applied_color_2, applied_color_3, similarity=0.999):
+                assert False, "Color 3 is not applied correctly on preview window! Similarity should < 0.999"
 
         with step('[Verfiy] Check if preview changed correctly as GT'):
             time.sleep(DELAY_TIME*1.5)
@@ -4748,7 +4748,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after set timecode as GT'):
             # Set timecode :
-            main_page.set_timeline_timecode('00_00_17_19')
+            main_page.set_timeline_timecode('00_00_07_19')
+            time.sleep(DELAY_TIME)
 
             timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L170.png')
             check_current_title = main_page.compare(Ground_Truth_Folder + 'L170.png', timeline_preview, similarity=0.85)
@@ -5013,119 +5014,146 @@ class Test_BFT_365_OS14():
             assert check_title == 'Mood Stickers 09', f"Template is not added to timeline! Expected: Mood Stickers 09, Actual: {check_title}"
 
     @pytest.mark.pip_designer_func
-    @pytest.mark.pip_room
-    @pytest.mark.timeline
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_pip_designer_func_7_2] ')
+    @pytest.mark.pip_designer
+    @pytest.mark.name('[test_pip_designer_func_7_2] Switch to Advance Mode and Express Mode')
     @exception_screenshot
     def test_pip_designer_func_7_2(self):
         '''
+        1. Check default mode is Express Mode
+        2. Switch to Advance Mode and check if switch correctly
+        3. Switch to Express Mode and check if switch correctly
         '''
-
-            # Set template duration to 10 sec.
-            #tips_area_page.click_TipsArea_btn_Duration()
-            #tips_area_page.apply_duration_settings('00_00_10_00')
-
-
-
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_1"
+        self.ensure_dependency(dependency_test)
 
         # [L375] 3.3 Pip Designer > Switch to [Advance] mode or [Express] Mode
         # with uuid("ef3ed38d-1e2a-483d-a25e-f59b89c4fa5f") as case:
 
         with step('[Verify] Check default mode is Express Mode'):
-                get_mode = pip_designer_page.express_mode.get_current_mode()
-                if get_mode == 'Express Mode':
-                    default_express_mode = True
-                else:
-                    default_express_mode = False
-                logger(default_express_mode)
+            get_mode = pip_designer_page.express_mode.get_current_mode()
+            if get_mode != 'Express Mode':
+                assert False, f"Default mode is not Express Mode! Expected: Express Mode, Actual: {get_mode}"
 
         with step('[Action] Switch to [Advance] mode'):
-
             pip_designer_page.switch_mode('Advanced')
-            time.sleep(DELAY_TIME*2)
 
         with step('[Verify] Check switch to [Advance] mode'):
             animation_elem = main_page.exist(L.pip_designer.tab_animation)
             if animation_elem == None:
-                switch_advanced_mode = False
-            else:
-                switch_advanced_mode = True
+                assert False, "Cannot switch to [Advance] mode!"
         
         with step('[Action] Switch to [Express] mode'):
-
             pip_designer_page.switch_mode('Express')
-            time.sleep(DELAY_TIME*2)
 
         with step('[Verify] Check switch to [Express] mode'):
             get_mode = pip_designer_page.express_mode.get_current_mode()
-            logger(get_mode)
-            if get_mode == 'Express Mode':
-                switch_express_mode = True
-            else:
-                logger(get_mode)
-                switch_express_mode = False
+            if get_mode != 'Express Mode':
+                assert False, f"Cannot switch to [Express] mode! Expected: Express Mode, Actual: {get_mode}"
+        assert True
 
-            case.result = default_express_mode and switch_advanced_mode and switch_express_mode
     @pytest.mark.pip_designer_func
-    @pytest.mark.pip_room
-    @pytest.mark.timeline
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_pip_designer_func_7_3] ')
+    @pytest.mark.pip_designer
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_3] Check default value of Opacity')
     @exception_screenshot
     def test_pip_designer_func_7_3(self):
         '''
+        1. Unfold Object Settings
+        2. Check default value of Opacity
         '''
-
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_2"
+        self.ensure_dependency(dependency_test)
 
         # [L376] 3.3 Pip Designer > Set in [Properties] > Object Setting - Opacity
-        with uuid("6d387c5c-3982-4b6e-ab94-a79ee7b4cbd0") as case:
+        # with uuid("6d387c5c-3982-4b6e-ab94-a79ee7b4cbd0") as case:
+        with step('[Action] Unfold Object Settings'):
+            # Switch to Express Mode
+            pip_designer_page.switch_mode('Express')
             # Unfold Object Settings
             pip_designer_page.express_mode.unfold_properties_object_setting_tab()
+
+        with step('[Verify] Check default value of Opacity'):
             get_opacity_default = pip_designer_page.express_mode.get_object_setting_opacity_value()
-            logger(get_opacity_default)
 
-            if get_opacity_default == '100%':
-                default_value = True
-            else:
-                default_value = False
+            assert get_opacity_default == '100%', f"Default value of Opacity is not correct! Expected: 100%, Actual: {get_opacity_default}"
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_4] Adjust Opacity value by arrow')
+    @exception_screenshot
+    def test_pip_designer_func_7_4(self):
+        '''
+        1. Adjust Opacity value by arrow
+        2. Check if Opacity value is changed correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_3"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Adjust Opacity value by arrow'):
             # Click arrow button to 76%
             pip_designer_page.express_mode.click_object_setting_opacity_arrow_btn(1,25)
-            time.sleep(DELAY_TIME)
             pip_designer_page.express_mode.click_object_setting_opacity_arrow_btn(0, 1)
 
+        with step('[Verify] Check if Opacity value is changed correctly'):
             check_opacity = pip_designer_page.express_mode.get_object_setting_opacity_value()
-            if check_opacity == '76%':
-                apply_opacity = True
-            else:
-                apply_opacity = False
+            assert check_opacity == '76%', f"Opacity value is not changed correctly! Expected: 76%, Actual: {check_opacity}. Action: 100>75>76"
 
-            case.result = default_value and apply_opacity
-            logger(default_value)
-            logger(apply_opacity)
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timeline
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_pip_designer_func_7_5] ')
+    @exception_screenshot
+    def test_pip_designer_func_7_5(self):
+        '''
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_1"
+        self.ensure_dependency(dependency_test)
+
 
         # [L381] 3.3 Pip Designer > Object Setting > Able to add position/scale/opacity/Rotation keyframe with correct value
-        with uuid("91625334-9a98-4452-8055-5a199526738f") as case:
+        # with uuid("91625334-9a98-4452-8055-5a199526738f") as case:
+
+        with step('[Action] Switch to Advance Mode'):
             pip_designer_page.switch_mode('Advanced')
 
+        with step('[Action] Add Position (0.5, 0.5) keyframe at (00:00)'):
             # Add position keyframe: 0s Position: (0.5, 0.5)
             pip_designer_page.add_remove_position_current_keyframe()
 
+        with step('[Action] Add Scale (0.803, 0.68) keyframe at (04:12)'):
             # Set (04:12), Position: (0.803, 0.68)
             pip_designer_page.set_timecode('00_00_04_12')
             pip_designer_page.input_x_position_value('0.803')
             time.sleep(DELAY_TIME)
             pip_designer_page.input_y_position_value('0.68')
 
+        with step('[Action] Switch to previous keyframe'):
             # Click previous keyframe
             pip_designer_page.tap_position_previous_keyframe()
+
+        with step('[Verify] Check if switch to (00:00) keyframe correctly'):
             get_timecode = pip_designer_page.get_timecode()
             if get_timecode == '00:00:00:00':
                 set_1st_keyframe = True
             else:
                 set_1st_keyframe = False
             logger(set_1st_keyframe)
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timeline
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_pip_designer_func_7_6] ')
+    @exception_screenshot
+    def test_pip_designer_func_7_6(self):
+        '''
+        '''
 
             # Click next keyframe
             pip_designer_page.tap_position_next_keyframe()
