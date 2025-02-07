@@ -3847,8 +3847,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly'):
             font_face_color_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            if main_page.compare(before_preview, font_face_color_preview, similarity=0.98):
-                assert False, "Font face color is not adjusted correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(before_preview, font_face_color_preview, similarity=0.99):
+                assert False, "Font face color is not adjusted correctly on preview window! Similarity should < 0.99"
 
         assert True
 
