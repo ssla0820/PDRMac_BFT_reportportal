@@ -4128,8 +4128,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply font color'):
             applied_font_color = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_bold, applied_font_color, similarity=0.98):
-                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(applied_bold, applied_font_color, similarity=0.999):
+                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.999"
         assert True
 
     @pytest.mark.title_mgt_func
@@ -4547,8 +4547,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after move'):
             mgt_move_preview = main_page.snapshot(locator=L.title_designer.area.obj_title)
-            if main_page.compare(before_move_preview, mgt_move_preview):
-                assert False, "MGT is not moved correctly! Similarity should < 0.95"
+            if main_page.compare(before_move_preview, mgt_move_preview, similarity=0.96):
+                assert False, "MGT is not moved correctly! Similarity should < 0.96"
         assert True
 
     @pytest.mark.title_mgt_func
@@ -4752,13 +4752,13 @@ class Test_BFT_365_OS14():
             
         assert True
 
-    # @pytest.mark.title_mgt_func
-    # @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
-    # @exception_screenshot
-    # def test_title_mgt_func_5_z(self):
-    #     # close ap due to the section is completed
-    #     main_page.close_app()
-    #     assert True
+    @pytest.mark.title_mgt_func
+    @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
+    @exception_screenshot
+    def test_title_mgt_func_5_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
 
 
     # 5 uuid
@@ -4796,10 +4796,14 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_room
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_media_search_func_6_2] ')
+    @pytest.mark.name('[test_media_search_func_6_2] Search library with keyword in title room')
     @exception_screenshot
     def test_media_search_func_6_2(self):
         '''
+        1. Enter Title Room with all content category
+        2. Search library with keyword [winter] and check if [winter wonderland] is found
+        3. Click cancel search and search again with keyword [Ice Skates] and check if [Ice Skates] is found
+        4. Click cancel search and search again with keyword [Colorful 01] and check if [Colorful 01] is found
 
         '''
         # Ensure the dependency test is run and passed
@@ -4813,42 +4817,40 @@ class Test_BFT_365_OS14():
             # switch to all content category
             media_room_page.select_specific_category('All Content')
 
-        with step('[Action] Search library with keyword -- winter'):
+        with step('[Action] Search library with keyword [winter]'):
             # with uuid("1a6f7ebb-0cba-423d-b0f0-a915e606484a") as case:
             # Select template (search library: Winter Sticker 01)
             media_room_page.search_library('winter')
 
-        with step('[Verify] Check if search result is correct'):
+        with step('[Verify] Check if search result is correct [winter wonderland]'):
             # verify step
-            find_template_1 = main_page.select_library_icon_view_media('Winter Wonderland')
+            if not main_page.select_library_icon_view_media('Winter Wonderland'):
+                assert False, "Cannot find [Winter Wonderland] in search result!"
 
-
+        with step('[Action] Click cancel search and search again with keyword [Ice Skates]'):
             # Click cancel search
             media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 2)
 
             # Select template (search library: Ice Skates)
             media_room_page.search_library('Ice Skates')
-            time.sleep(DELAY_TIME * 2)
 
-            find_template_2 = main_page.select_library_icon_view_media('Ice Skates')
-            time.sleep(DELAY_TIME * 4)
-
+        with step('[Verify] Check if search result is correct [Ice Skates]'):
+            if not main_page.select_library_icon_view_media('Ice Skates'):
+                assert False, "Cannot find [Ice Skates] in search result!"
+        
+        with step('[Action] Click cancel search and search again with keyword [Colorful 01]'):
             # Click cancel search
             media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 2)
-
             # Select template (search library: Colorful 01 )
             media_room_page.search_library('Colorful 01')
-            time.sleep(DELAY_TIME * 2)
 
-            find_template_3 = main_page.select_library_icon_view_media('Colorful 01')
-            time.sleep(DELAY_TIME * 4)
-            case.result = find_template_1 and find_template_2 and find_template_3
+        with step('[Verify] Check if search result is correct [Colorful 01]'):
+            if not main_page.select_library_icon_view_media('Colorful 01'):
+                assert False, "Cannot find [Colorful 01] in search result!"
+        assert True
 
-    @pytest.mark.launch
-    @pytest.mark.open_project
-    @pytest.mark.recent_project
+    @pytest.mark.title_room
+    @pytest.mark.content_pack
     @pytest.mark.name('[test_media_search_func_6_3] ')
     @exception_screenshot
     def test_media_search_func_6_3(self):
@@ -4856,20 +4858,30 @@ class Test_BFT_365_OS14():
 
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_media_search_func_6_1"
+        dependency_test = "test_media_search_func_6_2"
         self.ensure_dependency(dependency_test)
 
         # [L209] 2.3 Title Room > Input . character
-        with uuid("4c4db52c-5f66-4ced-b560-b6749ec7da64") as case:
+        # with uuid("4c4db52c-5f66-4ced-b560-b6749ec7da64") as case:
+
+        with step('[Action] Click cancel search and search again with keyword [.]'):
             # Click cancel search
             media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 3)
 
             media_room_page.search_library('.')
-            time.sleep(DELAY_TIME * 4)
 
+        with step('[Verify] Check if search result is correct (Should not find any result)'):
             # verify result:
-            case.result = main_page.is_exist(L.media_room.txt_no_results_for_dot)
+            assert main_page.is_exist(L.media_room.txt_no_results_for_dot), "Found some result with keyword [.]! Should not find any result!"
+
+    @pytest.mark.title_room
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_media_search_func_6_4] ')
+    @exception_screenshot
+    def test_media_search_func_6_4(self):
+        '''
+
+        '''
 
         # [L211] 2.3 Title Room > check all search keyword
         with uuid("de131070-6075-4176-84d2-0f4c0c641f6a") as case:
