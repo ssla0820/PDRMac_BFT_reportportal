@@ -361,8 +361,8 @@ class Test_BFT_365_OS14():
 
         # Select extract path
         main_page.delete_folder(Test_Material_Folder + save_name)
-        main_page.select_file(Test_Material_Folder + save_name)
         time.sleep(DELAY_TIME * 2)
+        main_page.select_file(Test_Material_Folder + save_name)
         main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
         return True
     
