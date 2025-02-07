@@ -4531,11 +4531,12 @@ class Title_Designer(Main_Page, BasePage):
                 raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][TitleDesigner][MGT] Apply Graphics Color')
         def apply_graphics_color(self, group_no, HexColor):
             try:
                 if not self.exist(L.title_designer.area.window_title_designer):
                     logger("No title designer window show up")
-                    raise Exception
+                    raise Exception("No title designer window show up")
                 self.exist_click({'AXIdentifier': 'IDC_ELEGANT_TITLE_DESIGNER_BTN_COLOR_PICKER_'+ str(group_no), 'AXRole': 'AXButton'})
                 self.color_picker_switch_category_to_RGB()
                 self.exist_click(L.title_designer.graphic_color.edittext_hex)
@@ -4543,9 +4544,10 @@ class Title_Designer(Main_Page, BasePage):
                 self.keyboard.send(HexColor)
                 self.exist_click(L.title_designer.graphic_color.edittext_red)
                 self.exist_click(L.title_designer.graphic_color.btn_color_close)
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def get_graphics_color(self, group_no):

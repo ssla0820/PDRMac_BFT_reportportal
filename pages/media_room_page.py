@@ -246,6 +246,7 @@ class Media_Room(BasePage):
             if result_verify:
                 logger('Fail to verify after clicked select all')
                 raise Exception('Fail to verify after clicked select all')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
@@ -270,6 +271,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Click cancel button in search library')
     def search_library_click_cancel(self):
         try:
             self.exist_click(L.media_room.btn_search_cancel)
@@ -277,10 +279,11 @@ class Media_Room(BasePage):
             self.mouse.click() # Fix the v20.3.3630 bug (Note: v20.4.3918 is fine)
             if self.exist(L.media_room.btn_search_cancel, parent=None, timeout=3):
                 logger('Fail to click search cancel button')
-                raise Exception
+                raise Exception('Fail to click search cancel button')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_display_hide_explore_view(self):
@@ -1690,6 +1693,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action] Select specific category')
     def select_specific_category(self, category_name): # support all rooms category selection
         try:
             if category_name == 'My Favorites':
@@ -1706,9 +1710,11 @@ class Media_Room(BasePage):
                     break
             if is_found == 0:
                 logger(f'Fail to select the specific category {category_name}')
+                raise Exception(f'Fail to select the specific category {category_name}')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def select_specific_category_in_meta(self, category_name): # support all rooms category selection

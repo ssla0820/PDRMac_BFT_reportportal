@@ -446,6 +446,7 @@ class Test_BFT_365_OS14():
     # 2023/11/15: test_1_1_1 ~ test_1_1_11 total case = 203
     # 9 uuid
     @exception_screenshot
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_1] GDPR shows up when first launch')
     def test_launch_process_1_1(self):
@@ -470,6 +471,7 @@ class Test_BFT_365_OS14():
         assert qdpr_window, "GDPR dialog not found!"
 
 
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_2] Click [Accept and Continue] button on GDPR dialog')
     @exception_screenshot
@@ -489,6 +491,7 @@ class Test_BFT_365_OS14():
 
 
 
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_3] Check upgrade button or link on essential dialog')
     @exception_screenshot
@@ -521,6 +524,7 @@ class Test_BFT_365_OS14():
         assert upgrade_link or upgrade_btn, f"Upgrade Now link/ button not found! {upgrade_link=}, {upgrade_btn=}"
 
     # @pytest.mark.skip
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_4] Launch PDR Essential build')
     @exception_screenshot
@@ -552,6 +556,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_5] BB shows up and close by pressing ESC key')
     @exception_screenshot
@@ -587,6 +592,7 @@ class Test_BFT_365_OS14():
             assert close_status, "Seasonal BB not closed! by pressing ESC key"
 
 
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_6] Sign 365 account and restart AP')
     @exception_screenshot
@@ -653,6 +659,7 @@ class Test_BFT_365_OS14():
 
         assert verify_step, "Sign in PDR and relaunch AP FAILED!"
 
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_7] Tick/Untick "Show Launcher after close program"')
     @exception_screenshot
@@ -692,6 +699,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_8] Launch/ Close PDR with "Show Launcher after close program" is unticked')
     @exception_screenshot
@@ -733,6 +741,7 @@ class Test_BFT_365_OS14():
 
             assert True
     
+    @pytest.mark.launch_process
     @pytest.mark.launch
     @pytest.mark.name('[test_launch_process_1_z] Close AP due to the section is completed')
     @exception_screenshot
@@ -1105,6 +1114,7 @@ class Test_BFT_365_OS14():
     #  18 uuid
     @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
+    @pytest.mark.launch
     @pytest.mark.content_pack
     @pytest.mark.name('[test_intro_room_func_3_1] Enter Video Intro and select favorite template to enter designer')
     @exception_screenshot
@@ -1835,20 +1845,16 @@ class Test_BFT_365_OS14():
             main_page.top_menu_bar_file_save_project_as()
             main_page.handle_save_file_dialog(name='test_intro_room_func_3_16',
                                                 folder_path=Export_Folder + 'BFT_21_Stage1/')
+            time.sleep(DELAY_TIME * 8)
 
         # Remove (share Video Intro template)
         # If share successfully, then delete template
         with step('[Action] Remove shared template'):
             # Open (My Profile)
             intro_video_page.enter_my_profile()
-            time.sleep(DELAY_TIME * 8)
-
             intro_video_page.my_profile.delete_1st_template()
-            time.sleep(DELAY_TIME * 5)
-
             # close (My Profile)
             main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
 
     @pytest.mark.intro_room_func
     @pytest.mark.intro_video_designer
@@ -1859,6 +1865,7 @@ class Test_BFT_365_OS14():
         assert True
 
     @pytest.mark.title_designer_func
+    @pytest.mark.launch
     @pytest.mark.preferences
     @pytest.mark.title_designer
     @pytest.mark.title
@@ -2480,6 +2487,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
     @pytest.mark.save_template
+    @pytest.mark.launch
     @pytest.mark.name('[test_title_designer_func_4_13] Reopen AP and add saved template')
     @exception_screenshot
     def test_title_designer_func_4_13(self):
@@ -3037,6 +3045,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.save_template
     @pytest.mark.timeline
     @pytest.mark.in_out_animation
+    @pytest.mark.launch
     @pytest.mark.name('[test_title_designer_func_4_25] Reopen AP and open saved template > Apply In animation')
     @exception_screenshot
     def test_title_designer_func_4_25(self):
@@ -3472,6 +3481,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.open_project
     @pytest.mark.particle
+    @pytest.mark.launch
     @pytest.mark.name('[test_title_designer_func_4_35] Insert a particle twice and check preview/ particle title')
     @exception_screenshot
     def test_title_designer_func_4_35(self):
@@ -3983,6 +3993,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.open_project
     @pytest.mark.mgt
     @pytest.mark.content_pack
+    @pytest.mark.launch
     @pytest.mark.name('[test_title_mgt_func_5_1] Open Project > Motion Graphics title')
     @exception_screenshot
     def test_title_mgt_func_5_1(self):
@@ -4762,6 +4773,7 @@ class Test_BFT_365_OS14():
 
 
     # 5 uuid
+    @pytest.mark.title_search_func
     @pytest.mark.launch
     @pytest.mark.open_project
     @pytest.mark.recent_project
@@ -4794,6 +4806,7 @@ class Test_BFT_365_OS14():
                 elif main_page.exist(L.base.main_caption).AXValue == 'test_title_search_func_6_1_from_test_title_mgt_func_5_21':
                     assert True
 
+    @pytest.mark.title_search_func
     @pytest.mark.title_room
     @pytest.mark.content_pack
     @pytest.mark.search_library
@@ -4850,6 +4863,7 @@ class Test_BFT_365_OS14():
                 assert False, "Cannot find [Colorful 01] in search result!"
         assert True
 
+    @pytest.mark.title_search_func
     @pytest.mark.title_room
     @pytest.mark.content_pack
     @pytest.mark.search_library
@@ -4877,6 +4891,7 @@ class Test_BFT_365_OS14():
             # verify result:
             assert main_page.is_exist(L.media_room.txt_no_results_for_dot), "Found some result with keyword [.]! Should not find any result!"
 
+    @pytest.mark.title_search_func
     @pytest.mark.title_room
     @pytest.mark.search_library
     @pytest.mark.name('[test_title_search_func_6_4] ')
@@ -4914,6 +4929,7 @@ class Test_BFT_365_OS14():
             all_search_result = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L211_all_search.png', w=new_w, x=new_x, y=new_y, h=new_h)
             assert main_page.compare(Ground_Truth_Folder + 'L211_all_search.png', all_search_result), "Search history is not correct as GT (L211_all_search.png)!"
 
+    @pytest.mark.title_search_func
     @pytest.mark.title_room
     @pytest.mark.open_project
     @pytest.mark.name('[test_title_search_func_6_5] Check hint not show in Media room due to import project content in Library')
@@ -4936,76 +4952,112 @@ class Test_BFT_365_OS14():
             assert main_page.is_not_exist(L.media_room.string_use_sample_media), "Show hints in Media room! Should NOT show any hint due to import project content in Library"
 
 
-    # 22 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.pip_room
+    @pytest.mark.timeline
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_pip_designer_func_7_1] Add pip object to timeline')
     @exception_screenshot
-    def test_1_1_5(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_pip_designer_func_7_1(self):
+        '''
+        1. Open AP and open saved project
+        2. Select timeline track 3 and set timecode to (09:00)
+        3. Open PiP designer
+        4. Search > Select template [Mood Stickers 09]
+        5. Add to timeline
+        6. Check if template is added to timeline
+        '''
 
-        # Open project: test_case_1_1_4
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_4.pds')
-        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+        with step('[Action] Open AP and open saved project'):
+            main_page.start_app()
+            time.sleep(DELAY_TIME)
 
-        # select timeline track 3
-        main_page.timeline_select_track(3)
+            project_name = 'BFT_21_Stage1/test_pip_designer_func_7_1_from_test_title_mgt_func_5_21.pdk'
+            save_name = 'BFT_21_Stage1/test_pip_designer_func_7_1'
+            self.open_packed_project(project_name, save_name)
 
-        # Set timecode :
-        main_page.set_timeline_timecode('00_00_09_00')
-        time.sleep(DELAY_TIME * 2)
+        with step('[Action] Select timeline track 3 and set timecode to (09:00)'):
+            # select timeline track 3
+            main_page.timeline_select_track(3)
+            # Set timecode :
+            main_page.set_timeline_timecode('00_00_09_00')
 
         # [L374] 3.3 Pip Designer (Dialog_09) > Open PiP designer
-        with uuid("4ddeabc0-9f40-4621-bd9a-118beeef450e") as case:
+        # with uuid("4ddeabc0-9f40-4621-bd9a-118beeef450e") as case:
+        with step('[Action] Open PiP designer'):
             # enter PiP room
             main_page.enter_room(4)
-            time.sleep(DELAY_TIME * 3)
+            
+        with step('[Action] Search > Select template [Mood Stickers 09]'):
             # Select template (21.6.5219 : search then select Mood Sticker 09)
             media_room_page.search_library('Mood Stickers 09')
-            time.sleep(DELAY_TIME * 4)
             main_page.select_library_icon_view_media('Mood Stickers 09')
             # Download IAD template
             time.sleep(DELAY_TIME * 4)
+
+        with step('[Action] Add to timeline'):
             main_page.right_click()
             main_page.select_right_click_menu('Add to Timeline')
-            time.sleep(DELAY_TIME * 2)
+
+        with step('[Action] Set template duration to 10 sec'):
+            main_page.tips_area_click_set_length_of_selected_clip('00_00_10_00')
+
+        with step('[Verify] Check if template is added to timeline'):
+            # On timeline track 2 : Select Dialog_09 > double click to enter pip designer
+            timeline_operation_page.select_timeline_media(track_index=4, clip_index=1)
+            main_page.double_click()
+            check_title = pip_designer_page.get_title()
+            assert check_title == 'Mood Stickers 09', f"Template is not added to timeline! Expected: Mood Stickers 09, Actual: {check_title}"
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_room
+    @pytest.mark.timeline
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_pip_designer_func_7_2] ')
+    @exception_screenshot
+    def test_pip_designer_func_7_2(self):
+        '''
+        '''
 
             # Set template duration to 10 sec.
             #tips_area_page.click_TipsArea_btn_Duration()
             #tips_area_page.apply_duration_settings('00_00_10_00')
 
-            main_page.tips_area_click_set_length_of_selected_clip('00_00_10_00')
 
-            # On timeline track 2 : Select Dialog_09 > double click to enter pip designer
-            timeline_operation_page.select_timeline_media(track_index=4, clip_index=1)
-            main_page.double_click()
-            check_title = pip_designer_page.get_title()
-            if check_title == 'Mood Stickers 09':
-                case.result = True
-            else:
-                case.result = False
+
 
         # [L375] 3.3 Pip Designer > Switch to [Advance] mode or [Express] Mode
-        with uuid("ef3ed38d-1e2a-483d-a25e-f59b89c4fa5f") as case:
-            get_mode = pip_designer_page.express_mode.get_current_mode()
-            if get_mode == 'Express Mode':
-                default_express_mode = True
-            else:
-                default_express_mode = False
-            logger(default_express_mode)
+        # with uuid("ef3ed38d-1e2a-483d-a25e-f59b89c4fa5f") as case:
+
+        with step('[Verify] Check default mode is Express Mode'):
+                get_mode = pip_designer_page.express_mode.get_current_mode()
+                if get_mode == 'Express Mode':
+                    default_express_mode = True
+                else:
+                    default_express_mode = False
+                logger(default_express_mode)
+
+        with step('[Action] Switch to [Advance] mode'):
 
             pip_designer_page.switch_mode('Advanced')
             time.sleep(DELAY_TIME*2)
+
+        with step('[Verify] Check switch to [Advance] mode'):
             animation_elem = main_page.exist(L.pip_designer.tab_animation)
             if animation_elem == None:
                 switch_advanced_mode = False
             else:
                 switch_advanced_mode = True
+        
+        with step('[Action] Switch to [Express] mode'):
 
             pip_designer_page.switch_mode('Express')
             time.sleep(DELAY_TIME*2)
+
+        with step('[Verify] Check switch to [Express] mode'):
             get_mode = pip_designer_page.express_mode.get_current_mode()
             logger(get_mode)
             if get_mode == 'Express Mode':
@@ -5015,9 +5067,16 @@ class Test_BFT_365_OS14():
                 switch_express_mode = False
 
             case.result = default_express_mode and switch_advanced_mode and switch_express_mode
-            logger(default_express_mode)
-            logger(switch_advanced_mode)
-            logger(switch_express_mode)
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_room
+    @pytest.mark.timeline
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_pip_designer_func_7_3] ')
+    @exception_screenshot
+    def test_pip_designer_func_7_3(self):
+        '''
+        '''
+
 
         # [L376] 3.3 Pip Designer > Set in [Properties] > Object Setting - Opacity
         with uuid("6d387c5c-3982-4b6e-ab94-a79ee7b4cbd0") as case:
