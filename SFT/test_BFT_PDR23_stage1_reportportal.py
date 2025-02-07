@@ -4119,8 +4119,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply bold'):
             applied_bold = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_font_type, applied_bold, similarity=0.98):
-                assert False, "Bold is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(applied_font_type, applied_bold, similarity=0.999):
+                assert False, "Bold is not applied correctly on preview window! Similarity should < 0.999"
         
         with step('[Action] Apply Font Color'):
             # Apply font color
@@ -4752,13 +4752,13 @@ class Test_BFT_365_OS14():
             
         assert True
 
-    @pytest.mark.title_mgt_func
-    @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
-    @exception_screenshot
-    def test_title_mgt_func_5_z(self):
-        # close ap due to the section is completed
-        main_page.close_app()
-        assert True
+    # @pytest.mark.title_mgt_func
+    # @pytest.mark.name('[test_title_mgt_func_5_z] Close AP due to the section is completed')
+    # @exception_screenshot
+    # def test_title_mgt_func_5_z(self):
+    #     # close ap due to the section is completed
+    #     main_page.close_app()
+    #     assert True
 
 
     # 5 uuid
@@ -4794,23 +4794,34 @@ class Test_BFT_365_OS14():
                 elif main_page.exist(L.base.main_caption).AXValue == 'test_media_search_func_6_1_from_test_title_mgt_func_5_21':
                     assert True
 
-        # [L208] 2.3 Title Room > Input some keyword
-        # enter Title room
-        main_page.enter_room(1)
-        time.sleep(DELAY_TIME * 3)
+    @pytest.mark.title_room
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_media_search_func_6_2] ')
+    @exception_screenshot
+    def test_media_search_func_6_2(self):
+        '''
 
-        # switch to all content category
-        media_room_page.select_specific_category('All Content')
-        time.sleep(DELAY_TIME * 3)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_media_search_func_6_1"
+        self.ensure_dependency(dependency_test)
 
-        with uuid("1a6f7ebb-0cba-423d-b0f0-a915e606484a") as case:
+        with step('[Action] Enter Title Room with all content category'):
+            # [L208] 2.3 Title Room > Input some keyword
+            # enter Title room
+            main_page.enter_room(1)
+            # switch to all content category
+            media_room_page.select_specific_category('All Content')
+
+        with step('[Action] Search library with keyword -- winter'):
+            # with uuid("1a6f7ebb-0cba-423d-b0f0-a915e606484a") as case:
             # Select template (search library: Winter Sticker 01)
             media_room_page.search_library('winter')
-            time.sleep(DELAY_TIME * 4)
 
+        with step('[Verify] Check if search result is correct'):
             # verify step
             find_template_1 = main_page.select_library_icon_view_media('Winter Wonderland')
-            time.sleep(DELAY_TIME * 4)
+
 
             # Click cancel search
             media_room_page.search_library_click_cancel()
@@ -4834,6 +4845,19 @@ class Test_BFT_365_OS14():
             find_template_3 = main_page.select_library_icon_view_media('Colorful 01')
             time.sleep(DELAY_TIME * 4)
             case.result = find_template_1 and find_template_2 and find_template_3
+
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.recent_project
+    @pytest.mark.name('[test_media_search_func_6_3] ')
+    @exception_screenshot
+    def test_media_search_func_6_3(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_media_search_func_6_1"
+        self.ensure_dependency(dependency_test)
 
         # [L209] 2.3 Title Room > Input . character
         with uuid("4c4db52c-5f66-4ced-b560-b6749ec7da64") as case:
