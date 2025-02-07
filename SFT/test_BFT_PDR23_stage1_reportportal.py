@@ -353,19 +353,16 @@ class Test_BFT_365_OS14():
 
         # Open project
         main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
-        main_page.top_menu_bar_file_open_project(save_changes='no')
         check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
         if not check_open_result:
-            return False
+            assert False, "Dealing with Open project dialog FAIL!"
 
         # Select extract path
         main_page.delete_folder(Test_Material_Folder + save_name)
-        time.sleep(DELAY_TIME * 2)
         main_page.select_file(Test_Material_Folder + save_name)
         main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
         return True
-    
+
     def check_download_body_effect(self, wait_time=900):
         return self.body_effect_download_complete(wait_time)
 
@@ -3061,8 +3058,7 @@ class Test_BFT_365_OS14():
 
             project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
             save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
-            if not self.open_packed_project(project_name, save_name):
-                assert False, "Open saved project failed!"
+            self.open_packed_project(project_name, save_name)
 
         with step('[Action] Enter title room and select saved template'):
             # enter Title Room
@@ -3497,8 +3493,7 @@ class Test_BFT_365_OS14():
 
                 project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
                 save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
-                if not self.open_packed_project(project_name, save_name):
-                    assert False, "Open saved project failed!"
+                self.open_packed_project(project_name, save_name)
                 
             with step('[Action] Open [Default] title designer by searching [Default] in library'):
                 # enter Title room
@@ -4001,8 +3996,7 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             project_name = 'BFT_21_Stage1/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk'
             save_name = 'BFT_21_Stage1/test_title_mgt_func_5_1'
-            if not self.open_packed_project(project_name, save_name):
-                assert False, "Open saved project failed!"
+            self.open_packed_project(project_name, save_name)
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
         # with uuid("f36c7d26-cec9-47aa-a29c-9aff9bb61e6c") as case:
@@ -4782,8 +4776,7 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             project_name = 'BFT_21_Stage1/test_media_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
             save_name = 'BFT_21_Stage1/test_media_search_func_6_1'
-            if not self.open_packed_project(project_name, save_name):
-                assert False, "Open saved project failed!"
+            self.open_packed_project(project_name, save_name)
             main_page.close_app()
 
         with step('[Action] Reopen APP and open project from recent project'):
