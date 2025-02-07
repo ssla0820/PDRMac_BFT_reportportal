@@ -3476,7 +3476,47 @@ class Test_BFT_365_OS14():
         '''
         # Ensure the dependency test is run and passed
         # Start a new section, starts from "test_title_designer_func_4_1"
-        self.test_title_designer_func_4_1()
+        
+        with step('[Initialize] Open project and enter Title room'):
+            with step('[Action] Reopen AP and open saved project'):
+                main_page.close_app()
+                main_page.start_app()
+                time.sleep(DELAY_TIME)
+
+                project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
+
+                if not main_page.exist_file(Test_Material_Folder + project_name):
+                    assert False, f"Project file {project_name} doesn't exist!"
+
+                main_page.top_menu_bar_file_open_project(save_changes='no')
+                check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+                if not check_open_result:
+                    assert False, "Dealing with Open project dialog FAIL!"
+
+                # Select extract path
+                main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
+                main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/test_title_designer_func_4_25')
+                main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+
+            with step('[Action] Open [Default] title designer by searching [Default] in library'):
+                # enter Title room
+                main_page.enter_room(1)
+
+                # Select default title (21.6.5219 : search then select default title)
+                media_room_page.search_library('Default')
+                time.sleep(DELAY_TIME * 2)
+                main_page.select_library_icon_view_media('Default')
+                main_page.double_click()
+
+            with step('[Verify] Check open [Default] title designer'):
+                # Verify Step
+                check_selected_object = title_designer_page.get_title_text_content()
+                if check_selected_object != 'My Title':
+                    assert False, f"Open [Default] title designer failed! Expected: My Title, Actual: {check_selected_object}"
+                check_caption_bar_content = title_designer_page.get_full_title()
+                if check_caption_bar_content != 'Title Designer | Default':
+                    assert False, f"Open [Default] title designer failed! Expected: Title Designer | Default, Actual: {check_caption_bar_content}"
+
 
         # [L150] 3.2 Title Designer > Insert object > Particle
         # with uuid("01518edc-0a14-4a92-95c5-baaed5ae0c51") as case:
