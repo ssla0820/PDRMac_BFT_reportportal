@@ -5155,81 +5155,81 @@ class Test_BFT_365_OS14():
         '''
         '''
 
-            # Click next keyframe
-            pip_designer_page.tap_position_next_keyframe()
-            get_x_value = pip_designer_page.get_x_position_value()
-            logger(get_x_value)
-            if get_x_value == '0.803':
-                set_2nd_x_keyframe = True
-            else:
-                set_2nd_x_keyframe = False
+        # Click next keyframe
+        pip_designer_page.tap_position_next_keyframe()
+        get_x_value = pip_designer_page.get_x_position_value()
+        logger(get_x_value)
+        if get_x_value == '0.803':
+            set_2nd_x_keyframe = True
+        else:
+            set_2nd_x_keyframe = False
 
-            get_y_value = pip_designer_page.get_y_position_value()
-            logger(get_y_value)
-            if get_y_value == '0.680':
-                set_2nd_y_keyframe = True
-            else:
-                set_2nd_y_keyframe = False
+        get_y_value = pip_designer_page.get_y_position_value()
+        logger(get_y_value)
+        if get_y_value == '0.680':
+            set_2nd_y_keyframe = True
+        else:
+            set_2nd_y_keyframe = False
 
-            # -----------
-            # Set Scale : 1st keyframe
-            pip_designer_page.drag_scale_width_slider('1.733')
-            pip_designer_page.add_remove_scale_current_keyframe()
+        # -----------
+        # Set Scale : 1st keyframe
+        pip_designer_page.drag_scale_width_slider('1.733')
+        pip_designer_page.add_remove_scale_current_keyframe()
 
-            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
-            # Set (07:15)
-            pip_designer_page.set_timecode('00_00_07_15')
+        pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
+        # Set (07:15)
+        pip_designer_page.set_timecode('00_00_07_15')
 
-            # Set Scale : 2nd keyframe
-            pip_designer_page.input_scale_height_value('2.857')
+        # Set Scale : 2nd keyframe
+        pip_designer_page.input_scale_height_value('2.857')
 
-            # Set Position : 3rd keyframe
-            pip_designer_page.input_x_position_value('0.350')
-            time.sleep(DELAY_TIME)
-            pip_designer_page.input_y_position_value('0.761')
+        # Set Position : 3rd keyframe
+        pip_designer_page.input_x_position_value('0.350')
+        time.sleep(DELAY_TIME)
+        pip_designer_page.input_y_position_value('0.761')
 
-            # Click previous keyframe
-            pip_designer_page.tap_position_previous_keyframe()
-            time.sleep(DELAY_TIME)
-            # Remove 2nd Position keyframe (only exist 1st, last keyframe)
-            pip_designer_page.add_remove_position_current_keyframe()
+        # Click previous keyframe
+        pip_designer_page.tap_position_previous_keyframe()
+        time.sleep(DELAY_TIME)
+        # Remove 2nd Position keyframe (only exist 1st, last keyframe)
+        pip_designer_page.add_remove_position_current_keyframe()
 
-            # drag scroll bar
-            pip_designer_page.drag_properties_scroll_bar(0.72)
-            # Set Rotation : 1st keyframe on (04:12)  0 degree
-            pip_designer_page.add_remove_rotation_current_keyframe()
+        # drag scroll bar
+        pip_designer_page.drag_properties_scroll_bar(0.72)
+        # Set Rotation : 1st keyframe on (04:12)  0 degree
+        pip_designer_page.add_remove_rotation_current_keyframe()
 
-            # drag simple timeline to larger (Can see Rotation keyframe track)
-            pip_designer_page.drag_simple_timeline_track_to_lager()
+        # drag simple timeline to larger (Can see Rotation keyframe track)
+        pip_designer_page.drag_simple_timeline_track_to_lager()
 
-            # Click max button
-            pip_designer_page.click_maximize_btn()
-            time.sleep(DELAY_TIME)
-            # drag properties scroll bar
-            pip_designer_page.drag_properties_scroll_bar(0)
+        # Click max button
+        pip_designer_page.click_maximize_btn()
+        time.sleep(DELAY_TIME)
+        # drag properties scroll bar
+        pip_designer_page.drag_properties_scroll_bar(0)
 
-            # Verify step:
-            # Check position on timecode 04:12
-            current_x_value = pip_designer_page.get_x_position_value()
-            logger(current_x_value)
-            if current_x_value == '0.412':
-                check_pos_x = True
-            else:
-                check_pos_x = False
+        # Verify step:
+        # Check position on timecode 04:12
+        current_x_value = pip_designer_page.get_x_position_value()
+        logger(current_x_value)
+        if current_x_value == '0.412':
+            check_pos_x = True
+        else:
+            check_pos_x = False
 
-            current_y_value = pip_designer_page.get_y_position_value()
-            logger(current_y_value)
-            if current_y_value == '0.653':
-                check_pos_y = True
-            else:
-                check_pos_y = False
+        current_y_value = pip_designer_page.get_y_position_value()
+        logger(current_y_value)
+        if current_y_value == '0.653':
+            check_pos_y = True
+        else:
+            check_pos_y = False
 
-            case.result = set_1st_keyframe and set_2nd_x_keyframe and set_2nd_y_keyframe and check_pos_x and check_pos_y
-            logger(set_1st_keyframe)
-            logger(set_2nd_x_keyframe)
-            logger(set_2nd_y_keyframe)
-            logger(check_pos_x)
-            logger(check_pos_y)
+        case.result = set_1st_keyframe and set_2nd_x_keyframe and set_2nd_y_keyframe and check_pos_x and check_pos_y
+        logger(set_1st_keyframe)
+        logger(set_2nd_x_keyframe)
+        logger(set_2nd_y_keyframe)
+        logger(check_pos_x)
+        logger(check_pos_y)
 
         # [L385] 3.3 Pip Designer > Adjust keyframe > Add
         with uuid("9e576f88-8a62-47ff-bc6a-58f75116b112") as case:
