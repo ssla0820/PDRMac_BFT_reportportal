@@ -4222,8 +4222,8 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check if preview changed correctly after apply graphics color -- A81B22'):
             applied_color_1 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(before_preview, applied_color_1, similarity=0.98):
-                assert False, "Color 1 is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(before_preview, applied_color_1, similarity=0.995):
+                assert False, "Color 1 is not applied correctly on preview window! Similarity should < 0.995"
 
         with step('[Action] Apply Graphics Color -- C8D996'):
             # Change color 2
@@ -4231,8 +4231,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply graphics color -- C8D996'):
             applied_color_2 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_color_1, applied_color_2, similarity=0.98):
-                assert False, "Color 2 is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(applied_color_1, applied_color_2, similarity=0.995):
+                assert False, "Color 2 is not applied correctly on preview window! Similarity should < 0.995"
 
         with step('[Action] Apply Graphics Color -- 18FA4F'):
             # Change color 3
@@ -4240,8 +4240,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply graphics color -- 18FA4F'): 
             applied_color_3 = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_color_2, applied_color_3, similarity=0.98):
-                assert False, "Color 3 is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(applied_color_2, applied_color_3, similarity=0.995):
+                assert False, "Color 3 is not applied correctly on preview window! Similarity should < 0.995"
 
         with step('[Verfiy] Check if preview changed correctly as GT'):
             time.sleep(DELAY_TIME*1.5)
@@ -4631,8 +4631,8 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check back to 00:00 after stop video'):
             current_timecode = title_designer_page.get_timecode()
-            if current_timecode != '00_00_00_00':
-                assert False, f"Current timecode is not correct after stop video! Expected: 00_00_00_00, Actual: {current_timecode}"
+            if current_timecode != '00:00:00:00':
+                assert False, f"Current timecode is not correct after stop video! Expected: 00:00:00:00, Actual: {current_timecode}"
         assert True
 
     @pytest.mark.title_mgt_func
@@ -4765,17 +4765,17 @@ class Test_BFT_365_OS14():
     @pytest.mark.launch
     @pytest.mark.open_project
     @pytest.mark.recent_project
-    @pytest.mark.name('[test_media_search_func_6_1] Open Recent Project')
+    @pytest.mark.name('[test_title_search_func_6_1] Open Recent Project')
     @exception_screenshot
-    def test_media_search_func_6_1(self):
+    def test_title_search_func_6_1(self):
         '''
         1. Open project and close AP (Show in recent project)
         2. Reopen APP and open project from recent project
         '''
         with step('[Action] Open project and close AP (Show in recent project)'):
             main_page.start_app()
-            project_name = 'BFT_21_Stage1/test_media_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
-            save_name = 'BFT_21_Stage1/test_media_search_func_6_1'
+            project_name = 'BFT_21_Stage1/test_title_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
+            save_name = 'BFT_21_Stage1/test_title_search_func_6_1'
             self.open_packed_project(project_name, save_name)
             main_page.close_app()
 
@@ -4791,14 +4791,15 @@ class Test_BFT_365_OS14():
                 # Verify Step:
                 if not main_page.exist(L.base.main_caption):
                     assert False, 'Cannot find locator main_caption / Not find project name locator'
-                elif main_page.exist(L.base.main_caption).AXValue == 'test_media_search_func_6_1_from_test_title_mgt_func_5_21':
+                elif main_page.exist(L.base.main_caption).AXValue == 'test_title_search_func_6_1_from_test_title_mgt_func_5_21':
                     assert True
 
     @pytest.mark.title_room
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_media_search_func_6_2] Search library with keyword in title room')
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_title_search_func_6_2] Search library with keyword in title room')
     @exception_screenshot
-    def test_media_search_func_6_2(self):
+    def test_title_search_func_6_2(self):
         '''
         1. Enter Title Room with all content category
         2. Search library with keyword [winter] and check if [winter wonderland] is found
@@ -4807,7 +4808,7 @@ class Test_BFT_365_OS14():
 
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_media_search_func_6_1"
+        dependency_test = "test_title_search_func_6_1"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Enter Title Room with all content category'):
@@ -4851,14 +4852,16 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_room
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_media_search_func_6_3] ')
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_title_search_func_6_3] Search library with should not found anything keyword in title room')
     @exception_screenshot
-    def test_media_search_func_6_3(self):
+    def test_title_search_func_6_3(self):
         '''
+        1. Click cancel search and search again with keyword [.] and check if nothing found
 
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_media_search_func_6_2"
+        dependency_test = "test_title_search_func_6_2"
         self.ensure_dependency(dependency_test)
 
         # [L209] 2.3 Title Room > Input . character
@@ -4875,27 +4878,21 @@ class Test_BFT_365_OS14():
             assert main_page.is_exist(L.media_room.txt_no_results_for_dot), "Found some result with keyword [.]! Should not find any result!"
 
     @pytest.mark.title_room
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_media_search_func_6_4] ')
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_title_search_func_6_4] ')
     @exception_screenshot
-    def test_media_search_func_6_4(self):
+    def test_title_search_func_6_4(self):
         '''
-
+        1. Enter [Search the library] textbox and show history
+        2. Check show correct search history
         '''
 
         # [L211] 2.3 Title Room > check all search keyword
-        with uuid("de131070-6075-4176-84d2-0f4c0c641f6a") as case:
-            # enter Media room
-            main_page.enter_room(0)
-            time.sleep(DELAY_TIME * 3)
+        # with uuid("de131070-6075-4176-84d2-0f4c0c641f6a") as case:
 
-            # enter Title room
-            main_page.enter_room(1)
-            time.sleep(DELAY_TIME * 3)
-
+        with step('[Action] Enter [Search the library] textbox and show history'):
             # Enter Plain Text category
             media_room_page.select_LibraryRoom_category('Plain Text')
-            time.sleep(DELAY_TIME * 3)
 
             # get search filed size / position
             search_object = main_page.exist(L.media_room.input_search)
@@ -4903,26 +4900,40 @@ class Test_BFT_365_OS14():
             # click search filed
             main_page.click(L.media_room.input_search)
             time.sleep(DELAY_TIME * 1.5)
+        
+        with step('[Verify] Check show correct search history'):
+            with step('[Action] Check snapshot region (Region: From import button to My Favorites)'):
+                w, h = search_object.AXSize
+                x, y = search_object.AXPosition
 
-            w, h = search_object.AXSize
-            x, y = search_object.AXPosition
-
-            # snapshot region (Region: From import button to My Favorites)
-            new_x = x
-            new_y = y
-            new_w = w + 5
-            new_h = h * 12
+                # snapshot region (Region: From import button to My Favorites)
+                new_x = x
+                new_y = y
+                new_w = w + 5
+                new_h = h * 12
             all_search_result = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L211_all_search.png', w=new_w, x=new_x, y=new_y, h=new_h)
-            case.result = main_page.compare(Ground_Truth_Folder + 'L211_all_search.png', all_search_result)
+            assert main_page.compare(Ground_Truth_Folder + 'L211_all_search.png', all_search_result), "Search history is not correct as GT (L211_all_search.png)!"
+
+    @pytest.mark.title_room
+    @pytest.mark.open_project
+    @pytest.mark.name('[test_title_search_func_6_5] Check hint not show in Media room due to import project content in Library')
+    @exception_screenshot
+    def test_title_search_func_6_5(self):
+        '''
+        1. Enter Media room
+        2. Check should NOT show any hint due to import project content in Library
+
+        '''
 
         # [L100] 2.1 Media Room > New One Boarding > On Boarding 1 > [Case 2] open one project
-        with uuid("fd97c083-8de8-4d12-b7a9-2ddf7caf9e0d") as case:
+        # with uuid("fd97c083-8de8-4d12-b7a9-2ddf7caf9e0d") as case:
             # Verify step: should NOT show any hint due to import project's content in Library
+        with step('[Action] Enter Media room'):
             # enter Media room
             main_page.enter_room(0)
-            time.sleep(DELAY_TIME * 3)
 
-            case.result = main_page.is_not_exist(L.media_room.string_use_sample_media)
+        with step('[Verify] Should NOT show any hint due to import project content in library'):
+            assert main_page.is_not_exist(L.media_room.string_use_sample_media), "Show hints in Media room! Should NOT show any hint due to import project content in Library"
 
 
     # 22 uuid
