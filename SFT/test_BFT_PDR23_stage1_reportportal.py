@@ -362,6 +362,7 @@ class Test_BFT_365_OS14():
         # Select extract path
         main_page.delete_folder(Test_Material_Folder + save_name)
         main_page.select_file(Test_Material_Folder + save_name)
+        time.sleep(DELAY_TIME * 2)
         main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
         return True
     
@@ -3035,6 +3036,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
+    @pytest.mark.open_project
     @pytest.mark.save_template
     @pytest.mark.timeline
     @pytest.mark.in_out_animation
@@ -3059,7 +3061,8 @@ class Test_BFT_365_OS14():
 
             project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
             save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
-            self.open_packed_project(project_name, save_name)
+            if not self.open_packed_project(project_name, save_name):
+                assert False, "Open saved project failed!"
 
         with step('[Action] Enter title room and select saved template'):
             # enter Title Room
@@ -3471,6 +3474,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
+    @pytest.mark.open_project
     @pytest.mark.particle
     @pytest.mark.name('[test_title_designer_func_4_35] Insert a particle twice and check preview/ particle title')
     @exception_screenshot
@@ -3493,7 +3497,8 @@ class Test_BFT_365_OS14():
 
                 project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
                 save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
-                self.open_packed_project(project_name, save_name)
+                if not self.open_packed_project(project_name, save_name):
+                    assert False, "Open saved project failed!"
                 
             with step('[Action] Open [Default] title designer by searching [Default] in library'):
                 # enter Title room
@@ -3980,6 +3985,7 @@ class Test_BFT_365_OS14():
     # 13 uuid
     @pytest.mark.title_mgt_func
     @pytest.mark.title_designer
+    @pytest.mark.open_project
     @pytest.mark.mgt
     @pytest.mark.content_pack
     @pytest.mark.name('[test_title_mgt_func_5_1] Open Project > Motion Graphics title')
@@ -3993,10 +3999,10 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Open AP and open saved project'):
             main_page.start_app()
-
             project_name = 'BFT_21_Stage1/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk'
             save_name = 'BFT_21_Stage1/test_title_mgt_func_5_1'
-            self.open_packed_project(project_name, save_name)
+            if not self.open_packed_project(project_name, save_name):
+                assert False, "Open saved project failed!"
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
         # with uuid("f36c7d26-cec9-47aa-a29c-9aff9bb61e6c") as case:
@@ -4762,41 +4768,38 @@ class Test_BFT_365_OS14():
 
 
     # 5 uuid
-    @pytest.mark.title_mgt_func
-    @pytest.mark.title_designer
-    @pytest.mark.mgt
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_media_search_func_6_1] Open Project > Motion Graphics title')
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.recent_project
+    @pytest.mark.name('[test_media_search_func_6_1] Open Recent Project')
     @exception_screenshot
     def test_media_search_func_6_1(self):
         '''
-
+        1. Open project and close AP (Show in recent project)
+        2. Reopen APP and open project from recent project
         '''
-
         with step('[Action] Open project and close AP (Show in recent project)'):
-            test_title_mgt_func_5_21
-
-
-
-        with step('[Action] Open AP and open saved project'):
             main_page.start_app()
+            project_name = 'BFT_21_Stage1/test_media_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
+            save_name = 'BFT_21_Stage1/test_media_search_func_6_1'
+            if not self.open_packed_project(project_name, save_name):
+                assert False, "Open saved project failed!"
+            main_page.close_app()
 
-        # launch APP
-        main_page.launch_app()
-        time.sleep(DELAY_TIME*3)
-
-        # [L39] 1.3 New Launcher > Project area > Recent Project > Single Click
-        with uuid("18c53c7b-5889-45ea-bac4-c84392ec1ea1") as case:
+        with step('[Action] Reopen APP and open project from recent project'):
+            # launch APP
+            main_page.launch_app()
+            # [L39] 1.3 New Launcher > Project area > Recent Project > Single Click
+            # with uuid("18c53c7b-5889-45ea-bac4-c84392ec1ea1") as case:
             # Select 1st recently
             main_page.click(L.base.launcher_window.img_recently_icon)
-            time.sleep(DELAY_TIME * 3)
 
-            # Verify Step:
-            if not main_page.exist(L.base.main_caption):
-                logger('Cannot find locator main_caption / Not find project name locator')
-                case.result = False
-            elif main_page.exist(L.base.main_caption).AXValue == 'test_case_1_1_4':
-                case.result = True
+        with step('[Verify] Check if project is opened correctly'):
+                # Verify Step:
+                if not main_page.exist(L.base.main_caption):
+                    assert False, 'Cannot find locator main_caption / Not find project name locator'
+                elif main_page.exist(L.base.main_caption).AXValue == 'test_media_search_func_6_1_from_test_title_mgt_func_5_21':
+                    assert True
 
         # [L208] 2.3 Title Room > Input some keyword
         # enter Title room
