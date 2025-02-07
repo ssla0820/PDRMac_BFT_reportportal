@@ -5114,7 +5114,7 @@ class Test_BFT_365_OS14():
             # Add position keyframe: 0s Position: (0.5, 0.5)
             pip_designer_page.add_remove_position_current_keyframe()
 
-        with step('[Action] Add Scale (0.803, 0.68) keyframe at (04:12)'):
+        with step('[Action] Add Position (0.803, 0.68) keyframe at (04:12)'):
             # Set (04:12), Position: (0.803, 0.68)
             pip_designer_page.set_timecode('00_00_04_12')
             pip_designer_page.input_x_position_value('0.803')
@@ -5167,39 +5167,80 @@ class Test_BFT_365_OS14():
 
         assert True
 
+
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
-    @pytest.mark.name('[test_pip_designer_func_7_6] ')
+    @pytest.mark.name('[test_pip_designer_func_7_7] Delete 2nd Position Keyframe > Switch to previous keyframe')
     @exception_screenshot
-    def test_pip_designer_func_7_6(self):
+    def test_pip_designer_func_7_7(self):
+        '''
+        1. Set Position (0.350, 0.761) keyframe at (07:15)
+        2. Click previous keyframe and check if switch to (04:12) keyframe correctly
+        3. Remove 2nd Position keyframe (only exist 1st, last keyframe)
+        4. Click next keyframe > previous keyframe and check if switch to (00:00) keyframe correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_6"
+        self.ensure_dependency(dependency_test)
+
+
+        with step('[Action] Set Position (0.350, 0.761) keyframe at (07:15)'):
+            pip_designer_page.set_timecode('00_00_07_15')
+            pip_designer_page.input_x_position_value('0.350')
+            pip_designer_page.input_y_position_value('0.761')
+
+        with step('[Action] Click previous keyframe'):
+            # Click previous keyframe
+            pip_designer_page.tap_position_previous_keyframe()
+
+        with step('[Verify] Check if switch to (04:12) keyframe correctly'):
+            get_timecode = pip_designer_page.get_timecode()
+            if get_timecode != '00:00:04:12':
+                assert False, f"Cannot switch to (04:12) keyframe correctly! Expected: 04:12, Actual: {get_timecode}"
+
+        with step('[Action] Delect position keyframe at (04:12)'):
+            # Remove 2nd Position keyframe (only exist 1st, last keyframe)
+            pip_designer_page.add_remove_position_current_keyframe()
+
+        with step('[Action] Click next keyframe > previous keyframe'):
+            # Click next keyframe
+            pip_designer_page.tap_position_next_keyframe()
+            # Click previous keyframe
+            pip_designer_page.tap_position_previous_keyframe()
+
+        with step('[Verify] Check if switch to (00:00) keyframe correctly'):
+            get_timecode = pip_designer_page.get_timecode()
+            if get_timecode != '00:00:00:00':
+                assert False, f"Cannot switch to (00:00) keyframe correctly! Expected: 00:00:00:00, Actual: {get_timecode}"
+
+        assert True
+
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.name('[test_pip_designer_func_7_8] ')
+    @exception_screenshot
+    def test_pip_designer_func_7_8(self):
         '''
         '''
 
         # -----------
-        # Set Scale : 1st keyframe
-        pip_designer_page.drag_scale_width_slider('1.733')
-        pip_designer_page.add_remove_scale_current_keyframe()
+        with step('[Action] Set Scale (1.733) keyframe at (04:12) w/o Maintain Aspect Ratio'):
+            # Set Scale : 1st keyframe
+            pip_designer_page.drag_scale_width_slider('1.733')
+            pip_designer_page.add_remove_scale_current_keyframe()
+            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
 
-        pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
-        # Set (07:15)
-        pip_designer_page.set_timecode('00_00_07_15')
+        with step('[Action] Set Scale (2.857) keyframe at (07:15)'):
+            # Set (07:15)
+            pip_designer_page.set_timecode('00_00_07_15')
 
-        # Set Scale : 2nd keyframe
-        pip_designer_page.input_scale_height_value('2.857')
-
-        # Set Position : 3rd keyframe
-        pip_designer_page.input_x_position_value('0.350')
-        time.sleep(DELAY_TIME)
-        pip_designer_page.input_y_position_value('0.761')
-
-        # Click previous keyframe
-        pip_designer_page.tap_position_previous_keyframe()
-        time.sleep(DELAY_TIME)
-        # Remove 2nd Position keyframe (only exist 1st, last keyframe)
-        pip_designer_page.add_remove_position_current_keyframe()
-
+            # Set Scale : 2nd keyframe
+            pip_designer_page.input_scale_height_value('2.857')
         # drag scroll bar
         pip_designer_page.drag_properties_scroll_bar(0.72)
         # Set Rotation : 1st keyframe on (04:12)  0 degree
