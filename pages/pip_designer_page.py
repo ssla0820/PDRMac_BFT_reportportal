@@ -194,31 +194,34 @@ class Pip_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             return False
         return True
-
+    
+    @step('[Action][Pip Designer] Add/ Remove Position Keyframe')
     def add_remove_position_current_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.position_add_remove_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Reset Position Keyframe')
     def reset_position_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.position_reset_keyframe)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_yes_on_reset_all_keyframe_dialog(self):
@@ -231,47 +234,53 @@ class Pip_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    @step('[Action][Pip Designer] Switch to Previous Keyframe')
     def tap_position_previous_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.position_previous_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Switch to Next Keyframe')
     def tap_position_next_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.position_next_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Get X Position Value')
     def get_x_position_value(self):
         try:
+            if not self.exist(L.pip_designer.designer_window):
+                logger("No pip designer window show up")
+                raise Exception("No pip designer window show up")
             if not self.exist(L.pip_designer.object_setting.x_position_value):
-                raise Exception
+                raise Exception("No x position value")
             return self.exist(L.pip_designer.object_setting.x_position_value).AXValue
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
 
+    @step('[Action][Pip Designer] Input X Position Value')
     def input_x_position_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.click(L.pip_designer.object_setting.x_position_value)
@@ -280,7 +289,7 @@ class Pip_Designer(Main_Page, BasePage):
             self.keyboard.enter()
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
         ''' 
         try:
@@ -329,20 +338,25 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Get Y Position Value')
     def get_y_position_value(self):
         try:
+            if not self.exist(L.pip_designer.designer_window):
+                logger("No pip designer window show up")
+                raise Exception("No pip designer window show up")
             if not self.exist(L.pip_designer.object_setting.y_position_value):
-                raise Exception
+                raise Exception("No y position value")
             return self.exist(L.pip_designer.object_setting.y_position_value).AXValue
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-
+            raise Exception(f'Exception occurs. log={e}')
+        
+    @step('[Action][Pip Designer] Input Y Position Value')
     def input_y_position_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.click(L.pip_designer.object_setting.y_position_value)
@@ -351,7 +365,7 @@ class Pip_Designer(Main_Page, BasePage):
             self.keyboard.enter()
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
         '''
         try:
@@ -401,11 +415,12 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Enable/ Disable Ease In Checkbox')
     def click_position_ease_in_checkbox(self, bCheck=1):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             value = self.exist(L.pip_designer.object_setting.ease_in_checkbox).AXValue
@@ -417,36 +432,38 @@ class Pip_Designer(Main_Page, BasePage):
                 self.exist_click(L.pip_designer.object_setting.ease_in_checkbox)
             elif value == 0 and bCheck == 0:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Input Ease In Value')
     def input_position_ease_in_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             status = self.exist(L.pip_designer.object_setting.ease_in_checkbox).AXValue
             if status == 0:
                 logger("Ease in box is unchecked")
-                raise Exception
+                raise Exception("Ease in box is unchecked")
             else:
                 if float(value) < 0.01:
                     logger("value can't less than 0.01")
-                    raise Exception
+                    raise Exception("value can't less than 0.01")
                 elif float(value) > 1.00:
                     logger("value can't greater than 1")
-                    raise Exception
+                    raise Exception("value can't greater than 1")
                 self.exist_click(L.pip_designer.object_setting.ease_in_value)
                 self.mouse.click(times=2)
                 self.keyboard.send(value)
                 self.exist_click(L.pip_designer.object_setting.position)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_position_ease_in_arrow_btn(self, mode):
@@ -489,11 +506,12 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Enable/ Disable Ease Out Checkbox')
     def click_position_ease_out_checkbox(self, bCheck=1):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             value = self.exist(L.pip_designer.object_setting.ease_out_checkbox).AXValue
@@ -505,36 +523,39 @@ class Pip_Designer(Main_Page, BasePage):
                 self.exist_click(L.pip_designer.object_setting.ease_out_checkbox)
             elif value == 0 and bCheck == 0:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Input Ease Out Value')
     def input_position_ease_out_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             status = self.exist(L.pip_designer.object_setting.ease_out_checkbox).AXValue
             if status == 0:
                 logger("Ease out box is unchecked")
-                raise Exception
+                raise Exception("Ease out box is unchecked")
             else:
                 if float(value) < 0.01:
                     logger("value can't less than 0.01")
-                    raise Exception
+                    raise Exception("value can't less than 0.01")
                 elif float(value) > 1.00:
                     logger("value can't greater than 1")
-                    raise Exception
+                    raise Exception("value can't greater than 1")
                 self.exist_click(L.pip_designer.object_setting.ease_out_value)
                 self.mouse.click(times=2)
                 self.keyboard.send(value)
                 self.exist_click(L.pip_designer.object_setting.position)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_position_ease_out_arrow_btn(self, mode):
@@ -578,17 +599,18 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Add/ Remove Scale Keyframe')
     def add_remove_scale_current_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.scale.add_remove_current_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def reset_scale_keyframe(self):
@@ -604,32 +626,46 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Switch to Scale Previous Keyframe')
     def tap_scale_previous_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.scale.previous_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Switch to Scale Next Keyframe')
     def tap_scale_next_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.scale.next_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Get Scale Width Value')
+    def get_scale_width_value(self):
+        try:
+            if not self.exist(L.pip_designer.designer_window):
+                logger("No title designer window show up")
+                raise Exception("No title designer window show up")
+            value = self.exist(L.pip_designer.object_setting.scale.width_value).AXValue
+            return value
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+        
     def input_scale_width_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
@@ -679,6 +715,19 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Get Scale Height Value')
+    def get_scale_height_value(self):
+        try:
+            if not self.exist(L.pip_designer.designer_window):
+                logger("No title designer window show up")
+                raise Exception("No title designer window show up")
+            value = self.exist(L.pip_designer.object_setting.scale.height_value).AXValue
+            return value
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+    
+    @step('[Action][Pip Designer] Input Scale Height Value')
     def input_scale_height_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
@@ -1181,19 +1230,20 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Input Rotation Degree Value')
     def input_rotation_degree_value(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             if float(value) < -9999.000:
                 logger("value can't less than -9999")
-                raise Exception
+                raise Exception("value can't less than -9999")
             elif float(value) > 9999.000:
                 logger("Value can't greater than 9999")
-                raise Exception
+                raise Exception("Value can't greater than 9999")
 
             self.exist_click(L.pip_designer.object_setting.rotation.degree_value)
             self.exist(L.pip_designer.object_setting.rotation.degree_value).AXValue = str(value)
@@ -1213,20 +1263,21 @@ class Pip_Designer(Main_Page, BasePage):
             '''
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Switch to Rotation Next Keyframe')
     def tap_rotation_next_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.object_setting.object_setting).AXValue == 0:
                 self.exist_click(L.pip_designer.object_setting.object_setting)
             self.exist_click(L.pip_designer.object_setting.rotation.next_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_rotation_degree_arrow_btn(self, mode):
@@ -2543,70 +2594,76 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Tap Scale Track Previous Keyframe')
     def tap_scale_track_previous_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.simple_scale_track.previous_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Tap Scale Track Next Keyframe')
     def tap_scale_track_next_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.simple_scale_track.next_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action] Add/Remove Opacity Track Current Keyframe')
     def add_remove_opacity_track_current_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.simple_opacity_track.add_remove_current_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action] Tap Opacity Track Previous Keyframe')
     def tap_opacity_track_previous_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.simple_opacity_track.previous_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
+    @step('[Action] Tap Opacity Track Next Keyframe')
     def tap_opacity_track_next_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.simple_opacity_track.next_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action] Add/Remove Rotation Track Current Keyframe')
     def add_remove_rotation_track_current_keyframe(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.simple_rotation_track.add_remove_current_keyframe)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def tap_rotation_track_previous_keyframe(self):
@@ -2793,18 +2850,20 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Switch mode')
     def switch_mode(self, mode):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             if mode == 'Express':
                 self.exist_click(L.pip_designer.express)
             elif mode == 'Advanced':
                 self.exist_click(L.pip_designer.advanced)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_share(self):
@@ -2818,15 +2877,17 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Click [Maximize] button')
     def click_maximize_btn(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click(L.pip_designer.maximize_btn)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_restore_btn(self):
@@ -2851,17 +2912,20 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Click specific keyframe')
     def click_specific_keyframe(self, index):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             self.exist_click([{'AXIdentifier': 'IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW', 'AXRoleDescription': 'outline'}, {'AXIdentifier': 'SimpleTimelineKeyframeCollectionViewItem', 'index': index}]) # hardcode_20v3303: _NS:255 > IDC_SIMPLE_TIMELINE_TRACK_OUTLINEVIEW
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Drag properties scroll bar')
     def drag_properties_scroll_bar(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
@@ -2884,6 +2948,7 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Drag timeline scroll bar to larger')
     def drag_simple_timeline_track_to_lager(self):
         try:
             x, y = self.exist(L.pip_designer.scroller_removed_scroll_view).AXPosition
@@ -2997,12 +3062,13 @@ class Pip_Designer(Main_Page, BasePage):
     class Express_Mode(Main_Page, BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-
+        
+        @step('[Action][Pip Designer][Express Mode] Get current mode')
         def get_current_mode(self):
             try:
                 if not self.exist(L.pip_designer.designer_window):
                     logger("No designer window show up")
-                    raise Exception
+                    raise Exception("No designer window show up")
                 a = 'Advanced Mode'
                 b = 'Express Mode'
                 if self.exist(L.pip_designer.display_timeline_mode):
@@ -3013,13 +3079,14 @@ class Pip_Designer(Main_Page, BasePage):
                     return b
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
-
+                raise Exception(f'Exception occurs. log={e}')
+        
+        @step('[Action][Pip Designer][Express Mode] Fold/ Unfold Object Setting tab')
         def unfold_properties_object_setting_tab(self, unfold=1):
             try:
                 if not self.exist(L.pip_designer.designer_window):
                     logger("No designer window show up")
-                    raise Exception
+                    raise Exception("No designer window show up")
                 value = self.exist(L.pip_designer.express_mode.btn_object_setting).AXValue
                 if value == 0 and unfold == 0:
                     return True
@@ -3029,9 +3096,10 @@ class Pip_Designer(Main_Page, BasePage):
                     self.exist_click(L.pip_designer.express_mode.btn_object_setting)
                 elif value == 1 and unfold == 1:
                     return True
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             
         @step('[Action][Pip Designer] Unfold Properties Chroma Key tab')
         def unfold_properties_chroma_key_tab(self, unfold=1):
@@ -3139,17 +3207,19 @@ class Pip_Designer(Main_Page, BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception
 
+        @step('[Action][Pip Designer][Express Mode] Get Object Setting -- Opacity value')
         def get_object_setting_opacity_value(self):
             try:
                 if not self.exist(L.pip_designer.designer_window):
                     logger("No designer window show up")
-                    raise Exception
+                    raise Exception("No designer window show up")
                 value = self.exist(L.pip_designer.object_setting.opacity.opacity_value).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Pip Designer][Express Mode] Adjust Object Setting -- Opacity by slider')
         def drag_object_setting_opacity_slider(self, value):
             try:
                 if not self.exist(L.pip_designer.designer_window):
@@ -3161,11 +3231,12 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Pip Designer][Express Mode] Adjust Object Setting -- Opacity by arrow')
         def click_object_setting_opacity_arrow_btn(self, mode, times=1):
             try:
                 if not self.exist(L.pip_designer.designer_window):
                     logger("No pip designer window show up")
-                    raise Exception
+                    raise Exception("No pip designer window show up")
                 if mode == 0:
                     x, y = self.exist(L.pip_designer.object_setting.opacity.opacity_value_up).AXPosition
                     self.mouse.move(x,y)
@@ -3176,10 +3247,11 @@ class Pip_Designer(Main_Page, BasePage):
                     self.mouse.click(times=times)
                 else:
                     logger("Input the wrong augment, only support (0/1), 0= Up/1= Down")
-                    raise Exception
+                    raise Exception("Input the wrong augment, only support (0/1), 0= Up/1= Down")
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_check_chromakey(self, bCheck=1):
@@ -3884,21 +3956,20 @@ class Pip_Designer(Main_Page, BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Pip Designer][Advanced Mode] Switch to Motion tab')
         def switch_to_motion(self):
             try:
                 if not self.exist(L.pip_designer.tab_motion):
-                    raise Exception
+                    raise Exception("No motion tab show up")
                 self.click(L.pip_designer.tab_motion)
-
                 time.sleep(DELAY_TIME)
-
                 # Verify step
                 if self.is_not_exist(L.pip_designer.path.path_title):
                     logger('Verify fail - cannot enter motion tab')
-                    return False
+                    raise Exception('Verify fail - cannot enter motion tab')
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def switch_to_properties(self):
@@ -3965,6 +4036,7 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Pip Designer][Advanced Mode] Fold/ Unfold path menu')
         def unfold_path_menu(self, set_unfold=1):
             try:
                 current_value = self.exist(L.pip_designer.path.btn_path).AXValue
@@ -3972,7 +4044,7 @@ class Pip_Designer(Main_Page, BasePage):
                     self.exist_click(L.pip_designer.path.btn_path)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def get_path_unfold_status(self):
@@ -4091,23 +4163,24 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Pip Designer][Path] Select certain template')
         def select_template(self, index=1):
             try:
                 if index < 1:
                     logger('Invalid parameter')
-                    return False
+                    raise Exception('Invalid parameter')
 
                 # select template with index
                 elem_item = self.exist(L.pip_designer.path.path_template)
                 current_index = index - 1
                 if not self.exist(elem_item[current_index]):
-                    raise Exception
+                    raise Exception(f'Cannot find the template with {index}')
                 self.el_click(elem_item[current_index])
                 #logger(elem_item)
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def click_save_custom_btn(self):
