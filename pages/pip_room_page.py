@@ -6,6 +6,7 @@ from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -328,10 +329,11 @@ class Pip_room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Room] Click "Download Content from DirectorZone/ Cloud"')
     def click_DownloadContent_from_DZCL(self):
         try:
             if not self.exist_click(L.pip_room.btn_import_media):
-                raise Exception
+                raise Exception('Cannot find btn_import_media, not entered pip room')
             time.sleep(DELAY_TIME)
 
             if not self.exist(L.pip_room.btn_import_PiP_object):
