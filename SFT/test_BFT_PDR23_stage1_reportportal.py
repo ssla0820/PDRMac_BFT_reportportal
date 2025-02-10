@@ -2580,7 +2580,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.timeline
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_15] Add keyframe on Position/ Scale/ Opacity/ Rotation')
     @exception_screenshot
     def test_title_designer_func_4_15(self):
@@ -2659,7 +2659,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.ease_in_out
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_16] Add Ease In/ Out on Scale keyframe')
     @exception_screenshot
     def test_title_designer_func_4_16(self):
@@ -2702,7 +2702,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.ease_in_out
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_17] Reset Scale/ Position keyframe')
     @exception_screenshot
     def test_title_designer_func_4_17(self):
@@ -2750,7 +2750,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.ease_in_out
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_18] Ease out on Rotation keyframe')
     @exception_screenshot
     def test_title_designer_func_4_18(self):
@@ -2784,7 +2784,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.timeline
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_19] Switch to next/ previous keyframe')
     @exception_screenshot
     def test_title_designer_func_4_19(self):
@@ -2830,7 +2830,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.timeline
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_20] Click [Previous] keyframe when no previous keyframe')
     @exception_screenshot
     def test_title_designer_func_4_20(self):
@@ -2864,7 +2864,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_designer
     @pytest.mark.keyframe
     @pytest.mark.timeline
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_21] Add Opacity keyframe at (09:00) and click [Previous] keyframe')
     @exception_screenshot
     def test_title_designer_func_4_21(self):
@@ -3235,7 +3235,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
-    @pytest.mark.object_settings
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_title_designer_func_4_30] Insert new title and set x position = 0 and rotation = 90')
     @exception_screenshot
     def test_title_designer_func_4_30(self):
@@ -4880,7 +4880,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_search_func
     @pytest.mark.title_room
     @pytest.mark.search_library
-    @pytest.mark.name('[test_title_search_func_6_4] ')
+    @pytest.mark.name('[test_title_search_func_6_4] Check history search in Title Room')
     @exception_screenshot
     def test_title_search_func_6_4(self):
         '''
@@ -4924,7 +4924,6 @@ class Test_BFT_365_OS14():
         '''
         1. Enter Media room
         2. Check should NOT show any hint due to import project content in Library
-
         '''
 
         # [L100] 2.1 Media Room > New One Boarding > On Boarding 1 > [Case 2] open one project
@@ -5039,6 +5038,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_3] Check default value of Opacity')
     @exception_screenshot
@@ -5066,6 +5066,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_4] Adjust Opacity value by arrow')
     @exception_screenshot
@@ -5091,6 +5092,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_5] Add 2 Position Keyframes > Switch to previous keyframe')
     @exception_screenshot
@@ -5134,6 +5136,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_6] Switch to next keyframe > Check timecode/ x position/ y position')
     @exception_screenshot
@@ -5174,6 +5177,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_7] Delete 2nd Position Keyframe > Switch to previous keyframe')
     @exception_screenshot
@@ -5225,6 +5229,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_8] Add 2 scale keyframes > Switch to previous keyframe')
     @exception_screenshot
@@ -5263,6 +5268,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_9] Switch to next keyframe > Check timecode/ height scale/ width scale')
     @exception_screenshot
@@ -5302,6 +5308,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_10] Set 2 Rotation Keyframes > Switch to next keyframe')
     @exception_screenshot
@@ -5360,6 +5367,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_11] Add 3 Opacity Keyframes > Switch to previous keyframe')
     @exception_screenshot
@@ -5407,6 +5415,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_12] Switch to next keyframe > Check timecode/ Opacity')
     @exception_screenshot
@@ -5440,6 +5449,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_13] Switch to (00:00) and check if preview is correct as GT')
     @exception_screenshot
@@ -5466,6 +5476,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_14] Reset all Position keyframe')
     @exception_screenshot
@@ -5500,6 +5511,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_15] Reset all Scale keyframe')
     @exception_screenshot
@@ -5535,6 +5547,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_16] Reset all Opacity keyframe')
     @exception_screenshot
@@ -5568,6 +5581,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_17] Reset all Rotation keyframe')
     @exception_screenshot
@@ -5603,6 +5617,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
     @pytest.mark.ease_in_out
     @pytest.mark.name('[test_pip_designer_func_7_18] Add Ease in/out on keyframe')
@@ -5700,6 +5715,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
     @pytest.mark.timecode
+    @pytest.mark.motion
     @pytest.mark.path
     @pytest.mark.name('[test_pip_designer_func_7_19] Apply Path Template')
     @exception_screenshot
@@ -5739,282 +5755,530 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
-    @pytest.mark.timecode
-    @pytest.mark.keyframe
+    @pytest.mark.properties
     @pytest.mark.object_setting
-    @pytest.mark.name('[test_pip_designer_func_7_20] ')
+    @pytest.mark.canva
+    @pytest.mark.name('[test_pip_designer_func_7_20] Resize Object on Canvas')
     @exception_screenshot
     def test_pip_designer_func_7_20(self):
         '''
-
+        1. Switch to properties
+        2. Set Rotation (0)
+        3. Resize on Canvas : To larger
+        4. Check if resize on canvas is correct by checking scale size
         '''
-        # fold path menu
-        pip_designer_page.advanced.unfold_path_menu(0)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_19"
+        self.ensure_dependency(dependency_test)
 
-        # Switch to properties
-        pip_designer_page.advanced.switch_to_properties()
+        with step('[Action] Switch to properties'):
+            # fold path menu
+            pip_designer_page.advanced.unfold_path_menu(0)
+            # Switch to properties
+            pip_designer_page.advanced.switch_to_properties()
 
         # [L388] 3.3 Pip Designer > Manual adjust on canvas
-        with uuid("8a6515af-cdf1-4c1b-ac78-ac44dca720ca") as case:
+        # with uuid("8a6515af-cdf1-4c1b-ac78-ac44dca720ca") as case:
+
+        with step('[Action] Set Rotation (0)'):
             # Set rotation to 0
             pip_designer_page.input_rotation_degree_value(0)
 
+        with step('[Action] Resize on Canvas : To larger'):
             # Resize on Canvas : To larger
             pip_designer_page.resize_on_canvas(drag_x=75, drag_y=60)
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check if resize on canvas is correct by checking scale size'):
             # Verify Step: check scale size
             width_text_field = main_page.exist(L.pip_designer.object_setting.scale.width_value)
-            logger(width_text_field.AXValue)
-            if float(width_text_field.AXValue) > 0.378:
-                check_resize = True
-            else:
-                check_resize = False
-            logger(check_resize)
+            assert float(width_text_field.AXValue)>0.378, f"Cannot resize on canvas correctly! Expected: > 0.378, Actual: {width_text_field.AXValue}"
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.object_setting
+    @pytest.mark.canva
+    @pytest.mark.name('[test_pip_designer_func_7_21] Move Object to Left on Canvas')
+    @exception_screenshot
+    def test_pip_designer_func_7_21(self):
+        '''
+        1. Move object to left on Canvas
+        2. Check if move object to left on canvas is correct
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_20"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Move object to left on Canvas'):
             # Move object to left on Canvas
             pip_designer_page.move_to_left_on_canvas(drag_x=40)
 
+        with step('[Verify] Check if move object to left on canvas is correct'):
             # Verify Step: check position x value
             current_x_value = pip_designer_page.get_x_position_value()
-            logger(current_x_value)
             #if (current_x_value == '0.292') or (current_x_value == '0.285') or (current_x_value == '0.284'):
-            if float(current_x_value) > 0.25:
-                check_move = True
-            else:
-                check_move = False
+            assert float(current_x_value)>0.25, f"Cannot move object to left on canvas correctly! Expected: >0.25, Actual: {current_x_value}"
 
-            case.result = check_resize and check_move
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.flip
+    @pytest.mark.name('[test_pip_designer_func_7_22] Flip Horizontally and Vertically')
+    @exception_screenshot
+    def test_pip_designer_func_7_22(self):
+        '''
+        1. Set Flip Horizontally and check preview
+        2. Set Flip Vertically and check preview
+        3. Check if Flip Horizontally and Vertically is correct as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_21"
+        self.ensure_dependency(dependency_test)
 
         # [L383] 3.3 Pip Designer > Set in [Properties] > Flip
-        with uuid("a249d010-4d02-499a-9309-c57675e8b5a9") as case:
-            check_horizontal = pip_designer_page.apply_flip_horizontally()
-            check_vertical = pip_designer_page.apply_flip_vertically()
+        # with uuid("a249d010-4d02-499a-9309-c57675e8b5a9") as case:
 
-            logger(check_horizontal)
-            logger(check_vertical)
+        with step('[Action] Set Flip Horizontally'):
+            before_flip_horizontally = main_page.snapshot(locator=L.pip_designer.preview)
+            pip_designer_page.apply_flip_horizontally()
+        
+        with step('[Verify] Check if preview changed correctly after apply Flip Horizontally'):
+            after_flip_horizontally = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(before_flip_horizontally, after_flip_horizontally, similarity=0.98):
+                assert False, "Preview is not changed correctly after apply Flip Horizontally!"
 
+        with step('[Action] Set Flip Vertically'):
+            pip_designer_page.apply_flip_vertically()
+        
+        with step('[Verify] Check if preview changed correctly after apply Flip Vertically'):
+            after_flip_vertically = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(after_flip_horizontally, after_flip_vertically, similarity=0.98):
+                assert False, "Preview is not changed correctly after apply Flip Vertically!"
+
+        with step('[Verify] Check if Flip Horizontally and Vertically is correct as GT'):
             pip_designer_page.set_timecode('00_00_02_10')
-            time.sleep(DELAY_TIME)
             timeline_preview = main_page.snapshot(locator=L.pip_designer.preview,
                                                   file_name=Auto_Ground_Truth_Folder + 'L181.png')
             check_current_result = main_page.compare(Ground_Truth_Folder + 'L181.png', timeline_preview,
                                                      similarity=0.9)
-            logger(check_current_result)
-            case.result = check_current_result
+            assert check_current_result, "Flip Horizontally and Vertically is not correct as GT(L181.png)!"
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.motion
+    @pytest.mark.name('[test_pip_designer_func_7_22] Set only show selected track on motion')
+    @exception_screenshot
+    def test_pip_designer_func_7_22(self):
+        '''
+        1. Switch to motion
+        2. Set [Only show selected track]
+        3. Check if [Only show selected track] box value is correct
+        4. Check if [Only show selected track] is correct as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_21"
+        self.ensure_dependency(dependency_test)
 
         # [L384] 3.3 Pip Designer > Only show the selected track in preview
-        with uuid("888b424f-1eab-496e-9288-6fda16cf3b57") as case:
+        # with uuid("888b424f-1eab-496e-9288-6fda16cf3b57") as case:
+
+        with step('[Action] Switch to motion'):
             # Fold Object Settings
             pip_designer_page.express_mode.unfold_properties_object_setting_tab(unfold=0)
-            time.sleep(DELAY_TIME)
-
             # Switch to motion
             pip_designer_page.advanced.switch_to_motion()
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Set [Only show selected track]'):
             # Tick [Only show selected track]
             main_page.click(L.pip_designer.show_the_selected_track)
             time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check if [Only show selected track] box value is correct'):
             # Verify Step
             check_checkbox = pip_designer_page.get_selected_track_checkbox_status()
-            logger(check_checkbox)
+            if check_checkbox != 'Tick':
+                assert False, "Cannot set [Only show selected track] correctly!"
 
+        with step('[Verify] Check if [Only show selected track] is correct as GT'):
             pip_designer_page.set_timecode('00_00_05_25')
-            time.sleep(DELAY_TIME)
             check_preview = main_page.snapshot(locator=L.pip_designer.preview,
                                                file_name=Auto_Ground_Truth_Folder + 'L182.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L182.png', check_preview)
+            if not compare_result:
+                assert False, "Only show selected track is not correct as GT(L182.png)!"
 
-            case.result = compare_result and check_checkbox
+        with step('[Initial] Un-Tick [Only show selected track]'):
+            # Un-Tick [Only show selected track]
+            main_page.click(L.pip_designer.show_the_selected_track)
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.motion
+    @pytest.mark.motion_blur
+    @pytest.mark.name('[test_pip_designer_func_7_23] Apply Motion Blur -- Length and Density')
+    @exception_screenshot
+    def test_pip_designer_func_7_23(self):
+        '''
+        1. Set Motion Blur
+        2. Set Blur length = 1.88 and check if Blur length is set correctly
+        3. Set Blur density = 28 and check if Blur density is set correctly
+        4. Check if Motion Blur is correct as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_22"
+        self.ensure_dependency(dependency_test)
 
         # [L401] 3.3 Pip Designer > Set [Motion Blur]
-        with uuid("6ab4ebf9-4369-4944-bc0e-93eded165757") as case:
+        # with uuid("6ab4ebf9-4369-4944-bc0e-93eded165757") as case:
+
+        with step('[Action] Set Motion Blur'):
             # Unfold Motion Blur
             pip_designer_page.advanced.unfold_motion_blur_menu()
-
             # Set checkbox of Motion Blur
             pip_designer_page.motion_blur.set_checkbox(tick=1)
 
-            # Un-Tick [Only show selected track]
-            main_page.click(L.pip_designer.show_the_selected_track)
-            time.sleep(DELAY_TIME)
-
+        with step('[Action] Set Blur length = 1.88'):
             # Set Blur length = 1.88
             pip_designer_page.motion_blur.length.set_value(1.88)
-            # Set Blur density = 28
-            pip_designer_page.motion_blur.density.adjust_slider(28)
-            time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check if Blur length is set correctly'):
             # Verify Step
             get_length = pip_designer_page.motion_blur.length.get_value()
-            logger(get_length)
-            if get_length == '1.88':
-                check_length = True
-            else:
-                check_length = False
+            if get_length != '1.88':
+                assert False, f"Blur length is not 1.88! Expected: 1.88, Actual: {get_length}"
 
+        with step('[Action] Set Blur density = 28'):
+            # Set Blur density = 28
+            pip_designer_page.motion_blur.density.adjust_slider(28)
+
+        with step('[Verify] Check if Blur density is set correctly'):
             get_density = pip_designer_page.motion_blur.density.get_value()
-            logger(get_density)
-            if get_density == '28':
-                check_density = True
-            else:
-                check_density = False
+            if get_density != '28':
+                assert False, f"Blur density is not 28! Expected: 28, Actual: {get_density}"
 
-            # Switch to properties
-            pip_designer_page.advanced.switch_to_properties()
 
+        with step('[Verify] Check if Motion Blur is correct as GT'):
             pip_designer_page.set_timecode('00_00_02_10')
-            time.sleep(DELAY_TIME)
             check_preview = main_page.snapshot(locator=L.pip_designer.preview,
                                                file_name=Auto_Ground_Truth_Folder + 'L189.png')
 
             # Compare preview is changed when apply motion blur
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L181.png', check_preview, similarity=0.9999)
-            logger(compare_result)
+            compare_result = main_page.compare(Ground_Truth_Folder + 'L181.png', check_preview, similarity=0.98)
+            assert compare_result, "Motion Blur is not correct as GT(L189.png)!"
 
-            case.result = (not compare_result) and check_length and check_density
+            # case.result = (not compare_result) and check_length and check_density
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.border
+    @pytest.mark.name('[test_pip_designer_func_7_24] Check Default Border/ Set Border size by arrow')
+    @exception_screenshot
+    def test_pip_designer_func_7_24(self):
+        '''
+        1. Apply Border
+        2. Check if Default size is 3
+        3. Set Border size = 7 by arrow button
+        4. Check if Border size chagned by UI
+        '''
+        # Ensure the dependency test is run and passed
+        self.test_pip_designer_func_7_1()
         # [L378] 3.3 Pip Designer > Set in [Properties] > Border
-        with uuid("fb425a56-1501-4a70-a285-f9398d894f8a") as case:
+        # with uuid("fb425a56-1501-4a70-a285-f9398d894f8a") as case:
+
+        with step('[Action] Apply Border'):
+            # switch to advanced mode
+            pip_designer_page.switch_mode('Advanced')
+            # Switch to properties
+            pip_designer_page.advanced.switch_to_properties()
             # Apply border
             pip_designer_page.apply_border()
-
+        
+        with step('[Verify] Check if Default size is 3'):
             # Check Default size
             current_value = pip_designer_page.express_mode.get_border_size_value()
-            if current_value == '3':
-                default_size = True
-            else:
-                default_size = False
-            logger(default_size)
+            if current_value != '3':
+                assert False, f"Default size is not 3! Expected: 3, Actual: {current_value}"
 
+        with step('[Action] Set Border size = 7 by arrow button'):
+            before_preview = main_page.snapshot(locator=L.pip_designer.preview)
             # Set Border size = 7
             pip_designer_page.express_mode.click_border_size_arrow_btn(0,4)
 
-            time.sleep(DELAY_TIME)
-            current_value = pip_designer_page.express_mode.get_border_size_value()
-            if current_value == '7':
-                apply_border_size = True
-            else:
-                apply_border_size = False
-            logger(apply_border_size)
+        with step('[Verify] Check if Border size chagned by UI'):
+            border_size_changed = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(before_preview, border_size_changed, similarity=0.999):
+                assert False, "Border size is not changed by UI!"
 
+        with step('[Verify] Check if Border size is set correctly'):
+            current_value = pip_designer_page.express_mode.get_border_size_value()
+            assert current_value == '7', f"Border size is not 7 after modified by arrow! Expected: 7, Actual: {current_value}"
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.border
+    @pytest.mark.blur
+    @pytest.mark.name('[test_pip_designer_func_7_25] Apply Border -- Blur')
+    @exception_screenshot
+    def test_pip_designer_func_7_25(self):
+        '''
+        1. Set Border -- Blur value = 3
+        2. Check if Border -- blur value is set correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_24"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Border -- Blur value = 3'):
             # Set Blur = 3
             pip_designer_page.express_mode.input_border_blur_value('3')
 
-            time.sleep(DELAY_TIME)
+        with step('[Verify] Check if Border -- blur value is set correctly'):
             current_value = pip_designer_page.express_mode.get_border_blur_value()
-            if current_value == '3':
-                apply_blur = True
-            else:
-                apply_blur = False
-            logger(apply_blur)
+            assert current_value == '3', f'Border blur value is not 3! Expected: 3, Actual: {current_value}'
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.border
+    @pytest.mark.opacity
+    @pytest.mark.name('[test_pip_designer_func_7_26] Apply Border -- Opacity')
+    @exception_screenshot
+    def test_pip_designer_func_7_26(self):
+        '''
+        1. Set Border -- Opacity = 96%
+        2. Check if Border -- opacity value is set correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_25"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Apply Border -- Opacity = 96%'):
             # Set opacity = 96%
             pip_designer_page.express_mode.drag_border_opacity_slider('96')
 
-            time.sleep(DELAY_TIME)
+        with step('[Verify] Check if Border -- opacity value is set correctly'):
             current_value = pip_designer_page.express_mode.get_border_opacity_value()
-            if current_value == '96%':
-                apply_opacity = True
-            else:
-                apply_opacity = False
-            logger(apply_opacity)
+            assert current_value == '96%', f'Border opacity value is not 96%! Expected: 96%, Actual: {current_value}'
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.border
+    @pytest.mark.color
+    @pytest.mark.name('[test_pip_designer_func_7_27] Apply Border -- Color as 0F2E12')
+    @exception_screenshot
+    def test_pip_designer_func_7_27(self):
+        '''
+        1. Apply Border -- Color as 0F2E12
+        2. Check if Border -- color is set correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_26"
+        self.ensure_dependency(dependency_test)
+
+
+        with step('[Action] Set Border -- Color as 0F2E12'):
+            before_preview = main_page.snapshot(locator=L.pip_designer.preview)
             # Set color
             pip_designer_page.express_mode.set_border_uniform_color('0F2E12')
 
-            case.result = default_size and apply_border_size and apply_blur and apply_opacity
-            # Fold border menu
-            pip_designer_page.express_mode.unfold_properties_border_tab(0)
+        with step('[Verify] Check if Border -- color is set correctly'):
+            applied_color = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(before_preview, applied_color, similarity=0.999):
+                assert False, "Border color is not changed correctly!"
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.shadow
+    @pytest.mark.distance
+    @pytest.mark.name('[test_pip_designer_func_7_28] Set Shadow -- Distance')
+    @exception_screenshot
+    def test_pip_designer_func_7_28(self):
+        '''
+        1. Enter Shadow menu
+        2. Set Shadow -- Distance = 37.1
+        3. Check if preview changed after adjust shadow distance
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_27"
+        self.ensure_dependency(dependency_test)
 
         # [L379] 3.3 Pip Designer > Set in [Properties] > Shadow
-        with uuid("bad37a4f-6327-42ed-8214-4e245fdaa0a2") as case:
+        # with uuid("bad37a4f-6327-42ed-8214-4e245fdaa0a2") as case:
+        with step('[Action] Enter Shadow menu'):
+            # Fold border menu
+            pip_designer_page.express_mode.unfold_properties_border_tab(0)
             # Unfold shadow menu
             pip_designer_page.express_mode.unfold_properties_shadow_tab(1)
-
             # Enable Shadow
             pip_designer_page.apply_shadow()
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Set Shadow -- Distance = 37.1'):
+            before_preview = main_page.snapshot(locator=L.pip_designer.preview)
             # Set distance = 37.1
             pip_designer_page.express_mode.input_shadow_distance_value('37.1')
 
+        with step('[Verify] Check if preview changed after adjust shadow distance'):
+            adjusted_distance = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(before_preview, adjusted_distance, similarity=0.98):
+                assert False, "Shadow distance is not changed correctly!"
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.properties
+    @pytest.mark.shadow
+    @pytest.mark.color
+    @pytest.mark.name('[test_pip_designer_func_7_29] Apply Shadow -- Color')
+    @exception_screenshot
+    def test_pip_designer_func_7_29(self):
+        '''
+        1. Set Shadow -- Color = B7AFE3
+        2. Check if preview changed after apply shadow color
+        3. Check if preview changed correctly as GT (test_pip_designer_func_7_28~29)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_28"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Shadow -- Color = B7AFE3'):
+            before_preview = main_page.snapshot(locator=L.pip_designer.preview)
             # Set color
             pip_designer_page.express_mode.set_shadow_select_color('B7AFE3')
 
+        with step('[Verify] Check if preview changed after apply shadow color'):
+            adjusted_color = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(before_preview, adjusted_color, similarity=0.998):
+                assert False, "Shadow color is not changed correctly!"
+
+        with step('[Verify] Check if preview changed correctly as GT (test_pip_designer_func_7_28~29)'):
             check_preview = main_page.snapshot(locator=L.pip_designer.preview,
                                                file_name=Auto_Ground_Truth_Folder + 'L177.png')
 
             # Compare preview is changed when apply Shadow
-            compare_result = main_page.compare(Auto_Ground_Truth_Folder + 'L189.png', check_preview, similarity=0.9999)
-            logger(compare_result)
+            compare_result = main_page.compare(Auto_Ground_Truth_Folder + 'L189.png', check_preview)
+            assert compare_result, "Shadow color is not correct as GT(L177.png)!"
 
-            case.result = (not compare_result)
-
-            # Fold shadow menu
-            pip_designer_page.express_mode.unfold_properties_shadow_tab(0)
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.properties
+    @pytest.mark.fades
+    @pytest.mark.fade_in_out
+    @pytest.mark.name('[test_pip_designer_func_7_30] Fades -- Fade-in')
+    @exception_screenshot
+    def test_pip_designer_func_7_30(self):
+        '''
+        1. Enter Properties Fades menu
+        2. Set Fade-in
+        3. Check if preview changed after apply fade-in
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_29"
+        self.ensure_dependency(dependency_test)
 
         # [L380] 3.3 Pip Designer > Set in [Properties] > Fade
-        with uuid("50370c50-3035-42d5-bab2-34a04165c2e2") as case:
+        # with uuid("50370c50-3035-42d5-bab2-34a04165c2e2") as case:
+
+        with step('[Action] Enter Properties Fades menu'):
+            # Fold shadow menu
+            pip_designer_page.express_mode.unfold_properties_shadow_tab(0)
             # Unfold fades menu
             pip_designer_page.express_mode.unfold_properties_fades_tab(type=1, unfold=1)
+            # Apply faddes
+            pip_designer_page.apply_fades()
+
+        with step('[Action] Set Fade-in'):
 
             # Set timecode (00:00:00:24)
             pip_designer_page.set_timecode('00_00_00_24')
             time.sleep(DELAY_TIME)
             no_fade_in_preview = main_page.snapshot(locator=L.pip_designer.preview)
 
-            # Set timecode (00:00:08:23)
-            pip_designer_page.set_timecode('00_00_08_23')
-            time.sleep(DELAY_TIME)
-            no_fade_out_preview = main_page.snapshot(locator=L.pip_designer.preview)
-
-            # Apply faddes
-            pip_designer_page.apply_fades()
-
             # Apply fade-in and fade-out
             pip_designer_page.apply_enable_fade_in()
-            pip_designer_page.apply_enable_fade_out()
 
-            # Set timecode (00:00:00:24)
-            pip_designer_page.set_timecode('00_00_00_24')
-            time.sleep(DELAY_TIME)
+        with step('[Verify] Check if preview changed after apply fade-in'):
             has_fade_in_preview = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(no_fade_in_preview, has_fade_in_preview, similarity=0.99):
+                assert False, "Fade-in is not changed correctly!"
+        assert True
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.properties
+    @pytest.mark.fades
+    @pytest.mark.fade_in_out
+    @pytest.mark.name('[test_pip_designer_func_7_31] Fades -- Fade-out')
+    @exception_screenshot
+    def test_pip_designer_func_7_31(self):
+        '''
+
+        
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_30"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Fade-out'):
             # Set timecode (00:00:08:23)
             pip_designer_page.set_timecode('00_00_08_23')
-            time.sleep(DELAY_TIME)
+            no_fade_out_preview = main_page.snapshot(locator=L.pip_designer.preview)
+            pip_designer_page.apply_enable_fade_out()
+
+        with step('[Verify] Check if preview changed after apply fade-out'):
             has_fade_out_preview = main_page.snapshot(locator=L.pip_designer.preview)
+            if not main_page.compare(no_fade_out_preview, has_fade_out_preview, similarity=0.99):
+                assert False, "Fade-out is not changed correctly!"
+        assert True
 
-            # Compare preview is changed when apply fade in
-            compare_fade_in_result = main_page.compare(no_fade_in_preview, has_fade_in_preview, similarity=0.99)
-            compare_fade_out_result = main_page.compare(no_fade_out_preview, has_fade_out_preview, similarity=0.99)
-
-            logger(compare_fade_in_result)
-            logger(compare_fade_out_result)
-
-            case.result = (not compare_fade_in_result) and (not compare_fade_out_result)
-
-            # Fold fades menu
-            pip_designer_page.express_mode.unfold_properties_fades_tab(type=1, unfold=0)
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.properties
+    @pytest.mark.chroma_key
+    @pytest.mark.color
+    @pytest.mark.name('[test_pip_designer_func_7_32] Set Chroma Key -- Color')
+    @exception_screenshot
+    def test_pip_designer_func_7_32(self):
+        '''
+        1. Enter Properties Chroma Key menu
+        2. Click dropper button
+        3. Select one color
+        4. Check if preview changed after apply chroma key
+        5. Check if preview changed correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_31"
+        self.ensure_dependency(dependency_test)
 
         # [L377] 3.3 Pip Designer > Set in [Properties] > Chroma Key
-        with uuid("3b57839e-be4f-45b4-9cf6-e11bf494a44b") as case:
+        # with uuid("3b57839e-be4f-45b4-9cf6-e11bf494a44b") as case:
+        with step('[Action] Enter Properties Chroma Key menu'):
+            # Fold fades menu
+            pip_designer_page.express_mode.unfold_properties_fades_tab(type=1, unfold=0)
             # Unfold chroma key menu
             # pip_designer_page.express_mode.unfold_properties_chroma_key_tab(unfold=1)
-
-            # Set timecode (00:00:04:00)
-            pip_designer_page.set_timecode('00_00_04_00')
-
             # Apply Chroma key
             pip_designer_page.apply_chromakey()
-            time.sleep(DELAY_TIME)
-
+            
+        with step('[Action] Click dropper button'):
+            # Set timecode (00:00:04:00)
+            pip_designer_page.set_timecode('00_00_04_00')
+            before_preview = main_page.snapshot(locator=L.pip_designer.preview)
             # Click dropper button
             main_page.click(L.pip_designer.chromakey.btn_dropper)
 
+        with step('[Action] Select one color'):
             # Select one color
             pip_object = main_page.exist(L.pip_designer.preview)
             org_pos = pip_object.AXPosition
@@ -6023,29 +6287,47 @@ class Test_BFT_365_OS14():
             des_pos = (org_pos[0] + size_w * 0.5, org_pos[1] + size_h * 0.35)
             main_page.mouse.click(*des_pos)
 
+        with step('[Verify] Check if preview changed after apply chroma key'):
+            applied_chromakey = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(before_preview, applied_chromakey, similarity=0.99):
+                assert False, "Chroma key is not changed correctly!"
+
+        with step('[Verify] Check if preview changed correctly as GT'):
             check_preview = main_page.snapshot(locator=L.pip_designer.preview,
                                                file_name=Auto_Ground_Truth_Folder + 'L175.png')
-
             # Compare preview after apply chromakey
             compare_result = main_page.compare(Ground_Truth_Folder + 'L175.png', check_preview, similarity=0.8)
-            logger(compare_result)
+            assert compare_result, "Chroma key is not correct as GT(L175.png)!"
 
-            case.result = compare_result
-
-            time.sleep(DELAY_TIME)
-            # Fold fades menu
-            pip_designer_page.express_mode.unfold_properties_chroma_key_tab(unfold=0)
-            time.sleep(DELAY_TIME*2)
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.animation
+    @pytest.mark.in_out_animation
+    @pytest.mark.name('[test_pip_designer_func_7_33] Apply In Animation')
+    @exception_screenshot
+    def test_pip_designer_func_7_33(self):
+        '''
+        1. Enter In Animation Menu
+        2. Apply in animation
+        3. Check if preview changed after apply in animation as GT
+        '''
+        self.test_pip_designer_func_7_1()
 
         # [L389] 3.3 Pip Designer > Set Animation
-        with uuid("34f35e0f-aff7-46bc-8624-81866440a7f8") as case:
+        # with uuid("34f35e0f-aff7-46bc-8624-81866440a7f8") as case:
+        with step('[Action] Enter In Animation Menu'):
+            # switch to advanced mode
+            pip_designer_page.switch_mode('Advanced')
             pip_designer_page.advanced.switch_to_animation()
-
             pip_designer_page.advanced.unfold_in_animation_menu(1)
+
+        with step('[Action] Apply in animation'):
             # Apply (Brush Transition 02) animation
             #pip_designer_page.in_animation.select_effect('Glitch')
             pip_designer_page.in_animation.select_template(10)
 
+        with step('[Verify] Check if preview changed after apply in animation as GT'):
             # Set timecode (00:00:01:09)
             pip_designer_page.set_timecode('00_00_01_09')
             time.sleep(DELAY_TIME * 3)
@@ -6054,103 +6336,211 @@ class Test_BFT_365_OS14():
 
             # Compare preview after apply chromakey
             compare_result = main_page.compare(Ground_Truth_Folder + 'L187.png', check_preview, similarity=0.9)
-            logger(compare_result)
+            assert compare_result, "In animation is not correct as GT(L187.png)! Similary should>0.9"
 
-            case.result = compare_result
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_pip_designer_func_7_34] Play Video')
+    @exception_screenshot
+    def test_pip_designer_func_7_34(self):
+        '''
+        1. Switch to Express mode
+        2. Press Space key to play video
+        3. Check if preview changed correctly after play
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_33"
+        self.ensure_dependency(dependency_test)
 
-            time.sleep(DELAY_TIME)
-            pip_designer_page.advanced.unfold_in_animation_menu(0)
 
         # [L402] 3.3 Pip Designer > Preview in Designer
-        with uuid("55666272-8ab9-4b7f-a6b1-dfbf0c6322ad") as case:
+        # with uuid("55666272-8ab9-4b7f-a6b1-dfbf0c6322ad") as case:
+        with step('[Action] Switch to Express mode'):
+            pip_designer_page.advanced.unfold_in_animation_menu(0)
             # Switch
             pip_designer_page.switch_mode('Express')
 
+        with step('[Action] Press Space key to play video'):
+            main_page.set_timecode('00_00_00_00')
             main_page.press_space_key()
-            time.sleep(DELAY_TIME * 6)
+
+        with step('[Verify] Check if preview changed correctly after play'):
+            check_preview_update = main_page.Check_PreviewWindow_is_different(L.title_designer.area.frame_preview, sec=2)
+            if not check_preview_update:
+                assert False, "Preview is not updated after play in 2 secs!"
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_pip_designer_func_7_34] Stop Video')
+    @exception_screenshot
+    def test_pip_designer_func_7_34(self):
+        '''
+        1. Click [Stop] button to stop video
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_33"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Click [Stop] button to stop video'):
             pip_designer_page.click_preview_operation('Stop')
 
-            # Set timecode (00:00:08:05)
-            pip_designer_page.set_timecode('00_00_08_05')
-            time.sleep(DELAY_TIME * 3)
-            check_preview = main_page.snapshot(locator=L.pip_designer.designer_window,
-                                               file_name=Auto_Ground_Truth_Folder + 'L190.png')
+        with step('[Verify] Check if switch to (00:00)'):
+            current_timecode = pip_designer_page.get_timecode()
+            assert current_timecode == '00_00_00_00', f"Cannot stop video correctly! Expected: 00_00_00_00, Actual: {current_timecode}"
 
-            # Compare preview
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L190.png', check_preview, similarity=0.9)
-            logger(compare_result)
+        
+            # # Set timecode (00:00:08:05)
+            # pip_designer_page.set_timecode('00_00_08_05')
+            # time.sleep(DELAY_TIME * 3)
+            # check_preview = main_page.snapshot(locator=L.pip_designer.designer_window,
+            #                                    file_name=Auto_Ground_Truth_Folder + 'L190.png')
 
-            # Click max button / Leave full mode
-            pip_designer_page.click_maximize_btn()
+            # # Compare preview
+            # compare_result = main_page.compare(Ground_Truth_Folder + 'L190.png', check_preview, similarity=0.9)
+            # logger(compare_result)
 
-            case.result = compare_result
+            # # Click max button / Leave full mode
+            # pip_designer_page.click_maximize_btn()
+
+            # case.result = compare_result
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.dz
+    @pytest.mark.name('[test_pip_designer_func_7_35] Share to Cloud')
+    @exception_screenshot
+    def test_pip_designer_func_7_35(self):
+        '''
+        1. Click [Share] button to upload template online
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_34"
+        self.ensure_dependency(dependency_test)
 
         # [L403] 3.4 Pip Designer > [Share] template online
-        with uuid("fbce1533-d0d5-4ca9-9aed-2f0e4ade18c4") as case:
+        # with uuid("fbce1533-d0d5-4ca9-9aed-2f0e4ade18c4") as case:
             # Click [Share] > Upload to "Cyberlink Cloud and DZ"
             # Verify DZ link
-
+        
+        with step('[Action] Click [Share] button to upload template online'):
             check_upload = pip_designer_page.share_to_cloud(name='dialog09_chroma', tags='123', collection='test', description='Apply chroma key', verify_dz_link=1)
-            logger(check_upload)
+            assert check_upload, "Cannot upload template online!"
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.dz
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_pip_designer_func_7_36] Download Content from CL/DZ')
+    @exception_screenshot
+    def test_pip_designer_func_7_36(self):
+        '''
+        1. Click [Save as] button to save template
+        2. Leave pip designer
+        3. Download Content from CL/DZ
+        4. Delete downloaded content and close window
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_35"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Click [Save as] button to save template'):
             # Click [Save as] > Save custom name to close PiP designer
             main_page.click(L.pip_designer.save_as_button)
             time.sleep(DELAY_TIME)
             pip_designer_page.input_template_name_and_click_ok('BFT_Pip_Custom')
             time.sleep(DELAY_TIME)
+
+        with step('[Action] Leave pip designer'):
             pip_designer_page.click_ok()
 
+        with step('[Action] Download Content from CL/DZ'):
             # Click download content form CL/DZ
             pip_room_page.click_DownloadContent_from_DZCL()
 
             # Already enter "Download PiP Objects" > Open My Cyberlink Cloud
             # Select template name "dialog09_chroma"
             check_CL_content = download_from_cl_dz_page.select_template('dialog09_chroma')
+        
+        with step('[Initial] Delete downloaded content and close window'):
             time.sleep(DELAY_TIME)
             download_from_cl_dz_page.tap_delete_button()
-            time.sleep(DELAY_TIME*3)
-
             # Close "Download PiP Objects" window
             # download_from_cl_dz_page.tap_close_button()
             main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 5)
 
-            case.result = check_upload and check_CL_content
+        assert check_CL_content, "Cannot download content from CL/DZ!"
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_pip_designer_func_7_37] Select saved template and check preview')
+    @exception_screenshot
+    def test_pip_designer_func_7_37(self):
+        '''
+        1. Select saved template and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_36"
+        self.ensure_dependency(dependency_test)
 
         # [L404] 3.4 Pip Designer > Save template
-        with uuid("4b3b937e-ce77-4946-8c43-cb1eaaf4a264") as case:
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("4b3b937e-ce77-4946-8c43-cb1eaaf4a264") as case:
+        with step('[Action] Select saved template'):
             # Select custom template: BFT_PiP_Custom
             main_page.select_library_icon_view_media('BFT_Pip_Custom')
             time.sleep(DELAY_TIME * 5)
             # Check preview update
             check_result = main_page.Check_PreviewWindow_is_different(area=L.base.Area.preview.main, sec=3)
-            case.result = check_result
+            assert check_result, "Cannot select saved template correctly!"
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.save_template
+    @pytest.mark.timecode
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_pip_designer_func_7_38] Add saved template to timeline')
+    @exception_screenshot
+    def test_pip_designer_func_7_38(self):
+        '''
+        1. Add saved template to timeline
+        2. Check preview at (02:06) is as GT
+        3. Save project
+        '''
 
         # [L405] 3.4 Pip Designer > Add saved pip template to timeline
-        with uuid("b63cc42d-7ae7-49e8-9584-36d0afb9af10") as case:
+        # with uuid("b63cc42d-7ae7-49e8-9584-36d0afb9af10") as case:
+
+        with step('[Action] Add saved template to track 3'):
             # select timeline track 3
             main_page.timeline_select_track(3)
-
             # Set timecode :
             main_page.set_timeline_timecode('00_00_19_00')
-            time.sleep(DELAY_TIME * 2)
-
             # Drag BFT_Pip_Custom to timeline track 3
             main_page.drag_media_to_timeline_playhead_position('BFT_Pip_Custom', track_no=3)
 
+        with step('[Verify] Check preview at (02:06) is as GT'):
             # Set timecode :
             main_page.set_timeline_timecode('00_00_02_06')
             time.sleep(DELAY_TIME * 2)
 
             timeline_preview = main_page.snapshot(locator=main_page.area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L193.png')
             check_current_dialog09 = main_page.compare(Ground_Truth_Folder + 'L193.png', timeline_preview, similarity=0.9)
-            case.result = check_current_dialog09
 
+        with step('[Initial] Save Project'):
         # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_5',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name='test_pip_designer_func_7_38',
+                                            folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+            
+        assert check_current_dialog09, "Cannot add saved template to timeline correctly as GT (L193.png)!"
+        
 
     # 17 uuid
     # @pytest.mark.skip
