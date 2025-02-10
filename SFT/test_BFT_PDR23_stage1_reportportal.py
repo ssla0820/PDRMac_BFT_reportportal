@@ -4952,7 +4952,7 @@ class Test_BFT_365_OS14():
         1. Open AP and open saved project
         2. Select timeline track 3 and set timecode to (09:00)
         3. Open PiP designer
-        4. Search > Select template [Mood Stickers 09]
+        4. Search > Select template [Mood 09]
         5. Add to timeline
         6. Check if template is added to timeline
         '''
@@ -4977,10 +4977,10 @@ class Test_BFT_365_OS14():
             # enter PiP room
             main_page.enter_room(4)
             
-        with step('[Action] Search > Select template [Mood Stickers 09]'):
+        with step('[Action] Search > Select template [Mood 09]'):
             # Select template (21.6.5219 : search then select Mood Sticker 09)
-            media_room_page.search_library('Mood Stickers 09')
-            main_page.select_library_icon_view_media('Mood Stickers 09')
+            media_room_page.search_library('Mood 09')
+            main_page.select_library_icon_view_media('Mood 09')
             # Download IAD template
             time.sleep(DELAY_TIME * 4)
 
@@ -4996,7 +4996,7 @@ class Test_BFT_365_OS14():
             timeline_operation_page.select_timeline_media(track_index=4, clip_index=1)
             main_page.double_click()
             check_title = pip_designer_page.get_title()
-            assert check_title == 'Mood Stickers 09', f"Template is not added to timeline! Expected: Mood Stickers 09, Actual: {check_title}"
+            assert check_title == 'Mood 09', f"Template is not added to timeline! Expected: Mood 09, Actual: {check_title}"
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
@@ -5091,6 +5091,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_5] Add 2 Position Keyframes > Switch to previous keyframe')
     @exception_screenshot
     def test_pip_designer_func_7_5(self):
@@ -5133,6 +5134,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_6] Switch to next keyframe > Check timecode/ x position/ y position')
     @exception_screenshot
     def test_pip_designer_func_7_6(self):
@@ -5172,6 +5174,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
+    @pytest.mark.object_setting
     @pytest.mark.name('[test_pip_designer_func_7_7] Delete 2nd Position Keyframe > Switch to previous keyframe')
     @exception_screenshot
     def test_pip_designer_func_7_7(self):
@@ -5222,271 +5225,509 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.keyframe
-    @pytest.mark.name('[test_pip_designer_func_7_8] ')
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_8] Add 2 scale keyframes > Switch to previous keyframe')
     @exception_screenshot
     def test_pip_designer_func_7_8(self):
         '''
+        1. Set Scale width (1.733) keyframe at (04:12)
+        2. Set Scale height (2.857) keyframe at (07:15) w/o Maintain Aspect Ratio
+        3. Switch to previous keyframe and check if switch to (04:12) keyframe correctly
         '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_7"
+        self.ensure_dependency(dependency_test)
 
-        # -----------
-        with step('[Action] Set Scale (1.733) keyframe at (04:12) w/o Maintain Aspect Ratio'):
+        with step('[Action] Set Scale width (1.733) keyframe at (04:12)'):
             # Set Scale : 1st keyframe
+            pip_designer_page.set_timecode('00_00_04_12')
             pip_designer_page.drag_scale_width_slider('1.733')
             pip_designer_page.add_remove_scale_current_keyframe()
-            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
-
-        with step('[Action] Set Scale (2.857) keyframe at (07:15)'):
+            
+        with step('[Action] Set Scale height (2.857) keyframe at (07:15) w/o Maintain Aspect Ratio'):
             # Set (07:15)
             pip_designer_page.set_timecode('00_00_07_15')
-
+            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=0)
             # Set Scale : 2nd keyframe
             pip_designer_page.input_scale_height_value('2.857')
-        # drag scroll bar
-        pip_designer_page.drag_properties_scroll_bar(0.72)
-        # Set Rotation : 1st keyframe on (04:12)  0 degree
-        pip_designer_page.add_remove_rotation_current_keyframe()
 
-        # drag simple timeline to larger (Can see Rotation keyframe track)
-        pip_designer_page.drag_simple_timeline_track_to_lager()
+        with step('[Action] Switch to previous keyframe'):
+            # Click previous keyframe
+            pip_designer_page.tap_scale_previous_keyframe()
 
-        # Click max button
-        pip_designer_page.click_maximize_btn()
-        time.sleep(DELAY_TIME)
-        # drag properties scroll bar
-        pip_designer_page.drag_properties_scroll_bar(0)
+        with step('[Verify] Check if switch to (04:12) keyframe correctly'):
+            get_timecode = pip_designer_page.get_timecode()
+            assert get_timecode == '00:00:04:12', f"Cannot switch to (04:12) keyframe correctly! Expected: 04:12, Actual: {get_timecode}"
 
-        # Verify step:
-        # Check position on timecode 04:12
-        current_x_value = pip_designer_page.get_x_position_value()
-        logger(current_x_value)
-        if current_x_value == '0.412':
-            check_pos_x = True
-        else:
-            check_pos_x = False
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_9] Switch to next keyframe > Check timecode/ height scale/ width scale')
+    @exception_screenshot
+    def test_pip_designer_func_7_9(self):
+        '''
+        1. Switch to next keyframe
+        2. Check if switch to (07:15) keyframe correctly
+        3. Check if height scale is 2.857
+        4. Check if width scale is 1.733
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_8"
+        self.ensure_dependency(dependency_test)
 
-        current_y_value = pip_designer_page.get_y_position_value()
-        logger(current_y_value)
-        if current_y_value == '0.653':
-            check_pos_y = True
-        else:
-            check_pos_y = False
+        with step('[Action] Switch to next keyframe'):
+            # Click next keyframe
+            pip_designer_page.tap_scale_next_keyframe()
 
-        case.result = set_1st_keyframe and set_2nd_x_keyframe and set_2nd_y_keyframe and check_pos_x and check_pos_y
-        logger(set_1st_keyframe)
-        logger(set_2nd_x_keyframe)
-        logger(set_2nd_y_keyframe)
-        logger(check_pos_x)
-        logger(check_pos_y)
+        with step('[Verify] Check if switch to (07:15) keyframe correctly'):
+            get_timecode = pip_designer_page.get_timecode()
+            if get_timecode != '00:00:07:15':
+                assert False, f"Cannot switch to (07:15) keyframe correctly! Expected: 07:15, Actual: {get_timecode}"
+
+        with step('[Verify] Check if height scale is 2.857'):
+            get_height_value = pip_designer_page.get_scale_height_value()
+            if get_height_value != '2.857':
+                assert False, f"Height scale is not 2.857! Expected: 2.857, Actual: {get_height_value}"
+
+        with step('[Verify] Check if width scale is 1.733'):
+            get_width_value = pip_designer_page.get_scale_width_value()
+            if get_width_value != '1.733':
+                assert False, f"Width scale is not 1.733! Expected: 1.733, Actual: {get_width_value}"
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_10] Set 2 Rotation Keyframes > Switch to next keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_10(self):
+        '''
+        1. Set Rotation (0) keyframe at (04:12)
+        2. Adjust UI to show Rotation keyframe track
+        3. Set Rotation (270) keyframe at (03:10)
+        4. Switch to next keyframe
+        5. Check if switch to (07:15) keyframe correctly
+        6. Check if degree is 0
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_9"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Rotation (0) keyframe at (07:15)'):
+
+            # drag scroll bar
+            pip_designer_page.drag_properties_scroll_bar(0.72)
+            # Set Rotation : 1st keyframe on (04:12)  0 degree
+            pip_designer_page.add_remove_rotation_current_keyframe()
+
+        with step('[Action] Adjust UI to show Rotation keyframe track'):
+            # drag simple timeline to larger (Can see Rotation keyframe track)
+            pip_designer_page.drag_simple_timeline_track_to_lager()
+
+            # Click max button
+            pip_designer_page.click_maximize_btn()
+            # drag properties scroll bar
+            pip_designer_page.drag_properties_scroll_bar(0)
+
+        with step('[Action] Set Rotation (270) keyframe at (03:10)'):
+            # Set Rotation : 2nd keyframe (03:10) 270 degree
+            main_page.set_timecode('00_00_03_10')
+            pip_designer_page.add_remove_rotation_track_current_keyframe()
+            pip_designer_page.input_rotation_degree_value(270)
+
+        with step('[Action] Switch to next keyframe'):
+            # Click next keyframe
+            pip_designer_page.tap_rotation_next_keyframe()
+
+        with step('[Verify] Check if switch to (07:15) keyframe correctly'):
+            get_timecode = pip_designer_page.get_timecode()
+            if get_timecode != '00:00:07:15':
+                assert False, f"Cannot switch to (07:15) keyframe correctly! Expected: 07:15, Actual: {get_timecode}"
+
+        with step('[Verify] Check if degree is 0'):
+
+           # Check degree
+            current_degree = pip_designer_page.exist(L.pip_designer.object_setting.rotation.degree_value)
+            assert current_degree.AXValue == '0', f"Degree is not 0! Expected: 0, Actual: {current_degree.AXValue}"
+
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_11] Add 3 Opacity Keyframes > Switch to previous keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_11(self):
+        '''
+        1. Set Opacity (100) keyframe at (00:20)
+        2. Set Opacity (100) keyframe at (01:20)
+        3. Set Opacity (99) keyframe at (03:10)
+        4. Swtich to previous keyframe
+        5. Check if switch to (01:20) keyframe correctly
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_10"
+        self.ensure_dependency(dependency_test)
 
         # [L385] 3.3 Pip Designer > Adjust keyframe > Add
-        with uuid("9e576f88-8a62-47ff-bc6a-58f75116b112") as case:
+        # with uuid("9e576f88-8a62-47ff-bc6a-58f75116b112") as case:
+
+        with step('[Action] Set Opcity (100) keyframe at (00:20)'):
             # Set Opacity : 1st keyframe (00:20)
             pip_designer_page.set_timecode('00_00_00_20')
             pip_designer_page.add_remove_opacity_track_current_keyframe()
 
+        with step('[Action] Set Opcity (100) keyframe at (01:20)'):
             # Set Opacity : 2nd keyframe (01:20)
             pip_designer_page.set_timecode('00_00_01_20')
             pip_designer_page.add_remove_opacity_track_current_keyframe()
 
+        with step('[Action] Set Opcity (99) keyframe at (03:10)'):
             # Set Opacity : 3rd keyframe (03:10)
             pip_designer_page.set_timecode('00_00_03_10')
             pip_designer_page.add_remove_opacity_track_current_keyframe()
-
-            # Set Rotation : 2nd keyframe (03:10) 270 degree
-            pip_designer_page.add_remove_rotation_track_current_keyframe()
-            pip_designer_page.input_rotation_degree_value(270)
-
             # Set Opacity to 99% on 3rd keyframe
             pip_designer_page.express_mode.drag_object_setting_opacity_slider('99')
 
-            # Set Opacity to 25% on 2nd keyframe
+        with step('[Action] Swtich to previous keyframe'):
             pip_designer_page.tap_opacity_track_previous_keyframe()
-            pip_designer_page.express_mode.drag_object_setting_opacity_slider('25')
-
+            
+        with step('[Verify] Check if switch to (01:20) keyframe correctly'):
             # Verify step:
             check_timecode = pip_designer_page.get_timecode()
-            if check_timecode == '00:00:01:20':
-                add_opacity_keyframe_ok = True
-            else:
-                add_opacity_keyframe_ok = False
+            assert check_timecode == '00:00:01:20', f"Cannot switch to (01:20) keyframe correctly! Expected: 01:20, Actual: {check_timecode}"
 
-            # Check 1st rotation keyframe & degree
-            pip_designer_page.tap_rotation_next_keyframe()
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_12] Switch to next keyframe > Check timecode/ Opacity')
+    @exception_screenshot
+    def test_pip_designer_func_7_12(self):
+        '''
+        1. Set Opacity (25) keyframe at (01:20) and switch to next keyframe
+        2. Check if switch to (03:10) keyframe correctly
+        3. Check if Opacity is 99
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_11"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Opacity to 25 and switch to next keyframe'):
+            pip_designer_page.express_mode.drag_object_setting_opacity_slider('25')
+            pip_designer_page.tap_opacity_track_next_keyframe()
+            
+        with step('[Verify] Check if switch to (03:10) keyframe correctly'):
             check_timecode = pip_designer_page.get_timecode()
-            if check_timecode == '00:00:03:10':
-                add_rotation_keyframe_ok = True
-            else:
-                add_rotation_keyframe_ok = False
+            if not check_timecode == '00:00:03:10':
+                assert False, f"Cannot switch to (03:10) keyframe correctly! Expected: 03:10, Actual: {check_timecode}"
 
-            # Check degree
-            current_degree = pip_designer_page.exist(L.pip_designer.object_setting.rotation.degree_value)
-            if current_degree.AXValue == '270':
-                current_degree_value = True
-            else:
-                current_degree_value = False
-                logger(current_degree.AXValue)
+        with step('[Verify] Check if Opacity is 99%'):
+            check_opacity = pip_designer_page.express_mode.get_object_setting_opacity_value()
+            if not check_opacity == '99%':
+                assert False, f"Opacity is not 99%! Expected: 99%, Actual: {check_opacity}"
+        assert True
 
-            case.result = add_opacity_keyframe_ok and add_rotation_keyframe_ok and current_degree_value
-            logger(add_opacity_keyframe_ok)
-            logger(add_rotation_keyframe_ok)
-            logger(current_degree_value)
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_13] Switch to (00:00) and check if preview is correct as GT')
+    @exception_screenshot
+    def test_pip_designer_func_7_13(self):
+        '''
+        1. Switch to (00:00) and check if preview is correct as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_12"
+        self.ensure_dependency(dependency_test)
 
         # [L387] 3.3 Pip Designer > Adjust keyframe > Switch keyframe
-        with uuid("fb1acb9f-1c3a-4f23-b1c6-389d9d42d3d5") as case:
-            # Click Scale next keyframe
-            for x in range(2):
-                pip_designer_page.tap_scale_track_next_keyframe()
-                time.sleep(DELAY_TIME)
+        # with uuid("fb1acb9f-1c3a-4f23-b1c6-389d9d42d3d5") as case:
 
-            # Click Position previous keyframe
-            pip_designer_page.tap_position_track_previous_keyframe()
-
-            # Verify Step:
-            check_timecode = pip_designer_page.get_timecode()
-            if check_timecode == '00:00:00:00':
-                switch_keyframe_ok = True
-            else:
-                switch_keyframe_ok = False
+        with step('[Verify] Check if switch to (00:00) keyframe correctly'):
+            main_page.set_timecode('00_00_00_00')
 
             check_preview = main_page.snapshot(locator=L.pip_designer.designer_window,
                                                file_name=Auto_Ground_Truth_Folder + 'L185.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L185.png', check_preview)
-            case.result = switch_keyframe_ok and compare_result
-            logger(switch_keyframe_ok)
-            logger(compare_result)
+            assert compare_result, "Preview is not correct as GT (L185.png)!"
 
-        # Reset all Position keyframe
-        pip_designer_page.reset_position_keyframe()
-        time.sleep(DELAY_TIME*2)
-        main_page.click(L.main.confirm_dialog.btn_yes)
-        # Reset all Scale keyframe
-        pip_designer_page.reset_scale_keyframe()
-        time.sleep(DELAY_TIME*2)
-        main_page.click(L.main.confirm_dialog.btn_yes)
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_14] Reset all Position keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_14(self):
+        '''
+        1. Reset all Position keyframe
+        2. Check if all Position keyframe is removed (No Next/ Previous keyframe)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_13"
+        self.ensure_dependency(dependency_test)
 
-        # Reset all Opacity keyframe
-        pip_designer_page.reset_position_opacity_keyframe()
-        time.sleep(DELAY_TIME*2)
-        main_page.click(L.main.confirm_dialog.btn_yes)
+        with step('[Action] Reset Position keyframe'):
+            # Reset all Position keyframe
+            pip_designer_page.reset_position_keyframe()
+            main_page.click(L.main.confirm_dialog.btn_yes)
 
-        # Reset all Rotation keyframe
-        pip_designer_page.reset_rotation_keyframe()
-        time.sleep(DELAY_TIME*2)
-        main_page.click(L.main.confirm_dialog.btn_yes)
+        with step('[Verify] Check if all Position keyframe is removed'):
+            # click next keyframe
+            pip_designer_page.tap_position_next_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Position keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+            # click previous keyframe
+            pip_designer_page.tap_position_previous_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Position keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+        assert True
 
-        # Set Scale  width / height to 0.378
-        pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=1)
-        pip_designer_page.drag_scale_width_slider('0.378')
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_15] Reset all Scale keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_15(self):
+        '''
+        1. Reset all Scale keyframe
+        2. Check if all Scale keyframe is removed (No Next/ Previous keyframe)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_14"
+        self.ensure_dependency(dependency_test)
 
-        # Set Position : 0s (0.919, 0.164)
-        pip_designer_page.input_x_position_value('0.919')
-        time.sleep(DELAY_TIME)
-        pip_designer_page.input_y_position_value('0.164')
+        with step('[Action] Reset all Scale keyframe'):
+            # Reset all Scale keyframe
+            pip_designer_page.reset_scale_keyframe()
+            time.sleep(DELAY_TIME*2)
+            main_page.click(L.main.confirm_dialog.btn_yes)
+        
+        with step('[Verify] Check if all Scale keyframe is removed'):
+            # click next keyframe
+            pip_designer_page.tap_scale_track_next_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Scale keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+            # click previous keyframe
+            pip_designer_page.tap_scale_track_previous_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Scale keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+        assert True
 
-        # [L382] 3.3 Pip Designer > Object Settings > Able to set Ease in/out setting
-        with uuid("1a408d6c-fdf1-4e46-9856-e3caaa0bcc65") as case:
-            # Add position 1st keyframe
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_16] Reset all Opacity keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_16(self):
+        '''
+        1. Reset all Opacity keyframe
+        2. Check if all Opacity keyframe is removed (No Next/ Previous keyframe)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_15"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Reset all Opacity keyframe'):
+            # Reset all Opacity keyframe
+            pip_designer_page.reset_position_opacity_keyframe()
+            main_page.click(L.main.confirm_dialog.btn_yes)
+        with step('[Verify] Check if all Opacity keyframe is removed'):
+            # click next keyframe
+            pip_designer_page.tap_opacity_track_next_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Opacity keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+            # click previous keyframe
+            pip_designer_page.tap_opacity_track_previous_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Opacity keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_17] Reset all Rotation keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_17(self):
+        '''
+        1. Reset all Rotation keyframe
+        2. Check if all Rotation keyframe is removed (No Next/ Previous keyframe)
+        '''
+
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_16"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Reset all Rotation keyframe'):
+            # Reset all Rotation keyframe
+            pip_designer_page.reset_rotation_keyframe()
+            main_page.click(L.main.confirm_dialog.btn_yes)
+
+        with step('[Verify] Check if all Rotation keyframe is removed'):
+            # click next keyframe
+            pip_designer_page.tap_rotation_track_next_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Rotation keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+            # click previous keyframe
+            pip_designer_page.tap_rotation_track_previous_keyframe()
+            check_timecode = pip_designer_page.get_timecode()
+            if not check_timecode == '00:00:00:00':
+                assert False, f"Cannot remove all Rotation keyframe correctly! Expected: 00:00:00:00, Actual: {check_timecode}"
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.ease_in_out
+    @pytest.mark.name('[test_pip_designer_func_7_18] Add Ease in/out on keyframe')
+    @exception_screenshot
+    def test_pip_designer_func_7_18(self):
+        '''
+        1. Unfold Object Settings
+        2. Add first keyframe
+        3. Add Ease in on keyframe
+        4. Add Ease out on keyframe
+        '''
+        # Ensure the dependency test is run and passed
+        self.test_pip_designer_func_7_1()
+
+        with step('[Action] Unfold Object Settings'):
+            # Switch to Advanced Mode
+            pip_designer_page.switch_mode('Advanced')
+            # Unfold Object Settings
+            pip_designer_page.express_mode.unfold_properties_object_setting_tab()
+        
+        with step('[Action] Add first keyframe'):
+            # Set Scale  width / height to 0.378
+            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=1)
+            pip_designer_page.drag_scale_width_slider('0.378')
+
+            # Set Position : 0s (0.919, 0.164)
+            pip_designer_page.input_x_position_value('0.919')
+            time.sleep(DELAY_TIME)
+            pip_designer_page.input_y_position_value('0.164')
+
+            # [L382] 3.3 Pip Designer > Object Settings > Able to set Ease in/out setting
+            # with uuid("1a408d6c-fdf1-4e46-9856-e3caaa0bcc65") as case:
+                # Add position 1st keyframe
             pip_designer_page.add_remove_position_track_current_keyframe()
 
-            # Set Position 2nd keyframe at timecode (05:04)
-            pip_designer_page.set_timecode('00_00_05_04')
-            time.sleep(DELAY_TIME * 1.5)
-            pip_designer_page.input_x_position_value('0.106')
+        with step('[Verify] Check if position is correct'):
+            # Check position (x) in timecode (00:00)
+            check_x_position = pip_designer_page.get_x_position_value()
+            if check_x_position != '0.919':
+                assert False, f"X position is not 0.919! Expected: 0.919, Actual: {check_x_position}"
+            check_y_position = pip_designer_page.get_y_position_value()
+            if check_y_position != '0.164':
+                assert False, f"Y position is not 0.164! Expected: 0.164, Actual: {check_y_position}"
 
-            # Set Position 3rd keyframe at timecode (10:00)
-            pip_designer_page.set_timecode('00_00_10_00')
-            time.sleep(DELAY_TIME * 1.5)
-            pip_designer_page.input_x_position_value('0.894')
-            time.sleep(DELAY_TIME)
-            pip_designer_page.input_y_position_value('0.836')
-
-            # Enable Ease in and Ease out on 2nd keyframe
+        with step('[Action] Add Ease in on keyframe'):
+            # Enable Ease in and Ease out on keyframe
             pip_designer_page.click_specific_keyframe(1)
-            time.sleep(DELAY_TIME * 1.5)
             pip_designer_page.click_position_ease_in_checkbox(1)
-            time.sleep(DELAY_TIME * 1.5)
             pip_designer_page.input_position_ease_in_value('0.88')
 
+        with step('[Verify] Check if Ease in setting is correct'):
+            # Verify Step
+            check_menu_ease_in_status = pip_designer_page.simple_timeline.right_click_menu.get_ease_in_status()
+            if not check_menu_ease_in_status:
+                assert False, "Cannot set Ease in on keyframe correctly!"
+
+        with step('[Action] Add Ease out on keyframe'):
             pip_designer_page.click_position_ease_out_checkbox(1)
-            time.sleep(DELAY_TIME * 1.5)
             pip_designer_page.input_position_ease_out_value('0.97')
 
-            # Verify Step
-            pip_designer_page.click_specific_keyframe(1)
-            time.sleep(DELAY_TIME * 1.5)
-            check_menu_ease_in_status = pip_designer_page.simple_timeline.right_click_menu.get_ease_in_status()
-            logger(check_menu_ease_in_status)
-
-            pip_designer_page.click_specific_keyframe(1)
-            time.sleep(DELAY_TIME * 1.5)
+        with step('[Verify] Check if Ease out setting is correct'):
             check_menu_ease_out_status = pip_designer_page.simple_timeline.right_click_menu.get_ease_out_status()
-            logger(check_menu_ease_out_status)
-
-            # Check position (x) in timecode (04:11)
-            pip_designer_page.set_timecode('00_00_04_11')
-            time.sleep(DELAY_TIME * 1.5)
-            check_x_position = pip_designer_page.get_x_position_value()
-            logger(check_x_position)
-            if check_x_position == '0.132':
-                check_x_status = True
-            else:
-                check_x_status = False
-
-            # Check position (y) in timecode (06:01)
-            pip_designer_page.set_timecode('00_00_06_01')
-            time.sleep(DELAY_TIME * 1.5)
-            check_y_position = pip_designer_page.get_y_position_value()
-            logger(check_y_position)
-            if check_y_position == '0.197':
-                check_y_status = True
-            else:
-                check_y_status = False
-
-            case.result = check_menu_ease_in_status and check_menu_ease_out_status and check_x_status and check_y_status
+            if not check_menu_ease_out_status:
+                assert False, "Cannot set Ease out on keyframe correctly!"
+        assert True
 
 
-        # [L386] 3.3 Pip Designer > Adjust keyframe > Remove
-        with uuid("8249bb39-3372-4174-9cf8-813a881f9816") as case:
-            # Remove Position keyframe: 1st , 2nd
-            for x in range(2):
-                # Click previous keyframe
-                pip_designer_page.tap_position_track_previous_keyframe()
-                # Remove keyframe
-                pip_designer_page.add_remove_position_current_keyframe()
 
-            # Remove Position keyframe: 3rd
-            pip_designer_page.tap_position_next_keyframe()
-            pip_designer_page.add_remove_position_current_keyframe()
+        # # [L386] 3.3 Pip Designer > Adjust keyframe > Remove
+        # with uuid("8249bb39-3372-4174-9cf8-813a881f9816") as case:
+        #     # Remove Position keyframe: 1st , 2nd
+        #     for x in range(2):
+        #         # Click previous keyframe
+        #         pip_designer_page.tap_position_track_previous_keyframe()
+        #         # Remove keyframe
+        #         pip_designer_page.add_remove_position_current_keyframe()
 
-            # Verify Step:
-            # Click previous keyframe
-            pip_designer_page.tap_position_track_previous_keyframe()
+        #     # Remove Position keyframe: 3rd
+        #     pip_designer_page.tap_position_next_keyframe()
+        #     pip_designer_page.add_remove_position_current_keyframe()
 
-            check_timecode = pip_designer_page.get_timecode()
-            logger(check_timecode)
-            if check_timecode == '00:00:10:00':
-                remove_keyframe_ok = True
-            else:
-                remove_keyframe_ok = False
+        #     # Verify Step:
+        #     # Click previous keyframe
+        #     pip_designer_page.tap_position_track_previous_keyframe()
 
-            case.result = remove_keyframe_ok
+        #     check_timecode = pip_designer_page.get_timecode()
+        #     logger(check_timecode)
+        #     if check_timecode == '00:00:10:00':
+        #         remove_keyframe_ok = True
+        #     else:
+        #         remove_keyframe_ok = False
+
+        #     case.result = remove_keyframe_ok
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.path
+    @pytest.mark.name('[test_pip_designer_func_7_19] Apply Path Template')
+    @exception_screenshot
+    def test_pip_designer_func_7_19(self):
+        '''
+        1. Set path template
+        2. Check if path template is set correctly as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_18"
+        self.ensure_dependency(dependency_test)
 
         # [L400] 3.3 Pip Designer > Set [Motion] > Select Path
-        with uuid("39370a35-82b8-44e5-a531-5560b5062ef0") as case:
-            # Set opacity = 100
-            pip_designer_page.express_mode.drag_object_setting_opacity_slider('100')
+        # with uuid("39370a35-82b8-44e5-a531-5560b5062ef0") as case:
+        # with step('[Action] Set opacity to 100'):
+        #     # Set opacity = 100
+        #     pip_designer_page.express_mode.drag_object_setting_opacity_slider('100')
 
+        with step('[Action] Set path template'):
             # Switch to motion > Unfold path menu
             pip_designer_page.advanced.switch_to_motion()
-            time.sleep(DELAY_TIME)
             pip_designer_page.advanced.unfold_path_menu()
-
             # Select path template
             pip_designer_page.path.select_template(index=3)
-
             # You have not saved the changes ... Do you want to save the changes now? Click [No]
             main_page.exist_click(L.title_designer.backdrop.warning.btn_no)
 
+        with step('[Verify] Check if path template is set correctly as GT'):
             # Verify Step
             pip_designer_page.set_timecode('00_00_04_00')
             time.sleep(DELAY_TIME)
@@ -5494,8 +5735,19 @@ class Test_BFT_365_OS14():
                                                file_name=Auto_Ground_Truth_Folder + 'L188.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L188.png', check_preview, similarity=0.85)
 
-            case.result = compare_result
+            assert compare_result, "Path template is not set correctly as GT(L188.png)!"
 
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.keyframe
+    @pytest.mark.object_setting
+    @pytest.mark.name('[test_pip_designer_func_7_20] ')
+    @exception_screenshot
+    def test_pip_designer_func_7_20(self):
+        '''
+
+        '''
         # fold path menu
         pip_designer_page.advanced.unfold_path_menu(0)
 
