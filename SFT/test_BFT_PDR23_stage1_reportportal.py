@@ -5359,7 +5359,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Set Rotation (270) keyframe at (03:10)'):
             # Set Rotation : 2nd keyframe (03:10) 270 degree
-            main_page.set_timecode('00_00_03_10')
+            pip_designer_page.set_timecode('00_00_03_10')
             pip_designer_page.add_remove_rotation_track_current_keyframe()
             pip_designer_page.input_rotation_degree_value(270)
 
@@ -5481,7 +5481,7 @@ class Test_BFT_365_OS14():
         # with uuid("fb1acb9f-1c3a-4f23-b1c6-389d9d42d3d5") as case:
 
         with step('[Verify] Check if switch to (00:00) keyframe correctly'):
-            main_page.set_timecode('00_00_00_00')
+            pip_designer_page.set_timecode('00_00_00_00')
 
             check_preview = main_page.snapshot(locator=L.pip_designer.designer_window,
                                                file_name=Auto_Ground_Truth_Folder + 'L185.png')
@@ -5641,9 +5641,12 @@ class Test_BFT_365_OS14():
     def test_pip_designer_func_7_18(self):
         '''
         1. Unfold Object Settings
-        2. Add first keyframe
-        3. Add Ease in on keyframe
-        4. Add Ease out on keyframe
+        2. Set Scale width/ Height to (0.378) keyframe at (00:00)
+        3. Add 1st keyframe at (00:00) for ease in/ out
+        4. Add 2nd position keyframe at (05:04) for ease
+        5. Add 3rd position keyframe at (10:00) for ease
+        6. Add Ease in on keyframe
+        7. Add Ease out on keyframe
         '''
         # Ensure the dependency test is run and passed
         self.test_pip_designer_func_7_1()
@@ -5653,6 +5656,10 @@ class Test_BFT_365_OS14():
             pip_designer_page.switch_mode('Advanced')
             # Unfold Object Settings
             pip_designer_page.express_mode.unfold_properties_object_setting_tab()
+
+        with step('[Action] Set Scale width/ Height to (0.378) keyframe at (00:00)'):
+            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=1)
+            pip_designer_page.drag_scale_width_slider('0.378')
         
         with step('[Action] Add 1st keyframe at (00:00) for ease in/ out'):
             # Set Scale  width / height to 0.378
@@ -6044,6 +6051,8 @@ class Test_BFT_365_OS14():
             pip_designer_page.switch_mode('Advanced')
             # Switch to properties
             pip_designer_page.advanced.switch_to_properties()
+            # Fold Object Settings
+            pip_designer_page.express_mode.unfold_properties_object_setting_tab(unfold=0)
             # Apply border
             pip_designer_page.apply_border()
         
@@ -6411,7 +6420,7 @@ class Test_BFT_365_OS14():
             pip_designer_page.switch_mode('Express')
 
         with step('[Action] Press Space key to play video'):
-            main_page.set_timecode('00_00_00_00')
+            pip_designer_page.set_timecode('00_00_00_00')
             main_page.press_space_key()
 
         with step('[Verify] Check if preview changed correctly after play'):
@@ -6674,7 +6683,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_type
-    @pytest.mark.name('[test_shape_designer_func_8_3] Apply Shape Type 8 and 4')
+    @pytest.mark.name('[test_shape_designer_func_8_3] Apply Linear Shape (8 and 4)')
     @exception_screenshot
     def test_shape_designer_func_8_3(self):
         '''
@@ -6723,7 +6732,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_type
-    @pytest.mark.name('[test_shape_designer_func_8_4] ')
+    @pytest.mark.name('[test_shape_designer_func_8_4] Apply General Shape (10 and 14)')
     @exception_screenshot
     def test_shape_designer_func_8_4(self):
         '''
@@ -6735,55 +6744,84 @@ class Test_BFT_365_OS14():
 
 
         # [L430] 3.5 Shape Designer (Shape 10) > Properties tab > Shape Type (General shape)
-        with uuid("1c24089b-4989-459e-b2aa-105da9c3cf1e") as case:
-            shape_designer_page.click_cancel(option=1)
-            time.sleep(DELAY_TIME)
+        # with uuid("1c24089b-4989-459e-b2aa-105da9c3cf1e") as case:
 
+        with step('[Action] Leave Shape Designer and re-enter'):
+            # Leave Shape Designer
+            shape_designer_page.click_cancel(option=1)
+            # Search [Shape 010] and open shape designer
             main_page.select_library_icon_view_media('Shape 010')
             main_page.double_click()
-
+            # Edit text: Happy Hour
             shape_designer_page.click_center_on_Canvas()
             shape_designer_page.edit_title_on_Canvas('Happy Hour')
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Apply General Shape (10)'):
             # Drag scroll bar of (shape type) to 0.314
-            shape_designer_page.properties.shape_type.drag_scroll_bar('0')
-            time.sleep(DELAY_TIME)
-            shape_designer_page.properties.shape_type.apply_type(10)
+            # shape_designer_page.properties.shape_type.drag_scroll_bar('0')
+            # time.sleep(DELAY_TIME)
+            # shape_designer_page.properties.shape_type.apply_type(10)
             shape_designer_page.properties.shape_type.drag_scroll_bar('0.14')
-            time.sleep(DELAY_TIME * 2)
+            # time.sleep(DELAY_TIME * 2)
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
             shape_designer_page.properties.shape_type.apply_type(10)
+        
+        with step('[Verify] Check preview after apply shape 10'):
+            check_preview_10 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+            if main_page.compare(before_preview, check_preview_10, similarity=0.98):
+                assert False, "Shape 10 is not applied correctly! Similary should<0.98"
 
+        with step('[Action] Apply General Shape (14)'):
             # Apply shape 14
-            shape_designer_page.properties.shape_type.apply_type(14)
+            # shape_designer_page.properties.shape_type.apply_type(14)
             shape_designer_page.properties.shape_type.drag_scroll_bar('0.34')
-            time.sleep(DELAY_TIME * 2)
             # Apply shape 14
             shape_designer_page.properties.shape_type.apply_type(14)
-            time.sleep(DELAY_TIME)
-
+            # time.sleep(DELAY_TIME)
+        with step('[Verify] Check preview after apply shape 14'):
             check_preview_14 = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(check_preview_10, check_preview_14, similarity=0.98):
+                assert False, "Shape 14 is not applied correctly! Similary should<0.98"
 
+        with step('[Verify] Compare preview after select Shape 14 as GT'):
             # Compare preview after select Shape 14 vs Shape 25
             compare_result_14 = main_page.compare(Ground_Truth_Folder + 'L196.png', check_preview_14)
-            logger(compare_result_14)
+            if not compare_result_14:
+                assert False, "Shape 14 is not correct as GT(L196.png)! Similary should>0.95"
 
+        with step('[Action] Apply General Shape (19)'):
             # Apply shape 19
             shape_designer_page.properties.shape_type.apply_type(19)
-            time.sleep(DELAY_TIME)
-
+            # time.sleep(DELAY_TIME)
+        with step('[Verify] Check preview after apply shape 19'):
             check_preview_19 = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
-
             # Compare preview after select Shape 19 vs Shape 14
-            compare_result_19 = main_page.compare(check_preview_19, check_preview_14)
-            logger(compare_result_19)
+            if main_page.compare(check_preview_19, check_preview_14):
+                assert False, "Shape 19 is not applied correctly! Similary should<0.95"
+            assert True
 
-            case.result = (not compare_result_14) and (not compare_result_19)
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_type
+    @pytest.mark.name('[test_shape_designer_func_8_4] Apply General Shape (10 and 14)')
+    @exception_screenshot
+    def test_shape_designer_func_8_4(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_3"
+        self.ensure_dependency(dependency_test)
+        
+        # [L432] 3.5 Shape Designer (Shape 10) > Properties tab > Preset
+        # with uuid("53bde9e0-8ccd-4155-995c-50815b552ddd") as case:
+
+        with step('[Action] Enter Preset'):
             # Fold Shape Type
             shape_designer_page.properties.unfold_shape_type(set_unfold=0)
 
-        # [L432] 3.5 Shape Designer (Shape 10) > Properties tab > Preset
-        with uuid("53bde9e0-8ccd-4155-995c-50815b552ddd") as case:
+
             # Unfold Preset Type
             shape_designer_page.properties.unfold_shape_preset(set_unfold=1)
 
@@ -6803,8 +6841,22 @@ class Test_BFT_365_OS14():
             logger(compare_result)
             case.result = (not should_different) and compare_result
 
-            # Fold Preset Type
-            shape_designer_page.properties.unfold_shape_preset(set_unfold=0)
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_type
+    @pytest.mark.name('[test_shape_designer_func_8_5] Apply General Shape (10 and 14)')
+    @exception_screenshot
+    def test_shape_designer_func_8_5(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_4"
+        self.ensure_dependency(dependency_test)
+
+        # Fold Preset Type
+        shape_designer_page.properties.unfold_shape_preset(set_unfold=0)
 
         # [L433] 3.5 Shape Designer (Shape 10) > Properties tab > Fill
         with uuid("0925be85-d8bc-4a20-bd47-80b7c2f3ba35") as case:
