@@ -4887,6 +4887,9 @@ class Test_BFT_365_OS14():
         1. Enter [Search the library] textbox and show history
         2. Check show correct search history
         '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_search_func_6_3"
+        self.ensure_dependency(dependency_test)
 
         # [L211] 2.3 Title Room > check all search keyword
         # with uuid("de131070-6075-4176-84d2-0f4c0c641f6a") as case:
@@ -4925,6 +4928,9 @@ class Test_BFT_365_OS14():
         1. Enter Media room
         2. Check should NOT show any hint due to import project content in Library
         '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_search_func_6_4"
+        self.ensure_dependency(dependency_test)
 
         # [L100] 2.1 Media Room > New One Boarding > On Boarding 1 > [Case 2] open one project
         # with uuid("fd97c083-8de8-4d12-b7a9-2ddf7caf9e0d") as case:
@@ -4935,6 +4941,15 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Should NOT show any hint due to import project content in library'):
             assert main_page.is_not_exist(L.media_room.string_use_sample_media), "Show hints in Media room! Should NOT show any hint due to import project content in Library"
+
+
+    @pytest.mark.title_search_func
+    @pytest.mark.name('[test_title_search_func_6_z] Close AP due to the section is completed')
+    @exception_screenshot
+    def test_title_search_func_6_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
 
 
 
@@ -6513,6 +6528,9 @@ class Test_BFT_365_OS14():
         2. Check preview at (02:06) is as GT
         3. Save project
         '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_pip_designer_func_7_37"
+        self.ensure_dependency(dependency_test)
 
         # [L405] 3.4 Pip Designer > Add saved pip template to timeline
         # with uuid("b63cc42d-7ae7-49e8-9584-36d0afb9af10") as case:
@@ -6540,42 +6558,70 @@ class Test_BFT_365_OS14():
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
             
         assert check_current_dialog09, "Cannot add saved template to timeline correctly as GT (L193.png)!"
-        
 
-    # 17 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.pip_designer_func
+    @pytest.mark.name('[test_pip_designer_func_7_z] Close AP due to the section is completed')
     @exception_screenshot
-    def test_1_1_6(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_pip_designer_func_7_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
 
-        # Open project: test_case_1_1_5
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_5.pds')
-        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.search_library
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_shape_designer_func_8_1] Open Shape Designer with [Shape 010]')
+    @exception_screenshot
+    def test_shape_designer_func_8_1(self):
+        '''
+        1. Open AP and open saved project
+        2. Enter PiP room
+        3. Search [Shape 010] and open shape designer
+        4. Check if Shape Designer (Shape 10) is opened
+        '''
+
+        with step('[Action] Open AP and open saved project'):
+            main_page.start_app()
+            time.sleep(DELAY_TIME)
+
+            project_name = 'BFT_21_Stage1/test_shape_designer_func_8_1_from_test_pip_designer_func_7_38.pdk'
+            save_name = 'BFT_21_Stage1/test_shape_designer_func_8_1'
+            self.open_packed_project(project_name, save_name)
 
         # [L428] 3.5 Shape Designer (Shape 10) > Open Shape designer
-        with uuid("d31e8163-f315-43f3-bf3b-1ef15d347554") as case:
+        # with uuid("d31e8163-f315-43f3-bf3b-1ef15d347554") as case:
+        with step('[Action] Enter pip room'):
             # enter PiP room
             main_page.enter_room(4)
-            time.sleep(DELAY_TIME * 3)
 
+        with step('[Action] Search [Shape 010] and open shape designer'):
             # Input search Shape 010
             main_page.exist_click(L.media_room.input_search)
             main_page.keyboard.send('Shape 010')
             main_page.press_enter_key()
-            time.sleep(DELAY_TIME * 3)
+            time.sleep(DELAY_TIME)
             main_page.select_library_icon_view_media('Shape 010')
             main_page.double_click()
 
+        with step('[Verify] Check if Shape Designer (Shape 10) is opened'):
             check_title = shape_designer_page.get_title()
-            if check_title == 'Shape 010':
-                case.result = True
-            else:
-                case.result = False
+            assert check_title == 'Shape 010', f"Cannot open Shape Designer (Shape 10) correctly! Expected: Shape 010, Actual: {check_title}"
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.search_library
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_shape_designer_func_8_2] ')
+    @exception_screenshot
+    def test_shape_designer_func_8_2(self):
+        '''
+
+        '''
         # [L429] 3.5 Shape Designer (Shape 10) > Input text
         with uuid("649e782e-02f5-4d11-98f8-43c305c69daa") as case:
             shape_designer_page.click_center_on_Canvas()
