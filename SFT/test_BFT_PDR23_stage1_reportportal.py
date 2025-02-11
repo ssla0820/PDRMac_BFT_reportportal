@@ -5654,14 +5654,13 @@ class Test_BFT_365_OS14():
             # Unfold Object Settings
             pip_designer_page.express_mode.unfold_properties_object_setting_tab()
         
-        with step('[Action] Add first keyframe'):
+        with step('[Action] Add 1st keyframe at (00:00) for ease in/ out'):
             # Set Scale  width / height to 0.378
             pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=1)
             pip_designer_page.drag_scale_width_slider('0.378')
 
             # Set Position : 0s (0.919, 0.164)
             pip_designer_page.input_x_position_value('0.919')
-            time.sleep(DELAY_TIME)
             pip_designer_page.input_y_position_value('0.164')
 
             # [L382] 3.3 Pip Designer > Object Settings > Able to set Ease in/out setting
@@ -5669,8 +5668,11 @@ class Test_BFT_365_OS14():
                 # Add position 1st keyframe
             pip_designer_page.add_remove_position_track_current_keyframe()
 
-        with step('[Verify] Check if position is correct'):
-            # Check position (x) in timecode (00:00)
+        with step('[Verify] Check if position/ timecode is correct for 1st keyframe'):
+            # Check position (x/y) in timecode (00:00)
+            current_timecode = pip_designer_page.get_timecode()
+            if current_timecode != '00:00:00:00':
+                assert False, f"Timecode is not 00:00:00:00! Expected: 00:00:00:00, Actual: {current_timecode}"
             check_x_position = pip_designer_page.get_x_position_value()
             if check_x_position != '0.919':
                 assert False, f"X position is not 0.919! Expected: 0.919, Actual: {check_x_position}"
@@ -5678,9 +5680,42 @@ class Test_BFT_365_OS14():
             if check_y_position != '0.164':
                 assert False, f"Y position is not 0.164! Expected: 0.164, Actual: {check_y_position}"
 
+        with step('[Action] Add 2nd position keyframe at (05:04) for ease in/ out'):
+            pip_designer_page.set_timecode('00_00_05_04')
+            pip_designer_page.input_x_position_value('0.106')
+        
+        with step('[Verify] Check if position/ timecode is correct for 2nd keyframe'):
+            # Check position (x/y) in timecode (05:04)
+            current_timecode = pip_designer_page.get_timecode()
+            if current_timecode != '00:00:05:04':
+                assert False, f"Timecode is not 00:00:05:04! Expected: 00:00:05:04, Actual: {current_timecode}"
+            check_x_position = pip_designer_page.get_x_position_value()
+            if check_x_position != '0.106':
+                assert False, f"X position is not 0.106! Expected: 0.106, Actual: {check_x_position}"
+            check_y_position = pip_designer_page.get_y_position_value()
+            if check_y_position != '0.164':
+                assert False, f"Y position is not 0.164! Expected: 0.164, Actual: {check_y_position}"
+
+        with step('[Action] Add 3rd position keyframe at (10:00) for ease in/ out'):
+            pip_designer_page.set_timecode('00_00_10_00')
+            pip_designer_page.input_x_position_value('0.894')
+            pip_designer_page.input_y_position_value('0.836')
+
+        with step('[Verify] Check if position/ timecode is correct for 3rd keyframe'):
+            # Check position (x/y) in timecode (10:00)
+            current_timecode = pip_designer_page.get_timecode()
+            if current_timecode != '00:00:10:00':
+                assert False, f"Timecode is not 00:00:10:00! Expected: 00:00:10:00, Actual: {current_timecode}"
+            check_x_position = pip_designer_page.get_x_position_value()
+            if check_x_position != '0.894':
+                assert False, f"X position is not 0.894! Expected: 0.894, Actual: {check_x_position}"
+            check_y_position = pip_designer_page.get_y_position_value()
+            if check_y_position != '0.836':
+                assert False, f"Y position is not 0.836! Expected: 0.836, Actual: {check_y_position}"
+
         with step('[Action] Add Ease in on keyframe'):
             # Enable Ease in and Ease out on keyframe
-            pip_designer_page.click_specific_keyframe(0)
+            pip_designer_page.click_specific_keyframe(1)
             pip_designer_page.click_position_ease_in_checkbox(1)
             pip_designer_page.input_position_ease_in_value('0.88')
 
@@ -5699,8 +5734,6 @@ class Test_BFT_365_OS14():
             if not check_menu_ease_out_status:
                 assert False, "Cannot set Ease out on keyframe correctly!"
         assert True
-
-
 
         # # [L386] 3.3 Pip Designer > Adjust keyframe > Remove
         # with uuid("8249bb39-3372-4174-9cf8-813a881f9816") as case:
@@ -6238,8 +6271,8 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_pip_designer_func_7_31(self):
         '''
-
-        
+        1. Set Fade-out
+        2. Check if preview changed after apply fade-out
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_pip_designer_func_7_30"
@@ -6253,7 +6286,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed after apply fade-out'):
             has_fade_out_preview = main_page.snapshot(locator=L.pip_designer.preview)
-            if not main_page.compare(no_fade_out_preview, has_fade_out_preview, similarity=0.99):
+            if main_page.compare(no_fade_out_preview, has_fade_out_preview, similarity=0.99):
                 assert False, "Fade-out is not changed correctly!"
         assert True
 
@@ -6370,7 +6403,6 @@ class Test_BFT_365_OS14():
         dependency_test = "test_pip_designer_func_7_33"
         self.ensure_dependency(dependency_test)
 
-
         # [L402] 3.3 Pip Designer > Preview in Designer
         # with uuid("55666272-8ab9-4b7f-a6b1-dfbf0c6322ad") as case:
         with step('[Action] Switch to Express mode'):
@@ -6392,14 +6424,14 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.timecode
     @pytest.mark.play_video
-    @pytest.mark.name('[test_pip_designer_func_7_34] Stop Video')
+    @pytest.mark.name('[test_pip_designer_func_7_35] Stop Video')
     @exception_screenshot
-    def test_pip_designer_func_7_34(self):
+    def test_pip_designer_func_7_35(self):
         '''
         1. Click [Stop] button to stop video
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_pip_designer_func_7_33"
+        dependency_test = "test_pip_designer_func_7_34"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Click [Stop] button to stop video'):
@@ -6407,7 +6439,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if switch to (00:00)'):
             current_timecode = pip_designer_page.get_timecode()
-            assert current_timecode == '00_00_00_00', f"Cannot stop video correctly! Expected: 00_00_00_00, Actual: {current_timecode}"
+            assert current_timecode == '00:00:00:00', f"Cannot stop video correctly! Expected: 00:00:00:00, Actual: {current_timecode}"
 
         
             # # Set timecode (00:00:08:05)
@@ -6429,14 +6461,14 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.cyberlink_cloud
     @pytest.mark.dz
-    @pytest.mark.name('[test_pip_designer_func_7_35] Share to Cloud')
+    @pytest.mark.name('[test_pip_designer_func_7_36] Share to Cloud')
     @exception_screenshot
-    def test_pip_designer_func_7_35(self):
+    def test_pip_designer_func_7_36(self):
         '''
         1. Click [Share] button to upload template online
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_pip_designer_func_7_34"
+        dependency_test = "test_pip_designer_func_7_35"
         self.ensure_dependency(dependency_test)
 
         # [L403] 3.4 Pip Designer > [Share] template online
@@ -6453,9 +6485,9 @@ class Test_BFT_365_OS14():
     @pytest.mark.cyberlink_cloud
     @pytest.mark.dz
     @pytest.mark.save_template
-    @pytest.mark.name('[test_pip_designer_func_7_36] Download Content from CL/DZ')
+    @pytest.mark.name('[test_pip_designer_func_7_37] Download Content from CL/DZ')
     @exception_screenshot
-    def test_pip_designer_func_7_36(self):
+    def test_pip_designer_func_7_37(self):
         '''
         1. Click [Save as] button to save template
         2. Leave pip designer
@@ -6463,7 +6495,7 @@ class Test_BFT_365_OS14():
         4. Delete downloaded content and close window
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_pip_designer_func_7_35"
+        dependency_test = "test_pip_designer_func_7_36"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Click [Save as] button to save template'):
@@ -6496,14 +6528,14 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
     @pytest.mark.save_template
-    @pytest.mark.name('[test_pip_designer_func_7_37] Select saved template and check preview')
+    @pytest.mark.name('[test_pip_designer_func_7_38] Select saved template and check preview')
     @exception_screenshot
-    def test_pip_designer_func_7_37(self):
+    def test_pip_designer_func_7_38(self):
         '''
         1. Select saved template and check preview
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_pip_designer_func_7_36"
+        dependency_test = "test_pip_designer_func_7_37"
         self.ensure_dependency(dependency_test)
 
         # [L404] 3.4 Pip Designer > Save template
@@ -6521,16 +6553,16 @@ class Test_BFT_365_OS14():
     @pytest.mark.save_template
     @pytest.mark.timecode
     @pytest.mark.timeline
-    @pytest.mark.name('[test_pip_designer_func_7_38] Add saved template to timeline')
+    @pytest.mark.name('[test_pip_designer_func_7_39] Add saved template to timeline')
     @exception_screenshot
-    def test_pip_designer_func_7_38(self):
+    def test_pip_designer_func_7_39(self):
         '''
         1. Add saved template to timeline
         2. Check preview at (02:06) is as GT
         3. Save project
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_pip_designer_func_7_37"
+        dependency_test = "test_pip_designer_func_7_38"
         self.ensure_dependency(dependency_test)
 
         # [L405] 3.4 Pip Designer > Add saved pip template to timeline
@@ -6640,53 +6672,67 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.test_shape_designer_func
     @pytest.mark.shape_designer
-    @pytest.mark.search_library
-    @pytest.mark.launch
-    @pytest.mark.open_project
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_shape_designer_func_8_3] ')
+    @pytest.mark.properties
+    @pytest.mark.shape_type
+    @pytest.mark.name('[test_shape_designer_func_8_3] Apply Shape Type 8 and 4')
     @exception_screenshot
     def test_shape_designer_func_8_3(self):
+        '''
+        1. Apply Shape 8 and check preview
+        2. Apply Shape 4 and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_2"
+        self.ensure_dependency(dependency_test)
+
+        # [L431] 3.5 Shape Designer (Shape 10) > Properties tab > Shape Type (Linear shape)
+        # with uuid("281801de-64bc-4c6c-8c47-ab1dd7f8e0fa") as case:
+        with step('[Action] Enter shape type'):
+            shape_designer_page.unselect_title_on_Canvas()
+            # Unfold Shape Type
+            shape_designer_page.properties.unfold_shape_type(set_unfold=1)
+            # Drag scroll bar of (shape type) to 0
+            shape_designer_page.properties.shape_type.drag_scroll_bar('0')
+
+        with step('[Action] Apply shape 8'):
+            check_preview_25 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+            # Apply shape 8
+            shape_designer_page.properties.shape_type.apply_type(8)
+        
+        with step('[Verify] Check preview after apply shape 8'):
+            # Verify Step
+            check_preview_08 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+            if main_page.compare(check_preview_25, check_preview_08):
+                assert False, "Shape 8 is not applied correctly! Similary should<0.95"
+            
+        with step('[Action] Apply shape 4'):
+            # Apply shape 4
+            shape_designer_page.properties.shape_type.apply_type(4)
+
+        with step('[Verify] Check preview after apply shape 4'):
+            # Verify Step
+            # If preview (Linear 08 -> Linear 04) is not changed, it's known bug (VDE224706-0064)
+            check_preview_04 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+            compare_result_w_04 = main_page.compare(check_preview_08, check_preview_04, similarity=0.99)
+            if compare_result_w_04:
+                assert False, "Shape 4 is not applied correctly! Similary should<0.99"
+
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_type
+    @pytest.mark.name('[test_shape_designer_func_8_4] ')
+    @exception_screenshot
+    def test_shape_designer_func_8_4(self):
         '''
 
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_shape_designer_func_8_1"
+        dependency_test = "test_shape_designer_func_8_3"
         self.ensure_dependency(dependency_test)
 
-        shape_designer_page.unselect_title_on_Canvas()
-        check_preview_25 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-
-
-        # [L431] 3.5 Shape Designer (Shape 10) > Properties tab > Shape Type (Linear shape)
-        with uuid("281801de-64bc-4c6c-8c47-ab1dd7f8e0fa") as case:
-            # Unfold Shape Type
-            shape_designer_page.properties.unfold_shape_type(set_unfold=1)
-
-            # Drag scroll bar of (shape type) to 0
-            shape_designer_page.properties.shape_type.drag_scroll_bar('0')
-
-            # Apply shape 8
-            shape_designer_page.properties.shape_type.apply_type(8)
-            time.sleep(DELAY_TIME)
-
-            # Verify Step
-            check_preview_08 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            compare_result_w_08 = main_page.compare(check_preview_25, check_preview_08)
-            logger(compare_result_w_08)
-
-            # Apply shape 4
-            shape_designer_page.properties.shape_type.apply_type(4)
-            time.sleep(DELAY_TIME)
-
-            # Verify Step
-            # If preview (Linear 08 -> Linear 04) is not changed, it's known bug (VDE224706-0064)
-            check_preview_04 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            compare_result_w_04 = main_page.compare(check_preview_08, check_preview_04, similarity=0.9999)
-            logger(compare_result_w_04)
-
-            case.result = (not compare_result_w_08) and (not compare_result_w_04)
-            case.fail_log = 'VDE224706-0064'
 
         # [L430] 3.5 Shape Designer (Shape 10) > Properties tab > Shape Type (General shape)
         with uuid("1c24089b-4989-459e-b2aa-105da9c3cf1e") as case:
