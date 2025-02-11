@@ -5173,7 +5173,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if switch to (04:12) keyframe correctly'):
             get_timecode = pip_designer_page.get_timecode()
-            if get_timecode != '00:00:00:00':
+            if get_timecode != '00:00:04:12':
                 assert False, f"Cannot switch to (04:12) keyframe correctly! Expected: 04:12, Actual: {get_timecode}"
 
         with step('[Verify] Check if x position is 0.803'):
@@ -5680,7 +5680,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Add Ease in on keyframe'):
             # Enable Ease in and Ease out on keyframe
-            pip_designer_page.click_specific_keyframe(1)
+            pip_designer_page.click_specific_keyframe(0)
             pip_designer_page.click_position_ease_in_checkbox(1)
             pip_designer_page.input_position_ease_in_value('0.88')
 
@@ -6177,11 +6177,11 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly as GT (test_pip_designer_func_7_28~29)'):
             check_preview = main_page.snapshot(locator=L.pip_designer.preview,
-                                               file_name=Auto_Ground_Truth_Folder + 'L177.png')
+                                               file_name=Auto_Ground_Truth_Folder + 'L189.png')
 
             # Compare preview is changed when apply Shadow
-            compare_result = main_page.compare(Auto_Ground_Truth_Folder + 'L189.png', check_preview)
-            assert compare_result, "Shadow color is not correct as GT(L177.png)!"
+            compare_result = main_page.compare(Ground_Truth_Folder + 'L189.png', check_preview)
+            assert compare_result, "Shadow color is not correct as GT(L189.png)!"
 
     @pytest.mark.pip_designer_func
     @pytest.mark.pip_designer
