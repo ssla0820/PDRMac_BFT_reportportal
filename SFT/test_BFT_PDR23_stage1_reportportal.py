@@ -6654,8 +6654,8 @@ class Test_BFT_365_OS14():
         dependency_test = "test_shape_designer_func_8_1"
         self.ensure_dependency(dependency_test)
 
-            shape_designer_page.unselect_title_on_Canvas()
-            check_preview_25 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+        shape_designer_page.unselect_title_on_Canvas()
+        check_preview_25 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
 
 
         # [L431] 3.5 Shape Designer (Shape 10) > Properties tab > Shape Type (Linear shape)
