@@ -4786,6 +4786,7 @@ class Test_BFT_365_OS14():
             main_page.click(L.base.launcher_window.img_recently_icon)
 
         with step('[Verify] Check if project is opened correctly'):
+                time.sleep(DELAY_TIME*3) # wait for project loaded
                 # Verify Step:
                 if not main_page.exist(L.base.main_caption):
                     assert False, 'Cannot find locator main_caption / Not find project name locator'
@@ -6612,32 +6613,50 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.test_shape_designer_func
     @pytest.mark.shape_designer
-    @pytest.mark.search_library
-    @pytest.mark.launch
-    @pytest.mark.open_project
-    @pytest.mark.content_pack
-    @pytest.mark.name('[test_shape_designer_func_8_2] ')
+    @pytest.mark.name('[test_shape_designer_func_8_2] Input text: Happy Hour')
     @exception_screenshot
     def test_shape_designer_func_8_2(self):
         '''
-
+        1. Input text: Happy Hour
+        2. Check if text is input correctly as GT
         '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_1"
+        self.ensure_dependency(dependency_test)
+
         # [L429] 3.5 Shape Designer (Shape 10) > Input text
-        with uuid("649e782e-02f5-4d11-98f8-43c305c69daa") as case:
+        # with uuid("649e782e-02f5-4d11-98f8-43c305c69daa") as case:
+        with step('[Action] Input text: Happy Hour'):
             shape_designer_page.click_center_on_Canvas()
             shape_designer_page.edit_title_on_Canvas('Happy Hour')
-            time.sleep(DELAY_TIME)
 
-            time.sleep(DELAY_TIME * 3)
+        with step('[Verify] Check if text is input correctly as GT'):
             check_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape,
                                                file_name=Auto_Ground_Truth_Folder + 'L196.png')
 
             # Compare preview after select Shape 10 & input text : Happy Hour
             compare_result = main_page.compare(Ground_Truth_Folder + 'L196.png', check_preview)
-            logger(compare_result)
-            case.result = compare_result
+            assert compare_result, "Cannot input text correctly as GT (L196.png)! Similary should>0.95"
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.search_library
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_shape_designer_func_8_3] ')
+    @exception_screenshot
+    def test_shape_designer_func_8_3(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_1"
+        self.ensure_dependency(dependency_test)
+
             shape_designer_page.unselect_title_on_Canvas()
             check_preview_25 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+
 
         # [L431] 3.5 Shape Designer (Shape 10) > Properties tab > Shape Type (Linear shape)
         with uuid("281801de-64bc-4c6c-8c47-ab1dd7f8e0fa") as case:
