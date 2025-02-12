@@ -6,6 +6,7 @@ from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -116,7 +117,7 @@ class Shape_Designer(Main_Page, BasePage):
             self.shape_outline = self.Shape_Outline(*args, **kwargs)
             self.shadow = self.Shadow(*args, **kwargs)
             self.title = self.Title(*args, **kwargs)
-
+        @step('[Action][Properties] Fold/ Unfold Shape Type')
         def unfold_shape_type(self, set_unfold=1):
             try:
                 current_value = self.exist(L.shape_designer.shape_type.btn_shape_type).AXValue
@@ -124,9 +125,10 @@ class Shape_Designer(Main_Page, BasePage):
                     self.exist_click(L.shape_designer.shape_type.btn_shape_type)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Properties] Fold/ Unfold Shape Preset')
         def unfold_shape_preset(self, set_unfold=1):
             try:
                 current_value = self.exist(L.shape_designer.shape_preset.btn_shape_preset).AXValue
@@ -134,9 +136,10 @@ class Shape_Designer(Main_Page, BasePage):
                     self.exist_click(L.shape_designer.shape_preset.btn_shape_preset)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Properties] Fold/ Unfold Shape Fill')
         def unfold_shape_fill(self, set_unfold=1):
             try:
                 current_value = self.exist(L.shape_designer.shape_fill.btn_shape_fill).AXValue
@@ -144,9 +147,10 @@ class Shape_Designer(Main_Page, BasePage):
                     self.exist_click(L.shape_designer.shape_fill.btn_shape_fill)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Properties] Fold/ Unfold Shape Outline')
         def unfold_shape_outline(self, set_unfold=1):
             try:
                 current_value = self.exist(L.shape_designer.shape_outline.btn_shape_outline).AXValue
@@ -154,17 +158,19 @@ class Shape_Designer(Main_Page, BasePage):
                     self.exist_click(L.shape_designer.shape_outline.btn_shape_outline)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Properties] Fold/ Unfold Shadow')
         def unfold_shadow(self, set_unfold=1):
             try:
                 current_value = self.exist(L.shape_designer.shadow.btn_shadow).AXValue
                 if current_value != set_unfold:
                     self.exist_click(L.shape_designer.shadow.btn_shadow)
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def unfold_title(self, set_unfold=1):
@@ -181,37 +187,38 @@ class Shape_Designer(Main_Page, BasePage):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
 
+            @step('[Action][Properties][Shape Type] Drag Scroll Bar')
             def drag_scroll_bar(self, value):
                 try:
                     if not self.exist(L.shape_designer.shape_type.shape_type_collection_view):
                         logger("Not unfold shape type now")
-                        raise Exception
+                        raise Exception("Not unfold shape type now")
                     self.exist(L.shape_designer.shape_type.scroll_bar).AXValue = float(value)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def get_unfold_status(self):
                 check_status = self.exist(L.shape_designer.shape_type.btn_shape_type).AXValue
                 return check_status
 
+            @step('[Action][Properties][Shape Type] Apply Shape Type')
             def apply_type(self, index=1):
                 # index = 1 (1st preset), 2 (2nd preset), 3 (3rd preset), ...
                 try:
                     if not self.exist(L.shape_designer.shape_type.shape_type_collection_view):
                         logger("Not unfold shape type now")
-                        raise Exception
-
+                        raise Exception("Not unfold shape type now")
                     # apply type with index
                     current_index = index - 1
                     elem_item = L.shape_designer.shape_type.preset_collection_item.copy()
                     elem_item[1]['index'] = current_index
                     self.exist_click(elem_item)
-                    logger('Click item')
+                    time.sleep(DELAY_TIME)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
 
         class Shape_Preset(BasePage):
             def __init__(self, *args, **kwargs):
@@ -225,7 +232,8 @@ class Shape_Designer(Main_Page, BasePage):
                 menu_elem = self.exist(L.shape_designer.shape_preset.setting_outline_view_menu)
                 pos_y = menu_elem.AXPosition[1]
                 return pos_y
-
+            
+            @step('[Action][Properties][Shape Preset] Apply Shape Preset')
             def apply_preset(self, index=1):
                 # index = 1 (1st preset), 2 (2nd preset), 3 (3rd preset), ...
                 try:
@@ -245,12 +253,11 @@ class Shape_Designer(Main_Page, BasePage):
                     elem_item = self.exist(find_item, parent=setting_elem)
 
                     if not self.el_click(elem_item):
-                        raise Exception
-                    logger('Click item')
+                        raise Exception('Cannot find element')
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
         class Shape_Fill(BasePage):
@@ -267,6 +274,7 @@ class Shape_Designer(Main_Page, BasePage):
                 check_status = self.exist(L.shape_designer.shape_fill.checkbox).AXValue
                 return check_status
 
+            @step('[Action][Properties][Shape Fill] Enable/ Disable Fill')
             def apply_checkbox(self, bCheck=1):
                 try:
                     current_value = self.get_checkbox_status()
@@ -274,7 +282,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.exist_click(L.shape_designer.shape_fill.checkbox)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def get_fill_type(self):
@@ -323,12 +331,13 @@ class Shape_Designer(Main_Page, BasePage):
                     logger(f'Exception occurs. log={e}')
                     raise Exception
                 return True
-
+            
+            @step('[Action][Properties][Shape Fill] Set Gradient Begin Color')
             def set_gradient_begin(self, hexcolor):
                 try:
                     if not self.is_exist(L.shape_designer.shape_fill.fill_type_gradient_begin_color):
                         logger('Cannot find fill_type_gradient_begin_color locator')
-                        raise Exception
+                        raise Exception('Cannot find fill_type_gradient_begin_color locator')
                     self.click(L.shape_designer.shape_fill.fill_type_gradient_begin_color)
                     self.color_picker_switch_category_to_RGB()
 
@@ -343,14 +352,15 @@ class Shape_Designer(Main_Page, BasePage):
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
+            @step('[Action][Properties][Shape Fill] Set Gradient End Color')
             def set_gradient_end(self, hexcolor):
                 try:
                     if not self.is_exist(L.shape_designer.shape_fill.fill_type_gradient_end_color):
                         logger('Cannot find fill_type_gradient_end_color locator')
-                        raise Exception
+                        raise Exception('Cannot find fill_type_gradient_end_color locator')
                     self.click(L.shape_designer.shape_fill.fill_type_gradient_end_color)
                     self.color_picker_switch_category_to_RGB()
 
@@ -365,7 +375,7 @@ class Shape_Designer(Main_Page, BasePage):
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
             '''
             def check_index(self):
@@ -394,15 +404,17 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shape Fill][Blur] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shape_fill.text_field_blur, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
 
+                @step('[Action][Properties][Shape Fill][Blur] Set Value')
                 def set_value(self, value):
                     try:
                         if (value > 20) | (value < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
 
                         if not self.is_exist(L.shape_designer.shape_fill.text_field_blur):
                             raise Exception
@@ -413,7 +425,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.press_enter_key()
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def set_slider(self, value):
@@ -428,6 +440,7 @@ class Shape_Designer(Main_Page, BasePage):
                         logger(f'Exception occurs. log={e}')
                         raise Exception
                     return True
+
 
                 def click_arrow(self, option, times=1):
                     try:
@@ -448,6 +461,7 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shape Fill][Opacity] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shape_fill.text_field_opacity, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
@@ -482,12 +496,12 @@ class Shape_Designer(Main_Page, BasePage):
                         logger(f'Exception occurs. log={e}')
                         raise Exception
                     return True
-
+                @step('[Action][Properties][Shape Fill][Opacity] Click Arrow to Adjust Value')
                 def click_arrow(self, option, times=1):
                     try:
                         if (option > 1) | (option < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
                         for x in range(times):
                             if option == 0:
                                 self.exist_click(L.shape_designer.shape_fill.arrow_up_btn_opacity)
@@ -496,7 +510,7 @@ class Shape_Designer(Main_Page, BasePage):
 
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
         class Shape_Outline(BasePage):
@@ -510,15 +524,17 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shape Outline][Size] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shape_outline.text_field_size, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
 
+                @step('[Action][Properties][Shape Outline][Size] Set Value')
                 def set_value(self, value):
                     try:
                         if (value > 10) | (value < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
 
                         if not self.is_exist(L.shape_designer.shape_outline.text_field_size):
                             raise Exception
@@ -529,7 +545,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.press_enter_key()
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def set_slider(self, value):
@@ -565,6 +581,7 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shape Outline][Blur] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shape_outline.text_field_blur, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
@@ -586,18 +603,18 @@ class Shape_Designer(Main_Page, BasePage):
                         logger(f'Exception occurs. log={e}')
                         raise Exception
                     return True
-
+                @step('[Action][Properties][Shape Outline][Blur] Set Value by Slider')
                 def set_slider(self, value):
                     try:
                         if (value > 20) | (value < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
 
                         self.exist(L.shape_designer.shape_outline.slider_blur).AXValue = value
                         time.sleep(DELAY_TIME)
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def click_arrow(self, option, times=1):
@@ -679,6 +696,7 @@ class Shape_Designer(Main_Page, BasePage):
                 check_status = self.exist(L.shape_designer.shape_outline.checkbox).AXValue
                 return check_status
 
+            @step('[Action][Properties][Shape Outline] Enable/ Disable Outline')
             def apply_checkbox(self, bCheck=1):
                 try:
                     current_value = self.get_checkbox_status()
@@ -686,23 +704,27 @@ class Shape_Designer(Main_Page, BasePage):
                         self.exist_click(L.shape_designer.shape_outline.checkbox)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
+            @step('[Action][Properties][Shape Outline] Set Line Type')
             def set_line_type(self, index):
-                # index = 1 (Left side type), 2 (Middle type) , 3 (Right side type)
-                if index == 1:
-                    self.click(L.shape_designer.shape_outline.line_type_1)
-                    return True
-                elif index == 2:
-                    self.click(L.shape_designer.shape_outline.line_type_2)
-                    return True
-                elif index == 3:
-                    self.click(L.shape_designer.shape_outline.line_type_3)
-                    return True
-                else:
+                try:
+                    # index = 1 (Left side type), 2 (Middle type) , 3 (Right side type)
+                    if index == 1:
+                        self.click(L.shape_designer.shape_outline.line_type_1)
+                        return True
+                    elif index == 2:
+                        self.click(L.shape_designer.shape_outline.line_type_2)
+                        return True
+                    elif index == 3:
+                        self.click(L.shape_designer.shape_outline.line_type_3)
+                        return True
+                    else:
+                        raise Exception('Invalid parameter')
+                except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
 
             def snapshot_line_type(self, file_name=None):
 
@@ -899,11 +921,12 @@ class Shape_Designer(Main_Page, BasePage):
                     raise Exception
                 return True
 
+            @step('[Action][Properties][Shape Outline] Set Uniform Color')
             def set_uniform_color(self, hexcolor):
                 try:
                     if not self.is_exist(L.shape_designer.shape_outline.fill_type_uniform_color):
                         logger('Cannot find fill_type_uniform_color locator')
-                        raise Exception
+                        raise Exception('Cannot find fill_type_uniform_color locator')
                     self.click(L.shape_designer.shape_outline.fill_type_uniform_color)
                     self.color_picker_switch_category_to_RGB()
 
@@ -918,7 +941,7 @@ class Shape_Designer(Main_Page, BasePage):
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def set_gradient_begin(self, hexcolor):
@@ -982,6 +1005,7 @@ class Shape_Designer(Main_Page, BasePage):
                 check_status = self.exist(L.shape_designer.shadow.checkbox).AXValue
                 return check_status
 
+            @step('[Action][Properties][Shadow] Enable/ Disable Shadow')
             def apply_checkbox(self, bCheck=1):
                 try:
                     current_value = self.get_checkbox_status()
@@ -989,7 +1013,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.exist_click(L.shape_designer.shadow.checkbox)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def get_apply_shadow_to(self):
@@ -1001,6 +1025,7 @@ class Shape_Designer(Main_Page, BasePage):
                     raise Exception
                 return current_title.AXTitle
 
+            @step('[Action][Properties][Shadow] Set Apply Shadow To')
             def set_apply_shadow_to(self, current_type=1):
                 try:
                     if current_type == 1:
@@ -1011,28 +1036,30 @@ class Shape_Designer(Main_Page, BasePage):
                         option = L.shape_designer.shadow.shadow_type_object
                     else:
                         logger('Invalid parameter')
-                        return False
+                        raise Exception('Invalid parameter')
 
                     self.exist_click(L.shape_designer.shadow.apply_shadow_dropdown_menu)
                     self.exist_click(option)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             class Distance(BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shadow][Distance] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shadow.text_field_distance, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
 
+                @step('[Action][Properties][Shadow][Distance] Set Value')
                 def set_value(self, value):
                     try:
                         if (value > 100) | (value < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
 
                         if not self.is_exist(L.shape_designer.shadow.text_field_distance):
                             raise Exception
@@ -1043,7 +1070,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.press_enter_key()
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def set_slider(self, value):
@@ -1079,15 +1106,17 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shadow][Blur] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shadow.text_field_blur, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
 
+                @step('[Action][Properties][Shadow][Blur] Set Value')
                 def set_value(self, value):
                     try:
                         if (value > 20) | (value < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
 
                         if not self.is_exist(L.shape_designer.shadow.text_field_blur):
                             raise Exception
@@ -1098,7 +1127,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.press_enter_key()
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def set_slider(self, value):
@@ -1134,6 +1163,7 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shadow][Opacity] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shadow.text_field_opacity, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
@@ -1156,17 +1186,18 @@ class Shape_Designer(Main_Page, BasePage):
                         raise Exception
                     return True
 
+                @step('[Action][Properties][Shadow][Opacity] Set Value by Slider')
                 def set_slider(self, value):
                     try:
                         if (value > 100) | (value < 0):
                             logger('Invalid parameter')
-                            return False
+                            raise Exception('Invalid parameter')
 
                         self.exist(L.shape_designer.shadow.slider_opacity).AXValue = value
                         time.sleep(DELAY_TIME)
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def click_arrow(self, option, times=1):
@@ -1189,10 +1220,12 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shadow][Fill Shadow] Get status of Fill Shadow')
                 def get_checkbox(self):
                     current_value = self.exist(L.shape_designer.shadow.checkbox_fill_shadow, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
 
+                @step('[Action][Properties][Shadow][Fill Shadow] Enable/ Disable Fill Shadow')
                 def apply_checkbox(self, bCheck=1):
                     try:
                         current_value = self.get_checkbox()
@@ -1229,10 +1262,12 @@ class Shape_Designer(Main_Page, BasePage):
                 def __init__(self, *args, **kwargs):
                     super().__init__(*args, **kwargs)
 
+                @step('[Action][Properties][Shadow][Direction] Get Value')
                 def get_value(self):
                     current_value = self.exist(L.shape_designer.shadow.text_field_shadow_direction, parent=L.shape_designer.left_panel_outline_view_parameter_setting)
                     return current_value.AXValue
 
+                @step('[Action][Properties][Shadow][Direction] Set Value')
                 def set_value(self, value):
                     try:
                         '''
@@ -1241,7 +1276,7 @@ class Shape_Designer(Main_Page, BasePage):
                             return False
                         '''
                         if not self.is_exist(L.shape_designer.shadow.text_field_shadow_direction):
-                            raise Exception
+                            raise Exception('Cannot find text_field_shadow_direction locator')
                         self.click(L.shape_designer.shadow.text_field_shadow_direction)
                         self.mouse.click(times=2)
 
@@ -1249,7 +1284,7 @@ class Shape_Designer(Main_Page, BasePage):
                         self.press_enter_key()
                     except Exception as e:
                         logger(f'Exception occurs. log={e}')
-                        raise Exception
+                        raise Exception(f'Exception occurs. log={e}')
                     return True
 
                 def click_arrow(self, option, times=1):
@@ -1299,7 +1334,8 @@ class Shape_Designer(Main_Page, BasePage):
                     logger(f'Exception occurs. log={e}')
                     raise Exception
                 return True
-
+            
+            @step('[Action][Properties][Title][Font Type] Get Font Type')
             def get_font_type(self):
                 try:
                     if not self.is_exist(L.shape_designer.title.font_cbx_menu):
@@ -1307,13 +1343,14 @@ class Shape_Designer(Main_Page, BasePage):
                     current_font = self.exist(L.shape_designer.title.font_cbx_menu).AXValue
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return current_font
 
+            @step('[Action][Properties][Title][Font Type] Set Font Type')
             def set_font_type(self, strType):
                 try:
                     if not self.is_exist(L.shape_designer.title.font_cbx_menu):
-                        raise Exception
+                        raise Exception('Cannot find font_cbx_menu locator')
 
                     self.click(L.shape_designer.title.font_cbx_menu)
                     self.mouse.click(times=3)
@@ -1322,7 +1359,7 @@ class Shape_Designer(Main_Page, BasePage):
                     self.press_enter_key()
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def unfold_font_type_menu(self):
@@ -1335,16 +1372,18 @@ class Shape_Designer(Main_Page, BasePage):
                     raise Exception
                 return current_font
 
+            @step('[Action][Properties][Title][Font Size] Get Font Size')
             def get_font_size(self):
                 try:
                     if not self.is_exist(L.shape_designer.title.size_cbx_menu):
-                        raise Exception
+                        raise Exception('Cannot find size_cbx_menu locator')
                     current_size = self.exist(L.shape_designer.title.size_cbx_menu).AXValue
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return current_size
 
+            @step('[Action][Properties][Title][Font Size] Set Font Size')
             def set_font_size(self, strSize):
                 try:
                     if not self.is_exist(L.shape_designer.title.size_cbx_menu):
@@ -1358,7 +1397,7 @@ class Shape_Designer(Main_Page, BasePage):
                     time.sleep(DELAY_TIME)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def unfold_font_size_menu(self):
@@ -1371,11 +1410,12 @@ class Shape_Designer(Main_Page, BasePage):
                     raise Exception
                 return current_font
 
+            @step('[Action][Properties][Title][Font Color] Get Font Color')
             def set_font_color(self, hexcolor):
                 try:
                     if not self.is_exist(L.shape_designer.title.title_color):
                         logger('Cannot find title_color locator')
-                        raise Exception
+                        raise Exception('Cannot find title_color locator')
                     self.click(L.shape_designer.title.title_color)
                     self.color_picker_switch_category_to_RGB()
 
@@ -1390,7 +1430,7 @@ class Shape_Designer(Main_Page, BasePage):
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             def click_bold_btn(self):
@@ -1502,14 +1542,16 @@ class Shape_Designer(Main_Page, BasePage):
             return False
         else:
             return True
-
+    
+    @step('[Action][Shape Designer] Maximize Shape Designer')
     def click_restore_btn(self):
         try:
             if not self.exist_click(L.shape_designer.btn_zoom):
-                raise Exception
+                raise Exception('Cannot find Shape Designer Zoom button')
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_close_btn(self):
@@ -1521,13 +1563,14 @@ class Shape_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Shape Designer] Click Undo')
     def click_undo(self):
         try:
             if not self.exist_click(L.shape_designer.btn_undo):
-                raise Exception
+                raise Exception('Unable to find undo button')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_redo(self):
@@ -1586,19 +1629,21 @@ class Shape_Designer(Main_Page, BasePage):
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception
-
+    
+    @step('[Action][Shape Designer] Get Title Name')
     def get_title(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger('Not enter Shape Designer now')
-                raise Exception
+                raise Exception('Not enter Shape Designer now')
 
             title = self.exist(L.shape_designer.designer_window).AXTitle
             return title[19:]
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-
+            raise Exception(f'Exception occurs. log={e}')
+    
+    @step('[Action][Shape Designer] Set Timecode')
     def set_timecode(self, timecode):
         self.activate()
         elem = self.find(L.shape_designer.timecode)
@@ -1612,6 +1657,7 @@ class Shape_Designer(Main_Page, BasePage):
         self.keyboard.enter()
         time.sleep(DELAY_TIME)
 
+    @step('[Action][Shape Designer] Get Timecode')
     def get_timecode(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
@@ -1621,7 +1667,7 @@ class Shape_Designer(Main_Page, BasePage):
             return timecode
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_properties_scroll_bar(self, value):
@@ -1635,29 +1681,31 @@ class Shape_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Shape Designer] Click Properties Tab')
     def click_properties_tab(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger('Not enter Shape Designer now')
-                raise Exception
+                raise Exception('Not enter Shape Designer now')
 
             if self.exist_click(L.shape_designer.properties_tab):
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
 
+    @step('[Action][Shape Designer] Click Keyframe Tab')
     def click_keyframe_tab(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger('Not enter Shape Designer now')
-                raise Exception
+                raise Exception('Not enter Shape Designer now')
 
             if self.exist_click(L.shape_designer.keyframe_tab):
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
 
     def handle_shape_outline_dialog(self):
         try:
@@ -1826,12 +1874,13 @@ class Shape_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Shape Designer] Adjust object on Canvas to large')
     def adjust_object_on_Canvas_resize_to_large(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             x,y = self.exist(L.shape_designer.canvas_object_shape).AXPosition
             size_w, size_h = self.exist(L.shape_designer.canvas_object_shape).AXSize
             new_x = x - (size_w*0.5)
@@ -1844,14 +1893,15 @@ class Shape_Designer(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Shape Designer] Move object on Canvas to left')
     def adjust_object_on_Canvas_move_to_left(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             x,y = self.exist(L.shape_designer.canvas_object_shape).AXPosition
             size_w, size_h = self.exist(L.shape_designer.canvas_object_shape).AXSize
             new_x = x + (size_w*0.1)
@@ -1864,7 +1914,7 @@ class Shape_Designer(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def adjust_object_on_Canvas_move_to_right(self):
@@ -1924,11 +1974,12 @@ class Shape_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Shape Designer] Unselect title on Canvas')
     def unselect_title_on_Canvas(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             x,y = self.exist(L.shape_designer.canvas_object_shape).AXPosition
             size_w, size_h = self.exist(L.shape_designer.canvas_object_shape).AXSize
             new_x = x - (size_w*0.1)
@@ -1938,14 +1989,14 @@ class Shape_Designer(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
+    @step('[Action][Shape Designer] Click center on Canvas')
     def click_center_on_Canvas(self):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
 
             x,y = self.exist(L.shape_designer.canvas_split_view).AXPosition
             size_w, size_h = self.exist(L.shape_designer.canvas_split_view).AXSize
@@ -1956,14 +2007,15 @@ class Shape_Designer(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Shape Designer] Edit title on Canvas')
     def edit_title_on_Canvas(self, strTitle):
         try:
             if not self.exist(L.shape_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
 
             x,y = self.exist(L.shape_designer.canvas_object_shape).AXPosition
             size_w, size_h = self.exist(L.shape_designer.canvas_object_shape).AXSize
@@ -1975,7 +2027,7 @@ class Shape_Designer(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def adjust_shape_on_Canvas_linear(self):
@@ -2021,9 +2073,11 @@ class Shape_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Shape Designer] Click [OK] button on shape designer window')
     def click_ok(self):
         return bool(self.exist(L.shape_designer.btn_ok).press())
 
+    @step('[Action][Shape Designer] Click Cancel to leave Shape Designer')
     def click_cancel(self, option=None):
         try:
             options = [L.shape_designer.alert_dialog.btn_yes,
@@ -2035,9 +2089,10 @@ class Shape_Designer(Main_Page, BasePage):
                 self.click(options[option])
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False
+            return False(f'Exception occurs. log={e}')
         return True
-
+    
+    @step('[Action][Shape Designer] Click Save to save the template')
     def click_save_as(self):
         return bool(self.exist(L.shape_designer.btn_save_as).press())
 
@@ -2045,12 +2100,13 @@ class Shape_Designer(Main_Page, BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Shape Designer][Save As] Set Name')
         def set_name(self, name):
             try:
                 self.exist(L.shape_designer.save_template_dialog.edittext_template_name).sendKeys(name)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                return False
+                return False(f'Exception occurs. log={e}')
             return True
 
         def get_name(self):
@@ -2071,6 +2127,7 @@ class Shape_Designer(Main_Page, BasePage):
         def click_cancel(self):
             return bool(self.exist(L.shape_designer.save_template_dialog.btn_cancel).press())
 
+        @step('[Action][Shape Designer][Save As] Click OK')
         def click_ok(self):
             return bool(self.exist(L.shape_designer.save_template_dialog.btn_ok).press())
 
@@ -2169,15 +2226,16 @@ class Shape_Designer(Main_Page, BasePage):
                     raise Exception
                 return True
 
+            @step('[Action][Shape Designer][Simple Timeline][Position] Click Next Keyframe')
             def click_next_keyframe(self):
                 try:
                     if not self.exist(L.shape_designer.designer_window):
                         logger("No designer window show up")
-                        raise Exception
+                        raise Exception("No designer window show up")
                     self.exist_click(L.shape_designer.simple_position_track.next_keyframe)
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
 
             class RightClickMenu(BasePage):
@@ -2388,12 +2446,14 @@ class Scale(KEComboSet):
         super().__init__(*args, **kwargs)
         self.w = AdjustSet(self, L.shape_designer.keyframe.object_settings.scale.width.group)
         self.h = AdjustSet(self, L.shape_designer.keyframe.object_settings.scale.height.group)
-
+    
+    @step('[Action][Shape Designer][Keyframe][Object Setting][Scale] Set Maintain Aspect Ratio Checkbox')
     def set_aspect_ratio_chx(self, value=1):
         target = self.exist(L.shape_designer.keyframe.object_settings.scale.maintain_aspect_ratio)
         int(target.AXValue) ^ value and target.press()
         return True
-
+    
+    @step('[Action][Shape Designer][Keyframe][Object Setting][Scale] Get Maintain Aspect Ratio Checkbox')
     def get_aspect_ratio_chx(self):
         target = self.exist(L.shape_designer.keyframe.object_settings.scale.maintain_aspect_ratio)
         return bool(target.AXValue)

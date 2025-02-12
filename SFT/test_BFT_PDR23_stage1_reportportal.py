@@ -403,6 +403,7 @@ class Test_BFT_365_OS14():
         if btn_continue:
             main_page.click(L.base.gdpr_dialog.btn_accept_continue)
 
+    @step("[Initial] Check dependency test result")
     def ensure_dependency(self, dependency_test, run_dependency=True):
         """
         Ensures a dependency test is run and passed before continuing.
@@ -6732,11 +6733,14 @@ class Test_BFT_365_OS14():
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_type
-    @pytest.mark.name('[test_shape_designer_func_8_4] Apply General Shape (10 and 14)')
+    @pytest.mark.name('[test_shape_designer_func_8_4] Apply General Shape (10 and 14 and 19)')
     @exception_screenshot
     def test_shape_designer_func_8_4(self):
         '''
-
+        1. Leave Shape Designer and re-enter
+        2. Apply General Shape (10) and check preview
+        3. Apply General Shape (14) and check preview/ GT
+        4. Apply General Shape (19) and check preview
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_shape_designer_func_8_3"
@@ -6803,15 +6807,18 @@ class Test_BFT_365_OS14():
     @pytest.mark.test_shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
-    @pytest.mark.shape_type
-    @pytest.mark.name('[test_shape_designer_func_8_4] Apply General Shape (10 and 14)')
+    @pytest.mark.shape_preset
+    @pytest.mark.name('[test_shape_designer_func_8_5] Apply Preset 4')
     @exception_screenshot
-    def test_shape_designer_func_8_4(self):
+    def test_shape_designer_func_8_5(self):
         '''
-
+        1. Enter Preset
+        2. Apply preset 4
+        3. Check preview after apply preset 4
+        4. Compare preview after select Preset 4 as GT
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_shape_designer_func_8_3"
+        dependency_test = "test_shape_designer_func_8_4"
         self.ensure_dependency(dependency_test)
         
         # [L432] 3.5 Shape Designer (Shape 10) > Properties tab > Preset
@@ -6820,111 +6827,310 @@ class Test_BFT_365_OS14():
         with step('[Action] Enter Preset'):
             # Fold Shape Type
             shape_designer_page.properties.unfold_shape_type(set_unfold=0)
-
-
             # Unfold Preset Type
             shape_designer_page.properties.unfold_shape_preset(set_unfold=1)
 
+        with step('[Action] Apply preset 4'):
             check_preset_2 = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
-
             # Apply preset 4
             shape_designer_page.properties.shape_preset.apply_preset(4)
 
+        with step('[Verify] Check preview after apply preset 4'):
             check_preset_4 = main_page.snapshot(locator=L.shape_designer.canvas_object_shape,
                                                 file_name=Auto_Ground_Truth_Folder + 'L199.png')
-
             # Compare preview after apply preset 4
             should_different = main_page.compare(check_preset_2, check_preset_4)
-            logger(should_different)
+            if should_different:
+                assert False, "Preset 4 is not applied correctly! Similary should<0.95"
 
+        with step('[Verify] Compare preview after select Preset 4 as GT'):
             compare_result = main_page.compare(Ground_Truth_Folder + 'L199.png', check_preset_4)
-            logger(compare_result)
-            case.result = (not should_different) and compare_result
+            if not compare_result:
+                assert False, "Preset 4 is not correct as GT(L199.png)! Similary should>0.95"
+        assert True
 
     @pytest.mark.test_shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
-    @pytest.mark.shape_type
-    @pytest.mark.name('[test_shape_designer_func_8_5] Apply General Shape (10 and 14)')
+    @pytest.mark.shape_fill
+    @pytest.mark.name('[test_shape_designer_func_8_6] Set [Gradient Begin color] in [Shape Fill] tab')
     @exception_screenshot
-    def test_shape_designer_func_8_5(self):
+    def test_shape_designer_func_8_6(self):
         '''
-
+        1. Enter [Shape Fill] tab
+        2. Set Gradient Begin and check preview
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_shape_designer_func_8_4"
+        dependency_test = "test_shape_designer_func_8_5"
         self.ensure_dependency(dependency_test)
 
-        # Fold Preset Type
-        shape_designer_page.properties.unfold_shape_preset(set_unfold=0)
-
         # [L433] 3.5 Shape Designer (Shape 10) > Properties tab > Fill
-        with uuid("0925be85-d8bc-4a20-bd47-80b7c2f3ba35") as case:
+        # with uuid("0925be85-d8bc-4a20-bd47-80b7c2f3ba35") as case:
+
+        with step('[Action] Enter Fill tab'):
+            # Fold Preset Type
+            shape_designer_page.properties.unfold_shape_preset(set_unfold=0)
             # Unfold Fill Type
             shape_designer_page.properties.unfold_shape_fill(set_unfold=1)
 
+        with step('[Action] Set Gradient Begin'):
+            before_fill = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set Gradient begin : 362A45
             shape_designer_page.properties.shape_fill.set_gradient_begin('E31E35')
 
+        with step('[Verify] Check preview changed after apply Gradient Begin'):
+            applied_gradient_begin = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_fill, applied_gradient_begin, similarity=0.98):
+                assert False, "Gradient Begin is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_fill
+    @pytest.mark.name('[test_shape_designer_func_8_7] Set [Gradient End color] in [Shape Fill] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_7(self):
+        '''
+        1. Set Gradient End and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_6"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Gradient End'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set Gradient end : 91F3C1
             shape_designer_page.properties.shape_fill.set_gradient_end('91F3C1')
 
+        with step('[Verify] Check preview changed after apply Gradient End'):
+            applied_gradient_end = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, applied_gradient_end, similarity=0.98):
+                assert False, "Gradient End is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_fill
+    @pytest.mark.name('[test_shape_designer_func_8_8] Set [Blur Value] in [Shape Fill] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_8(self):
+        '''
+        1. Set Blur value and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_7"
+        self.ensure_dependency(dependency_test)
+        
+        with step('[Action] Set Blur value'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set blur : 5
             shape_designer_page.properties.shape_fill.blur.set_value(5)
+
+        with step('[Verify] Check Blur value ==5'):
+            # Get blur value
+            check_blur = shape_designer_page.properties.shape_fill.blur.get_value()
+            if check_blur != '5':
+                assert False, f"Blur value is not correct! Expected: 5, Actual: {check_blur}"
+
+        with step('[Verify] Check preview changed after apply Blur'):
+            applied_blur = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, applied_blur, similarity=0.98):
+                assert False, "Blur is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_fill
+    @pytest.mark.name('[test_shape_designer_func_8_9] Set [Opacity] in [Shape Fill] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_9(self):
+        '''
+        1. Set Opacity value and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_5"
+        self.ensure_dependency(dependency_test)
+        with step('[Action] Set Opacity value'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set opacity : 94%
             shape_designer_page.properties.shape_fill.opacity.click_arrow(1, 6)
 
-            # Verify Step:
-            # Get blur value
-            check_blur = shape_designer_page.properties.shape_fill.blur.get_value()
-            if check_blur == '5':
-                apply_blur = True
-            else:
-                apply_blur = False
-            logger(apply_blur)
-
+        with step('[Verify] Check Opacity value ==94%'):
             # Get opacity value
-            check_blur = shape_designer_page.properties.shape_fill.opacity.get_value()
-            if check_blur == '94%':
-                apply_opacity = True
-            else:
-                apply_opacity = False
-            logger(apply_opacity)
+            check_opacity = shape_designer_page.properties.shape_fill.opacity.get_value()
+            if check_opacity != '94%':
+                assert False, f"Opacity value is not correct! Expected: 94%, Actual: {check_opacity}"
 
+        with step('[Verify] Check preview changed after apply Opacity'):
+            applied_opacity = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, applied_opacity, similarity=0.98):
+                assert False, "Opacity is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_fill
+    @pytest.mark.name('[test_shape_designer_func_8_10] Check Previe from test_shape_designer_func_8_7~10')
+    @exception_screenshot
+    def test_shape_designer_func_8_10(self):
+        '''
+        1. Compare preview after select Shape 14 as GT (L199.png)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_9"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Compare preview after select Shape 14 as GT'):
             # Check shape preview
             check_fill = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
-
             compare_different = main_page.compare(Auto_Ground_Truth_Folder + 'L199.png', check_fill, similarity=0.98)
-            logger(compare_different)
-            case.result = apply_blur and apply_opacity and (not compare_different)
+            if not compare_different:
+                assert False, "Fill is not correct as GT(L199.png)! Similary should>0.98"
+        assert True
 
-            # Fold Fill Type
-            shape_designer_page.properties.unfold_shape_fill(set_unfold=0)
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_outline
+    @pytest.mark.name('[test_shape_designer_func_8_11] Set [Size] in [Shape Outline] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_11(self):
+        '''
+        1. Enter [Shape Outline] tab and Maximize window
+        2. Set Size to (2) and check preview/ size value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_10"
+        self.ensure_dependency(dependency_test)
 
         # [L434] 3.5 Shape Designer (Shape 10) > Properties tab > Outline
-        with uuid("81e6ab89-f81c-4ec3-926f-6611abe5cef2") as case:
+        # with uuid("81e6ab89-f81c-4ec3-926f-6611abe5cef2") as case:
+        with step('[Action] Enter [Shape Outline] tab and Maximize window'):
+            # Fold Fill Type
+            shape_designer_page.properties.unfold_shape_fill(set_unfold=0)
             # Unfold Outline
             shape_designer_page.properties.unfold_shape_outline(set_unfold=1)
-
-            # maximize
-            shape_designer_page.click_restore_btn()
-            time.sleep(DELAY_TIME*1.5)
-
             # Set checkbox
             shape_designer_page.properties.shape_outline.apply_checkbox()
+            # maximize
+            shape_designer_page.click_restore_btn()
 
+
+        with step('[Action] Set Size to (2)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set size
             shape_designer_page.properties.shape_outline.size.set_value(2)
+        
+        with step('[Verify] Check Size value'):
+            # Get size value
+            check_size = shape_designer_page.properties.shape_outline.size.get_value()
+            if check_size != '2':
+                assert False, f"Size value is not correct! Expected: 2, Actual: {check_size}"
 
+        with step('[Verify] Check preview after apply Size'):
+            check_outline_size = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_outline_size, similarity=0.99):
+                assert False, "Size is not changed correctly! Similary should<0.99"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_outline
+    @pytest.mark.name('[test_shape_designer_func_8_12] Set [Line Type] in [Shape Outline] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_12(self):
+        '''
+        1. Set Line Type to the 3rd type and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_11"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Line Type to the 3rd type'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set 3rd type
             shape_designer_page.properties.shape_outline.set_line_type(3)
+        with step('[Verify] Check preview after apply Line Type'):
+            check_outline_line_type = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_outline_line_type, similarity=0.999):
+                assert False, "Line Type is not changed correctly! Similary should<0.999"
+        assert True
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_outline
+    @pytest.mark.name('[test_shape_designer_func_8_13] Set [Blur] in [Shape Outline] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_13(self):
+        '''
+        1. Set Blur and check preview/ blur value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_12"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Blur to 11 by slider'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set blur
-            shape_designer_page.properties.shape_outline.blur.set_slider(1)
+            shape_designer_page.properties.shape_outline.blur.set_slider(11)
+        
+        with step('[Verify] Check blur value'):
+            # Get blur value
+            check_blur = shape_designer_page.properties.shape_outline.blur.get_value()
+            if check_blur != '11':
+                assert False, f"Blur value is not correct! Expected: 11, Actual: {check_blur}"
 
+        with step('[Verify] Check preview after apply Blur'):
+            check_outline_blur = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_outline_blur, similarity=0.98):
+                assert False, "Blur is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_outline
+    @pytest.mark.name('[test_shape_designer_func_8_14] Set [Cㄐㄟ] in [Shape Outline] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_14(self):
+        '''
+        1. Set Color to (F3C4DE) and check preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_13"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Color to (F3C4DE)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set color
             shape_designer_page.properties.shape_outline.set_uniform_color('F3C4DE')
+        with step('[Verify] Check preview after apply Color'):
+            check_outline_color = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_outline_color, similarity=0.98):
+                assert False, "Color is not changed correctly! Similary should<0.98"
+        assert True
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_outline
+    @pytest.mark.name('[test_shape_designer_func_8_15] Check preview from test_shape_designer_func_8_11~14')
+    @exception_screenshot
+    def test_shape_designer_func_8_15(self):
+        '''
+        1. Check preview from test_shape_designer_func_8_11~14
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_14"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check preview as GT'):
             # Click center
             shape_designer_page.click_center_on_Canvas()
             time.sleep(DELAY_TIME)
@@ -6934,112 +7140,437 @@ class Test_BFT_365_OS14():
 
             # Compare preview
             compare_result = main_page.compare(Ground_Truth_Folder + 'L201.png', check_preview, similarity=0.9)
-            case.result = compare_result
+            assert compare_result, "Preview is not correct as GT(L201.png)! Similary should>0.9"
 
-            # Fold Outline
-            shape_designer_page.properties.unfold_shape_outline(set_unfold=0)
+            
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_16] Set [Apply Shadow to] in [Shadow] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_16(self):
+        '''
+        1. Enter Shadow tab
+        2. Set Apply Shadow to (Outline Only) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_15"
+        self.ensure_dependency(dependency_test)
+
 
         # [L435] 3.5 Shape Designer (Shape 10) > Properties tab > Shadow
-        with uuid("f9c22e54-7e9d-4341-ac36-496bf86861d1") as case:
+        # with uuid("f9c22e54-7e9d-4341-ac36-496bf86861d1") as case:
+
+        with step('[Action] Enter Shadow tab'):
+            # Fold Outline
+            shape_designer_page.properties.unfold_shape_outline(set_unfold=0)
             # Unfold Shadow
             shape_designer_page.properties.unfold_shadow(set_unfold=1)
-            time.sleep(DELAY_TIME * 2)
-
             # Set checkbox
             shape_designer_page.properties.shadow.apply_checkbox(1)
-            checkbox_value = shape_designer_page.properties.shadow.get_checkbox_status()
-            logger(checkbox_value)
 
+        with step('[Action] Switch to apply [Outline Only]'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set apply shadow to (Outline Only)
             shape_designer_page.properties.shadow.set_apply_shadow_to(2)
-            check_shadow_to_result = shape_designer_page.properties.shadow.get_apply_shadow_to()
-            if check_shadow_to_result == 'Outline Only':
-                shadow_to_result = True
-            else:
-                shadow_to_result = False
-            logger(shadow_to_result)
 
-            # Set distance
+        with step('[Verify] Check [Apply Shadow to] == [Outline Only]'):
+            check_shadow_to_result = shape_designer_page.properties.shadow.get_apply_shadow_to()
+            if check_shadow_to_result != 'Outline Only':
+                assert False, f"Apply Shadow to is not correct! Expected: Outline Only, Actual: {check_shadow_to_result}"
+
+        with step('[Verify] Check preview after apply Shadow'):
+            applied_shadow_to_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, applied_shadow_to_preview, similarity=0.98):
+                assert False, "Shadow is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_17] Set [Distance] in [Shadow] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_17(self):
+        '''
+        1. Set [Distance] to (35.6) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_16"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Distance] to (35.6)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            # Set distance 
             shape_designer_page.properties.shadow.distance.set_value(35.6)
 
+        with step('[Verify] Check [Distance] value'):
+            # Get distance value
+            check_distance = shape_designer_page.properties.shadow.distance.get_value()
+            if check_distance != '35.6':
+                assert False, f"Distance value is not correct! Expected: 35.6, Actual: {check_distance}"
+
+        with step('[Verify] Check preview after apply [Distance]'):
+            check_distance_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_distance_preview, similarity=0.98):
+                assert False, "Distance is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_18] Set [Opacity] in [Shadow] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_18(self):
+        '''
+        1. Set [Opacity] to (88%) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_17"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Opacity] to (88%)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set opacity
             shape_designer_page.properties.shadow.opacity.set_slider(88)
 
-            # Set Blur
-            shape_designer_page.properties.shadow.blur.set_value(1)
+        with step('[Verify] Check [Opacity] value'):
+            # Get opacity value
+            check_opacity = shape_designer_page.properties.shadow.opacity.get_value()
+            if check_opacity != '88%':
+                assert False, f"Opacity value is not correct! Expected: 88%, Actual: {check_opacity}"
+        
+        with step('[Verify] Check preview after apply [Opacity]'):
+            check_opacity_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_opacity_preview, similarity=0.98):
+                assert False, "Opacity is not changed correctly! Similary should<0.98"
+        assert True
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_19] Set [Blur] in [Shadow] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_19(self):
+        '''
+        1. Set [Blur] to (11) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_18"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Blur] to (11)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            # Set Blur
+            shape_designer_page.properties.shadow.blur.set_value(11)
+
+        with step('[Verify] Check [Blur] value'):
+            # Get blur value
+            check_blur = shape_designer_page.properties.shadow.blur.get_value()
+            if check_blur != '11':
+                assert False, f"Blur value is not correct! Expected: 11, Actual: {check_blur}"
+        
+        with step('[Verify] Check preview after apply [Blur]'):
+            check_blur_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_blur_preview, similarity=0.98):
+                assert False, "Blur is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_20] Set [Fill Shadow] in [Shadow] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_20(self):
+        '''
+        1. Set [Fill Shadow] to (On) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_19"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Fill Shadow] to (On)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set Fill shadow
             shape_designer_page.properties.shadow.fill_shadow.apply_checkbox(1)
 
+        with step('[Verify] Check [Fill Shadow] value'):
+            # Get Fill shadow value
+            check_fill_shadow = shape_designer_page.properties.shadow.fill_shadow.get_checkbox()
+            if check_fill_shadow != True:
+                assert False, f"Fill Shadow value is not correct! Expected: True, Actual: {check_fill_shadow}"
+        
+        with step('[Verify] Check preview after apply [Fill Shadow]'):
+            check_fill_shadow_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_fill_shadow_preview, similarity=0.999):
+                assert False, "Fill Shadow is not changed correctly! Similary should<0.999"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_21] Set [Direction] in [Shadow] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_21(self):
+        '''
+        1. Set [Direction] to (17) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_19"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Direction] to (17)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set direction
             shape_designer_page.properties.shadow.direction.set_value(17)
 
+        with step('[Verify] Check [Direction] value'):
+            # Get direction value
+            check_direction = shape_designer_page.properties.shadow.direction.get_value()
+            if check_direction != '17':
+                assert False, f"Direction value is not correct! Expected: 17, Actual: {check_direction}"
+
+        with step('[Verify] Check preview after apply [Direction]'):
+            check_direction_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_direction_preview, similarity=0.98):
+                assert False, "Direction is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_shadow
+    @pytest.mark.name('[test_shape_designer_func_8_22] Check preview from test_shape_designer_func_8_16~21')
+    @exception_screenshot
+    def test_shape_designer_func_8_22(self):
+        '''
+        1. Check preview from test_shape_designer_func_8_16~21
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_21"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check preview as GT'):
             check_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
 
             # Compare preview
             compare_result = main_page.compare(Ground_Truth_Folder + 'L201.png', check_preview, similarity=0.99)
-            logger(compare_result)
-            case.result = (not compare_result) and checkbox_value and shadow_to_result
+            if not compare_result:
+                assert False, "Preview is not correct as GT(L201.png)! Similary should>0.99"
+        assert True
 
-            # Fold Shadow
-            shape_designer_page.properties.unfold_shadow(set_unfold=0)
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_title
+    @pytest.mark.name('[test_shape_designer_func_8_23] Set [Font Type] in [Title] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_23(self):
+        '''
+        1. Enter Title tab
+        2. Set [Font Type] to (pigmo) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_22"
+        self.ensure_dependency(dependency_test)
 
         # [L436] 3.5 Shape Designer (Shape 10) > Properties tab > Title
-        with uuid("a148b797-eb2a-4bc8-89e3-ff4f648c6b05") as case:
+        # with uuid("a148b797-eb2a-4bc8-89e3-ff4f648c6b05") as case:
+
+        with step('[Action] Enter Title tab'):
+            # Fold Shadow
+            shape_designer_page.properties.unfold_shadow(set_unfold=0)
             # Unfold Title
             shape_designer_page.properties.unfold_title(set_unfold=1)
 
+        with step('[Action] Set font type (pigmo)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set font type: pigmo
             shape_designer_page.properties.title.set_font_type('pigmo')
 
+        with step('[Verify] Check Font type value'):
+            # Get font type value
+            check_font_type = shape_designer_page.properties.title.get_font_type()
+            if check_font_type != 'pigmo':
+                assert False, f"Font type value is not correct! Expected: pigmo, Actual: {check_font_type}"
+        
+        with step('[Verify] Check preview after apply Font type'):
+            check_font_type_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_font_type_preview, similarity=0.98):
+                assert False, "Font type is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_title
+    @pytest.mark.name('[test_shape_designer_func_8_24] Set [Size] in [Title] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_24(self):
+        '''
+        1. Set [Size] to (21) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_23"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Size] to (21)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set size = 21
             shape_designer_page.properties.title.set_font_size(21)
 
+        with step('[Verify] Check [Size] value'):
+            # Get size value
+            check_size = shape_designer_page.properties.title.get_font_size()
+            if check_size != '21':
+                assert False, f"Size value is not correct! Expected: 21, Actual: {check_size}"
+        
+        with step('[Verify] Check preview after apply [Size]'):
+            check_size_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_size_preview, similarity=0.98):
+                assert False, "Size is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_title
+    @pytest.mark.name('[test_shape_designer_func_8_25] Set [Color] in [Title] tab')
+    @exception_screenshot
+    def test_shape_designer_func_8_25(self):
+        '''
+        1. Set [Color] to (B5FFFF) and check value/ preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_24"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set [Color] to (B5FFFF)'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set font color
             shape_designer_page.properties.title.set_font_color('B5FFFF')
 
+        with step('[Verify] Check preview after apply [Color]'):
+            check_color_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_color_preview, similarity=0.98):
+                assert False, "Color is not changed correctly! Similary should<0.98"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.properties
+    @pytest.mark.shape_title
+    @pytest.mark.name('[test_shape_designer_func_8_26] Check preview from test_shape_designer_func_8_23~25')
+    @exception_screenshot
+    def test_shape_designer_func_8_26(self):
+        '''
+        1. Check preview from test_shape_designer_func_8_23~25
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_25"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check preview as GT'):
             # Compare preview
             check_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape,
                                                file_name=Auto_Ground_Truth_Folder + 'L203.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L203.png', check_preview, similarity=0.9)
-            logger(compare_result)
-            case.result = compare_result
+            assert compare_result, "Preview is not correct as GT(L203.png)! Similary should>0.9"
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.canva
+    @pytest.mark.name('[test_shape_designer_func_8_27] Manual adjust object to larger on canvas')
+    @exception_screenshot
+    def test_shape_designer_func_8_27(self):
+        '''
+        1. Initial till [Properties] tab with [Title] fold
+        2. Manual adjust object to larger on canvas
+        3. Check preview after manual adjust as GT
+        '''
+
+        with step('[Initial] Till [Properties] tab with [Title] fold'):
+            # Ensure the dependency test is run and passed
+            self.test_shape_designer_func_8_1()
             # Fold Title
             shape_designer_page.properties.unfold_title(set_unfold=0)
 
         # [L441] 3.5 Shape Designer (Shape 10) > Manual adjust on canvas
-        with uuid("47acdd2c-75cb-48c9-bce2-64a188a62cb4") as case:
-            shape_designer_page.adjust_object_on_Canvas_resize_to_large()
-            time.sleep(DELAY_TIME)
+        # with uuid("47acdd2c-75cb-48c9-bce2-64a188a62cb4") as case:
 
+        with step('[Action] Manual adjust object to larger on canvas'):
+            shape_designer_page.adjust_object_on_Canvas_resize_to_large()
+
+        with step('[Verify] Check preview after manual adjust as GT'):
             # Verify : Preview is changed
             check_resize = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             compare_resize_result = main_page.compare(Ground_Truth_Folder + 'L203.png', check_resize)
-            logger(compare_resize_result)
+            assert compare_resize_result, "Preview is not correct as GT(L203.png)! Similary should>0.95"
+        assert True
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.canva
+    @pytest.mark.keyframe
+    @pytest.mark.name('[test_shape_designer_func_8_28] Move Object to left on canvas')
+    @exception_screenshot
+    def test_shape_designer_func_8_28(self):
+        '''
+        1. Move object to left on canvas and check preview
+        '''
+
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_27"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Initial] Undo large step in previous test'):
             shape_designer_page.click_undo()
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Move object to left on canvas'):
+            before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             shape_designer_page.adjust_object_on_Canvas_move_to_left()
 
-            # Switch Keyframe menu
-            shape_designer_page.click_keyframe_tab()
-            time.sleep(DELAY_TIME)
+        with step('[Verify] Check preview after move object to left'):
+            # Verify : Preview is changed
+            check_move_left = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            if main_page.compare(before_preview, check_move_left, similarity=0.98):
+                assert False, "Move left is not correct! Similary should<0.98"
+
+        with step('[Verify] Check position x value'):
+            with step('[Action] Switch to Keyframe tab'):
+                # Switch Keyframe menu
+                shape_designer_page.click_keyframe_tab()
 
             # Verify position x value
             current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
-            logger(current_x)
-            if current_x == '0.359':
-                move_left = True
-            else:
-                move_left = False
-            logger(move_left)
+            if current_x != '0.359':
+                assert False, f"Position x value is not correct! Expected: 0.359, Actual: {current_x}"
 
-            case.result = (not compare_resize_result) and move_left
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_29] Set 1st Position keyframe at (00:00)')
+    @exception_screenshot
+    def test_shape_designer_func_8_29(self):
+        '''
+        1. Set 1st Position keyframe at (00:00) and check value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_28"
+        self.ensure_dependency(dependency_test)
 
         # [L438] 3.5 Shape Designer (Shape 10) > Keyframe tab > Adjust keyframe
-        with uuid("c70a3ee9-2263-4772-a7d7-d4f859315ec0") as case:
+        # with uuid("c70a3ee9-2263-4772-a7d7-d4f859315ec0") as case:
+
+        with step('[Action] Set 1st Position keyframe at (00:00)'):
             # Set position = (0.199, 0.297)
             shape_designer_page.keyframe.object_settings.position.x.set_value(0.199)
             shape_designer_page.keyframe.object_settings.position.y.set_value(0.297)
@@ -7047,71 +7578,475 @@ class Test_BFT_365_OS14():
             # Set position 1st keyframe on 0s
             shape_designer_page.keyframe.object_settings.position.keyframe.click_add_remove()
 
-            # Set timecode
-            shape_designer_page.set_timecode('00_00_03_10')
+        with step('[Verify] Check x value after set 1st Position keyframe'):
+            # Verify position x value
+            current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
+            if current_x != '0.199':
+                assert False, f"Position x value is not correct! Expected: 0.199, Actual: {current_x}"
 
-            # Set position = (0.783, 0.440) w/ 2nd keyframe
-            shape_designer_page.keyframe.object_settings.position.x.set_value(0.783)
-            shape_designer_page.keyframe.object_settings.position.y.set_value(0.440)
+        with step('[Verify] Check y value after set 1st Position keyframe'):
+            # Verify position y value
+            current_y = shape_designer_page.keyframe.object_settings.position.y.get_value()
+            if current_y != '0.297':
+                assert False, f"Position y value is not correct! Expected: 0.297, Actual: {current_y}"
+        assert True
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_30] Set 2nd Position keyframe at (05:25)')
+    @exception_screenshot
+    def test_shape_designer_func_8_30(self):
+        '''
+        1. Set 2nd Position keyframe at (05:25) and check value
+        2. Switch to previous keyframe and check timecode
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_29"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 2nd Position keyframe at (05:25)'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_05_25')
 
-            # Set position = (0.276, 0.621) w/ 3rd keyframe
+            # Set position = (0.276, 0.621) w/ 2nd keyframe
             shape_designer_page.keyframe.object_settings.position.x.set_value(0.276)
             shape_designer_page.keyframe.object_settings.position.y.set_value(0.621)
 
+        with step('[Verify] Check x value after set 2nd Position keyframe'):
+            # Verify position x value
+            current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
+            if current_x != '0.276':
+                assert False, f"Position x value is not correct! Expected: 0.276, Actual: {current_x}"
+
+        with step('[Verify] Check y value after set 2nd Position keyframe'):
+            # Verify position y value
+            current_y = shape_designer_page.keyframe.object_settings.position.y.get_value()
+            if current_y != '0.621':
+                assert False, f"Position y value is not correct! Expected: 0.621, Actual: {current_y}"
+
+        with step('[Action] Switch to previous keyframe'):
+            # Click previous keyframe
+            shape_designer_page.keyframe.object_settings.position.keyframe.click_previous()
+
+        with step('[Verify] Check timecode after switch to previous keyframe (00:00)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:00:00':
+                assert False, f"Timecode is not correct! Expected: 00:00:00:00, Actual: {current_timecode}"
+
+        with step('[Verify] Check x value after switch to previous keyframe'):
+            # Verify position x value
+            current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
+            if current_x != '0.199':
+                assert False, f"Position x value is not correct! Expected: 0.199, Actual: {current_x}"
+        
+        with step('[Verify] Check y value after switch to previous keyframe'):
+            # Verify position y value
+            current_y = shape_designer_page.keyframe.object_settings.position.y.get_value()
+            if current_y != '0.297':
+                assert False, f"Position y value is not correct! Expected: 0.297, Actual: {current_y}"
+
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_31] Set 3rd Position keyframe at (03:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_31(self):
+        '''
+        1. Set 3rd Position keyframe at (03:10) and check value
+        2. Switch to next keyframe and check timecode
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_30"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 3rd Position keyframe at (03:10)'):
+            # Set timecode
+            shape_designer_page.set_timecode('00_00_03_10')
+
+            # Set position = (0.783, 0.440) w/ 3rd keyframe
+            shape_designer_page.keyframe.object_settings.position.x.set_value(0.783)
+            shape_designer_page.keyframe.object_settings.position.y.set_value(0.440)
+
+        with step('[Verify] Check x value after set 3rd Position keyframe'):
+            # Verify position x value
+            current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
+            if current_x != '0.783':
+                assert False, f"Position x value is not correct! Expected: 0.783, Actual: {current_x}"
+
+        with step('[Verify] Check y value after set 3rd Position keyframe'):
+            # Verify position y value
+            current_y = shape_designer_page.keyframe.object_settings.position.y.get_value()
+            if current_y != '0.440':
+                assert False, f"Position y value is not correct! Expected: 0.440, Actual: {current_y}"
+
+        with step('[Action] Switch to next keyframe'):
+            # Click next keyframe
+            shape_designer_page.keyframe.object_settings.position.keyframe.click_next()
+        
+        with step('[Verify] Check timecode after switch to next keyframe (05:25)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:05:25':
+                assert False, f"Timecode is not correct! Expected: 00:00:05:25, Actual: {current_timecode}"
+
+        with step('[Verify] Check x value after switch to next keyframe'):
+            # Verify position x value
+            current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
+            if current_x != '0.276':
+                assert False, f"Position x value is not correct! Expected: 0.276, Actual: {current_x}"
+        
+        with step('[Verify] Check y value after switch to next keyframe'):
+            # Verify position y value
+            current_y = shape_designer_page.keyframe.object_settings.position.y.get_value()
+            if current_y != '0.621':
+                assert False, f"Position y value is not correct! Expected: 0.621, Actual: {current_y}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_32] Set 1st Scale keyframe at (05:25)')
+    @exception_screenshot
+    def test_shape_designer_func_8_32(self):
+        '''
+        1. Set 1st Scale keyframe at (05:25) and check value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_31"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 1st Scale keyframe at (05:25)'):
             # Set scale 1st keyframe
             shape_designer_page.keyframe.object_settings.scale.keyframe.click_add_remove()
 
+        with step('[Verify] Check scale width value after set 1st Scale keyframe'):
+            # Verify scale value
+            current_w = shape_designer_page.keyframe.object_settings.scale.w.get_value()
+            if current_w != '0.351':
+                assert False, f"Scale W value is not correct! Expected: 0.351, Actual: {current_w}"
+
+        with step('[Verify] Check scale height value after set 1st Scale keyframe'):
+            # Verify scale value
+            current_h = shape_designer_page.keyframe.object_settings.scale.h.get_value()
+            if current_h != '0.500':
+                assert False, f"Scale H value is not correct! Expected: 0.500, Actual: {current_h}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_33] Set 4th position keyframe at (08:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_33(self):
+        '''
+        1. Set 4th position keyframe at (08:10)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_32"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 4th position keyframe at (08:10)'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_08_10')
-
             # Set position = (0.676, 0.304) w/ 4th keyframe
             shape_designer_page.keyframe.object_settings.position.x.set_value(0.676)
             shape_designer_page.keyframe.object_settings.position.y.set_value(0.304)
 
+        with step('[Verify] Check x value after set 4th Position keyframe'):
+            # Verify position x value
+            current_x = shape_designer_page.keyframe.object_settings.position.x.get_value()
+            if current_x != '0.676':
+                assert False, f"Position x value is not correct! Expected: 0.676, Actual: {current_x}"
+
+        with step('[Verify] Check y value after set 4th Position keyframe'):
+            # Verify position y value
+            current_y = shape_designer_page.keyframe.object_settings.position.y.get_value()
+            if current_y != '0.304':
+                assert False, f"Position y value is not correct! Expected: 0.304, Actual: {current_y}"
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_34] Set 2nd Scale keyframe at (08:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_34(self):
+        '''
+        1. Set 2nd Scale keyframe at (08:10)
+        2. Switch to previous keyframe and check timecode (05:25)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_33"
+        self.ensure_dependency(dependency_test)
+
+
+        with step('[Action] Set 2nd Scale keyframe at (08:10)'):
+            # unticl [Maintain aspect ratio]
+            shape_designer_page.scale.set_aspect_ratio_chx(0)
             # Set scale W = 0.672, H = 0.748 w/ 2nd keyframe
             shape_designer_page.keyframe.object_settings.scale.w.set_value(0.672)
             shape_designer_page.keyframe.object_settings.scale.h.set_value(0.748)
 
+        with step('[Verify] Check scale width value after set 2nd Scale keyframe'):
+            # Verify scale value
+            current_w = shape_designer_page.keyframe.object_settings.scale.w.get_value()
+            if current_w != '0.672':
+                assert False, f"Scale W value is not correct! Expected: 0.672, Actual: {current_w}"
+        
+        with step('[Verify] Check scale height value after set 2nd Scale keyframe'):
+            # Verify scale value
+            current_h = shape_designer_page.keyframe.object_settings.scale.h.get_value()
+            if current_h != '0.748':
+                assert False, f"Scale H value is not correct! Expected: 0.748, Actual: {current_h}"
+
+        with step('[Action] Switch to previous keyframe'):
+            # Click previous keyframe
+            shape_designer_page.keyframe.object_settings.scale.keyframe.click_previous()
+        
+        with step('[Verify] Check timecode after switch to previous keyframe (05:25)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:05:25':
+                assert False, f"Timecode is not correct! Expected: 00:00:05:25, Actual: {current_timecode}"
+
+        with step('[Verify] Check scale width value after switch to previous keyframe'):
+            # Verify scale value
+            current_w = shape_designer_page.keyframe.object_settings.scale.w.get_value()
+            if current_w != '0.351':
+                assert False, f"Scale W value is not correct! Expected: 0.351, Actual: {current_w}"
+        
+        with step('[Verify] Check scale height value after switch to previous keyframe'):
+            # Verify scale value
+            current_h = shape_designer_page.keyframe.object_settings.scale.h.get_value()
+            if current_h != '0.500':
+                assert False, f"Scale H value is not correct! Expected: 0.500, Actual: {current_h}"
+
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_35] Set 1st Rotation keyframe at (08:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_35(self):
+        '''
+        1. Set 1st Rotation keyframe at (08:10)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_34"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 1st Rotation keyframe at (08:10)'):
             # Set Rotation 1st keyframe on 8s 10 frame
             shape_designer_page.keyframe.object_settings.rotation.keyframe.click_add_remove()
 
             # Drag simple timeline scroll bar to 1
             #shape_designer_page.simple_timeline.drag_scroll_bar(1)
+        with step('[Verify] Check Rotation value after set 1st Rotation keyframe'):
+            # Verify Rotation value
+            current_rotation = shape_designer_page.keyframe.object_settings.rotation.value.get_value()
+            if current_rotation != '0':
+                assert False, f"Rotation value is not correct! Expected: 0, Actual: {current_rotation}"
+        assert True
 
-            # Click previous keyframe
-            shape_designer_page.keyframe.object_settings.position.keyframe.click_previous()
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_36] Set 2nd Rotation keyframe at (05:25)')
+    @exception_screenshot
+    def test_shape_designer_func_8_36(self):
+        '''
+        1. Set 2nd Rotation keyframe at (05:25)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_35"
+        self.ensure_dependency(dependency_test)
 
+        with step('[Action] Set 2nd Rotation keyframe at (05:25)'):
             # Set Rotation 2nd keyframe on (05:25)
             shape_designer_page.keyframe.object_settings.rotation.keyframe.click_add_remove()
 
             # Set Rotation degree = 250
             shape_designer_page.keyframe.object_settings.rotation.value.set_value(250)
 
+        with step('[Verify] Check Rotation value after set 2nd Rotation keyframe'):
+            # Verify Rotation value
+            current_rotation = shape_designer_page.keyframe.object_settings.rotation.value.get_value()
+            if current_rotation != '250':
+                assert False, f"Rotation value is not correct! Expected: 250, Actual: {current_rotation}"
+
+        with step('[Action] Switch to next keyframe'):
+            # Click next keyframe
+            shape_designer_page.keyframe.object_settings.rotation.keyframe.click_next()
+        
+        with step('[Verify] Check timecode after switch to next keyframe (08:10)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:08:10':
+                assert False, f"Timecode is not correct! Expected: 00:00:08:10, Actual: {current_timecode}"
+        
+        with step('[Verify] Check rotation value after switch to next keyframe'):
+            # Verify Rotation value
+            current_rotation = shape_designer_page.keyframe.object_settings.rotation.value.get_value()
+            if current_rotation != '0':
+                assert False, f"Rotation value is not correct! Expected: 0, Actual: {current_rotation}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_37] Set 1st Opacity keyframe at (08:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_37(self):
+        '''
+        1. Set 1st Opacity keyframe at (08:10)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_36"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 1st Opacity keyframe at (08:10)'):
+            # Set timecode
+            shape_designer_page.set_timecode('00_00_08_10')
+            # Set opacity 1st keyframe
+            shape_designer_page.keyframe.object_settings.opacity.keyframe.click_add_remove()
+        
+        with step('[Verify] Check opacity value after set 1st Opacity keyframe'):
+            # Verify opacity value
+            current_opacity = shape_designer_page.keyframe.object_settings.opacity.get_value()
+            if current_opacity != '100%':
+                assert False, f"Opacity value is not correct! Expected: 100%, Actual: {current_opacity}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_38] Set 2nd Opacity keyframe at (05:25)')
+    @exception_screenshot
+    def test_shape_designer_func_8_38(self):
+        '''
+        1. Set 2nd Opacity keyframe at (05:25)
+        2. Switch to next keyframe and check timecode (08:10) and value (100%)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_36"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set 2nd Opacity keyframe at (05:25)'):
+            # Set timecode
+            shape_designer_page.set_timecode('00_00_05_25')
+            # Set opacity 2nd keyframe
+            shape_designer_page.keyframe.object_settings.opacity.keyframe.click_add_remove()
+            # Adjust opacity value = 50%
+            shape_designer_page.keyframe.object_settings.opacity.set_value('50%')
+        with step('[Verify] Check opacity value after set 2nd Opacity keyframe'):
+            # Verify opacity value
+            current_opacity = shape_designer_page.keyframe.object_settings.opacity.get_value()
+            if current_opacity != '50%':
+                assert False, f"Opacity value is not correct! Expected: 50%, Actual: {current_opacity}"
+        with step('[Action] Switch to next keyframe'):
+            # Click next keyframe
+            shape_designer_page.keyframe.object_settings.opacity.keyframe.click_next()
+        with step('[Verify] Check timecode after switch to next keyframe (08:10)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:08:10':
+                assert False, f"Timecode is not correct! Expected: 00:00:08:10, Actual: {current_timecode}"
+        with step('[Verify] Check opacity value after switch to next keyframe'):
+            # Verify opacity value
+            current_opacity = shape_designer_page.keyframe.object_settings.opacity.get_value()
+            if current_opacity != '100%':
+                assert False, f"Opacity value is not correct! Expected: 100%, Actual: {current_opacity}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_39] Check preview as GT from test_shape_designer_func_8_29~38')
+    @exception_screenshot
+    def test_shape_designer_func_8_39(self):
+        '''
+        1. Check preview as GT from test_shape_designer_func_8_29~38
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_38"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check preview as GT'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_06_29')
-            time.sleep(DELAY_TIME*1.5)
-
             # Compare preview
             check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
                                                file_name=Auto_Ground_Truth_Folder + 'L205.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L205.png', check_preview, similarity=0.88)
-            case.result = compare_result
+            assert compare_result, "Preview is not correct as GT(L205.png)! Similary should>0.88"
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_40] Set Postion Ease in at (08:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_40(self):
+        '''
+        1. Set Postion Ease in at (08:10) and check value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_39"
+        self.ensure_dependency(dependency_test)
 
         # [L439] 3.5 Shape Designer (Shape 10) > Keyframe tab > Adjust ease in / out
-        with uuid("4eda0d6a-b0ea-4100-a22a-317fffdfb976") as case:
-            # Click next keyframe
-            shape_designer_page.keyframe.object_settings.position.keyframe.click_next()
-            time.sleep(DELAY_TIME * 2)
-
+        # with uuid("4eda0d6a-b0ea-4100-a22a-317fffdfb976") as case:
+        with step('[Action] Set Postion Ease in at (08:10)'):
+            # Set timecode (08:10)
+            shape_designer_page.set_timecode('00_00_08_10')
             # Position > Set Ease in
             shape_designer_page.keyframe.object_settings.position.ease_in.set_checkbox()
             time.sleep(DELAY_TIME * 2)
             # Set Ease in value = 0.61
             shape_designer_page.keyframe.object_settings.position.ease_in.set_value('0.61')
 
+        with step('[Verify] Check Ease in checkbox status'):
+            # Verify Ease in checkbox status
+            ease_in_status = shape_designer_page.keyframe.object_settings.position.ease_in.get_checkbox()
+            if not ease_in_status:
+                assert False, f"Ease in checkbox is not checked! Expected: True, Actual: {ease_in_status}"
+
+        with step('[Verify] Check Ease in value'):
+            # Verify Ease in value
+            ease_in_value = shape_designer_page.keyframe.object_settings.position.ease_in.get_value()
+            if ease_in_value != '0.61':
+                assert False, f"Ease in value is not correct! Expected: 0.61, Actual: {ease_in_value}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_41] Set Postion Ease out at (05:25)')
+    @exception_screenshot
+    def test_shape_designer_func_8_41(self):
+        '''
+        1. Set Postion Ease out at (05:25) and check value
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_40"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Postion Ease out at (05:25)'):
             # Click previous keyframe
             shape_designer_page.keyframe.object_settings.position.keyframe.click_previous()
             time.sleep(DELAY_TIME * 2)
@@ -7121,377 +8056,977 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME * 2)
             # Set Ease out value = 0.61
             shape_designer_page.keyframe.object_settings.position.ease_out.set_value('0.77')
+        
+        with step('[Verify] Check Ease out checkbox status'):
+            # Verify Ease out checkbox status
+            ease_out_status = shape_designer_page.keyframe.object_settings.position.ease_out.get_checkbox()
+            if not ease_out_status:
+                assert False, f"Ease out checkbox is not checked! Expected: True, Actual: {ease_out_status}"
+        
+        with step('[Verify] Check Ease out value'):
+            # Verify Ease out value
+            ease_out_value = shape_designer_page.keyframe.object_settings.position.ease_out.get_value()
+            if ease_out_value != '0.77':
+                assert False, f"Ease out value is not correct! Expected: 0.77, Actual: {ease_out_value}"
+        assert True
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_42] Check preview as GT from test_shape_designer_func_8_40~41')
+    @exception_screenshot
+    def test_shape_designer_func_8_42(self):
+        '''
+        1. Check preview as GT from test_shape_designer_func_8_40~41
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_41"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check preview as GT'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_06_29')
-            time.sleep(DELAY_TIME*1.5)
-
             # Compare preview
             check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
-                                               file_name=Auto_Ground_Truth_Folder + 'L206_ease_in_out.png')
+                                               file_name=Auto_Ground_Truth_Folder + 'L205.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L205.png', check_preview, similarity=0.98)
-            case.result = not compare_result
+            assert compare_result, "Preview is not correct as GT(L205.png)! Similary should>0.98"
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_43] Remove 4th position keyframe at (08:10)')
+    @exception_screenshot
+    def test_shape_designer_func_8_43(self):
+        '''
+        1. Remove 4th position keyframe at (08:10)
+        2. Switch to previous Position keyframe and check timecode (05:25)
+        3. Switch to next Position keyframe and check timecode stay at (05:25)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_42"
+        self.ensure_dependency(dependency_test)
 
         # [L440] 3.5 Shape Designer (Shape 10) > Add keyframe in simple timeline
-        with uuid("1df5b03f-b8c4-4da6-87be-582d3c308826") as case:
+        # with uuid("1df5b03f-b8c4-4da6-87be-582d3c308826") as case:
+        with step('[Action] Remove 4th position keyframe at (08:10)'):
             # Click next keyframe
             shape_designer_page.simple_timeline.position.click_next_keyframe()
-            time.sleep(DELAY_TIME * 2)
-
             # Remove 4th position keyframe
             shape_designer_page.simple_timeline.position.add_keyframe()
 
+        with step('[Action] Switch to previous Position keyframe'):
             # Click previous keyframe
-            shape_designer_page.simple_timeline.scale.click_previous_keyframe()
-            time.sleep(DELAY_TIME * 2)
+            shape_designer_page.simple_timeline.position.click_previous_keyframe()
 
-            # Set timecode
-            shape_designer_page.set_timecode('00_00_05_13')
-            # Add scale keyframe
-            shape_designer_page.simple_timeline.scale.add_keyframe()
-            time.sleep(DELAY_TIME * 2)
+        with step('[Verify] Check timecode at (05:25)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:05:25':
+                assert False, f"Timecode is not correct! Expected: 00:00:05:25, Actual: {current_timecode}"
 
-            # Set scale W = 0.982
-            shape_designer_page.keyframe.object_settings.scale.w.set_value(0.982)
+        with step('[Action] Switch to next Position keyframe'):
+            # Click next keyframe
+            shape_designer_page.simple_timeline.position.click_next_keyframe()
+        
+        with step('[Verify] Check timecode stay at (05:25)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:05:25':
+                assert False, f"Timecode is not correct! Expected: 00:00:05:25, Actual: {current_timecode}"
+        assert True
 
-            # Set timecode
-            shape_designer_page.set_timecode('00_00_06_29')
-            time.sleep(DELAY_TIME * 1.5)
+            # # Set timecode
+            # shape_designer_page.set_timecode('00_00_05_13')
+            # # Add scale keyframe
+            # shape_designer_page.simple_timeline.scale.add_keyframe()
+            # time.sleep(DELAY_TIME * 2)
 
-            # Compare preview
-            check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
-                                               file_name=Auto_Ground_Truth_Folder + 'L207.png')
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L207.png', check_preview, similarity=0.88)
-            case.result = compare_result
+            # # Set scale W = 0.982
+            # shape_designer_page.keyframe.object_settings.scale.w.set_value(0.982)
+
+            # # Set timecode
+            # shape_designer_page.set_timecode('00_00_06_29')
+            # time.sleep(DELAY_TIME * 1.5)
+
+            # # Compare preview
+            # check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
+            #                                    file_name=Auto_Ground_Truth_Folder + 'L207.png')
+            # compare_result = main_page.compare(Ground_Truth_Folder + 'L207.png', check_preview, similarity=0.88)
+            # case.result = compare_result
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_shape_designer_func_8_44] Play video')
+    @exception_screenshot
+    def test_shape_designer_func_8_44(self):
+        '''
+        1. [Initial] Minimalize window and switch to properties tab
+        2. Play the video
+        3. Check if preview changed correctly after play
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_43"
+        self.ensure_dependency(dependency_test)
 
         # [L442] 3.5 Shape Designer (Shape 10) > Preview in designer
-        with uuid("57fc39a2-bd36-432d-a9f1-e9e148f9816d") as case:
+        # with uuid("57fc39a2-bd36-432d-a9f1-e9e148f9816d") as case:
+        with step('[Initial] Minimalize window and switch to properties tab'):
             # Restore window
             shape_designer_page.click_restore_btn()
-            time.sleep(DELAY_TIME)
-
             # Switch to properties
             shape_designer_page.click_properties_tab()
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Play the video'):
+            # Set timecode at (00:00:00:00)
+            shape_designer_page.set_timecode('00_00_00_00')
+            # Click Play
+            shape_designer_page.click_preview_operation('Play')
+
+        with step('[Verify] Check if preview changed correctly after play'):
+            check_preview_update = main_page.Check_PreviewWindow_is_different(L.title_designer.area.frame_preview, sec=2)
+            if not check_preview_update:
+                assert False, "Preview is not updated after play in 2 secs!"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_shape_designer_func_8_45] Pause video')
+    @exception_screenshot
+    def test_shape_designer_func_8_45(self):
+        '''
+        1. Pause the video and check timecode is in (00:00:02:00) ~ (00:00:04:00)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_44"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Pause the video'):
+            # Click Pause
+            shape_designer_page.click_preview_operation('Pause')
+        with step('[Verify] Check timecode is in (00:00:02:00) ~ (00:00:04:00)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            # check timecode in range (00:00:02:00) ~ (00:00:04:00)
+            if current_timecode < '00:00:02:00' or current_timecode > '00:00:04:00':
+                assert False, f"Timecode is not in range (00:00:02:00) ~ (00:00:04:00)! Actual: {current_timecode}"
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_shape_designer_func_8_46] Stop video')
+    @exception_screenshot
+    def test_shape_designer_func_8_46(self):
+        '''
+        1. Stop the video and check timecode back to (00:00:00:00)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_45"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Stop the video'):
             # Click Stop
             shape_designer_page.click_preview_operation('Stop')
-            time.sleep(DELAY_TIME * 0.5)
+        
 
-            # Click Play
-            shape_designer_page.click_preview_operation('Play')
-            time.sleep(DELAY_TIME * 4)
+        with step('[Verify] Check timecode back to (00:00:00:00)'):
+            # Verify timecode
+            current_timecode = shape_designer_page.get_timecode()
+            if current_timecode != '00:00:00:00':
+                assert False, f"Timecode is not correct! Expected: 00:00:00:00, Actual: {current_timecode}"
+        assert True
 
-            # Click Pause
-            shape_designer_page.click_preview_operation('Pause')
 
-            # Set timecode
-            shape_designer_page.set_timecode('00_00_04_29')
-            time.sleep(DELAY_TIME * 1.5)
 
-            # Compare preview
-            check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
-                                               file_name=Auto_Ground_Truth_Folder + 'L209.png')
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L209.png', check_preview)
-            case.result = compare_result
+
+            # # Set timecode
+            # shape_designer_page.set_timecode('00_00_04_29')
+            # time.sleep(DELAY_TIME * 1.5)
+
+            # # Compare preview
+            # check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
+            #                                    file_name=Auto_Ground_Truth_Folder + 'L209.png')
+            # compare_result = main_page.compare(Ground_Truth_Folder + 'L209.png', check_preview)
+            # case.result = compare_result
+
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_shape_designer_func_8_47] Save Template')
+    @exception_screenshot
+    def test_shape_designer_func_8_47(self):
+        '''
+        1. 
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_46"
+        self.ensure_dependency(dependency_test)
 
         # [L443] 3.5 Shape Designer (Shape 10) > Save as template
-        with uuid("7a48ed0f-e18b-40e0-8749-82321bac9821") as case:
+        # with uuid("7a48ed0f-e18b-40e0-8749-82321bac9821") as case:
+        with step('[Action] Save as template'):
             shape_designer_page.click_save_as()
-            time.sleep(DELAY_TIME)
             shape_designer_page.save_as.set_name('Custom_shape_10')
-            time.sleep(DELAY_TIME)
             shape_designer_page.save_as.click_ok()
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check if title changed to saved template name'):
             # Verify Step 1: check caption bar
             current_title = shape_designer_page.get_title()
-            logger(current_title)
-            if current_title == 'Custom_shape_10':
-                save_result = True
-            else:
-                save_result = False
-            logger(save_result)
+            if current_title != 'Custom_shape_10':
+                assert False, f"Title is not correct! Expected: Custom_shape_10, Actual: {current_title}"
 
+        with step('[Action] Close Shape Designer'):
             # Click [OK]
             shape_designer_page.click_ok()
-            time.sleep(DELAY_TIME * 3)
 
-            # select timeline track 1
-            main_page.timeline_select_track(1)
-            time.sleep(DELAY_TIME * 2)
-
-            # Set CTI timeline to (00:00:19:00)
-            main_page.set_timeline_timecode('00_00_19_00')
-            time.sleep(DELAY_TIME * 2)
+        with step('[Verify] Check if saved template is in library'):
             # Verify Step2:
             custom_select_result = main_page.select_library_icon_view_media('Custom_shape_10')
-            logger(custom_select_result)
-            case.result = save_result and custom_select_result
+            if not custom_select_result:
+                assert False, "Custom_shape_10 is not in library!"
+        assert True
+        
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.timeline
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_shape_designer_func_8_48] Add saved template to timeline')
+    @exception_screenshot
+    def test_shape_designer_func_8_48(self):
+        '''
+        1. Add saved template to track1 timeline at (19:00)
+        2. Check if saved template is in timeline by selected video track 1 and check title
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_47"
+        self.ensure_dependency(dependency_test)
+
 
         # [L444] 3.5 Shape Designer (Shape 10) > Add saved template to timeline
-        with uuid("ae82fd12-b91f-40e1-ade5-5cca22803e7e") as case:
-            time.sleep(DELAY_TIME * 3)
-            main_page.select_library_icon_view_media('Custom_shape_10')
-            time.sleep(DELAY_TIME * 2)
-            main_page.right_click()
-            time.sleep(DELAY_TIME)
-            main_page.select_right_click_menu('Add to Timeline')
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("ae82fd12-b91f-40e1-ade5-5cca22803e7e") as case:
 
+        with step('[Action] Add saved template to timeline'):
+            # select timeline track 1
+            main_page.timeline_select_track(1)
+            main_page.set_timeline_timecode('00_00_19_00')
+            main_page.select_library_icon_view_media('Custom_shape_10')
+            main_page.right_click()
+            main_page.select_right_click_menu('Add to Timeline')
+
+        with step('[Verify] Check if saved template is in timeline'):
             # Verify Step1 : Check (Custom_shape_10) is in Video track 1
             timeline_operation_page.select_timeline_media(track_index=0, clip_index=2)
-            time.sleep(DELAY_TIME * 2)
             main_page.double_click()
-            time.sleep(DELAY_TIME*1.5)
-
             current_title = shape_designer_page.get_title()
-            logger(current_title)
-            if current_title == 'Custom_shape_10':
-                check_caption_title = True
-            else:
-                check_caption_title = False
+            assert current_title == 'Custom_shape_10', f"Title is not correct! Expected: Custom_shape_10, Actual: {current_title}"
 
-            # Verify Step2: Play then Pause
-            # Click Play
-            shape_designer_page.click_preview_operation('Play')
-            time.sleep(DELAY_TIME * 2)
+        # # Verify Step2: Play then Pause
+        # # Click Play
+        # shape_designer_page.click_preview_operation('Play')
+        # time.sleep(DELAY_TIME * 2)
 
-            # Click Pause
-            shape_designer_page.click_preview_operation('Pause')
-            time.sleep(DELAY_TIME * 1.5)
+        # # Click Pause
+        # shape_designer_page.click_preview_operation('Pause')
+        # time.sleep(DELAY_TIME * 1.5)
+        
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_shape_designer_func_8_47] Check preview from test_shape_designer_func_8_27~48')
+    @exception_screenshot
+    def test_shape_designer_func_8_49(self):
+        '''
+        1. Check preview from test_shape_designer_func_8_27~48
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_48"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check preview as GT'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_02_01')
-            time.sleep(DELAY_TIME * 3)
 
             # Compare preview
             check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
                                                file_name=Auto_Ground_Truth_Folder + 'L211.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L211.png', check_preview,similarity=0.9)
-            case.result = compare_result and check_caption_title
+            assert compare_result, "Preview is not correct as GT(L211.png)! Similary should>0.9"
 
-        # [L437] 3.5 Shape Designer (Shape 10) > Only show the selected track
-        with uuid("12c35c84-9c7b-4ba1-bcdb-7510d1dc1555") as case:
-            # Click Stop
-            shape_designer_page.click_preview_operation('Stop')
-            time.sleep(DELAY_TIME)
+        # # [L437] 3.5 Shape Designer (Shape 10) > Only show the selected track
+        # with uuid("12c35c84-9c7b-4ba1-bcdb-7510d1dc1555") as case:
+        #     # Click Stop
+        #     shape_designer_page.click_preview_operation('Stop')
+        #     time.sleep(DELAY_TIME)
 
-            # Check checkbox default status
-            elem_checkbox = main_page.exist(L.shape_designer.show_the_selected_track)
-            default_value = elem_checkbox.AXValue
-            if default_value == 0:
-                default_status = True
-            else:
-                default_status = False
-            logger(default_status)
+        #     # Check checkbox default status
+        #     elem_checkbox = main_page.exist(L.shape_designer.show_the_selected_track)
+        #     default_value = elem_checkbox.AXValue
+        #     if default_value == 0:
+        #         default_status = True
+        #     else:
+        #         default_status = False
+        #     logger(default_status)
 
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_shape_designer_func_8_50] Only show the selected track')
+    @exception_screenshot
+    def test_shape_designer_func_8_50(self):
+        '''
+        1. Only show the selected track
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_48"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set only show the selected track'):
             # Set only show the selected track
             main_page.click(L.shape_designer.show_the_selected_track)
 
+        with step('[Verify] Check preview as GT'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_02_01')
-            time.sleep(DELAY_TIME * 1.5)
 
             # Compare preview
             check_preview_204 = main_page.snapshot(locator=L.shape_designer.designer_window)
             compare_result = main_page.compare(Ground_Truth_Folder + 'L211.png', check_preview_204)
-            logger(compare_result)
-            case.result = (not compare_result) and default_status
-        shape_designer_page.click_cancel()
+            if compare_result:
+                assert False, "Preview is the same as GT(L211.png)! Similary should<0.95"
 
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_6',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+        with step('[Initial] Save project'):
+            shape_designer_page.click_cancel()
 
-    # 6 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+            # Save project:
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name='test_case_1_1_6',
+                                            folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+        assert True
+
+    @pytest.mark.test_shape_designer_func
+    @pytest.mark.name('[test_shape_designer_func_8_z] Close AP due to the section is completed')
     @exception_screenshot
-    def test_1_1_7(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_shape_designer_func_8_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
 
-        # Open project: test_case_1_1_6
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_6.pds')
-        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.content_pack
+    @pytest.mark.particle_room
+    @pytest.mark.particle_designer
+    @pytest.mark.search_library
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_particle_designer_func_9_1] Open Particle Designer from Halloween 05')
+    @exception_screenshot
+    def test_particle_designer_func_9_1(self):
+        '''
+        1. Open AP and open saved project
+        2. Enter Particle room
+        3. Search and select Halloween
+        4. Drag Halloween to timeline track 2
+        5. Open Particle Designer from tips
+        6. Check Particle Designer title
+        '''
+        with step('[Action] Open AP and open saved project'):
+            main_page.start_app()
+            time.sleep(DELAY_TIME)
+
+            project_name = 'BFT_21_Stage1/test_particle_designer_func_9_1_from_test_shape_designer_func_8_50.pdk'
+            save_name = 'BFT_21_Stage1/test_particle_designer_func_9_1'
+            self.open_packed_project(project_name, save_name)
 
         # [L213] 3.6 Particle Designer (Should support opacity) > Open Particle designer
-        with uuid("51d8dc04-c9dc-4f8e-b7e2-bfb9e802e19b") as case:
+        # with uuid("51d8dc04-c9dc-4f8e-b7e2-bfb9e802e19b") as case:
+        with step('[Action] Enter particle room'):
             # enter Particle room
             main_page.enter_room(5)
-            time.sleep(DELAY_TIME * 3)
-            particle_room_page.search_Particle_room_library('Snowflakes')
 
-            main_page.select_library_icon_view_media('Snowflakes')
-            time.sleep(DELAY_TIME*7)
+        with step('[Action] Search and select Halloween 05'):
+            particle_room_page.search_Particle_room_library('Halloween')
 
+            main_page.select_library_icon_view_media('Halloween 05')
+            time.sleep(DELAY_TIME*7) # wait for downloading conponent
+
+        with step('[Action] Drag Halloween to timeline track 2'):
             # Drag BFT_title_Save to timeline track 2
-            main_page.drag_media_to_timeline_playhead_position('Snowflakes', track_no=2)
+            main_page.drag_media_to_timeline_playhead_position('Halloween 05', track_no=2)
 
+        with step('[Action] Open Particle Designer from tips'):
             # Click tips area [Designer] button
             main_page.tips_area_click_designer(2)
-            time.sleep(DELAY_TIME * 1.5)
 
+        with step('[Verify] Check Particle Designer title'):
             check_title = particle_designer_page.get_particle_designer_title()
-            logger(check_title)
+            assert check_title == 'Halloween 05', f"Title is not correct! Expected: Halloween 05, Actual: {check_title}"
 
-            if check_title == 'Snowflakes':
-                case.result = True
-            else:
-                case.result = False
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_2] Check Default [Emit] value == 100000')
+    @exception_screenshot
+    def test_particle_designer_func_9_2(self):
+        '''
+        1. Check Default [Emit] value == 100000
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
 
         # [L214] 3.6 Particle Designer (Should support opacity) > modify parameter
-        with uuid("56edc685-fdb3-4aa5-9fbb-36060e6a5223") as case:
+        # with uuid("56edc685-fdb3-4aa5-9fbb-36060e6a5223") as case:
+
+        with step('[Action] Get Default value of Emit'):
             # Get default Emit / Max / Life / Size / Speed / Opacity  value
             default_emit_value = particle_designer_page.express_mode.get_Emit_value()
+        with step('[Verify] Check Default value of Emit == 100000'):
+            assert default_emit_value == 100000, f"Default Emit value is not correct! Expected: 100000, Actual: {default_emit_value}"
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_3] Check Default [Max] value == 100000')
+    @exception_screenshot
+    def test_particle_designer_func_9_3(self):
+        '''
+        1. Check Default [Max] value == 100000
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Get Default value of Max'):
             default_max_value = particle_designer_page.express_mode.get_Max_value()
+        with step('[Verify] Check Default value of Max == 100000'):
+            assert default_max_value == 100000, f"Default Max value is not correct! Expected: 100000, Actual: {default_max_value}"
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_4] Check Default [Life] value == 100000')
+    @exception_screenshot
+    def test_particle_designer_func_9_4(self):
+        '''
+        1. Check Default [Life] value == 100000
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Get Default value of Life'):
             default_life_value = particle_designer_page.express_mode.get_Life_value()
+        with step('[Verify] Check Default value of Life == 100000'):
+            assert default_life_value == 100000, f"Default Life value is not correct! Expected: 100000, Actual: {default_life_value}"
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_5] Check Default [Size] value == 100000')
+    @exception_screenshot
+    def test_particle_designer_func_9_5(self):
+        '''
+        1. Check Default [Size] value == 100000
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Get Default value of Size'):
             default_size_value = particle_designer_page.express_mode.get_Size_value()
+        with step('[Verify] Check Default value of Size == 100000'):
+            assert default_size_value == 100000, f"Default Size value is not correct! Expected: 100000, Actual: {default_size_value}"
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_6] Check Default [Speed] value == 100000')
+    @exception_screenshot
+    def test_particle_designer_func_9_6(self):
+        '''
+        1. Check Default [Speed] value == 100000
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Get Default value of Speed'):
             default_speed_value = particle_designer_page.express_mode.get_Speed_value()
+        with step('[Verify] Check Default value of Speed == 100000'):
+            assert default_speed_value == 100000, f"Default Speed value is not correct! Expected: 100000, Actual: {default_speed_value}"
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_7] Check Default [Opacity] value == 100000')
+    @exception_screenshot
+    def test_particle_designer_func_9_7(self):
+        '''
+        1. Check Default [Opacity] value == 100000
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Get Default value of Opacity'):
             default_opacity_value = particle_designer_page.express_mode.get_Opacity_value()
+        with step('[Verify] Check Default value of Opacity == 100000'):
+            assert default_opacity_value == 100000, f"Default Opacity value is not correct! Expected: 100000, Actual: {default_opacity_value}"
 
-            logger(default_emit_value)
-            logger(default_max_value)
-            logger(default_life_value)
-            logger(default_size_value)
-            logger(default_speed_value)
-            logger(default_opacity_value)
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_8] Change [Emit] value by slider')
+    @exception_screenshot
+    def test_particle_designer_func_9_8(self):
+        '''
+        1. Apply Emit (10407) by Slider
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
 
-            # Verify step: check all parameters "default" value
-            # If average value = 100000, then True
-            avg_default = (default_emit_value + default_max_value + default_life_value + default_size_value + default_speed_value + default_opacity_value) / 6
-            logger(avg_default)
-
-            if int(avg_default) == 100000:
-                check_default = True
-            else:
-                check_default = False
-            logger(check_default)
-
-            # Set paramter
-            # Emit = 10407, Max = 170621, Life = 200000, Size = 178940, Speed = 121610, Opacity = 194574
+        with step('[Action] Set Emit (10407) by slider'):
+            before_emit_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Emit_slider(10407)
-            time.sleep(DELAY_TIME)
+
+        with step('[Verify] Check Emit value == 10407'):
+            check_emit_value = particle_designer_page.express_mode.get_Emit_value()
+            if check_emit_value != 10407:
+                assert False, f"Emit value is not correct! Expected: 10407, Actual: {check_emit_value}"
+        
+        with step('[Verify] Check preview is changed'):
+            after_emit_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_emit_preview, after_emit_preview, similarity=0.98):
+                assert False, "Preview is not changed after set Emit value! Similary should<0.98"
+        assert True
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_9] Change [Max] value by slider')
+    @exception_screenshot
+    def test_particle_designer_func_9_9(self):
+        '''
+        1. Apply [Max] (170621) by Slider
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Max (170621) by slider'):
+            before_max_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Max_slider(170621)
-            time.sleep(DELAY_TIME)
+        with step('[Verify] Check Max value == 170621'):
+            check_max_value = particle_designer_page.express_mode.get_Max_value()
+            if check_max_value != 170621:
+                assert False, f"Max value is not correct! Expected: 170621, Actual: {check_max_value}"
+        with step('[Verify] Check preview is changed'):
+            after_max_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_max_preview, after_max_preview, similarity=0.98):
+                assert False, "Preview is not changed after set Max value! Similary should<0.98"
+        assert True
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_10] Change [Life] value by slider')
+    @exception_screenshot
+    def test_particle_designer_func_9_10(self):
+        '''
+        1. Apply [Life] (200000) by Slider
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Life (200000) by slider'):
+            before_life_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Life_slider(200000)
-            time.sleep(DELAY_TIME)
+        
+        with step('[Verify] Check Life value == 200000'):
+            check_life_value = particle_designer_page.express_mode.get_Life_value()
+            if check_life_value != 200000:
+                assert False, f"Life value is not correct! Expected: 200000, Actual: {check_life_value}"
+        
+        with step('[Verify] Check preview is changed'):
+            after_life_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_life_preview, after_life_preview, similarity=0.98):
+                assert False, "Preview is not changed after set Life value! Similary should<0.98"
+        assert True
+        
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_11] Change [Size] value by slider')
+    @exception_screenshot
+    def test_particle_designer_func_9_11(self):
+        '''
+        1. Apply [Size] (171940) by Slider
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Size (171940) by slider'):
+            before_size_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Size_slider(171940)
-            time.sleep(DELAY_TIME)
+
+        with step('[Verify] Check Size value == 171940'):
+            check_size_value = particle_designer_page.express_mode.get_Size_value()
+            if check_size_value != 171940:
+                assert False, f"Size value is not correct! Expected: 171940, Actual: {check_size_value}"
+        
+        with step('[Verify] Check preview is changed'):
+            after_size_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_size_preview, after_size_preview, similarity=0.98):
+                assert False, "Preview is not changed after set Size value! Similary should<0.98"
+        assert True
+            
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_12] Change [Size] value by [Plus] button')
+    @exception_screenshot
+    def test_particle_designer_func_9_12(self):
+        '''
+        1. Apply [Size] (171947) by [Plus] button
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+        with step('[Action] Set Size (171947) by [Plus] button'):
+            before_size_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.click_Size_plus_btn(7)
-            time.sleep(DELAY_TIME)
+
+        with step('[Verify] Check Size value == 171947'):
+            check_size_value = particle_designer_page.express_mode.get_Size_value()
+            if check_size_value != 171947:
+                assert False, f"Size value is not correct! Expected: 171947, Actual: {check_size_value}"
+            
+        with step('[Verify] Check preview is changed'):
+            after_size_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_size_preview, after_size_preview, similarity=0.999):
+                assert False, "Preview is not changed after set Size value! Similary should<0.999"
+        assert True
+            
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_13] Change [Speed] value by slider')
+    @exception_screenshot
+    def test_particle_designer_func_9_13(self):
+        '''
+        1. Apply [Speed] (126610) by Slider
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+        with step('[Action] Set Speed (126610) by slider'):
+            before_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Speed_slider(126610)
-            time.sleep(DELAY_TIME)
+        
+        with step('[Verify] Check Speed value == 126610'):
+            check_speed_value = particle_designer_page.express_mode.get_Speed_value()
+            if check_speed_value != 126610:
+                assert False, f"Speed value is not correct! Expected: 126610, Actual: {check_speed_value}"
+        
+        with step('[Verify] Check preview is changed'):
+            after_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_speed_preview, after_speed_preview, similarity=0.98):
+                assert False, "Preview is not changed after set Speed value! Similary should<0.98"
+        assert True
+            
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_14] Change [Speed] value by [Minus] button')
+    @exception_screenshot
+    def test_particle_designer_func_9_14(self):
+        '''
+        1. Apply [Speed] (126605) by [Minus] button
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+        with step('[Action] Set Speed (126605) by [Minus] button'):
+            before_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.click_Speed_minus_btn(5)
-            time.sleep(DELAY_TIME)
+        
+        with step('[Verify] Check Speed value == 126605'):
+            check_speed_value = particle_designer_page.express_mode.get_Speed_value()
+            if check_speed_value != 126605:
+                assert False, f"Speed value is not correct! Expected: 126605, Actual: {check_speed_value}"
+
+        with step('[Verify] Check preview is changed'):
+            after_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_speed_preview, after_speed_preview, similarity=0.999):
+                assert False, "Preview is not changed after set Speed value! Similary should<0.999"
+        assert True
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_15] Change [Opacity] value by slider')
+    @exception_screenshot
+    def test_particle_designer_func_9_15(self):
+        '''
+        1. Apply [Opacity] (194574) by Slider
+        2. Check value and preview
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_1"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Set Opacity (194574) by slider'):
+            before_opacity_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Opacity_slider(194574)
+        
+        with step('[Verify] Check Opacity value == 194574'):
+            check_opacity_value = particle_designer_page.express_mode.get_Opacity_value()
+            if check_opacity_value != 194574:
+                assert False, f"Opacity value is not correct! Expected: 194574, Actual: {check_opacity_value}"
+
+        with step('[Verify] Check preview is changed'):
+            after_opacity_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
+            if main_page.compare(before_opacity_preview, after_opacity_preview, similarity=0.98):
+                assert False, "Preview is not changed after set Opacity value! Similary should<0.98"
+        assert True
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.properties
+    @pytest.mark.name('[test_particle_designer_func_9_16] Check Preview from test_particle_designer_func_9_8~15')
+    @exception_screenshot
+    def test_particle_designer_func_9_16(self):
+        '''
+        1. Check Preview from test_particle_designer_func_9_8~15
+        '''
+
+        # If the result from test_particle_designer_func_9_8~15 is True, else the test will be failed
+        dependency_test_list = ["test_particle_designer_func_9_8", "test_particle_designer_func_9_9", "test_particle_designer_func_9_10", "test_particle_designer_func_9_11", "test_particle_designer_func_9_12", "test_particle_designer_func_9_13", "test_particle_designer_func_9_14", "test_particle_designer_func_9_15"]
+        for dependency_test in dependency_test_list:
+            if not self.ensure_dependency(dependency_test, run_dependency=False):
+                assert False, f"Dependency test {dependency_test} is failed! Please check the result first!"
 
             # drag scroll bar to 1
             #particle_designer_page.drag_properties_scroll_bar(1)
 
+        with step('[Verify] Check preview as GT'):
             # Set timecode = 00:00:04:09
             particle_designer_page.set_timecode('00_00_04_09')
-            time.sleep(DELAY_TIME*1.5)
 
             # Verify Step;
             check_preview = main_page.snapshot(locator=L.particle_designer.designer_window,
                                                file_name=Auto_Ground_Truth_Folder + 'L214.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L214.png', check_preview)
 
-            case.result = check_default and compare_result
+            assert compare_result, "Preview is not correct as GT(L214.png)! Similary should>0.95"
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_particle_designer_func_9_17] Play preview by [Next Frame] button')
+    @exception_screenshot
+    def test_particle_designer_func_9_17(self):
+        '''
+        1. Play preview by [Next Frame] button
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test_list = ["test_particle_designer_func_9_8", "test_particle_designer_func_9_9", "test_particle_designer_func_9_10", "test_particle_designer_func_9_11", "test_particle_designer_func_9_12", "test_particle_designer_func_9_13", "test_particle_designer_func_9_14", "test_particle_designer_func_9_15"]
+        for dependency_test in dependency_test_list:
+            self.ensure_dependency(dependency_test)
 
         # [L215] 3.6 Particle Designer (Should support opacity) > preview in designer
-        with uuid("3bc57b03-6b38-45a7-b7d4-83db0bb56922") as case:
+        # with uuid("3bc57b03-6b38-45a7-b7d4-83db0bb56922") as case:
             # Seek next frame to 00:00:04:18
-            for x in range(9):
+        with step('[Action] Reach (04:18) by click [Next_Frame] button'):
+            for _ in range(9):
                 particle_designer_page.click_preview_operation('Next_Frame')
                 time.sleep(DELAY_TIME*0.5)
 
+        with step('[Verify] Check timecode is (04:18)'):
+            check_timecode = particle_designer_page.get_timecode()
+            if check_timecode != '00:00:04:18':
+                assert False, f"Timecode is not correct! Expected: 00:00:04:18, Actual: {check_timecode}"
+
+        with step('[Verify] Check preview as GT'):
             # Verify Step;
             check_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             compare_result = main_page.compare(Ground_Truth_Folder + 'L214.png', check_preview)
-            logger(compare_result)
-            case.result = not compare_result
+            if compare_result:
+                assert False, "Preview is the same as GT(L214.png at 04:09)! Similary should<0.95"
+        assert True
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.save_template
+    @pytest.mark.dz
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.name('[test_particle_designer_func_9_18] Save and share template to cloud')
+    @exception_screenshot
+    def test_particle_designer_func_9_18(self):
+        '''
+        1. Save and share template to cloud
+        2. Check if title changed to saved name
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = 'test_particle_designer_func_9_17'
+        self.ensure_dependency(dependency_test)
 
         # [L216] 3.6 Particle Designer (Should support opacity) > [Share] template online
-        with uuid("6030bf73-af59-4bef-ba28-051b275491ec") as case:
-            check_upload = particle_designer_page.share_to_cloud(name='snowflakes_design', tags='123', collection='test', description='white color', verify_dz_link=1)
-            logger(check_upload)
+        # with uuid("6030bf73-af59-4bef-ba28-051b275491ec") as case:
 
-            time.sleep(DELAY_TIME*3)
+        with step('[Action] Save and share template to cloud'):
+            check_upload = particle_designer_page.share_to_cloud(name='Halloween_design', tags='123', collection='test', description='white color', verify_dz_link=1)
+            if not check_upload:
+                assert False, "Cannot upload template to cloud! Please check the result first!"
 
+        with step('[Verify] Check if title changed to saved name'):
             # Verify step: check title
             check_title = particle_designer_page.get_particle_designer_title()
-            logger(check_title)
 
-            if check_title == 'snowflakes_design':
-                upload_save_back = True
-            else:
-                upload_save_back = False
-            logger(upload_save_back)
+            if check_title != 'Halloween_design':
+                assert False, f"Title is not correct! Expected: Halloween_design, Actual: {check_title}"
+        assert True
 
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.save_template
+    @pytest.mark.dz
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.name('[test_particle_designer_func_9_19] Download content form CL/DZ')
+    @exception_screenshot
+    def test_particle_designer_func_9_19(self):
+        '''
+        1. Save the template to Local as BFT_Halloween_custom
+        2. Download content form CL/DZ
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_18"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Save template'):
             # ---------------------------------
             # Click [Save as] > Save custom name then close Particle designer
-            particle_designer_page.save_as_name('BFT_snowflakes_custom')
+            particle_designer_page.save_as_name('BFT_Halloween_custom')
             time.sleep(DELAY_TIME)
             particle_designer_page.save_as_ok()
             particle_designer_page.click_OK()
 
-
+        with step('[Action] Download content form CL/DZ'):
             # Click download content form CL/DZ
             particle_room_page.click_DownloadContent_from_DZCloud()
-            time.sleep(DELAY_TIME*6)
-
+            
             # Already enter "Download Particle Objects" > Open My Cyberlink Cloud
             # Select template name "dialog09_chroma"
-            check_CL_content = download_from_cl_dz_page.select_template('snowflakes_design')
-            time.sleep(DELAY_TIME)
-            download_from_cl_dz_page.tap_delete_button()
-            time.sleep(DELAY_TIME*3)
+            check_CL_content = download_from_cl_dz_page.select_template('Halloween_design')
+            if not check_CL_content:
+                assert False, "Cannot find template in CL/DZ!"
 
+        with step('[Initial] Delete saved template on dz/cloud'):
+            download_from_cl_dz_page.tap_delete_button()
             # Close "Download Particle Objects" window
             # download_from_cl_dz_page.tap_close_button()
             main_page.press_esc_key()
+        assert True
 
-            case.result = check_upload and upload_save_back and check_CL_content
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_particle_designer_func_9_20] Check preview changed after select saved custom template')
+    @exception_screenshot
+    def test_particle_designer_func_9_20(self):
+        '''
+        1. Check preview changed after select saved custom template
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_19"
+        self.ensure_dependency(dependency_test)
 
         # [L217] 3.6 Particle Designer (Should support opacity) > Save / Save as template
-        with uuid("23140e39-6b80-4d37-b572-266f1481fca1") as case:
-            main_page.select_library_icon_view_media('BFT_snowflakes_custom')
+        # with uuid("23140e39-6b80-4d37-b572-266f1481fca1") as case:
+
+        with step('[Action] Selct saved custom template'):
+            main_page.select_library_icon_view_media('BFT_Halloween_custom')
+
+        with step('[Verify] Check preview changed'):
             check_different = main_page.Check_PreviewWindow_is_different(sec=4)
-            logger(check_different)
-            case.result = check_different
+            assert check_different, "Preview is not changed after select saved custom template!"
+
+    
+    @pytest.mark.particle_designer_func
+    @pytest.mark.particle_designer
+    @pytest.mark.save_template
+    @pytest.mark.timeline
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_particle_designer_func_9_21] Add saved custom template to timeline')
+    @exception_screenshot
+    def test_particle_designer_func_9_21(self):
+        '''
+        1. Add saved custom template to timeline
+        2. Check preview as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_20"
+        self.ensure_dependency(dependency_test)
 
         # [L218] 3.6 Particle Designer (Should support opacity) > Add saved title template to timeline
-        with uuid("5945daf9-f385-471b-aa11-4b9445c4736f") as case:
+        # with uuid("5945daf9-f385-471b-aa11-4b9445c4736f") as case:
+        with step('[Action] Add saved custom template to timeline'):
             # select timeline track 1
             main_page.timeline_select_track(1)
-
             # Set CTI timeline to (00:00:29:00)
             main_page.set_timeline_timecode('00_00_29_00')
-            time.sleep(DELAY_TIME*1.5)
-
             # Add to timeline
-            main_page.select_library_icon_view_media('BFT_snowflakes_custom')
-            time.sleep(DELAY_TIME*2)
+            main_page.select_library_icon_view_media('BFT_Halloween_custom')
             main_page.tips_area_insert_media_to_selected_track()
 
-            time.sleep(DELAY_TIME * 2)
+        with step('[Verify] Check preview as GT'):
             main_page.set_timeline_timecode('00_00_03_02')
-            time.sleep(DELAY_TIME*1.5)
-
             timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L217.png')
             check_timeline_particle = main_page.compare(Ground_Truth_Folder + 'L217.png', timeline_preview, similarity=0.8)
-            case.result = check_timeline_particle
+            if not check_timeline_particle:
+                assert False, "Preview is not correct as GT(L217.png)! Similary should>0.8"
 
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_7',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+        with step('[Action] Save project'):
+            # Save project:
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name='test_particle_designer_func_9_21',
+                                            folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+        assert True
+
+    @pytest.mark.particle_designer_func
+    @pytest.mark.name('[test_particle_designer_func_9_z] Close AP due to the section is completed')
+    @exception_screenshot
+    def test_particle_designer_func_9_z(self):
+        # close ap due to the section is completed
+        main_page.close_app()
+        assert True
+
 
     # 19 uuid
     # @pytest.mark.skip
@@ -9059,7 +10594,7 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME * 2)
             timeline_operation_page.edit_specific_video_track_set_lock_unlock(2)
             time.sleep(DELAY_TIME * 2)
-            main_page.select_library_icon_view_media('BFT_snowflakes_custom')
+            main_page.select_library_icon_view_media('BFT_Halloween_custom')
             time.sleep(DELAY_TIME * 2)
 
             # right click > Add to timeline

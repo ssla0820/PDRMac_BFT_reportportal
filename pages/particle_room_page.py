@@ -3,9 +3,10 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -138,28 +139,30 @@ class Particle_room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Particle Room] Click Download Content from DirectorZone/Cloud')
     def click_DownloadContent_from_DZCloud(self):
         try:
             if not self.exist_click(L.particle_room.btn_import_media):
-                raise Exception
+                raise Exception('Cannot find btn_import_media')
             time.sleep(DELAY_TIME*2)
 
             if not self.exist(L.particle_room.btn_import_particle_objects):
                 logger('not in Particle Room')
-                raise Exception
+                raise Exception('not in Particle Room')
 
             if not self.exist_click(L.particle_room.btn_download_from_DZ_cloud):
-                raise Exception
+                raise Exception('Cannot find btn_download_from_DZ_cloud')
             time.sleep(DELAY_TIME*2)
 
             # Verify Step - Pop up (Download Particle Objects) dialog
             if not self.exist(L.particle_room.download_dialog.main):
-                raise Exception
+                raise Exception('Cannot find download_dialog')
             if not self.exist(L.particle_room.download_dialog.str_Title):
-                raise Exception
+                raise Exception('Cannot find download_dialog.str_Title')
+            time.sleep(DELAY_TIME*4)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def download_content_from_CL(self, name, close_win=True):
@@ -393,10 +396,11 @@ class Particle_room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Particle Room] Search Particle room library')
     def search_Particle_room_library(self, name=None):
         try:
             if not name:
-                raise Exception
+                raise Exception('No [name] provided')
             time.sleep(DELAY_TIME)
 
             # if library field has content, should clear all
@@ -415,10 +419,10 @@ class Particle_room(Main_Page, BasePage):
             result_verify = self.compare(img_collection_view_before, img_collection_view_after)
             if result_verify:
                 logger('Fail to verify after clicked select all')
-                raise Exception
+                raise Exception('Fail to verify after clicked select all')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def search_Title_room_click_cancel(self):

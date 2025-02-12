@@ -3,9 +3,10 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -109,19 +110,20 @@ class Particle_Designer(Main_Page, BasePage):
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception
-
+    @step('[Action][Particle Designer] Get Particle Designer title')
     def get_particle_designer_title(self):
         try:
             if not self.exist(L.particle_designer.designer_window):
                 logger('Not enter Particle Designer now')
-                raise Exception
+                raise Exception('Not enter Particle Designer now')
 
             title = self.exist(L.particle_designer.designer_window).AXTitle
             return title[20:]
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-
+            raise Exception(f'Exception occurs. log={e}')
+    
+    @step('[Action][Particle Designer] Set Timecode')
     def set_timecode(self, timecode):
         self.activate()
         elem = self.find(L.particle_designer.timecode)
@@ -134,16 +136,17 @@ class Particle_Designer(Main_Page, BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Particle Designer] Get Timecode')
     def get_timecode(self):
         try:
             if not self.exist(L.particle_designer.designer_window):
                 logger("No particle designer window show up")
-                raise Exception
+                raise Exception("No particle designer window show up")
             timecode = self.exist(L.particle_designer.timecode).AXValue
             return timecode
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_preview_operation(self, strOperation):
@@ -179,15 +182,16 @@ class Particle_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Particle Designer] Click [OK] button to close Particle Designer window')
     def click_OK(self):
         try:
             if not self.exist(L.particle_designer.designer_window):
                 logger("No particle designer window show up")
-                raise Exception
+                raise Exception("No particle designer window show up")
             self.exist_click(L.particle_designer.btn_OK)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_Cancel(self):
@@ -328,24 +332,26 @@ class Particle_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Particle Designer] Save as template')
     def save_as_name(self, name):
         # Click (Save as) button > Input custom name w/ name
         try:
             if not self.exist(L.particle_designer.designer_window):
                 logger("No particle designer window show up")
-                raise Exception
+                raise Exception("No particle designer window show up")
             self.exist_click(L.particle_designer.btn_SaveAs)
             if not self.exist(L.particle_designer.save_as_template_dialog.main):
                 logger("No Save as dialog show up")
-                raise Exception
+                raise Exception("No Save as dialog show up")
 
             self.exist_click(L.particle_designer.save_as_template_dialog.save_as_textfield)
             self.keyboard.send(name)
+            time.sleep(DELAY_TIME)
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def save_as_get_custom_name(self):
@@ -391,14 +397,15 @@ class Particle_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Particle Designer] Save as OK')
     def save_as_ok(self):
         try:
             if not self.exist_click(L.particle_designer.save_as_template_dialog.btn_OK):
                 logger('Not find Save As OK')
-                raise Exception
+                raise Exception('Not find Save As OK')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def press_hotkey_enter_designer(self):
@@ -417,50 +424,51 @@ class Particle_Designer(Main_Page, BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Express Mode][Particle Designer] Click [Emit] slider')
         def drag_Emit_slider(self, value):
             try:
                 if value < 0:
                     logger('Detect Invalid parameter !!!')
-                    return False
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be greater than 0')
                 elif value > 200000:
                     logger('Detect Invalid parameter !!!')
-                    return False
-                else:
-                    pass
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be less than 200000')
 
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if self.exist(L.particle_designer.modify_parameters).AXValue == 0:
                     self.exist_click(L.particle_designer.modify_parameters)
                 self.exist(L.particle_designer.emit_rate.slider).AXValue = float(value)
                 time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
-
+        
+        @step('[Action][Express Mode][Particle Designer] Get [Emit] value')
         def get_Emit_value(self):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
 
                 if not self.exist(L.particle_designer.emit_rate.slider):
-                    raise Exception
+                    raise Exception("No [Emit] slider show up")
                 value = self.exist(L.particle_designer.emit_rate.slider).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Emit] plus button')
         def click_Emit_plus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.emit_rate.btn_plus):
-                    raise Exception
+                    raise Exception("No [Emit] plus button show up")
                 new_x, new_y = self.exist(L.particle_designer.emit_rate.btn_plus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -472,15 +480,16 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Emit] minus button')
         def click_Emit_minus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.emit_rate.btn_minus):
-                    raise Exception
+                    raise Exception("No [Emit] minus button show up")
                 new_x, new_y = self.exist(L.particle_designer.emit_rate.btn_minus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -492,22 +501,21 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Drag [Max] slider')
         def drag_Max_slider(self, value):
             try:
                 if value < 0:
                     logger('Detect Invalid parameter !!!')
-                    return False
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be greater than 0')
                 elif value > 200000:
                     logger('Detect Invalid parameter !!!')
-                    return False
-                else:
-                    pass
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be less than 200000')
 
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 # if Express Mode : (Modify Parameters) tab status = fold, auto unfold
                 if self.exist(L.particle_designer.modify_parameters).AXValue == 0:
                     self.exist_click(L.particle_designer.modify_parameters)
@@ -516,30 +524,32 @@ class Particle_Designer(Main_Page, BasePage):
                 time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Express Mode][Particle Designer] Get [Max] value')
         def get_Max_value(self):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
 
                 if not self.exist(L.particle_designer.max_count.slider):
-                    raise Exception
+                    raise Exception("No [Max] slider show up")
                 value = self.exist(L.particle_designer.max_count.slider).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Max] plus button')
         def click_Max_plus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.max_count.btn_plus):
-                    raise Exception
+                    raise Exception("No [Max] plus button show up")
                 new_x, new_y = self.exist(L.particle_designer.max_count.btn_plus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -551,15 +561,16 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Max] minus button')
         def click_Max_minus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.max_count.btn_minus):
-                    raise Exception
+                    raise Exception("No [Max] minus button show up")
                 new_x, new_y = self.exist(L.particle_designer.max_count.btn_minus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -571,22 +582,21 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Drag [Life] slider')
         def drag_Life_slider(self, value):
             try:
                 if value < 0:
                     logger('Detect Invalid parameter !!!')
-                    return False
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be greater than 0')
                 elif value > 200000:
                     logger('Detect Invalid parameter !!!')
-                    return False
-                else:
-                    pass
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be less than 200000')
 
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 # if Express Mode : (Modify Parameters) tab status = fold, auto unfold
                 if self.exist(L.particle_designer.modify_parameters).AXValue == 0:
                     self.exist_click(L.particle_designer.modify_parameters)
@@ -595,30 +605,32 @@ class Particle_Designer(Main_Page, BasePage):
                 time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Express Mode][Particle Designer] Get [Life] value')
         def get_Life_value(self):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
 
                 if not self.exist(L.particle_designer.life.slider):
-                    raise Exception
+                    raise Exception("No [Life] slider show up")
                 value = self.exist(L.particle_designer.life.slider).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Life] plus button')
         def click_Life_plus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.life.btn_plus):
-                    raise Exception
+                    raise Exception("No [Life] plus button show up")
                 new_x, new_y = self.exist(L.particle_designer.life.btn_plus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -630,15 +642,16 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Life] minus button')
         def click_Life_minus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.life.btn_minus):
-                    raise Exception
+                    raise Exception("No [Life] minus button show up")
                 new_x, new_y = self.exist(L.particle_designer.life.btn_minus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -650,22 +663,21 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Drag [Speed] slider')
         def drag_Size_slider(self, value):
             try:
                 if value < 0:
                     logger('Detect Invalid parameter !!!')
-                    return False
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be greater than 0')
                 elif value > 200000:
                     logger('Detect Invalid parameter !!!')
-                    return False
-                else:
-                    pass
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be less than 200000')
 
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 # if Express Mode : (Modify Parameters) tab status = fold, auto unfold
                 if self.exist(L.particle_designer.modify_parameters).AXValue == 0:
                     self.exist_click(L.particle_designer.modify_parameters)
@@ -674,30 +686,32 @@ class Particle_Designer(Main_Page, BasePage):
                 time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Express Mode][Particle Designer] Get [Size] value')
         def get_Size_value(self):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
 
                 if not self.exist(L.particle_designer.size.slider):
-                    raise Exception
+                    raise Exception("No [Size] slider show up")
                 value = self.exist(L.particle_designer.size.slider).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Size] plus button')
         def click_Size_plus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.size.btn_plus):
-                    raise Exception
+                    raise Exception("No [Size] plus button show up")
                 new_x, new_y = self.exist(L.particle_designer.size.btn_plus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -709,15 +723,16 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Size] minus button')
         def click_Size_minus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.size.btn_minus):
-                    raise Exception
+                    raise Exception("No [Size] minus button show up")
                 new_x, new_y = self.exist(L.particle_designer.size.btn_minus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -729,22 +744,21 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Drag [Speed] slider')
         def drag_Speed_slider(self, value):
             try:
                 if value < 0:
                     logger('Detect Invalid parameter !!!')
-                    return False
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be greater than 0')
                 elif value > 200000:
                     logger('Detect Invalid parameter !!!')
-                    return False
-                else:
-                    pass
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be less than 200000')
 
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 # if Express Mode : (Modify Parameters) tab status = fold, auto unfold
                 if self.exist(L.particle_designer.modify_parameters).AXValue == 0:
                     self.exist_click(L.particle_designer.modify_parameters)
@@ -753,30 +767,32 @@ class Particle_Designer(Main_Page, BasePage):
                 time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Express Mode][Particle Designer] Get [Speed] value')
         def get_Speed_value(self):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
 
                 if not self.exist(L.particle_designer.speed.slider):
-                    raise Exception
+                    raise Exception("No [Speed] slider show up")
                 value = self.exist(L.particle_designer.speed.slider).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Speed] plus button')
         def click_Speed_plus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.speed.btn_plus):
-                    raise Exception
+                    raise Exception("No [Speed] plus button show up")
                 new_x, new_y = self.exist(L.particle_designer.speed.btn_plus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -788,15 +804,16 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Speed] minus button')
         def click_Speed_minus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.speed.btn_minus):
-                    raise Exception
+                    raise Exception("No [Speed] minus button show up")
                 new_x, new_y = self.exist(L.particle_designer.speed.btn_minus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -808,22 +825,21 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Drag [Gravity] slider')
         def drag_Opacity_slider(self, value):
             try:
                 if value < 0:
                     logger('Detect Invalid parameter !!!')
-                    return False
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be greater than 0')
                 elif value > 200000:
                     logger('Detect Invalid parameter !!!')
-                    return False
-                else:
-                    pass
+                    raise Exception(f'Detect Invalid parameter {value}!!! Should be less than 200000')
 
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 # if Express Mode : (Modify Parameters) tab status = fold, auto unfold
                 if self.exist(L.particle_designer.modify_parameters).AXValue == 0:
                     self.exist_click(L.particle_designer.modify_parameters)
@@ -832,30 +848,32 @@ class Particle_Designer(Main_Page, BasePage):
                 time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Express Mode][Particle Designer] Get [Opacity] value')
         def get_Opacity_value(self):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
 
                 if not self.exist(L.particle_designer.opacity.slider):
-                    raise Exception
+                    raise Exception("No [Opacity] slider show up")
                 value = self.exist(L.particle_designer.opacity.slider).AXValue
                 return value
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Opacity] plus button')
         def click_Opacity_plus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.opacity.btn_plus):
-                    raise Exception
+                    raise Exception("No [Opacity] plus button show up")
                 new_x, new_y = self.exist(L.particle_designer.opacity.btn_plus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -867,15 +885,16 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
+        @step('[Action][Express Mode][Particle Designer] Click [Opacity] minus button')
         def click_Opacity_minus_btn(self, times=1):
             try:
                 if not self.exist(L.particle_designer.designer_window):
                     logger("No particle designer window show up")
-                    raise Exception
+                    raise Exception("No particle designer window show up")
                 if not self.exist(L.particle_designer.opacity.btn_minus):
-                    raise Exception
+                    raise Exception("No [Opacity] minus button show up")
                 new_x, new_y = self.exist(L.particle_designer.opacity.btn_minus).AXPosition
                 new_x = new_x + 30
                 new_y = new_y + 20
@@ -887,4 +906,4 @@ class Particle_Designer(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
