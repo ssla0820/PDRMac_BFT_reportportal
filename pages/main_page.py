@@ -222,6 +222,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Open designer window by tips area')
     def tips_area_click_designer(self, check_designer=1):
         try:
             # 1: title, 2: particle
@@ -232,9 +233,10 @@ class Main_Page(BasePage):
 
             self.exist_click(L.main.tips_area.btn_designer)
             if not self.exist(designer_elem, OPERATION_DELAY*10):
-
                 logger('Fail to click designer button')
                 raise Exception('Fail to click designer button')
+            time.sleep(OPERATION_DELAY)
+            
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')

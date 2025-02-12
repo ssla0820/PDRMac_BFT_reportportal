@@ -1374,6 +1374,7 @@ class AdjustSet:
         self.driver.keyboard.enter()
         return True
 
+    @step("[Action][Base_page][AdjustSet] Get value")
     def get_value(self):
         return self.driver.exist(self.locators[1]).AXValue
 
@@ -1415,11 +1416,13 @@ class EaseSet(AdjustSet):
     def __init__(self, *args):
         super().__init__(*args)
 
+    @step("[Action][Base_page][EaseSet] Enable/ Disable ease checkbox")
     def set_checkbox(self, value=1):
         target = self.driver.exist(self.locators[4])
         int(target.AXValue) ^ value and target.press()
         return True
-
+    
+    @step("[Action][Base_page][EaseSet] Get status of ease checkbox")
     def get_checkbox(self):
         target = self.driver.exist(self.locators[4])
         return bool(target.AXValue)
@@ -1443,12 +1446,14 @@ class KeyframeSet:
         if ret: self.driver.exist_click(self.locators[4], timeout=3)  # reset confirmation
         return ret
 
-    def click_previous(self):
+    @step("[Action][Base_page][KeyframeSet] Click previous keyframe")
+    def click_previous(self): 
         return self._click_keyframe(self.locators[1])
 
     def click_add_remove(self):
         return self._click_keyframe(self.locators[2])
-
+    
+    @step("[Action][Base_page][KeyframeSet] Click next keyframe")
     def click_next(self):
         return self._click_keyframe(self.locators[3])
 
