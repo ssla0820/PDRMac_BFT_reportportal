@@ -6610,7 +6610,7 @@ class Test_BFT_365_OS14():
         main_page.close_app()
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.search_library
     @pytest.mark.launch
@@ -6653,7 +6653,7 @@ class Test_BFT_365_OS14():
             check_title = shape_designer_page.get_title()
             assert check_title == 'Shape 010', f"Cannot open Shape Designer (Shape 10) correctly! Expected: Shape 010, Actual: {check_title}"
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.name('[test_shape_designer_func_8_2] Input text: Happy Hour')
     @exception_screenshot
@@ -6680,7 +6680,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L196.png', check_preview)
             assert compare_result, "Cannot input text correctly as GT (L196.png)! Similary should>0.95"
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_type
@@ -6729,7 +6729,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_type
@@ -6804,7 +6804,7 @@ class Test_BFT_365_OS14():
                 assert False, "Shape 19 is not applied correctly! Similary should<0.95"
             assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_preset
@@ -6849,7 +6849,7 @@ class Test_BFT_365_OS14():
                 assert False, "Preset 4 is not correct as GT(L199.png)! Similary should>0.95"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_fill
@@ -6884,7 +6884,7 @@ class Test_BFT_365_OS14():
                 assert False, "Gradient Begin is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_fill
@@ -6909,7 +6909,7 @@ class Test_BFT_365_OS14():
                 assert False, "Gradient End is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_fill
@@ -6940,7 +6940,7 @@ class Test_BFT_365_OS14():
                 assert False, "Blur is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_fill
@@ -6970,7 +6970,7 @@ class Test_BFT_365_OS14():
                 assert False, "Opacity is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_fill
@@ -6992,7 +6992,7 @@ class Test_BFT_365_OS14():
                 assert False, "Fill is not correct as GT(L199.png)! Similary should>0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_outline
@@ -7037,7 +7037,7 @@ class Test_BFT_365_OS14():
                 assert False, "Size is not changed correctly! Similary should<0.99"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_outline
@@ -7061,7 +7061,7 @@ class Test_BFT_365_OS14():
                 assert False, "Line Type is not changed correctly! Similary should<0.999"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_outline
@@ -7092,7 +7092,7 @@ class Test_BFT_365_OS14():
                 assert False, "Blur is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_outline
@@ -7116,7 +7116,7 @@ class Test_BFT_365_OS14():
                 assert False, "Color is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_outline
@@ -7143,7 +7143,7 @@ class Test_BFT_365_OS14():
             assert compare_result, "Preview is not correct as GT(L201.png)! Similary should>0.9"
 
             
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7186,7 +7186,7 @@ class Test_BFT_365_OS14():
                 assert False, "Shadow is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7217,7 +7217,7 @@ class Test_BFT_365_OS14():
                 assert False, "Distance is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7248,7 +7248,7 @@ class Test_BFT_365_OS14():
                 assert False, "Opacity is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7279,7 +7279,7 @@ class Test_BFT_365_OS14():
                 assert False, "Blur is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7310,7 +7310,7 @@ class Test_BFT_365_OS14():
                 assert False, "Fill Shadow is not changed correctly! Similary should<0.999"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7341,7 +7341,7 @@ class Test_BFT_365_OS14():
                 assert False, "Direction is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_shadow
@@ -7364,7 +7364,7 @@ class Test_BFT_365_OS14():
                 assert False, "Preview is not correct as GT(L201.png)! Similary should>0.99"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_title
@@ -7405,7 +7405,7 @@ class Test_BFT_365_OS14():
                 assert False, "Font type is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_title
@@ -7436,7 +7436,7 @@ class Test_BFT_365_OS14():
                 assert False, "Size is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_title
@@ -7461,7 +7461,7 @@ class Test_BFT_365_OS14():
                 assert False, "Color is not changed correctly! Similary should<0.98"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.properties
     @pytest.mark.shape_title
@@ -7482,7 +7482,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L203.png', check_preview, similarity=0.9)
             assert compare_result, "Preview is not correct as GT(L203.png)! Similary should>0.9"
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.canva
     @pytest.mark.name('[test_shape_designer_func_8_27] Manual adjust object to larger on canvas')
@@ -7513,7 +7513,7 @@ class Test_BFT_365_OS14():
             assert compare_resize_result, "Preview is not correct as GT(L203.png)! Similary should>0.95"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.canva
     @pytest.mark.keyframe
@@ -7553,7 +7553,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7591,7 +7591,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Position y value is not correct! Expected: 0.297, Actual: {current_y}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7650,7 +7650,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7708,7 +7708,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Position y value is not correct! Expected: 0.621, Actual: {current_y}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7739,7 +7739,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Scale H value is not correct! Expected: 0.500, Actual: {current_h}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7772,7 +7772,7 @@ class Test_BFT_365_OS14():
             if current_y != '0.304':
                 assert False, f"Position y value is not correct! Expected: 0.304, Actual: {current_y}"
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7831,7 +7831,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7858,7 +7858,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Rotation value is not correct! Expected: 0, Actual: {current_rotation}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7902,7 +7902,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Rotation value is not correct! Expected: 0, Actual: {current_rotation}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7929,7 +7929,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Opacity value is not correct! Expected: 100%, Actual: {current_opacity}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7971,7 +7971,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Opacity value is not correct! Expected: 100%, Actual: {current_opacity}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -7994,7 +7994,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L205.png', check_preview, similarity=0.88)
             assert compare_result, "Preview is not correct as GT(L205.png)! Similary should>0.88"
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -8032,7 +8032,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Ease in value is not correct! Expected: 0.61, Actual: {ease_in_value}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -8070,7 +8070,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Ease out value is not correct! Expected: 0.77, Actual: {ease_out_value}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -8093,7 +8093,7 @@ class Test_BFT_365_OS14():
             compare_result = main_page.compare(Ground_Truth_Folder + 'L205.png', check_preview, similarity=0.98)
             assert compare_result, "Preview is not correct as GT(L205.png)! Similary should>0.98"
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.keyframe
     @pytest.mark.timecode
@@ -8157,7 +8157,7 @@ class Test_BFT_365_OS14():
             # compare_result = main_page.compare(Ground_Truth_Folder + 'L207.png', check_preview, similarity=0.88)
             # case.result = compare_result
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.play_video
@@ -8193,7 +8193,7 @@ class Test_BFT_365_OS14():
                 assert False, "Preview is not updated after play in 2 secs!"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.play_video
@@ -8218,7 +8218,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Timecode is not in range (00:00:02:00) ~ (00:00:04:00)! Actual: {current_timecode}"
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.play_video
@@ -8258,7 +8258,7 @@ class Test_BFT_365_OS14():
             # case.result = compare_result
 
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.save_template
@@ -8296,7 +8296,7 @@ class Test_BFT_365_OS14():
                 assert False, "Custom_shape_10 is not in library!"
         assert True
         
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.timeline
@@ -8341,7 +8341,7 @@ class Test_BFT_365_OS14():
         # time.sleep(DELAY_TIME * 1.5)
         
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.play_video
@@ -8380,7 +8380,7 @@ class Test_BFT_365_OS14():
         #         default_status = False
         #     logger(default_status)
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
     @pytest.mark.timecode
     @pytest.mark.name('[test_shape_designer_func_8_50] Only show the selected track')
@@ -8416,7 +8416,7 @@ class Test_BFT_365_OS14():
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
         assert True
 
-    @pytest.mark.test_shape_designer_func
+    @pytest.mark.shape_designer_func
     @pytest.mark.name('[test_shape_designer_func_8_z] Close AP due to the section is completed')
     @exception_screenshot
     def test_shape_designer_func_8_z(self):
