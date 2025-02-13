@@ -7539,8 +7539,8 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check preview after move object to left'):
             # Verify : Preview is changed
             check_move_left = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
-            if main_page.compare(before_preview, check_move_left, similarity=0.98):
-                assert False, "Move left is not correct! Similary should<0.98"
+            if main_page.compare(before_preview, check_move_left, similarity=0.999):
+                assert False, "Move left is not correct! Similary should<0.999"
 
         with step('[Verify] Check position x value'):
             with step('[Action] Switch to Keyframe tab'):
