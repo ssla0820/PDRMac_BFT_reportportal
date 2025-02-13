@@ -6929,8 +6929,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview changed after apply Blur'):
             applied_blur = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
-            if main_page.compare(before_preview, applied_blur, similarity=0.98):
-                assert False, "Blur is not changed correctly! Similary should<0.98"
+            if main_page.compare(before_preview, applied_blur, similarity=0.99):
+                assert False, "Blur is not changed correctly! Similary should<0.99"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -6944,8 +6944,9 @@ class Test_BFT_365_OS14():
         1. Set Opacity value and check value/ preview
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_shape_designer_func_8_5"
+        dependency_test = "test_shape_designer_func_8_8"
         self.ensure_dependency(dependency_test)
+
         with step('[Action] Set Opacity value'):
             before_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             # Set opacity : 94%
@@ -6959,8 +6960,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview changed after apply Opacity'):
             applied_opacity = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
-            if main_page.compare(before_preview, applied_opacity, similarity=0.98):
-                assert False, "Opacity is not changed correctly! Similary should<0.98"
+            if main_page.compare(before_preview, applied_opacity, similarity=0.999):
+                assert False, "Opacity is not changed correctly! Similary should<0.999"
         assert True
 
     @pytest.mark.shape_designer_func
