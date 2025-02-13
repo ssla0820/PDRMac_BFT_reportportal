@@ -7629,7 +7629,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Switch to previous keyframe'):
             # Click previous keyframe
-            shape_designer_page.keyframe.object_settings.position.keyframe.click_previous()
+            shape_designer_page.keyframe.object_settings.position.keyframe.click_previous_keyframe()
 
         with step('[Verify] Check timecode after switch to previous keyframe (00:00)'):
             # Verify timecode
