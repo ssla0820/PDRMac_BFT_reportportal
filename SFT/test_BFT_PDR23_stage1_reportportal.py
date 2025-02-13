@@ -5483,6 +5483,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if switch to (00:00) keyframe correctly'):
             pip_designer_page.set_timecode('00_00_00_00')
+            time.sleep(DELAY_TIME*0.2)
 
             check_preview = main_page.snapshot(locator=L.pip_designer.designer_window,
                                                file_name=Auto_Ground_Truth_Folder + 'L185.png')
@@ -5642,12 +5643,11 @@ class Test_BFT_365_OS14():
     def test_pip_designer_func_7_18(self):
         '''
         1. Unfold Object Settings
-        2. Set Scale width/ Height to (0.378) keyframe at (00:00)
-        3. Add 1st keyframe at (00:00) for ease in/ out
-        4. Add 2nd position keyframe at (05:04) for ease
-        5. Add 3rd position keyframe at (10:00) for ease
-        6. Add Ease in on keyframe
-        7. Add Ease out on keyframe
+        2. Add 1st keyframe at (00:00) for ease in/ out
+        3. Add 2nd position keyframe at (05:04) for ease
+        4. Add 3rd position keyframe at (10:00) for ease
+        5. Add Ease in on 2nd position keyframe
+        6. Add Ease out on 2nd position keyframe
         '''
         # Ensure the dependency test is run and passed
         self.test_pip_designer_func_7_1()
@@ -5658,9 +5658,6 @@ class Test_BFT_365_OS14():
             # Unfold Object Settings
             pip_designer_page.express_mode.unfold_properties_object_setting_tab()
 
-        with step('[Action] Set Scale width/ Height to (0.378) keyframe at (00:00)'):
-            pip_designer_page.click_scale_maintain_aspect_ratio(bCheck=1)
-            pip_designer_page.drag_scale_width_slider('0.378')
         
         with step('[Action] Add 1st keyframe at (00:00) for ease in/ out'):
             # Set Scale  width / height to 0.378
@@ -5721,9 +5718,10 @@ class Test_BFT_365_OS14():
             if check_y_position != '0.836':
                 assert False, f"Y position is not 0.836! Expected: 0.836, Actual: {check_y_position}"
 
-        with step('[Action] Add Ease in on keyframe'):
+        with step('[Action] Add Ease in on second position keyframe'):
+            # switch to previous keyframe
+            pip_designer_page.tap_position_previous_keyframe()
             # Enable Ease in and Ease out on keyframe
-            pip_designer_page.click_specific_keyframe(1)
             pip_designer_page.click_position_ease_in_checkbox(1)
             pip_designer_page.input_position_ease_in_value('0.88')
 
@@ -5733,7 +5731,7 @@ class Test_BFT_365_OS14():
             if not check_menu_ease_in_status:
                 assert False, "Cannot set Ease in on keyframe correctly!"
 
-        with step('[Action] Add Ease out on keyframe'):
+        with step('[Action] Add Ease out on second position keyframe'):
             pip_designer_page.click_position_ease_out_checkbox(1)
             pip_designer_page.input_position_ease_out_value('0.97')
 
