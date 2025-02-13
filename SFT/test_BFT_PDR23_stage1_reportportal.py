@@ -6673,11 +6673,10 @@ class Test_BFT_365_OS14():
             shape_designer_page.edit_title_on_Canvas('Happy Hour')
 
         with step('[Verify] Check if text is input correctly as GT'):
-            check_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape,
-                                               file_name=Auto_Ground_Truth_Folder + 'L196.png')
+            check_preview = main_page.snapshot(locator=L.shape_designer.canvas_object_shape, file_name=Auto_Ground_Truth_Folder + 'L196.png')
 
             # Compare preview after select Shape 10 & input text : Happy Hour
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L196.png', check_preview)
+            compare_result = main_page.compare(Ground_Truth_Folder + 'L196.png', Auto_Ground_Truth_Folder + 'L196.png')
             assert compare_result, "Cannot input text correctly as GT (L196.png)! Similary should>0.95"
 
     @pytest.mark.shape_designer_func
