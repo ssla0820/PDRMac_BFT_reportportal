@@ -5727,6 +5727,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if Ease in setting is correct'):
             # Verify Step
+            pip_designer_page.click_specific_keyframe(1)
             check_menu_ease_in_status = pip_designer_page.simple_timeline.right_click_menu.get_ease_in_status()
             if not check_menu_ease_in_status:
                 assert False, "Cannot set Ease in on keyframe correctly!"
@@ -5736,6 +5737,7 @@ class Test_BFT_365_OS14():
             pip_designer_page.input_position_ease_out_value('0.97')
 
         with step('[Verify] Check if Ease out setting is correct'):
+            pip_designer_page.click_specific_keyframe(1)
             check_menu_ease_out_status = pip_designer_page.simple_timeline.right_click_menu.get_ease_out_status()
             if not check_menu_ease_out_status:
                 assert False, "Cannot set Ease out on keyframe correctly!"
@@ -6600,7 +6602,7 @@ class Test_BFT_365_OS14():
             
         assert check_current_dialog09, "Cannot add saved template to timeline correctly as GT (L193.png)!"
 
-    @pytest.mark.pip_designer_func
+    # @pytest.mark.pip_designer_func
     @pytest.mark.name('[test_pip_designer_func_7_z] Close AP due to the section is completed')
     @exception_screenshot
     def test_pip_designer_func_7_z(self):
@@ -9026,73 +9028,104 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    # 19 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.mask_designer_func
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.timeline
+    @pytest.mark.sample_media
+    @pytest.mark.mask_designer
+    @pytest.mark.name('[test_mask_designer_func_10_1] Open Mask Designer with Sport 02.jpg')
     @exception_screenshot
-    def test_1_1_8(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_mask_designer_func_10_1(self):
+        '''
+        1. Open AP and open saved project
+        2. Add Sport 02.jpg to timeline track3
+        3. Open Mask Designer by tips area
+        4. Check open Mask Designer window with Sport 02.jpg
+        '''
+        with step('[Action] Open AP and open saved project'):
+            main_page.start_app()
+            time.sleep(DELAY_TIME)
 
-        # Open project: test_case_1_1_7
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_7.pds')
-        main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
+            project_name = 'BFT_21_Stage1/test_mask_designer_func_10_1_from_test_particle_designer_func_9_21.pdk'
+            save_name = 'BFT_21_Stage1/test_mask_designer_func_10_1'
+            self.open_packed_project(project_name, save_name)
 
-        # select timeline track 3
-        main_page.timeline_select_track(3)
-
-        # Set timecode :
-        main_page.set_timeline_timecode('00_00_24_00')
-        time.sleep(DELAY_TIME * 2)
-
-        # Drag Spor t02.jpg to timeline track3
-        main_page.drag_media_to_timeline_playhead_position('Sport 02.jpg', track_no=3)
-        time.sleep(DELAY_TIME * 2)
+        with step('[Action] Add Sport 02.jpg to timeline track3'):
+            # select timeline track 3
+            main_page.timeline_select_track(3)
+            # Set timecode :
+            main_page.set_timeline_timecode('00_00_24_00')
+            # Drag Spor t02.jpg to timeline track3
+            main_page.drag_media_to_timeline_playhead_position('Sport 02.jpg', track_no=3)
 
         # [L220] 3.7 Mask Designer (Sport 02.jpg) > Open Mask Designer
-        with uuid("152b2168-2061-4e23-bdf0-1301392bcdee") as case:
+        # with uuid("152b2168-2061-4e23-bdf0-1301392bcdee") as case:
+        with step('[Action] Open Mask Designer by tips area'):
             # Click Tools > select (Mask designer)
             main_page.click(L.main.tips_area.btn_tools)
-            time.sleep(DELAY_TIME * 2)
             main_page.select_right_click_menu('Mask Designer')
-            time.sleep(DELAY_TIME * 2)
 
+        with step('[Verify] Check open Mask Designer window with Sport 02.jpg'):
             # Verify Step:
             check_mask_window = main_page.exist(L.mask_designer.mask_designer_window)
             if not check_mask_window:
-                logger('Cannot enter mask designer window')
-                case.result = False
-            elif check_mask_window.AXTitle == 'Mask Designer  |  Sport 02':
-                case.result = True
-            else:
-                case.result = False
+                assert False, "Mask Designer window is not opened!"
+            assert check_mask_window.AXTitle == 'Mask Designer  |  Sport 02', f"Show incorrect title on mask designer! Expected: Mask Designer  |  Sport 02, Actual: {check_mask_window.AXTitle}"
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask_preset
+    @pytest.mark.name('[test_mask_designer_func_10_2] Apply Mask preset')
+    @exception_screenshot
+    def test_mask_designer_func_10_2(self):
+        '''
+        1. Apply a random mask from index 1~7 and check preview is changed
+        2. Apply mask 8 and check preview is changed
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_1"
+        self.ensure_dependency(dependency_test)
 
         # [L221] 3.7 Mask Designer (Sport 02.jpg) > Apply default mask
-        with uuid("e4a71739-d5e3-4598-8f18-af2a81a6e91c") as case:
+        # with uuid("e4a71739-d5e3-4598-8f18-af2a81a6e91c") as case:
+
+        random_idx = random.randrange(1,7) # Get random index from 1~7
+        with step(f'[Action] Apply a random mask from index 1~7, selected index: {random_idx}'):
             mask_default_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
             #check_timeline_particle = main_page.compare(Ground_Truth_Folder + 'L217.png', timeline_preview, similarity=0.93)
-            time.sleep(DELAY_TIME * 2)
+            mask_designer_page.MaskDesigner_Apply_template(random_idx)
 
-            # random
-            # Apply mask random (2 ~ 8)
-            x = random.randrange(1,7)
-            logger(f'select preset {x}+1 - random select')
-            mask_designer_page.MaskDesigner_Apply_template(x)
-            time.sleep(DELAY_TIME * 2)
+        with step('[Verfiy] Check preview is changed after apply random mask'):
             mask_x_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(mask_default_preview, mask_x_preview, similarity=0.98):
+                assert False, "Preview is not changed after apply random mask! Similary should<0.98"
 
+        with step('[Action] Apply mask 8'):
             mask_designer_page.MaskDesigner_Apply_template(index=8)
-            time.sleep(DELAY_TIME * 2)
+        
+        with step('[Verfiy] Check preview is changed after apply mask 8'):
             mask_star_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(mask_x_preview, mask_star_preview, similarity=0.98):
+                assert False, "Preview is not changed after apply mask 8! Similary should<0.98"
 
-            check_first_mask = main_page.compare(mask_default_preview, mask_x_preview, similarity=0.98)
-            logger(check_first_mask)
-            check_second_mask = main_page.compare(mask_x_preview, mask_star_preview, similarity=0.98)
-            logger(check_second_mask)
+        assert True
 
-            case.result = (not check_first_mask) and (not check_second_mask)
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask_preset
+    @pytest.mark.name('[test_mask_designer_func_10_2] Apply Mask preset')
+    @exception_screenshot
+    def test_mask_designer_func_10_2(self):
+        '''
+        1. Apply a random mask from index 1~7 and check preview is changed
+        2. Apply mask 8 and check preview is changed
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_1"
+        self.ensure_dependency(dependency_test)
 
         # [L233] 3.7 Mask Designer (Sport 02.jpg) > Manual adjust on canvas > Move > Operation works fine.
         with uuid("1f9a1e2a-df56-4083-bb11-bfe9de94793d") as case:
@@ -9107,6 +9140,20 @@ class Test_BFT_365_OS14():
             # click undo
             mask_designer_page.tap_MaskDesigner_Undo_btn()
             time.sleep(DELAY_TIME)
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_mask_designer_func_10_3] ')
+    @exception_screenshot
+    def test_mask_designer_func_10_3(self):
+        '''
+
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_1"
+        self.ensure_dependency(dependency_test)
 
         # [L222] 3.7 Mask Designer (Sport 02.jpg) > custom mask from image
         with uuid("f244a59e-d7c8-4da3-b94e-65caa7672ca3") as case:
@@ -9199,9 +9246,9 @@ class Test_BFT_365_OS14():
 
                 # random
                 # Apply mask random (5 ~ 20)
-                x = random.randrange(5, 20)
-                logger(f'select preset {x} - random select')
-                mask_designer_page.motion.select_path_template(x)
+                random_idx = random.randrange(5, 20)
+                logger(f'select preset {random_idx} - random select')
+                mask_designer_page.motion.select_path_template(random_idx)
                 time.sleep(DELAY_TIME * 2)
                 motion_x_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
 
