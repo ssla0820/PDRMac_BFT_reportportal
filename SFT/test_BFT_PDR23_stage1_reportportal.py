@@ -6789,8 +6789,8 @@ class Test_BFT_365_OS14():
         with step('[Verify] Compare preview after select Shape 14 as GT'):
             # Compare preview after select Shape 14 vs Shape 25
             compare_result_14 = main_page.compare(Ground_Truth_Folder + 'L196.png', check_preview_14)
-            if not compare_result_14:
-                assert False, "Shape 14 is not correct as GT(L196.png)! Similary should>0.95"
+            if compare_result_14:
+                assert False, "Shape 14 is not correct as GT(L196.png)! Similary should<0.95"
 
         with step('[Action] Apply General Shape (19)'):
             # Apply shape 19
