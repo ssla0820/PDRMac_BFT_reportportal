@@ -6602,7 +6602,7 @@ class Test_BFT_365_OS14():
             
         assert check_current_dialog09, "Cannot add saved template to timeline correctly as GT (L193.png)!"
 
-    # @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer_func
     @pytest.mark.name('[test_pip_designer_func_7_z] Close AP due to the section is completed')
     @exception_screenshot
     def test_pip_designer_func_7_z(self):
