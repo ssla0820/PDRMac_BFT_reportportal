@@ -45,7 +45,7 @@ def _control_keyframe(obj, attribute_name, locator_operation=None):
             value = True
     except Exception as e:
         logger(f'Exception occurs. log={e}')
-        raise Exception
+        raise Exception(f'Exception occurs. log={e}')
     return value
 
 class CirclePositionCalculator:
@@ -309,6 +309,13 @@ class Mask_designer(BasePage):
                 L.mask_designer.settings.opacity_up,
             ])
 
+        @step('[Action][Mask Designer][Object Settings] Get Rotation Value') 
+        def get_rotation_value(self):
+            if not self.exist(L.mask_designer.settings.rotation_value).AXValue:
+                raise Exception("Rotation value is not found")
+            return self.exist(L.mask_designer.settings.rotation_value).AXValue
+        
+        @step('[Action][Mask Designer][Object Settings] Set Rotation')
         def set_rotation(self, value):
             self.exist(L.mask_designer.settings.rotation_value).AXValue = str(value)
             self.click_rotation_arrow()
@@ -334,14 +341,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Position'
 
+            @step('[Action][Mask Designer][Simple Track][Position] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
-
+            
+            @step('[Action][Mask Designer][Simple Track][Position] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
-
+            
+            @step('[Action][Mask Designer][Simple Track][Position] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -351,14 +361,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Scale'
 
+            @step('[Action][Mask Designer][Simple Track][Scale] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Scale] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Scale] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -368,14 +381,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Opacity'
 
+            @step('[Action][Mask Designer][Simple Track][Opacity] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Opacity] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Opacity] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -385,14 +401,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Rotation'
 
+            @step('[Action][Mask Designer][Simple Track][Rotation] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Rotation] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Rotation] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -529,6 +548,7 @@ class Mask_designer(BasePage):
     def Edit_MaskDesigner_ClickShare(self):
         self.exist(L.mask_designer.share).press()
 
+    @step('[Action][Mask Designer] Scroll bar')
     def drag_Mask_Settings_Scroll_Bar(self, value):
         self.exist(L.mask_designer.settings.scroll_bar).AXValue = float(value)
 
@@ -573,9 +593,10 @@ class Mask_designer(BasePage):
     def is_enter_mask_composer(self):
         return self.is_exist(L.mask_designer.mask_property.mask_composer.window)
 
+    @step('[Action][Mask Designer] Click [Create Text Mask]')
     def click_create_text_mask_btn(self):
         self.exist_click(L.mask_designer.mask_property.create_text_mask)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         return self.is_enter_mask_composer()
 
     def is_enter_brush_mask_designer(self):
@@ -860,11 +881,12 @@ class Mask_designer(BasePage):
                 return True
 
 
-
+    @step('[Action][Mask Designer] Switch to [Motion] tab')
     def switch_to_motion(self):
         self.exist_click(L.mask_designer.tab.motion)
         return self.is_exist(L.mask_designer.motion_tab.path_text, None, 10)
 
+    @step('[Action][Mask Designer] Switch to [Mask] tab')
     def switch_to_mask(self):
         self.exist_click(L.mask_designer.tab.mask)
         return self.is_exist(L.mask_designer.mask_property.mask_property_text, None, 10)
@@ -873,13 +895,12 @@ class Mask_designer(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Mask Designer][Motion] Click [Path] Tab')
         def open_path_tag(self, open=1):
             el_path_tag = self.exist(L.mask_designer.motion_tab.path_tag)
             if open != el_path_tag.AXValue:
                 self.exist_click(L.mask_designer.motion_tab.path_tag)
-                return True
-            else:
-                return True
+            return True
 
         def select_category(self, opt):
             self.exist_click(L.mask_designer.motion_tab.path_category)
@@ -900,8 +921,10 @@ class Mask_designer(BasePage):
         def get_current_category(self):
             return self.exist(L.mask_designer.motion_tab.path_category).AXTitle
 
+        @step('[Action][Mask Designer][Motion] Select [Path] Template by index')
         def select_path_template(self, index):
             self.exist_click({"AXRoleDescription": "group", 'AXIdentifier': 'motionPathThumbCVI', 'index': index-1})
+            time.sleep(DELAY_TIME)
             return True
 
         def click_save_custom_btn(self):
@@ -938,6 +961,7 @@ class Mask_designer(BasePage):
         self.exist(L.mask_designer.mask_property.feather_slider).AXValue = int(value)
         return True
 
+    @step('[Action][Mask Designer] Set Feather Radius Value by textbox')
     def Edit_MaskDesigner_Feather_radius_InputValue(self, value):
         self.exist(L.mask_designer.mask_property.feather_slider).AXValue = int(value)
         return True
@@ -1091,6 +1115,7 @@ class Mask_designer(BasePage):
         self.mouse.drag_directly(mask.center, end_position)
         return True
 
+    @step('[Action][Mask Designer] Rotate the object on canvas by degrees')
     def rotate_object_on_canvas(self, degrees=90):
         degrees = int(-degrees)
         radius = 120
