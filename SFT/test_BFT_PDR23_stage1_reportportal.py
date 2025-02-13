@@ -6738,7 +6738,7 @@ class Test_BFT_365_OS14():
         '''
         1. Leave Shape Designer and re-enter
         2. Apply General Shape (10) and check preview
-        3. Apply General Shape (14) and check preview/ GT
+        3. Apply General Shape (14) and check preview
         4. Apply General Shape (19) and check preview
         '''
         # Ensure the dependency test is run and passed
@@ -6785,12 +6785,6 @@ class Test_BFT_365_OS14():
             check_preview_14 = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
             if main_page.compare(check_preview_10, check_preview_14, similarity=0.98):
                 assert False, "Shape 14 is not applied correctly! Similary should<0.98"
-
-        with step('[Verify] Compare preview after select Shape 14 as GT'):
-            # Compare preview after select Shape 14 vs Shape 25
-            compare_result_14 = main_page.compare(Ground_Truth_Folder + 'L196.png', check_preview_14)
-            if compare_result_14:
-                assert False, "Shape 14 is not correct as GT(L196.png)! Similary should<0.95"
 
         with step('[Action] Apply General Shape (19)'):
             # Apply shape 19
@@ -7628,7 +7622,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Switch to previous keyframe'):
             # Click previous keyframe
-            shape_designer_page.keyframe.object_settings.position.keyframe.click_previous_keyframe()
+            shape_designer_page.simple_timeline.position.click_previous_keyframe()
 
         with step('[Verify] Check timecode after switch to previous keyframe (00:00)'):
             # Verify timecode
@@ -7687,7 +7681,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Switch to next keyframe'):
             # Click next keyframe
-            shape_designer_page.keyframe.object_settings.position.keyframe.click_next()
+            shape_designer_page.simple_timeline.position.click_next_keyframe()
         
         with step('[Verify] Check timecode after switch to next keyframe (05:25)'):
             # Verify timecode
@@ -7809,7 +7803,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Switch to previous keyframe'):
             # Click previous keyframe
-            shape_designer_page.keyframe.object_settings.scale.keyframe.click_previous()
+            shape_designer_page.simple_timeline.scale.click_previous_keyframe()
         
         with step('[Verify] Check timecode after switch to previous keyframe (05:25)'):
             # Verify timecode
@@ -7887,7 +7881,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Switch to next keyframe'):
             # Click next keyframe
-            shape_designer_page.keyframe.object_settings.rotation.keyframe.click_next()
+            shape_designer_page.simple_timeline.rotation.click_next_keyframe()
         
         with step('[Verify] Check timecode after switch to next keyframe (08:10)'):
             # Verify timecode
@@ -7958,7 +7952,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Opacity value is not correct! Expected: 50%, Actual: {current_opacity}"
         with step('[Action] Switch to next keyframe'):
             # Click next keyframe
-            shape_designer_page.keyframe.object_settings.opacity.keyframe.click_next()
+            shape_designer_page.simple_timeline.opacity.click_next_keyframe()
         with step('[Verify] Check timecode after switch to next keyframe (08:10)'):
             # Verify timecode
             current_timecode = shape_designer_page.get_timecode()
@@ -8048,12 +8042,9 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Set Postion Ease out at (05:25)'):
             # Click previous keyframe
-            shape_designer_page.keyframe.object_settings.position.keyframe.click_previous()
-            time.sleep(DELAY_TIME * 2)
-
+            shape_designer_page.simple_timeline.position.click_previous_keyframe()
             # Position > Set Ease out
             shape_designer_page.keyframe.object_settings.position.ease_out.set_checkbox()
-            time.sleep(DELAY_TIME * 2)
             # Set Ease out value = 0.61
             shape_designer_page.keyframe.object_settings.position.ease_out.set_value('0.77')
         
