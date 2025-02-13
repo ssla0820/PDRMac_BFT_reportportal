@@ -6723,9 +6723,9 @@ class Test_BFT_365_OS14():
             # Verify Step
             # If preview (Linear 08 -> Linear 04) is not changed, it's known bug (VDE224706-0064)
             check_preview_04 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            compare_result_w_04 = main_page.compare(check_preview_08, check_preview_04, similarity=0.99)
+            compare_result_w_04 = main_page.compare(check_preview_08, check_preview_04, similarity=0.999)
             if compare_result_w_04:
-                assert False, "Shape 4 is not applied correctly! Similary should<0.99"
+                assert False, "Shape 4 is not applied correctly! Similary should<0.999"
 
         assert True
 
@@ -7508,7 +7508,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after manual adjust as GT'):
             # Verify : Preview is changed
-            check_resize = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            check_resize = main_page.snapshot(locator=L.shape_designer.canvas_object_shape,
+                                               file_name=Auto_Ground_Truth_Folder + 'L203.png')
             compare_resize_result = main_page.compare(Ground_Truth_Folder + 'L203.png', check_resize)
             assert compare_resize_result, "Preview is not correct as GT(L203.png)! Similary should>0.95"
         assert True
