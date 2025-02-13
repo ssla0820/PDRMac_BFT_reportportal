@@ -783,7 +783,7 @@ class Intro_Video_Room(Main_Page, BasePage):
         try:
             if not self.exist(L.intro_video_room.intro_video_designer.main_window):
                 logger("No Video Intro designer window show up")
-                raise Exception
+                raise Exception("No Video Intro designer window show up")
             if operation == 'Play':
                 self.exist_click(L.intro_video_room.intro_video_designer.operation.btn_play)
             elif operation == 'Pause':
@@ -791,11 +791,11 @@ class Intro_Video_Room(Main_Page, BasePage):
             elif operation == 'Stop':
                 self.exist_click(L.intro_video_room.intro_video_designer.operation.btn_stop)
             else:
-                logger('Parameter is invalid')
-                return False
+                logger(f'Invalid operation: {operation}')
+                raise Exception(f'Invalid operation: {operation}, please input (Play, Pause, Stop)')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     @step('[Action][Intro Video Room] Hover at Center of Preview Area')

@@ -6,6 +6,9 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
+
+DELAY_TIME = 1
 
 def _get_attribute_index(obj, attribute_name):
     try:
@@ -403,6 +406,7 @@ class Mask_designer(BasePage):
         except:
             return None
 
+    @step('[Action][Mask Designer] Set timecode')
     def set_MaskDesigner_timecode(self, timecode):
         '''
         :param timecode: "HH_MM_SS_mm" -> "1_00_59_99"
@@ -419,13 +423,14 @@ class Mask_designer(BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Mask Designer] Get timecode')
     def get_timecode(self):
         try:
             timecode = self.exist(L.mask_designer.timecode).AXValue
             return timecode
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def tap_MaskDesigner_Undo_btn(self):
@@ -434,6 +439,7 @@ class Mask_designer(BasePage):
     def tap_MaskDesigner_Redo_btn(self):
         self.find(L.mask_designer.redo).press()
 
+    @step('[Action][Mask Designer] Tick/ Untick [Only Show Selected Track]')
     def Edit_MaskDesigner_Only_Show_Selected_track_SetCheck(self, check_it=True):
         checkbox = self.find(L.mask_designer.only_show_selected_track_checkbox)
         if checkbox.AXValue != check_it:
@@ -539,6 +545,7 @@ class Mask_designer(BasePage):
         self.mouse.click(*category_option.center)
         return True
 
+    @step('[Action][Mask Designer] Apply mask preset by index')
     def MaskDesigner_Apply_template(self, index):
         template_index = L.mask_designer.mask_property.template.copy()
         template_index["index"] = index
@@ -546,9 +553,12 @@ class Mask_designer(BasePage):
         self.mouse.click(*self.find(template_index).center)  # performance issue? click again
         return True
 
+    @step('[Action][Mask Designer] Create Custom Mask from Image')
     def Edit_MaskDesigner_CreateImageMask(self, full_path):
         self.exist(L.mask_designer.mask_property.create_mask).press()
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
+        if not os.path.exists(full_path):
+            raise Exception(f"File not found: {full_path}")
         self.select_file(full_path)
         return True
 
@@ -917,9 +927,11 @@ class Mask_designer(BasePage):
         self.mouse.drag_directly((pos_canvas[0], pos_canvas[1]), (pos_canvas[0] + x, pos_canvas[1] + y))
         return True
 
+    @step('[Action][Mask Designer] Enable/ Disable [Invert Mask]')
     def Edit_MaskDesigner_Invert_mask_SetCheck(self, check=True):
         button = self.exist(L.mask_designer.mask_property.invert_mask)
         if button.AXValue != int(bool(check)): button.press()
+        time.sleep(DELAY_TIME*0.5)
         return True
 
     def Edit_MaskDesigner_Feather_radius_Slider(self, value):
@@ -936,9 +948,11 @@ class Mask_designer(BasePage):
             L.mask_designer.mask_property.feather_up,
         ])
 
+    @step('[Action][Mask Designer] Click preview operation -- play, pause, stop, previous frame, next frame, fast forward')
     def Edit_MaskDesigner_PreviewOperation(self, operation):
         self.find(getattr(L.mask_designer.preview, operation.lower())).press()
         return True
+    
 
     def Viewer_Zoom_dropdown_menu(self, value="Fit"):
         category = self.exist(L.mask_designer.zoom)
@@ -1028,6 +1042,7 @@ class Mask_designer(BasePage):
         self.find(L.mask_designer.zoom_window).press()
         return True
 
+    @step('[Action][Mask Designer] Remove custom mask by index')
     def Edit_MaskDesigner_RemoveCustomMask(self, index):
         template_index = L.mask_designer.mask_property.template.copy()
         template_index["index"] = index
@@ -1053,7 +1068,8 @@ class Mask_designer(BasePage):
             return self.find(L.mask_designer.zoom).AXTitle
         except:
             return None
-
+    
+    @step('[Action][Mask Designer] Move the object on canvas by offset_x and offset_y')
     def move_object_on_canvas(self, offset_x=50, offset_y=50):
         offset_x, offset_y = map(int, [offset_x, offset_y])
         mask = self.find(L.mask_designer.preview.mask_object)

@@ -1851,13 +1851,13 @@ class Shape_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Shape Designer] Click Play/ Pause/ Stop/ Previous Frame/ Next Frame/ Fast Forward')
     def click_preview_operation(self, operation):
         try:
-            logger('1674')
             if not self.exist(L.shape_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             if operation == 'Play':
                 self.exist_click(L.shape_designer.preview_play)
             elif operation == 'Pause':
@@ -1870,9 +1870,12 @@ class Shape_Designer(Main_Page, BasePage):
                 self.exist_click(L.shape_designer.preview_next_frame)
             elif operation == 'Fast_Forward':
                 self.exist_click(L.shape_designer.preview_fast_forward)
+            else:
+                logger(f'Invalid operation: {operation}')
+                raise Exception(f'Invalid operation: {operation}, please input (Play, Pause, Stop, Previous_Frame, Next_Frame, Fast_Forward)')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
     
     @step('[Action][Shape Designer] Adjust object on Canvas to large')
