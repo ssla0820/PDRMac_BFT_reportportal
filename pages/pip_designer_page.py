@@ -2434,11 +2434,12 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Click Play/ Stop/ Pause/ Previous Frame/ Next Frame/ Fast Forward')
     def click_preview_operation(self, strOperation):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No designer window show up")
-                raise Exception
+                raise Exception("No designer window show up")
             if strOperation == 'Play':
                 self.exist_click(L.pip_designer.preview_play)
             elif strOperation == 'Stop':
@@ -2451,9 +2452,12 @@ class Pip_Designer(Main_Page, BasePage):
                 self.exist_click(L.pip_designer.preview_next_frame)
             elif strOperation == 'Fast_Forward':
                 self.exist_click(L.pip_designer.preview_fast_forward)
+            else:
+                logger("Input the wrong augment")
+                raise Exception(f"Input the wrong augment {strOperation}, please input (Play/ Stop/ Pause/ Previous_Frame/ Next_Frame/ Fast_Forward)")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def apply_snap_to_reference_lines(self, bApply):

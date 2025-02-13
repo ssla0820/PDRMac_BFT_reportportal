@@ -6021,11 +6021,11 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check if Motion Blur is correct as GT'):
             pip_designer_page.set_timecode('00_00_02_10')
             check_preview = main_page.snapshot(locator=L.pip_designer.preview,
-                                               file_name=Auto_Ground_Truth_Folder + 'L189.png')
+                                               file_name=Auto_Ground_Truth_Folder + 'L181.png')
 
             # Compare preview is changed when apply motion blur
             compare_result = main_page.compare(Ground_Truth_Folder + 'L181.png', check_preview, similarity=0.98)
-            assert compare_result, "Motion Blur is not correct as GT(L189.png)!"
+            assert compare_result, "Motion Blur is not correct as GT(L181.png)!"
 
             # case.result = (not compare_result) and check_length and check_density
 
@@ -6723,9 +6723,9 @@ class Test_BFT_365_OS14():
             # Verify Step
             # If preview (Linear 08 -> Linear 04) is not changed, it's known bug (VDE224706-0064)
             check_preview_04 = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            compare_result_w_04 = main_page.compare(check_preview_08, check_preview_04, similarity=0.99)
+            compare_result_w_04 = main_page.compare(check_preview_08, check_preview_04, similarity=0.999)
             if compare_result_w_04:
-                assert False, "Shape 4 is not applied correctly! Similary should<0.99"
+                assert False, "Shape 4 is not applied correctly! Similary should<0.999"
 
         assert True
 
@@ -7508,7 +7508,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after manual adjust as GT'):
             # Verify : Preview is changed
-            check_resize = main_page.snapshot(locator=L.shape_designer.canvas_object_shape)
+            check_resize = main_page.snapshot(locator=L.shape_designer.canvas_object_shape,
+                                               file_name=Auto_Ground_Truth_Folder + 'L203.png')
             compare_resize_result = main_page.compare(Ground_Truth_Folder + 'L203.png', check_resize)
             assert compare_resize_result, "Preview is not correct as GT(L203.png)! Similary should>0.95"
         assert True
@@ -9075,6 +9076,8 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.mask_designer_func
     @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
     @pytest.mark.mask_preset
     @pytest.mark.name('[test_mask_designer_func_10_2] Apply Mask preset')
     @exception_screenshot
@@ -9082,7 +9085,6 @@ class Test_BFT_365_OS14():
         '''
         1. Apply a random mask from index 1~7 and check preview is changed
         2. Apply mask 8 and check preview is changed
-
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_mask_designer_func_10_1"
@@ -9114,232 +9116,499 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.mask_designer_func
     @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
     @pytest.mark.mask_preset
-    @pytest.mark.name('[test_mask_designer_func_10_2] Apply Mask preset')
-    @exception_screenshot
-    def test_mask_designer_func_10_2(self):
-        '''
-        1. Apply a random mask from index 1~7 and check preview is changed
-        2. Apply mask 8 and check preview is changed
-
-        '''
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_mask_designer_func_10_1"
-        self.ensure_dependency(dependency_test)
-
-        # [L233] 3.7 Mask Designer (Sport 02.jpg) > Manual adjust on canvas > Move > Operation works fine.
-        with uuid("1f9a1e2a-df56-4083-bb11-bfe9de94793d") as case:
-            # Move mask object to lower right
-            mask_designer_page.move_object_on_canvas(offset_x=30, offset_y=40)
-
-            # Verify Step:
-            lower_right_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
-            check_no_updated = main_page.compare(mask_star_preview, lower_right_preview)
-            case.result = (not check_no_updated)
-
-            # click undo
-            mask_designer_page.tap_MaskDesigner_Undo_btn()
-            time.sleep(DELAY_TIME)
-
-    @pytest.mark.mask_designer_func
-    @pytest.mark.launch
-    @pytest.mark.open_project
-    @pytest.mark.timeline
-    @pytest.mark.name('[test_mask_designer_func_10_3] ')
+    @pytest.mark.canva
+    @pytest.mark.name('[test_mask_designer_func_10_3] Move mask object')
     @exception_screenshot
     def test_mask_designer_func_10_3(self):
         '''
-
+        1. Move mask object to lower right on canva
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_mask_designer_func_10_1"
+        dependency_test = "test_mask_designer_func_10_2"
         self.ensure_dependency(dependency_test)
 
-        # [L222] 3.7 Mask Designer (Sport 02.jpg) > custom mask from image
-        with uuid("f244a59e-d7c8-4da3-b94e-65caa7672ca3") as case:
-            mask_designer_page.Edit_MaskDesigner_CreateImageMask(Test_Material_Folder + 'BFT_21_Stage1/beauty.jpg')
-            time.sleep(DELAY_TIME * 4)
+        # [L233] 3.7 Mask Designer (Sport 02.jpg) > Manual adjust on canvas > Move > Operation works fine.
+        # with uuid("1f9a1e2a-df56-4083-bb11-bfe9de94793d") as case:
+        with step('[Action] Move mask object to lower right on canva'):
+            before_move_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            # Move mask object to lower right
+            mask_designer_page.move_object_on_canvas(offset_x=30, offset_y=40)
 
-            # Verify Step1:
+        with step('[Verify] Check preview is changed after move mask object'):
+            # Verify Step:
+            lower_right_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(before_move_preview, lower_right_preview, similarity=0.98):
+                assert False, "Preview is not changed after move mask object! Similary should<0.98"
+        assert True
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.custom_mask
+    @pytest.mark.name('[test_mask_designer_func_10_4] Create custom mask from image')
+    @exception_screenshot
+    def test_mask_designer_func_10_4(self):
+        '''
+        1. Undo test_mask_designer_func_10_3 action
+        2. Create custom mask from image
+        3. Check preview is changed as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_3"
+        self.ensure_dependency(dependency_test)
+        # [L222] 3.7 Mask Designer (Sport 02.jpg) > custom mask from image
+                    # click undo
+
+        # with uuid("f244a59e-d7c8-4da3-b94e-65caa7672ca3") as case:
+        with step('[Initial] Undo test_mask_designer_func_10_3 action'):
+            mask_designer_page.tap_MaskDesigner_Undo_btn()
+        
+        with step('[Action] Create custom mask from image'):
+            before_custom_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            mask_designer_page.Edit_MaskDesigner_CreateImageMask(Test_Material_Folder + 'BFT_21_Stage1/beauty.jpg')
+
+        with step('[Verify] Check preview is changed after create custom mask from image'):
+            mask_custom_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(before_custom_preview, mask_custom_preview, similarity=0.98):
+                assert False, "Preview is not changed after create custom mask from image! Similary should<0.98"
+
+        with step('[Verfify] Check preview as GT'):
+            zero_sec_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window, file_name=Auto_Ground_Truth_Folder + 'L222.png')
+            if not main_page.compare(Ground_Truth_Folder + 'L222.png', zero_sec_preview, similarity=0.93):
+                assert False, "Preview is not correct as GT(L222.png)! Similary should>0.93"
+        assert True
+                
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.custom_mask
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_mask_designer_func_10_5] Play the video')
+    @exception_screenshot
+    def test_mask_designer_func_10_5(self):
+        '''
+        1. Play the video
+        2. Check preview is changed when playing video
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_4"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Play the video'):
             # Play preview then check (preview is changed)
             mask_designer_page.Edit_MaskDesigner_PreviewOperation('play')
+
+        with step('[Verify] Check preview is changed when playing video in 2 secs'):
+            # Verify Step1:
             preview_is_updated = main_page.Check_PreviewWindow_is_different(area=L.mask_designer.preview_window, sec=2)
-            logger(preview_is_updated)
+            assert preview_is_updated, "Preview is not changed when playing video in 2 secs!"
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.custom_mask
+    @pytest.mark.play_video
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_mask_designer_func_10_6] Stop the video')
+    @exception_screenshot
+    def test_mask_designer_func_10_6(self):
+        '''
+        1. Stop the video and check timecode is 00:00:00:00
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_5"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Click [Stop] button'):
             mask_designer_page.Edit_MaskDesigner_PreviewOperation('stop')
-            time.sleep(DELAY_TIME*2)
+        
+        with step('[Verify] Check timecode is 00:00:00:00'):
+            check_timecode = mask_designer_page.get_timecode()
+            if check_timecode != '00:00:00:00':
+                assert False, f"Timecode is not correct! Expected: 00:00:00:00, Actual: {check_timecode}"
+        assert True
 
-            # Verify Step2:
-            zero_sec_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window, file_name=Auto_Ground_Truth_Folder + 'L222.png')
-            check_star_mask = main_page.compare(Ground_Truth_Folder + 'L222.png', zero_sec_preview, similarity=0.93)
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.custom_mask
+    @pytest.mark.delete_mask
+    @pytest.mark.name('[test_mask_designer_func_10_7] ')
+    @exception_screenshot
+    def test_mask_designer_func_10_7(self):
+        '''
+        1. 
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_6"
+        self.ensure_dependency(dependency_test)
 
-            # Verify Step3:
+        with step('[Action] Remove custom mask'):
+            before_delete_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
             # Remove custom mask
             check_remove_custom = mask_designer_page.Edit_MaskDesigner_RemoveCustomMask(index=1)
+            if not check_remove_custom:
+                assert False, "Cannot remove custom mask! Please check the result first!"
 
-            case.result = check_star_mask and preview_is_updated and check_remove_custom
+        with step('[Verify] Check preview is changed after remove custom mask'):
+            after_delete_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(before_delete_preview, after_delete_preview, similarity=0.98):
+                assert False, "Preview is not changed after remove custom mask! Similary should<0.98"
+        assert True
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.mask_preset
+    @pytest.mark.invert_mask
+    @pytest.mark.name('[test_mask_designer_func_10_8] Set [Only show the selected track] and tick invert mask')
+    @exception_screenshot
+    def test_mask_designer_func_10_8(self):
+        '''
+        1. Set [Only show the selected track]
+        2. Tick invert mask
+        3. Check preview is changed as GT
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_7"
+        self.ensure_dependency(dependency_test)
 
         # [L226] 3.7 Mask Designer (Sport 02.jpg) > Invert mask
-        with uuid("2010b0ee-ff55-4ac8-9556-d618b6cb89d0") as case:
+        # with uuid("2010b0ee-ff55-4ac8-9556-d618b6cb89d0") as case:
+
+        with step('[Action] Set [Only show the selected track]'):
             # Set (Only show the selected track)
             mask_designer_page.Edit_MaskDesigner_Only_Show_Selected_track_SetCheck()
 
+        with step('[Action] Tick invert mask'):
             # Tick invert mask
             mask_designer_page.Edit_MaskDesigner_Invert_mask_SetCheck()
-            time.sleep(DELAY_TIME)
-
+            
+        with step('[Verify] Check preview is changed as GT'):
             # Verify Step:
             current_preview = main_page.snapshot(locator=L.mask_designer.preview_window, file_name=Auto_Ground_Truth_Folder + 'L226.png')
             check_preview = main_page.compare(Ground_Truth_Folder + 'L226.png', current_preview)
-            case.result = check_preview
+            assert check_preview, "Preview is not correct as GT(L226.png)! Similary should>0.95"
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.text_mask
+    @pytest.mark.name('[test_mask_designer_func_10_9] Create Text Mask')
+    @exception_screenshot
+    def test_mask_designer_func_10_9(self):
+        '''
+        1. Untick [Invert Mask]
+        2. Click [Create Text Mask] and check [Mask Composer] window is opened
+        3. Set text content
+        4. Hide simple timeline
+        5. Check preview is changed after create title mask
+        '''
+        # Ensure the dependency test is run and passed
+        self.test_mask_designer_func_10_1()
 
         # [L223] 3.7 Mask Designer (Sport 02.jpg) > Create title mask
-        with uuid("efbff806-82b5-4247-a182-3edc78866548") as case:
-            # Un-tick invert mask
-            mask_designer_page.Edit_MaskDesigner_Invert_mask_SetCheck(check=False)
-            time.sleep(DELAY_TIME)
+        # with uuid("efbff806-82b5-4247-a182-3edc78866548") as case:
 
+        with step('[Action] Click [Create Text Mask]'):
             # Title mask
             mask_designer_page.click_create_text_mask_btn()
-            time.sleep(DELAY_TIME * 1.5)
-
+            
+        with step('[Verfiy] Check [Mask Composer] window is opened'):
             # Check is in (Mask composer)
             current_status = mask_designer_page.is_enter_mask_composer()
             if not current_status:
-                logger('Cannot enter Mask composer after call click_create_text_mask_btn()')
-                raise Exception
-            else:
-                main_page.click(L.title_designer.area.edittext_text_content)
-                main_page.mouse.click(times=3)
-                main_page.keyboard.send('Etxkhq')
-                main_page.press_enter_key()
-                main_page.keyboard.send('WTrdi')
-                time.sleep(DELAY_TIME)
-                main_page.click(L.title_designer.btn_ok)
-
-            time.sleep(DELAY_TIME*1.5)
-
+                assert False, "No Enter Mask Composer window after click [Create Text Mask]!"
+        
+        with step('[Action] Set text content'):
+            main_page.click(L.title_designer.area.edittext_text_content)
+            main_page.mouse.click(times=3)
+            main_page.keyboard.send('Etxkhq')
+            main_page.press_enter_key()
+            main_page.keyboard.send('WTrdi')
+            time.sleep(DELAY_TIME)
+            main_page.click(L.title_designer.btn_ok)
+            
+        with step('[Action] Hide simple timeline'):
             # Hide simple timeline
             main_page.click(L.mask_designer.btn_hide_timeline_mode)
             time.sleep(DELAY_TIME)
 
+        with step('[Verify] Check preview is changed after create title mask'):
             # Verify Step:
             current_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window, file_name=Auto_Ground_Truth_Folder + 'L223.png')
             check_preview = main_page.compare(Ground_Truth_Folder + 'L223.png', current_preview)
-            case.result = check_preview
+            if not check_preview:
+                assert False, "Preview is not correct as GT(L223.png)! Similary should>0.95"
+
+        with step('[Initial] Show simple timeline'):
+            # Show simple timeline
+            main_page.click(L.mask_designer.btn_display_timeline_mode)
+        assert True
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.canva
+    @pytest.mark.name('[test_mask_designer_func_10_10] Rotate object')
+    @exception_screenshot
+    def test_mask_designer_func_10_10(self):
+        '''
+        1. Rotate object degree = 35 and check preview changed
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_9"
+        self.ensure_dependency(dependency_test)
 
         # [L232] 3.7 Mask Designer (Sport 02.jpg) > Rotate
-        with uuid("5a933fab-12ff-464c-8551-b16ef67de363") as case:
+        # with uuid("5a933fab-12ff-464c-8551-b16ef67de363") as case:
+
+        with step('[Action] Rotate object degree = 35'):
+            before_rotate_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
             # Rotate object degree = 35
             mask_designer_page.rotate_object_on_canvas()
 
-            # [L230] 3.7 Mask Designer (Sport 02.jpg) > Set [Motion]
-            with uuid("b36192a8-c280-447a-89a5-f0dad4142943") as case:
-                # Un-tick (Only show the selected track)
-                mask_designer_page.Edit_MaskDesigner_Only_Show_Selected_track_SetCheck(check_it=False)
+        with step('[Verify] Check preview is changed after rotate object'):
+            # Verify Step:
+            after_rotate_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(before_rotate_preview, after_rotate_preview, similarity=0.98):
+                assert False, "Preview is not changed after rotate object! Similary should<0.98"
+        assert True
 
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.motion
+    @pytest.mark.path_template
+    @pytest.mark.name('[test_mask_designer_func_10_11] Apply path template')
+    @exception_screenshot
+    def test_mask_designer_func_10_11(self):
+        '''
+        1. Switch to [Motion] tab > [Path] tab
+        2. Apply ramdom path template from index 5~20 and check preview is changed
+        3. Apply path template 4 and check preview is changed
+        4. Check preview as GT at (00:25)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_10"
+        self.ensure_dependency(dependency_test)
+
+            # [L230] 3.7 Mask Designer (Sport 02.jpg) > Set [Motion]
+            # with uuid("b36192a8-c280-447a-89a5-f0dad4142943") as case:
+            
+                # # Un-tick (Only show the selected track)
+                # mask_designer_page.Edit_MaskDesigner_Only_Show_Selected_track_SetCheck(check_it=False)
+
+        with step('[Action] Switch to [Motion] tab > [Path] tab'):
                 # Switch to Motion tab
                 mask_designer_page.switch_to_motion()
-                time.sleep(DELAY_TIME * 0.5)
-
                 # Open path tab
                 mask_designer_page.motion.open_path_tag()
 
-                # random
-                # Apply mask random (5 ~ 20)
-                random_idx = random.randrange(5, 20)
-                logger(f'select preset {random_idx} - random select')
-                mask_designer_page.motion.select_path_template(random_idx)
-                time.sleep(DELAY_TIME * 2)
-                motion_x_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+        random_idx = random.randrange(5, 20)
+        with step(f'[Action] Apply ramdom path template from index 5~20. Selected index: {random_idx}'):
+            before_random_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            # random
+            # Apply mask random (5 ~ 20)
+            mask_designer_page.motion.select_path_template(random_idx)
+            motion_x_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
 
-                mask_designer_page.motion.select_path_template(4)
-                time.sleep(DELAY_TIME * 2)
-                motion_fourth_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+        with step('[Verify] Check preview is changed after apply random path template'):
+            random_path_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(before_random_preview, random_path_preview, similarity=0.98):
+                assert False, "Preview is not changed after apply random path template! Similary should<0.98"
 
-                check_path_no_updated = main_page.compare(motion_fourth_preview, motion_x_preview, similarity=0.98)
-                case.result = (not check_path_no_updated)
-
+        with step('[Action] Select path template 4'):
+            mask_designer_page.motion.select_path_template(4)
+        
+        with step('[Verify] Check preview is changed after apply path template 4'):
+            motion_fourth_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(motion_fourth_preview, motion_x_preview, similarity=0.98):
+                assert False, "Preview is not changed after apply path template 4! Similary should<0.98"
+            
+        with step('[Verify] Check preview as GT at (00:25)'):
             # Set designer timecode (00:00:00:25)
             mask_designer_page.set_MaskDesigner_timecode('00_00_00_25')
-            time.sleep(DELAY_TIME*2)
 
             # Verify Step:
             current_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window, file_name=Auto_Ground_Truth_Folder + 'L232.png')
             check_preview = main_page.compare(Ground_Truth_Folder + 'L232.png', current_preview)
-            case.result = check_preview
+            if not check_preview:
+                assert False, "Preview is not correct as GT(L232.png)! Similary should>0.95"
+        assert True
+
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.object_settings
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_mask_designer_func_10_12] Set Rotation Keyframe and Switch to Previous Keyframe')
+    @exception_screenshot
+    def test_mask_designer_func_10_12(self):
+        '''
+        1. Add 1st rotation keyframe on (00:25)
+        2. Fold Path tab and switch to Mask tab
+        3. Add 2nd rotation keyframe on (00:02:20)
+        4. Check rotation value on 2nd rotation keyframe
+        5. Switch to previous rotation keyframe on (00:25)
+        6. Check timecode on 1st rotation keyframe
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_11"
+        self.ensure_dependency(dependency_test)
 
         # [L234] 3.7 Mask Designer (Sport 02.jpg) > Adjust keyframe in simple timeline
-        with uuid("ee9c8e69-b7c6-4288-956e-8074c75500d7") as case:
-            # Show simple timeline
-            main_page.click(L.mask_designer.btn_display_timeline_mode)
-            time.sleep(DELAY_TIME)
+        # with uuid("ee9c8e69-b7c6-4288-956e-8074c75500d7") as case:
 
+        with step('[Action] Add 1st rotation keyframe on (00:25)'):
             # Add 1st rotation keyframe on (00:00:00:25)
             mask_designer_page.simple_timeline.rotation.add_keyframe()
-            time.sleep(DELAY_TIME)
 
+        with step('[Action] Fold Path tab and switch to Mask tab'):
             # Fold Path tab
             mask_designer_page.motion.open_path_tag(open=0)
-            time.sleep(DELAY_TIME * 0.5)
-
             # Switch to Mask tab
             mask_designer_page.switch_to_mask()
-            time.sleep(DELAY_TIME * 0.5)
 
+        with step('[Action] Add 2nd rotation keyframe on (00:02:20)'):
             # Drag Properties scroll bar to down (1)
             mask_designer_page.drag_Mask_Settings_Scroll_Bar(1)
-
             # Set designer timecode (00:00:02:20)
             mask_designer_page.set_MaskDesigner_timecode('00_00_02_20')
-            time.sleep(DELAY_TIME*2)
-
             # Set Rotation degree = 75 (2nd keyframe)
             mask_designer_page.object_settings.set_rotation('75')
 
+        with step('[Verify] Check rotation value on 2nd rotation keyframe'):
+            # Verify Step:
+            rotation_value = mask_designer_page.object_settings.get_rotation_value()
+            if rotation_value != '75':
+                assert False, f"Rotation value is not correct! Expected: 75, Actual: {rotation_value}"
+
+        with step('[Action] Switch to previous rotation keyframe on (00:25)'):
             # Rotation : Click previous keyframe
             mask_designer_page.simple_timeline.rotation.click_previous_keyframe()
 
+        with step('[Verify] Check timecode on 1st rotation keyframe'):
             # Verify Step:
             current_timecode = mask_designer_page.get_timecode()
-            if current_timecode == '00:00:00:25':
-                rotation_keyframe_settings = True
-            else:
-                rotation_keyframe_settings = False
+            if current_timecode != '00:00:00:25':
+                assert False, f"Timecode is not correct! Expected: 00:00:00:25, Actual: {current_timecode}"
 
+        with step('[Verify] Check Rotation value on 1st rotation keyframe'):
+            rotation_value = mask_designer_page.object_settings.get_rotation_value()
+            if rotation_value != '0':
+                assert False, f"Rotation value is not correct! Expected: 0, Actual: {rotation_value}"
+        assert True
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.object_settings
+    @pytest.mark.keyframe
+    @pytest.mark.timecode
+    @pytest.mark.path_template
+    @pytest.mark.name('[test_mask_designer_func_10_13] Default Position keyframe from Path template')
+    @exception_screenshot
+    def test_mask_designer_func_10_13(self):
+        '''
+        1. Switch to default 1st Position keyframe (Added by Path template)
+        2. Check timecode on 1st Position keyframe
+        3. Switch to default 2nd Position keyframe (Added by Path template)
+        4. Check timecode on 2nd Position keyframe
+        5. Check Preview as GT at (05:00)
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_12"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Action] Switch to default 1st Position keyframe (Added by Path template)'):
             # Position : Click previous keyframe
             mask_designer_page.simple_timeline.position.click_previous_keyframe()
-            time.sleep(DELAY_TIME * 0.5)
 
+        with step('[Verify] Check timecode on 1st Position keyframe'):
+            current_timecode = mask_designer_page.get_timecode()
+            if current_timecode != '00:00:00:00':
+                assert False, f"Timecode is not correct! Expected: 00:00:00:00, Actual: {current_timecode}"
+
+        with step('[Action] Switch to default 2nd Position keyframe (Added by Path template)'):
             # Position : Click next keyframe
             mask_designer_page.simple_timeline.position.click_next_keyframe()
-            time.sleep(DELAY_TIME * 0.5)
 
-            # Verify Step:
+        with step('[Verify] Check timecode on 2nd Position keyframe'):
+            current_timecode = mask_designer_page.get_timecode()
+            if current_timecode != '00:00:05:00':
+                assert False, f"Timecode is not correct! Expected: 00:00:05:00, Actual: {current_timecode}"
+        
+        with step('[Verify] Check Preview as GT at (05:00)'):
             current_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window, file_name=Auto_Ground_Truth_Folder + 'L234.png')
             check_preview = main_page.compare(Ground_Truth_Folder + 'L234.png', current_preview)
-            case.result = check_preview and rotation_keyframe_settings
+            if not check_preview:
+                assert False, "Preview is not correct as GT(L234.png)! Similary should>0.95"
 
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.name('[test_mask_designer_func_10_14] Adjust Feather radius by textbox')
+    @exception_screenshot
+    def test_mask_designer_func_10_14(self):
+        '''
+        1. Adjust Feather radius by textbox = 5
+        2. Check Feather radius value is 5
+        3. Check preview is changed after adjust Feather radius
+        '''
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_mask_designer_func_10_13"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Initial] Remove custom text mask'):
             # Drag Properties scroll bar to top (0)
             mask_designer_page.drag_Mask_Settings_Scroll_Bar(0)
-
             # Remove custom mask (Title mask)
             mask_designer_page.Edit_MaskDesigner_RemoveCustomMask(index=1)
 
         # [L227] 3.7 Mask Designer (Sport 02.jpg) > feather radius
-        with uuid("84117991-9ca4-43e0-a942-1dcb13a1bd6a") as case:
-            # Fold Path tab
-            mask_designer_page.Edit_MaskDesigner_Feather_radius_InputValue('5')
-            time.sleep(DELAY_TIME)
+        # with uuid("84117991-9ca4-43e0-a942-1dcb13a1bd6a") as case:
 
+        with step('[Action] Adjust Feather radius by textbox'):
+            before_feather_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            mask_designer_page.Edit_MaskDesigner_Feather_radius_InputValue('5')
+        
+        with step('[Verify] Check Feather radius value is 5'):
             # Verify Step
             check_value = main_page.exist(L.mask_designer.mask_property.feather_slider).AXValue
-            if check_value == 5:
-                case.result = True
-            else:
-                case.result = False
+            if check_value != 5:
+                assert False, f"Feather radius value is not correct! Expected: 5, Actual: {check_value}"
 
+        with step('[Verify] Check preview is changed after adjust Feather radius'):
+            applied_feather_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            if main_page.compare(before_feather_preview, applied_feather_preview, similarity=0.98):
+                assert False, "Preview is not changed after adjust Feather radius! Similary should<0.98"
+        assert True
+
+    @pytest.mark.mask_designer_func
+    @pytest.mark.mask_designer
+    @pytest.mark.mask
+    @pytest.mark.mask_properties
+    @pytest.mark.name('[test_mask_designer_func_10_14] Adjust Feather radius by textbox')
+    @exception_screenshot
+    def test_mask_designer_func_10_14(self):
+        '''
+        1. Adjust Feather radius by textbox = 5
+        2. Check Feather radius value is 5
+        3. Check preview is changed after adjust Feather radius
+        '''
         # [L229] 3.7 Mask Designer (Sport 02.jpg) > Set in [Object Settings] > Adjust ease in / ease out
-        with uuid("36403805-ed5c-4f70-91e5-1d2fa25e3049") as case:
+        # with uuid("36403805-ed5c-4f70-91e5-1d2fa25e3049") as case:
+        with step('[Action] Adjust ease in / ease out'):
             # Set designer timecode (00:00:00:29)
             mask_designer_page.set_MaskDesigner_timecode('00_00_00_29')
             time.sleep(DELAY_TIME*2)

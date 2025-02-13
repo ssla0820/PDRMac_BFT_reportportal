@@ -4943,6 +4943,9 @@ class Title_Designer(Main_Page, BasePage):
                     self.exist_click(L.title_designer.operation.btn_next_frame)
                 elif operation == 'Fast_Forward':
                     self.exist_click(L.title_designer.operation.btn_fast_forward)
+                else:
+                    logger(f'Invalid operation: {operation}')
+                    raise Exception(f'Invalid operation: {operation}, please input (Play, Pause, Stop, Previous_Frame, Next_Frame, Fast_Forward)')
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
                 raise Exception(f'Exception occurs. log={e}')

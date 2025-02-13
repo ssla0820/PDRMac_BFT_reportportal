@@ -6,6 +6,9 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
+
+DELAY_TIME = 1
 
 def _get_attribute_index(obj, attribute_name):
     try:
@@ -42,7 +45,7 @@ def _control_keyframe(obj, attribute_name, locator_operation=None):
             value = True
     except Exception as e:
         logger(f'Exception occurs. log={e}')
-        raise Exception
+        raise Exception(f'Exception occurs. log={e}')
     return value
 
 class CirclePositionCalculator:
@@ -306,6 +309,13 @@ class Mask_designer(BasePage):
                 L.mask_designer.settings.opacity_up,
             ])
 
+        @step('[Action][Mask Designer][Object Settings] Get Rotation Value') 
+        def get_rotation_value(self):
+            if not self.exist(L.mask_designer.settings.rotation_value).AXValue:
+                raise Exception("Rotation value is not found")
+            return self.exist(L.mask_designer.settings.rotation_value).AXValue
+        
+        @step('[Action][Mask Designer][Object Settings] Set Rotation')
         def set_rotation(self, value):
             self.exist(L.mask_designer.settings.rotation_value).AXValue = str(value)
             self.click_rotation_arrow()
@@ -331,14 +341,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Position'
 
+            @step('[Action][Mask Designer][Simple Track][Position] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
-
+            
+            @step('[Action][Mask Designer][Simple Track][Position] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
-
+            
+            @step('[Action][Mask Designer][Simple Track][Position] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -348,14 +361,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Scale'
 
+            @step('[Action][Mask Designer][Simple Track][Scale] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Scale] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Scale] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -365,14 +381,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Opacity'
 
+            @step('[Action][Mask Designer][Simple Track][Opacity] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Opacity] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Opacity] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -382,14 +401,17 @@ class Mask_designer(BasePage):
                 super().__init__(*args, **kwargs)
                 self.attribute_name = 'Rotation'
 
+            @step('[Action][Mask Designer][Simple Track][Rotation] Add Keyframe')
             def add_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_add_remove_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Rotation] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_previous_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
 
+            @step('[Action][Mask Designer][Simple Track][Rotation] Click Next Keyframe')
             def click_next_keyframe(self):
                 locator_operation = L.mask_designer.simple_track.btn_next_keyframe
                 return bool(_control_keyframe(self, self.attribute_name, locator_operation))
@@ -403,6 +425,7 @@ class Mask_designer(BasePage):
         except:
             return None
 
+    @step('[Action][Mask Designer] Set timecode')
     def set_MaskDesigner_timecode(self, timecode):
         '''
         :param timecode: "HH_MM_SS_mm" -> "1_00_59_99"
@@ -419,13 +442,14 @@ class Mask_designer(BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Mask Designer] Get timecode')
     def get_timecode(self):
         try:
             timecode = self.exist(L.mask_designer.timecode).AXValue
             return timecode
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def tap_MaskDesigner_Undo_btn(self):
@@ -434,6 +458,7 @@ class Mask_designer(BasePage):
     def tap_MaskDesigner_Redo_btn(self):
         self.find(L.mask_designer.redo).press()
 
+    @step('[Action][Mask Designer] Tick/ Untick [Only Show Selected Track]')
     def Edit_MaskDesigner_Only_Show_Selected_track_SetCheck(self, check_it=True):
         checkbox = self.find(L.mask_designer.only_show_selected_track_checkbox)
         if checkbox.AXValue != check_it:
@@ -523,6 +548,7 @@ class Mask_designer(BasePage):
     def Edit_MaskDesigner_ClickShare(self):
         self.exist(L.mask_designer.share).press()
 
+    @step('[Action][Mask Designer] Scroll bar')
     def drag_Mask_Settings_Scroll_Bar(self, value):
         self.exist(L.mask_designer.settings.scroll_bar).AXValue = float(value)
 
@@ -539,6 +565,7 @@ class Mask_designer(BasePage):
         self.mouse.click(*category_option.center)
         return True
 
+    @step('[Action][Mask Designer] Apply mask preset by index')
     def MaskDesigner_Apply_template(self, index):
         template_index = L.mask_designer.mask_property.template.copy()
         template_index["index"] = index
@@ -546,9 +573,12 @@ class Mask_designer(BasePage):
         self.mouse.click(*self.find(template_index).center)  # performance issue? click again
         return True
 
+    @step('[Action][Mask Designer] Create Custom Mask from Image')
     def Edit_MaskDesigner_CreateImageMask(self, full_path):
         self.exist(L.mask_designer.mask_property.create_mask).press()
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
+        if not os.path.exists(full_path):
+            raise Exception(f"File not found: {full_path}")
         self.select_file(full_path)
         return True
 
@@ -563,9 +593,10 @@ class Mask_designer(BasePage):
     def is_enter_mask_composer(self):
         return self.is_exist(L.mask_designer.mask_property.mask_composer.window)
 
+    @step('[Action][Mask Designer] Click [Create Text Mask]')
     def click_create_text_mask_btn(self):
         self.exist_click(L.mask_designer.mask_property.create_text_mask)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         return self.is_enter_mask_composer()
 
     def is_enter_brush_mask_designer(self):
@@ -850,11 +881,12 @@ class Mask_designer(BasePage):
                 return True
 
 
-
+    @step('[Action][Mask Designer] Switch to [Motion] tab')
     def switch_to_motion(self):
         self.exist_click(L.mask_designer.tab.motion)
         return self.is_exist(L.mask_designer.motion_tab.path_text, None, 10)
 
+    @step('[Action][Mask Designer] Switch to [Mask] tab')
     def switch_to_mask(self):
         self.exist_click(L.mask_designer.tab.mask)
         return self.is_exist(L.mask_designer.mask_property.mask_property_text, None, 10)
@@ -863,13 +895,12 @@ class Mask_designer(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Mask Designer][Motion] Click [Path] Tab')
         def open_path_tag(self, open=1):
             el_path_tag = self.exist(L.mask_designer.motion_tab.path_tag)
             if open != el_path_tag.AXValue:
                 self.exist_click(L.mask_designer.motion_tab.path_tag)
-                return True
-            else:
-                return True
+            return True
 
         def select_category(self, opt):
             self.exist_click(L.mask_designer.motion_tab.path_category)
@@ -890,8 +921,10 @@ class Mask_designer(BasePage):
         def get_current_category(self):
             return self.exist(L.mask_designer.motion_tab.path_category).AXTitle
 
+        @step('[Action][Mask Designer][Motion] Select [Path] Template by index')
         def select_path_template(self, index):
             self.exist_click({"AXRoleDescription": "group", 'AXIdentifier': 'motionPathThumbCVI', 'index': index-1})
+            time.sleep(DELAY_TIME)
             return True
 
         def click_save_custom_btn(self):
@@ -917,15 +950,18 @@ class Mask_designer(BasePage):
         self.mouse.drag_directly((pos_canvas[0], pos_canvas[1]), (pos_canvas[0] + x, pos_canvas[1] + y))
         return True
 
+    @step('[Action][Mask Designer] Enable/ Disable [Invert Mask]')
     def Edit_MaskDesigner_Invert_mask_SetCheck(self, check=True):
         button = self.exist(L.mask_designer.mask_property.invert_mask)
         if button.AXValue != int(bool(check)): button.press()
+        time.sleep(DELAY_TIME*0.5)
         return True
 
     def Edit_MaskDesigner_Feather_radius_Slider(self, value):
         self.exist(L.mask_designer.mask_property.feather_slider).AXValue = int(value)
         return True
 
+    @step('[Action][Mask Designer] Set Feather Radius Value by textbox')
     def Edit_MaskDesigner_Feather_radius_InputValue(self, value):
         self.exist(L.mask_designer.mask_property.feather_slider).AXValue = int(value)
         return True
@@ -936,9 +972,11 @@ class Mask_designer(BasePage):
             L.mask_designer.mask_property.feather_up,
         ])
 
+    @step('[Action][Mask Designer] Click preview operation -- play, pause, stop, previous frame, next frame, fast forward')
     def Edit_MaskDesigner_PreviewOperation(self, operation):
         self.find(getattr(L.mask_designer.preview, operation.lower())).press()
         return True
+    
 
     def Viewer_Zoom_dropdown_menu(self, value="Fit"):
         category = self.exist(L.mask_designer.zoom)
@@ -1028,6 +1066,7 @@ class Mask_designer(BasePage):
         self.find(L.mask_designer.zoom_window).press()
         return True
 
+    @step('[Action][Mask Designer] Remove custom mask by index')
     def Edit_MaskDesigner_RemoveCustomMask(self, index):
         template_index = L.mask_designer.mask_property.template.copy()
         template_index["index"] = index
@@ -1053,7 +1092,8 @@ class Mask_designer(BasePage):
             return self.find(L.mask_designer.zoom).AXTitle
         except:
             return None
-
+    
+    @step('[Action][Mask Designer] Move the object on canvas by offset_x and offset_y')
     def move_object_on_canvas(self, offset_x=50, offset_y=50):
         offset_x, offset_y = map(int, [offset_x, offset_y])
         mask = self.find(L.mask_designer.preview.mask_object)
@@ -1075,6 +1115,7 @@ class Mask_designer(BasePage):
         self.mouse.drag_directly(mask.center, end_position)
         return True
 
+    @step('[Action][Mask Designer] Rotate the object on canvas by degrees')
     def rotate_object_on_canvas(self, degrees=90):
         degrees = int(-degrees)
         radius = 120
