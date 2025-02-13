@@ -4512,6 +4512,7 @@ class Pip_Designer(Main_Page, BasePage):
                     logger(f'Exception occurs. log={e}')
                     raise Exception
 
+            @step('[Action][Pip Designer][Simple Timeline] Get Ease In Status')
             def get_ease_in_status(self):
                 try:
                     time.sleep(DELAY_TIME)
@@ -4535,11 +4536,12 @@ class Pip_Designer(Main_Page, BasePage):
                     elif current_result == None:
                         return 0
                     else:
-                        raise Exception
+                        raise Exception('Unable to get the status of Ease In')
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
 
+            @step('[Action][Pip Designer][Simple Timeline] Get Ease Out Status')
             def get_ease_out_status(self):
                 try:
                     time.sleep(DELAY_TIME)
@@ -4563,7 +4565,7 @@ class Pip_Designer(Main_Page, BasePage):
                     elif current_result == None:
                         return 0
                     else:
-                        raise Exception
+                        raise Exception('Unable to get the status of Ease Out')
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
