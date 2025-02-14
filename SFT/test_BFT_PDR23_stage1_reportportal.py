@@ -7784,8 +7784,8 @@ class Test_BFT_365_OS14():
 
 
         with step('[Action] Set 2nd Scale keyframe at (08:10)'):
-            # unticl [Maintain aspect ratio]
-            shape_designer_page.scale.set_aspect_ratio_chx(0)
+            # untick [Maintain aspect ratio]
+            shape_designer_page.Scale.set_aspect_ratio_chx(0)
             # Set scale W = 0.672, H = 0.748 w/ 2nd keyframe
             shape_designer_page.keyframe.object_settings.scale.w.set_value(0.672)
             shape_designer_page.keyframe.object_settings.scale.h.set_value(0.748)
