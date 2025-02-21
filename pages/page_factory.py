@@ -60,86 +60,86 @@ class PageFactory():
             page_obj = Mask_designer(driver)
         elif page_name == 'media_room_page':
             page_obj = Media_Room(driver)
-        elif page_name == 'title_room_page':
-            page_obj = Title_room(driver)
-        elif page_name == 'effect_room_page':
-            page_obj = Effect_Room(driver)
-        elif page_name == 'title_designer_page':
-            page_obj = Title_Designer(driver)
-        elif page_name == 'audio_mixing_room_page':
-            page_obj = Audio_Mixing_Room(driver)
-        elif page_name == 'library_preview_page':
-            page_obj = Library_Preview(driver)
+        # elif page_name == 'title_room_page':
+        #     page_obj = Title_room(driver)
+        # elif page_name == 'effect_room_page':
+        #     page_obj = Effect_Room(driver)
+        # elif page_name == 'title_designer_page':
+        #     page_obj = Title_Designer(driver)
+        # elif page_name == 'audio_mixing_room_page':
+        #     page_obj = Audio_Mixing_Room(driver)
+        # elif page_name == 'library_preview_page':
+        #     page_obj = Library_Preview(driver)
         elif page_name == 'timeline_operation_page':
             page_obj = Timeline_Operation(driver)
         elif page_name == 'import_downloaded_media_from_cl_page':
             page_obj = Import_Downloaded_Media_From_CL(driver)
-        elif page_name == 'pip_designer_page':
-            page_obj = Pip_Designer(driver)
+        # elif page_name == 'pip_designer_page':
+        #     page_obj = Pip_Designer(driver)
         elif page_name == 'precut_page':
             page_obj = Precut(driver)
-        elif page_name == 'video_speed_page':
-            page_obj = Video_speed_page(driver)
-        elif page_name == 'voice_over_recording_page':
-            page_obj = Voice_Over_Recording_Room(driver)
-        elif page_name == 'transition_room_page':
-            page_obj = Transition_room(driver)
-        elif page_name == 'particle_room_page':
-            page_obj = Particle_room(driver)
+        # elif page_name == 'video_speed_page':
+        #     page_obj = Video_speed_page(driver)
+        # elif page_name == 'voice_over_recording_page':
+        #     page_obj = Voice_Over_Recording_Room(driver)
+        # elif page_name == 'transition_room_page':
+        #     page_obj = Transition_room(driver)
+        # elif page_name == 'particle_room_page':
+        #     page_obj = Particle_room(driver)
         elif page_name == 'playback_window_page':
             page_obj = Playback_window(driver)
-        elif page_name == 'pip_room_page':
-            page_obj = Pip_room(driver)
-        elif page_name == 'download_from_cl_dz_page':
-            page_obj = DownloadFromCLDZ(driver)
-        elif page_name == 'preferences_page':
-            page_obj = Preferences_Page(driver)
+        # elif page_name == 'pip_room_page':
+        #     page_obj = Pip_room(driver)
+        # elif page_name == 'download_from_cl_dz_page':
+        #     page_obj = DownloadFromCLDZ(driver)
+        # elif page_name == 'preferences_page':
+        #     page_obj = Preferences_Page(driver)
         elif page_name == 'tips_area_page':
             page_obj = Tips_area(driver)
         elif page_name == 'video_collage_designer_page':
             page_obj = VideoCollageDesigner(driver)
         elif page_name == 'produce_page':
             page_obj = Produce(driver)
-        elif page_name == 'keyframe_room_page':
-            page_obj = KeyFrame_Page(driver)
-        elif page_name == 'fix_enhance_page':
-            page_obj = FixEnhance(driver)
+        # elif page_name == 'keyframe_room_page':
+        #     page_obj = KeyFrame_Page(driver)
+        # elif page_name == 'fix_enhance_page':
+        #     page_obj = FixEnhance(driver)
         elif page_name == 'download_from_shutterstock_page':
             page_obj = Shutterstock(driver)
-        elif page_name == 'blending_mode_page':
-            page_obj = Blending(driver)
-        elif page_name == 'upload_cloud_dz_page':
-            page_obj = Upload_Cloud_DZ(driver)
+        # elif page_name == 'blending_mode_page':
+        #     page_obj = Blending(driver)
+        # elif page_name == 'upload_cloud_dz_page':
+        #     page_obj = Upload_Cloud_DZ(driver)
         elif page_name == 'trim_page':
             page_obj = Trim(driver)
-        elif page_name == 'particle_designer_page':
-            page_obj = Particle_Designer(driver)
-        elif page_name == 'crop_zoom_pan_page':
-            page_obj = Crop_Zoom_Pan(driver)
-        elif page_name == 'pan_zoom_page':
-            page_obj = Pan_Zoom(driver)
-        elif page_name == 'nest_project_page':
-            page_obj = Nest_Project(driver)
-        elif page_name == 'project_room_page':
-            page_obj = Project_Room(driver)
+        # elif page_name == 'particle_designer_page':
+        #     page_obj = Particle_Designer(driver)
+        # elif page_name == 'crop_zoom_pan_page':
+        #     page_obj = Crop_Zoom_Pan(driver)
+        # elif page_name == 'pan_zoom_page':
+        #     page_obj = Pan_Zoom(driver)
+        # elif page_name == 'nest_project_page':
+        #     page_obj = Nest_Project(driver)
+        # elif page_name == 'project_room_page':
+        #     page_obj = Project_Room(driver)
         elif page_name == 'project_new_page':
             page_obj = Project_New(driver)
         elif page_name == 'gettyimage_page':
             page_obj = Getty_Image(driver)
-        elif page_name == 'shape_designer_page':
-            page_obj = Shape_Designer(driver)
+        # elif page_name == 'shape_designer_page':
+        #     page_obj = Shape_Designer(driver)
         elif page_name == 'intro_video_room_page':
             page_obj = Intro_Video_Room(driver)
-        elif page_name == 'crop_image_page':
-            page_obj = Crop_Image(driver)
-        elif page_name == 'subtitle_room_page':
-            page_obj = Subtitle_Room(driver)
-        elif page_name == 'audio_editing_page':
-            page_obj = Audio_Editing(driver)
-        elif page_name == 'motion_tracker_page':
-            page_obj = Motion_Tracker(driver)
-        elif page_name == 'effect_settings_page':
-            page_obj = Effect_Settings(driver)
+        # elif page_name == 'crop_image_page':
+        #     page_obj = Crop_Image(driver)
+        # elif page_name == 'subtitle_room_page':
+        #     page_obj = Subtitle_Room(driver)
+        # elif page_name == 'audio_editing_page':
+        #     page_obj = Audio_Editing(driver)
+        # elif page_name == 'motion_tracker_page':
+        #     page_obj = Motion_Tracker(driver)
+        # elif page_name == 'effect_settings_page':
+        #     page_obj = Effect_Settings(driver)
         else:
             logger(f'incorrect page_name : {page_name}')
             return None

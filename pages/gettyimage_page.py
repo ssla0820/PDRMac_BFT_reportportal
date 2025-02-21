@@ -97,15 +97,17 @@ class Getty_Image(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Getty Image] Click [Filter] button')
     def click_filter_button(self):
         try:
             if not self.exist(L.download_from_shutterstock.window):
                 logger("No window show up")
-                raise Exception
+                raise Exception("No window show up")
             self.exist_click(L.gettyimage.btn_filter)
+            time.sleep(DELAY_TIME*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_filter_explorer_view(self):
@@ -419,36 +421,32 @@ class Getty_Image(Main_Page, BasePage):
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
                 raise Exception
-
+        @step('[Action][Getty Image][Filter] Set collection type')
         def set_collection_type(self, index):
             try:
                 if not self.exist(L.download_from_shutterstock.window):
                     logger("No window show up")
-                    raise Exception
+                    raise Exception("No window show up")
                 if index == 0:
                     self.exist_click(L.gettyimage.collection.all)
-                    return True
                 elif index == 1:
                     self.exist_click(L.gettyimage.collection.subscription)
-                    return True
                 elif index == 2:
                     self.exist_click(L.gettyimage.collection.premium)
-                    return True
                 elif index == 3:
                     self.exist_click(L.gettyimage.collection.all_photo)
-                    return True
                 elif index == 4:
                     self.exist_click(L.gettyimage.collection.subscription_photo)
-                    return True
                 elif index == 5:
                     self.exist_click(L.gettyimage.collection.premium_photo)
-                    return True
                 else:
                     logger("No index")
-                    raise Exception
+                    raise Exception(f"No index, index={index}. Please provide index 0~5")
+                time.sleep(DELAY_TIME*2)
+                return True
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
         def get_sort_by_type(self, set_video=1):
             #set_video = 1 for Video

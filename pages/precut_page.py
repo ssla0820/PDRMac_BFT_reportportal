@@ -7,6 +7,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -237,7 +238,8 @@ class Precut(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Precut] Get Single Trim Duration')
     def get_precut_single_trim_duration(self):
         duration = self.exist(L.precut.single_trim_precut_duration).AXValue
         return duration
@@ -278,6 +280,7 @@ class Precut(Main_Page, BasePage):
         value = self.exist(L.precut.single_trim_precut_in_position).AXValue
         return value
 
+    @step('[Action][Precut] Set Single Trim Precut In Position')
     def set_single_trim_precut_in_position(self, value):
         self.activate()
         elem = self.find(L.precut.single_trim_precut_in_position)
@@ -286,9 +289,10 @@ class Precut(Main_Page, BasePage):
 
         pos_click = tuple(map(int, (x + w * 0.4, y + h * 0.5)))
         self.mouse.click(*pos_click)
-        time.sleep(1)
+        time.sleep(OPERATION_DELAY)
         self.keyboard.send(value.replace("_", ""))
         self.keyboard.enter()
+        time.sleep(OPERATION_DELAY*0.5)
 
     def click_precut_single_trim_in_position_arrow_button(self, option):
         '''
@@ -558,16 +562,17 @@ class Precut(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Precut] Click [OK] Button to leave Precut Window')
     def click_ok(self):
         try:
             self.exist_click(L.precut.btn_ok)
             time.sleep(OPERATION_DELAY)
             if self.exist(L.precut.main_window, 2):
                 logger('Fail to close precut window')
-                raise Exception
+                raise Exception('Fail to close precut window')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def get_precut_status(self, str_media):

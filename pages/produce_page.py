@@ -4,6 +4,7 @@ from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -162,7 +163,7 @@ class Produce(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    @step('[Action][Produce] Get timecode')
     def get_preview_timecode(self):
         return self.exist(L.produce.edittext_preview_playback_timecode).AXValue.replace(';', '_')
 
@@ -228,13 +229,16 @@ class Produce(BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Produce][Local] Check [Upload Copy to CyberLink Cloud] is visible')
         def check_visible_upload_copy_to_cyberlink_cloud(self):
             return self.is_exist(L.produce.local.chx_upload_copy_to_cyberlink_cloud, 2)
 
+        @step('[Action][Produce][Local] Enable/ Disable [Upload Copy to CyberLink Cloud]')
         def set_check_upload_copy_to_cyberlink_cloud(self, is_check=1):
             locator = L.produce.local.chx_upload_copy_to_cyberlink_cloud
             return checkbox_set_check(self, locator, is_check)
 
+        @step('[Action][Produce][Local] Click [Yes]/ [No] button on [Convert CyberLink Cloud Copy to MP4] dialog')
         def click_option_convert_cyberlink_cloud_copy_to_mp4_dialog(self, option=1): # 1: yes, 0: no
             try:
                 map_list = {0: 'no', 1: 'yes'}
@@ -242,9 +246,21 @@ class Produce(BasePage):
                 self.exist_click(locator)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
-
+        
+        @step('[Verify][Produce][Local] Check [Back] button show on [Produce] page after produce complete')
+        def check_back_btn_shows_on_upload_to_cyberlink_cloud_in_secs(self, wait_time=40):
+            for i in range(wait_time):
+                if self.is_exist(L.produce.btn_back_to_edit_after_upload_cl):
+                    return True
+                time.sleep(1)
+            return False
+        
+        @step('[Action][Produce][Local] Click [Back] button on [Produce] page after produce complete')
+        def click_back_btn_on_produce_page_after_upload(self):
+            return self.click(L.produce.btn_back_to_edit_after_upload_cl)
+        
         def click_profile_analyzer(self):
             try:
                 self.exist_click(L.produce.local.btn_profile_analyzer)
@@ -336,6 +352,7 @@ class Produce(BasePage):
                     raise Exception
                 return value
 
+        @step('[Action][Produce][Local] Select [File Extension]')
         def select_file_extension(self, value):
             try:
                 logger(f'input {value=}')
@@ -348,11 +365,15 @@ class Produce(BasePage):
                         eval(f"L.produce.local.file_extension.option_{value}['AXValue']"):
                     logger(
                         f'Fail to verify set file extension. {self.exist(L.produce.local.cbx_file_extension).AXTitle}')
-                    raise Exception
+                    raise Exception(f'Fail to verify set file extension to {value}. {self.exist(L.produce.local.cbx_file_extension).AXTitle}')
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
+        
+        @step('[Action][Produce][Local] Get [File Extension] value')
+        def get_file_extension(self):
+            return self.exist(L.produce.local.cbx_file_extension).AXTitle
 
         def select_profile_type(self, value):
             try:
@@ -372,6 +393,7 @@ class Produce(BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Produce][Local] Select [Profile Name] by index')
         def select_profile_name(self, index):
             try:
                 logger(f'{index=}')
@@ -386,10 +408,10 @@ class Produce(BasePage):
                 #verify the result
                 if self.exist(L.produce.local.cbx_profile_quality).AXTitle.replace('...', '') not in select_option_text:
                     logger(f'Fail to verify set profile name. {self.exist(L.produce.local.cbx_profile_quality).AXTitle}')
-                    raise Exception
+                    raise Exception(f'Fail to verify set profile name. {self.exist(L.produce.local.cbx_profile_quality).AXTitle}')
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def select_country_video_format(self, format): # format: 'ntsc', 'pal'
@@ -452,6 +474,7 @@ class Produce(BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Produce][Local] Get [Profile Name] value')
         def get_profile_name(self):
             return self.exist(L.produce.local.cbx_profile_quality).AXTitle
 
@@ -617,14 +640,20 @@ class Produce(BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Produce][Local] Set [Fast Video Rendering] to (Hardware Encode)')
         def set_fast_video_rendering_hardware_encode(self):
             try:
                 locator = L.produce.local.rdb_fast_video_rendering_hardware_encode
                 checkbox_set_check(self, locator, 1)
+                time.sleep(OPERATION_DELAY*0.5)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
+        
+        @step('[Action][Produce][Local] Get [Fast Video Rendering - Hardware Encode] status')
+        def get_fast_video_rendering_hardware_encode_status(self):
+            return bool(self.exist(L.produce.local.rdb_fast_video_rendering_hardware_encode).AXValue)
 
         def get_fast_video_rendering_svrt_status(self):
             return bool(self.exist(L.produce.local.rdb_fast_video_rendering_svrt).AXValue)
@@ -678,7 +707,8 @@ class Produce(BasePage):
         def set_surround_sound_true_theater_option_stadium(self):
             option = 'stadium'
             return self.set_surround_sound_true_theater_option(option)
-
+        
+        @step('[Action][Produce][Local] Set timecode')
         def set_preview_timecode(self, str_timecode):
             return self._set_timecode(str_timecode, L.produce.edittext_preview_playback_timecode)
 
@@ -741,25 +771,27 @@ class Produce(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
+    @step('[Action][Produce] get [Produced Filename]')
     def get_produced_filename(self):
         try:
             file_path = self.exist(L.produce.edittext_output_folder).AXValue
             filename = file_path.split('/')[-1]
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return filename
 
+    @step('[Action][Produce] Click [Start] button to produce')
     def click_start(self):
         try:
             self.exist_click(L.produce.btn_start_produce)
             if not self.is_exist(L.produce.btn_pause_produce):
                 logger('Fail to click start produce')
-                raise Exception
+                raise Exception('Fail to click start produce')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_pause(self):
@@ -797,15 +829,19 @@ class Produce(BasePage):
             raise Exception
         return True
 
-    def check_produce_complete(self):
+    @step('[Verify][Produce] Check [Produce] is completed')
+    def check_produce_complete(self, wait_time=60):
         try:
             result = False
-            if 'complete' in self.exist(L.produce.txt_producing_video_progress).AXValue:
-                logger('Produce is completed')
-                result = True
+            for _ in range(wait_time):
+                if 'complete' in self.exist(L.produce.txt_producing_video_progress).AXValue:
+                    logger('Produce is completed')
+                    result = True
+                    break
+                time.sleep(1)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return result
 
     class Online(BasePage):

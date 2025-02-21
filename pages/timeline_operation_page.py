@@ -1113,6 +1113,7 @@ class Timeline_Operation(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
 
+    @step('[Action][Timeline Operation] Set the track lock/unlock')
     def edit_specific_video_track_set_lock_unlock(self, track_index):
         '''
         e.g. track_no (first video track) = [{'AXIdentifier': 'IDC_TIMELINE_TABLEVIEW_TRACKHEAD'}, {'AXRole': 'AXRow', 'index': 0}]

@@ -79,6 +79,7 @@ class AdjustSet:
     def set_slider(self, value):
         return self.adjust_slider(value)
 
+    @step('[Action][Mask Designer][AdjustSet] Set value')
     def set_value(self, value):
         target = self.driver.exist(self.locators[1])
         self.driver.mouse.click(*target.center)
@@ -126,9 +127,11 @@ class EaseSet(AdjustSet):
     def __init__(self, *args):
         super().__init__(*args)
 
+    @step('[Action][Mask Designer][EaseSet] Enable/ Disable checkbox')
     def set_checkbox(self, value):
         target = self.driver.exist(self.locators[4])
         int(target.AXValue) ^ value and target.press()
+        time.sleep(DELAY_TIME*0.5)
         return True
 
 
@@ -160,14 +163,17 @@ class Mask_designer(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Mask Designer][Save As] Click OK')
         def click_ok(self):
             self.exist(L.mask_designer.save_as_dlg.ok).press()
 
         def click_cancel(self):
             self.exist(L.mask_designer.save_as_dlg.cancel).press()
 
+        @step('[Action][Mask Designer][Save As] Input name')
         def input_name(self, name):
             self.exist(L.mask_designer.save_as_dlg.name).sendKeys(name)
+            time.sleep(DELAY_TIME*0.5)
 
         def set_slider(self, value):
             try:
@@ -198,19 +204,23 @@ class Mask_designer(BasePage):
                     return True
                 else:
                     return False
-
+                
+            @step('[Action][Mask Designer][Object Settings][ModuleSet] Click Previous Keyframe')
             def click_previous_keyframe(self):
                 return self._click_keyframe(self.arg.previous_keyframe)
 
+            @step('[Action][Mask Designer][Object Settings][ModuleSet] Click Add/Remove Keyframe')
             def click_add_remove_keyframe(self):
                 return self._click_keyframe(self.arg.add_remove_keyframe)
-
+            
+            @step('[Action][Mask Designer][Object Settings][ModuleSet] Click Next Keyframe')
             def click_next_keyframe(self):
                 return self._click_keyframe(self.arg.next_keyframe)
 
+            @step('[Action][Mask Designer][Object Settings][ModuleSet] Click Reset Keyframe')
             def click_reset_keyframe(self):
                 self._click_keyframe(self.arg.reset_keyframe)
-                time.sleep(2.5)
+                time.sleep(DELAY_TIME)
                 self.click(L.main.confirm_dialog.btn_yes)
                 return True
 
@@ -464,24 +474,29 @@ class Mask_designer(BasePage):
         if checkbox.AXValue != check_it:
             checkbox.press()
         return True
-
+    
+    @step('[Action][Mask Designer] Click [OK] on Mask Designer')
     def Edit_MaskDesigner_ClickOK(self):
         self.find(L.mask_designer.ok).press()
+        time.sleep(DELAY_TIME*0.5)
         return True
 
+    @step('[Action][Mask Designer] Click [Save As]')
     def Edit_MaskDesigner_ClickSaveAs(self):
         self.exist(L.mask_designer.save_as).press()
+        time.sleep(DELAY_TIME*0.5)
         return True
 
+    @step('[Action][Mask Designer] Share template to cloud')
     def share_to_cloud(self, name, tags, collection, description, verify_dz_link=0, only_dz=0):
         try:
             self.Edit_MaskDesigner_ClickShare()
             self.save_as.input_name(name)
             self.save_as.click_ok()
-            time.sleep(1)
+            time.sleep(DELAY_TIME)
             if self.exist(L.pip_designer.auto_sign_in_to_DZ):
                 self.exist_click(L.pip_designer.log_in_yes)
-                time.sleep(2)
+                time.sleep(DELAY_TIME)
 
             self.exist_click(L.pip_designer.upload.upload_to_box)
             self.exist_click(L.pip_designer.upload.cloud_and_dz)
@@ -489,7 +504,7 @@ class Mask_designer(BasePage):
                 self.exist_click(L.pip_designer.upload.dz)
             else:
                 self.exist_click(L.pip_designer.upload.cloud_and_dz)
-            time.sleep(2)
+            time.sleep(DELAY_TIME)
             self.exist_click(L.pip_designer.upload.tags)
             self.keyboard.send(tags)
             self.exist_click(L.pip_designer.upload.collection)
@@ -504,21 +519,21 @@ class Mask_designer(BasePage):
 
             for x in range(500):
                 if not self.exist(L.pip_designer.upload.finish):
-                    time.sleep(1)
+                    time.sleep(DELAY_TIME)
                 elif self.exist(L.pip_designer.upload.finish).AXEnabled == False:
-                    time.sleep(1)
+                    time.sleep(DELAY_TIME)
                 else:
-                    time.sleep(1)
+                    time.sleep(DELAY_TIME)
                     if verify_dz_link:
                         self.click(L.upload_cloud_dz.upload_view_DZ)
-                        time.sleep(3)
+                        time.sleep(DELAY_TIME*3)
                         self.activate()
-                        time.sleep(6)
+                        time.sleep(DELAY_TIME*6)
                     break
             self.click(L.pip_designer.upload.finish)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def Edit_MaskDesigner_ClickOK_CustomName(self, name):
@@ -571,6 +586,7 @@ class Mask_designer(BasePage):
         template_index["index"] = index
         self.mouse.click(*self.find(template_index).center)
         self.mouse.click(*self.find(template_index).center)  # performance issue? click again
+        time.sleep(DELAY_TIME*0.5)
         return True
 
     @step('[Action][Mask Designer] Create Custom Mask from Image')
@@ -599,9 +615,11 @@ class Mask_designer(BasePage):
         time.sleep(DELAY_TIME)
         return self.is_enter_mask_composer()
 
+    @step('[Verify][Mask Designer] Check [Brush Mask Designer] is opened')
     def is_enter_brush_mask_designer(self):
         return self.is_exist(L.mask_designer.mask_property.brush_mask_designer.window)
 
+    @step('[Action][Mask Designer] Click [Create Brush Mask]')
     def click_create_brush_mask_btn(self):
         self.exist_click(L.mask_designer.mask_property.create_brush_mask)
         time.sleep(1)
@@ -627,9 +645,10 @@ class Mask_designer(BasePage):
             time.sleep(2)
             return True
 
+        @step('[Action][Mask Designer][Brush Mask] Click [Reset]')
         def click_reset(self):
             self.exist_click(L.mask_designer.mask_property.brush_mask_designer.reset)
-            time.sleep(2)
+            time.sleep(DELAY_TIME)
             return True
 
         class Reset_Dialog(BasePage):
@@ -688,7 +707,8 @@ class Mask_designer(BasePage):
                 self.exist_click(L.mask_designer.mask_property.brush_mask_designer.tools.flat)
                 time.sleep(2)
                 return True
-
+            
+            @step('[Action][Mask Designer][Brush Mask][Tools] Set Smart Brush')
             def set_smart_brush(self):
                 self.exist_click(L.mask_designer.mask_property.brush_mask_designer.tools.smart_brush)
                 time.sleep(2)
@@ -713,7 +733,7 @@ class Mask_designer(BasePage):
                     return True
             else:
                 return True
-
+        @step('[Action][Mask Designer][Brush Mask] Drag tool on canvas from upper left')
         def drag_tool_on_canvas_from_upper_left(self):
             el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
             pos_canvas = el_canvas.AXPosition
@@ -724,6 +744,7 @@ class Mask_designer(BasePage):
             self.drag_mouse((pos_middle_x - 80, pos_middle_y - 80), (pos_middle_x, pos_middle_y))
             return True
 
+        @step('[Action][Mask Designer][Brush Mask] Drag tool on canvas from upper middle')
         def drag_tool_on_canvas_from_upper_middle(self):
             el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
             pos_canvas = el_canvas.AXPosition
@@ -733,7 +754,8 @@ class Mask_designer(BasePage):
             pos_middle_y = pos_canvas[1] + size_canvas[1] * 0.5
             self.drag_mouse((pos_middle_x, pos_middle_y - 80), (pos_middle_x, pos_middle_y))
             return True
-
+        
+        @step('[Action][Mask Designer][Brush Mask] Drag tool on canvas from upper right')
         def drag_tool_on_canvas_from_upper_right(self):
             el_canvas = self.exist(L.mask_designer.mask_property.brush_mask_designer.preview_area)
             pos_canvas = el_canvas.AXPosition
@@ -758,6 +780,7 @@ class Mask_designer(BasePage):
             def __init__(self, *args, **kwargs):
                 super().__init__(*args, **kwargs)
 
+            @step('[Action][Mask Designer][Brush Mask][Width] Set width')
             def set_value(self, value):
                 self.exist_click(L.mask_designer.mask_property.brush_mask_designer.width_value)
                 self.exist(L.mask_designer.mask_property.brush_mask_designer.width_value).AXValue = str(value)
@@ -852,6 +875,7 @@ class Mask_designer(BasePage):
         def get_timecode_slidebar(self):
             return self.find(L.mask_designer.mask_property.brush_mask_designer.timecode).AXValue
 
+        @step('[Action][Mask Designer][Brush Mask] Click [OK] button')
         def click_ok_btn(self):
             self.exist_click(L.mask_designer.mask_property.brush_mask_designer.ok)
             return self.is_not_exist(L.mask_designer.mask_property.brush_mask_designer.window, None, 10)
@@ -942,12 +966,13 @@ class Mask_designer(BasePage):
             time.sleep(1)
             return True
 
-
+    @step('[Action][Mask Designer] Resize object on canvas')
     def adjust_object_on_canvas_resize(self, x=100, y=100):
         el_canvas = self.exist(L.mask_designer.mask_frame)
         pos_canvas = el_canvas.AXPosition
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         self.mouse.drag_directly((pos_canvas[0], pos_canvas[1]), (pos_canvas[0] + x, pos_canvas[1] + y))
+        time.sleep(DELAY_TIME)
         return True
 
     @step('[Action][Mask Designer] Enable/ Disable [Invert Mask]')
@@ -1133,9 +1158,11 @@ class Mask_designer(BasePage):
         self.mouse.drag_directly(mask_pos, end_position)
         return True
 
+    @step('[Action][Mask Designer] Click [Create Selection Mask] button')
     def click_create_selection_mask_btn(self):
         return bool(self.exist_click(L.mask_designer.mask_property.create_selection_mask))
 
+    @step('[Action][Mask Designer] Draw a triangle on canvas')
     def draw_triangle_on_canvas(self, angle=3):
         captions = self.find(L.mask_designer.property_captions)
         if len(captions) != 1:
@@ -1149,4 +1176,5 @@ class Mask_designer(BasePage):
             degrees = int(360 / angle)
             position = cpc.get_position(degrees * i)
             self.mouse.click(*position, duration=0.3, wait=0)
+        time.sleep(DELAY_TIME)
         return True

@@ -5,6 +5,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -172,6 +173,7 @@ class Playback_window(BasePage):
         self.mouse.click(*zoom_value.center)
         return True
 
+    @step('[Action][Playback_window] Click preview operation -- play, pause, stop, previous frame, next frame, fast forward')
     def Edit_Timeline_PreviewOperation(self, operation):
         self.find(getattr(L.playback_window.operation, operation.lower())).press()
         return True

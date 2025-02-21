@@ -367,6 +367,7 @@ class BasePage(BasePage):
     def double_click(self, locator=None, btn="left"):
         self.click(locator, btn, times=2)
 
+    @step("[Action][Base_page] Right Click")
     def right_click(self, locator=None, btn="right"):
         self.click(locator, btn)
 
@@ -392,6 +393,7 @@ class BasePage(BasePage):
             if item.AXValue == name:
                 self.mouse.click(*item.center)
                 return True
+        time.sleep(OPERATION_DELAY*0.5)
         return False
 
     def _close_menu(self):
@@ -425,7 +427,7 @@ class BasePage(BasePage):
                     self._close_menu()
                     return True
         except IndexError:
-            return True
+            raise Exception("Item is not found")
 
     def is_right_click_menu_enabled(self, *arg):
         return self.select_right_click_menu(*arg, return_elem=False, click_it=False)
@@ -814,7 +816,7 @@ class BasePage(BasePage):
         with self.keyboard.pressed(self.keyboard.key.cmd, "w"):
             pass
     
-    @step("[Action][Base_page] Check if the preview window is different")
+    @step("[Action][Base_page] Check if the preview window is different when playing")
     def Check_PreviewWindow_is_different(self, area=None, sec=1):
         area = area or self.area.preview.main
         old_img = self.snapshot(area)
@@ -822,6 +824,7 @@ class BasePage(BasePage):
         new_img = self.snapshot(area)
         return not self.compare(old_img, new_img, 0.9999)
 
+    @step("[Action][Base_page] Delte folder")
     def delete_folder(self, path):
         self.driver.shell(f"rm -r -f {path}")
         return True
@@ -1033,7 +1036,8 @@ class BasePage(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
+    @step("[Action][Base_page] Drag Mouse")
     def drag_mouse(self, start_pos, dest_pos):
         return self.driver.mouse.drag(start_pos, dest_pos)
 
