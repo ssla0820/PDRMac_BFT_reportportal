@@ -35,6 +35,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] import media from CyberLink Cloud')
     def import_media_from_cyberlink_cloud(self):
         try:
             self.exist_click(L.media_room.btn_import_media)
@@ -42,10 +43,11 @@ class Media_Room(BasePage):
             # verify if download media dialog pops up
             if not self.exist(L.media_room.download_media_dialog.btn_close, None, 3):
                 logger('Fail to open download media window')
-                raise Exception
+                raise Exception('Fail to open download media window')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def import_media_from_shutterstock(self):
@@ -1243,6 +1245,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Move clip in library to trash can')
     def library_clip_context_menu_move_to_trash_can(self):
         try:
             img_collection_view_before = self.snapshot(L.media_room.library_listview.main_frame)
@@ -1254,10 +1257,10 @@ class Media_Room(BasePage):
             result_verify = self.compare(img_collection_view_before, img_collection_view_after)
             if result_verify:
                 logger('Fail to verify after moved to trash can')
-                raise Exception
+                raise Exception('Fail to verify after moved to trash can')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_clip_context_menu_find_in_timeline(self, name):

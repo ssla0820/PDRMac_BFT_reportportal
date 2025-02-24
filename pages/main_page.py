@@ -282,7 +282,8 @@ class Main_Page(BasePage):
             logger(f'Exception occurs. log={e}')
             return False
         return True
-
+    
+    @step('[Action][Main_page] Set Timecode')
     def set_time_code(self, el_locator, duration, is_verify=True):
         try:
             logger(f'set_time_code - Input {duration=}')
@@ -308,6 +309,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click Set Length of Selected Clip')
     def tips_area_click_set_length_of_selected_clip(self, duration): # duration: in format 'HH_MM_SS_mm', e.g. 00_00_20_00
         try:
             img_before = self.snapshot(L.main.timeline.table_view)
@@ -382,6 +384,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Close and Restart App')
     def close_and_restart_app(self):
         try:
             self.close_app()
@@ -410,6 +413,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click [Produce] button')
     def click_produce(self):
         try:
             self.exist_click(L.main.btn_produce)
@@ -835,6 +839,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Open [Pack Project Materials] from top menu bar')
     def top_menu_bar_file_pack_project_materials(self, project_path):
         try:
             img_before = self.screenshot()
@@ -859,6 +864,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Open [Video Collage Designer] from top menu bar')
     def top_menu_bar_plugins_video_collage_designer(self):
         try:
             img_before = self.screenshot()

@@ -5,6 +5,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1  # sec
 
@@ -1579,7 +1580,8 @@ class Tips_area(Main_Page, BasePage):
             self.keyboard.enter()
             self.keyboard.esc()
         return True
-
+    
+    @step('[Action][TipsArea] Click [Video Collage] button in [Tips Area]')
     def click_TipsArea_btn_VideoCollage(self):
         self.exist_click(L.tips_area.button.btn_video_collage)
         found = self.is_exist([{"AXSubrole": "AXDialog", "recursive": False},

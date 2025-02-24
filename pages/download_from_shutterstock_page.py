@@ -9,6 +9,7 @@ from ATFramework.utils.Image_Search import CompareImage
 from .locator.locator import download_from_shutterstock as L
 from reportportal_client import step
 
+DELAY_TIME = 1
 
 def arrow(obj, button="up", times=1, locator=None):
     locator = locator[button.lower() == "up"]
@@ -82,12 +83,12 @@ def _set_checkbox(self, _locator, value=True, _get_status_only=False):
                 break
             else:
                 target.press()
-                time.sleep(1)
+                time.sleep(DELAY_TIME)
         except:
             logger("First round, force click it")
             if _get_status_only: target.press()
             target.press()
-            time.sleep(1)
+            time.sleep(DELAY_TIME)
     else:
         return False
     return True
@@ -104,7 +105,7 @@ def hover_download(self, _btn=None):
 
 def verify_download_tooltip(self, ground_truth, _btn=None, _offset=(0, 20, 62, 20), _hover_it=True):
     if _hover_it: hover_download(self, _btn)
-    time.sleep(1)
+    time.sleep(DELAY_TIME)
     _x, _y = self.mouse.position()
     x = _x + _offset[0]
     y = _y + _offset[1]
@@ -126,11 +127,12 @@ class Shutterstock(BasePage):
         timer = time.time()
         while time.time() - timer < timeout:
             if self.is_exist(L.window):
-                time.sleep(0.5)
+                time.sleep(DELAY_TIME*0.5)
                 if self.is_not_exist(L.waiting_cursor): return True
         else:
             return False
 
+    @step("[Action][ShutterStock Page][ShutterStock] Close Getty Image window")
     def click_close(self):
         return bool(self.exist_press(L.btn_close))
 
@@ -188,6 +190,7 @@ class Shutterstock(BasePage):
         if not self.exist(_btn).AXEnabled: return False
         return bool(self.exist_press(_btn))
 
+    @step('[Verify][ShutterStock Page][ShutterStock] Check if [Download] button is enabled or not')
     def is_enabled_download(self):
         return self.exist(L.btn_download).AXEnabled
 
@@ -261,7 +264,7 @@ class Shutterstock(BasePage):
     def set_library_setting(self, value):
         icon_list = ["Extra Large Icons", "Large Icons", "Medium Icons", "Small Icons"]
         self.click_library_menu()
-        # time.sleep(1)
+        # time.sleep(DELAY_TIME)
         for icon in icon_list:
             if value + " Icons" == icon:
                 self.exist_click([L.btn_library, {"AXTitle": value + " Icons"}])
@@ -269,11 +272,13 @@ class Shutterstock(BasePage):
         logger(f">> {value} Icons << is not found")
         return False
 
+    @step("[Action][ShutterStock Page][ShutterStock] Switch to [Video] tab")
     def switch_to_video(self):
         if self.exist_click(L.btn_video_tab):
             return self.is_not_exist(L.img_waiting_cursor)
         return False
 
+    @step("[Action][ShutterStock Page][ShutterStock] Switch to [Photo] tab")
     def switch_to_photo(self):
         if self.exist_click(L.btn_photo_tab):
             return self.is_not_exist(L.img_waiting_cursor)
@@ -285,7 +290,7 @@ class Shutterstock(BasePage):
         return False
 
     def close_pop_up_preview_window(self):
-        time.sleep(2)
+        time.sleep(DELAY_TIME*2)
         if self.exist(L.max_preview.main_window):
             self.click(L.max_preview.btn_close)
             return True
@@ -317,11 +322,11 @@ class Video(BasePage):
             y_long, y_top = (_:=self.exist(L.frame_section)).AXSize[1], _.AXPosition[1]
             percentage = (y0 - y_top - boundary[3]/2) / (y_long-boundary[3])
             self.exist(L.scroll_media).AXValue = percentage
-            time.sleep(0.5)
+            time.sleep(DELAY_TIME*0.5)
         if not _scroll_only: self.mouse.move(*target.center)
         return True
     
-    @step("Select stock media by thumbnail index")
+    @step("[Action][ShutterStock Page][Video] Select stock media by thumbnail index")
     def select_thumbnail_for_video_intro_designer(self, index):
         # This page function only for (Video Intro Designer) entry to enter SS
         # Step1: Select thumbnail w/ index then click [Replace Media]
@@ -334,14 +339,14 @@ class Video(BasePage):
         new_pos = (target_pos[0] + 10, target_pos[1] + 10)
         self.mouse.move(new_pos[0], new_pos[1])
         self.mouse.click()
-        time.sleep(0.5)
+        time.sleep(DELAY_TIME*0.5)
         self.click(L.btn_download)
 
         # Step2:
         for x in range(60):
             elem = self.exist(L.download.txt_complete_msg)
             if not elem:
-                time.sleep(0.5)
+                time.sleep(DELAY_TIME*0.5)
             else:
                 if elem.AXValue.startswith("High Definition"):
                     break
@@ -412,6 +417,7 @@ class Video(BasePage):
         self.mouse.move(*pos, 0, wait=0)
         return ret
 
+    @step("[Action][ShutterStock Page][Video] Select Clip")
     def select_clip(self, value):
         # value = 1, select 1st thumbnail
         # value = 2, select 2nd thumbnail
@@ -439,7 +445,7 @@ class Video(BasePage):
         if index is not None:
             self._refresh_media()
             self.hover_thumbnail(index)
-            time.sleep(2)
+            time.sleep(DELAY_TIME*2)
             target = L.frame_clip.copy()
             target["index"] = index
         else:
@@ -479,7 +485,7 @@ class Video(BasePage):
         for index in mylist:
             self.hover_thumbnail(index)
             self.mouse.shift(0,-30)
-            time.sleep(1)
+            time.sleep(DELAY_TIME)
             self.mouse.click()
         return True
 
@@ -555,10 +561,11 @@ class Photo(Video):
         for index in mylist:
             self.hover_thumbnail(index)
             self.mouse.shift(0, -30)
-            time.sleep(1)
+            time.sleep(DELAY_TIME)
             self.mouse.click()
         return True
 
+    @step("[Verify][ShutterStock Page][Photo] Select stock media by thumbnail index and Download")
     def select_thumbnail_then_download(self, index):
         # This page function only for (Video Intro Designer) entry to enter SS
         # Step1: Select thumbnail w/ index then click [Replace Media]
@@ -571,17 +578,17 @@ class Photo(Video):
         new_pos = (target_pos[0] + 10, target_pos[1] + 10)
         self.mouse.move(new_pos[0], new_pos[1])
         self.mouse.click()
-        time.sleep(0.5)
+        time.sleep(DELAY_TIME*0.5)
         self.click(L.btn_download)
 
         # Step2:
         for x in range(60):
             elem = self.exist(L.download.btn_complete_ok)
             if not elem:
-                time.sleep(0.5)
+                time.sleep(DELAY_TIME*0.5)
             else:
                 self.click(L.download.btn_complete_ok)
-                time.sleep(10)
+                time.sleep(DELAY_TIME*10)
                 break
 
 class Music(BasePage):
@@ -642,7 +649,7 @@ class Music(BasePage):
     def get_sort_by(self):
         self.exist_click(L.music.btn_sort)
         self.select_right_click_menu("Sort by")
-        time.sleep(0.5)
+        time.sleep(DELAY_TIME*0.5)
         items = self.exist(L.music.menu_item_sort)
         ret = None
         for item in items:
@@ -655,7 +662,7 @@ class Music(BasePage):
         target = ["Name", "Artist", "Length", "BPM(Tempo)"][index]
         self.exist_click(L.music.btn_sort)
         self.select_right_click_menu("Sort by")
-        time.sleep(0.5)
+        time.sleep(DELAY_TIME*0.5)
         items = self.exist(L.music.menu_item_sort)
         for item in items:
             if item.AXTitle == target:
@@ -699,12 +706,12 @@ class Music(BasePage):
             y_long, y_top = (_ := self.exist(L.music.table_clip)).AXSize[1], _.AXPosition[1]
             percentage = (y0 - y_top - boundary[3] / 2) / (y_long - boundary[3])
             self.exist(L.music.scroll_media).AXValue = percentage
-            time.sleep(0.5)
+            time.sleep(DELAY_TIME*0.5)
         self.mouse.move(*row.center)
         return True
 
     def select_song(self, name):
-        time.sleep(3)
+        time.sleep(DELAY_TIME*3)
         self.hover_song(name)
         self.mouse.click()
 
@@ -749,7 +756,7 @@ class Download(BasePage):
             if current_value != self.get_progress():
                 logger(current_value)
                 return True
-            time.sleep(0.5)
+            time.sleep(DELAY_TIME*0.5)
         return False
 
     def verify_info(self, timeout=10):
@@ -760,7 +767,7 @@ class Download(BasePage):
         timer = time.time()
         while time.time() - timer < timeout:
             if current_value != self.get_info(): return True
-            time.sleep(0.5)
+            time.sleep(DELAY_TIME*0.5)
         return False
 
     def click_cancel(self):
@@ -799,20 +806,22 @@ class Search(BasePage):
         search = self.exist(L.search.input_search)
         return search.AXPlaceholderValue == default
 
+    @step('[Action][ShutterStock Page][Search] Click [Clear] Button')
     def click_clear(self):
         # After search, input_search field will select all
         # need to cancel "select all" status
         self.click(L.search.input_search)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
 
         # Click [X]
         if self.exist_click(L.search.btn_clear):
             self.keyboard.enter()
+            time.sleep(DELAY_TIME)
             return True
         else:
             return False
 
-    @step('[Action] Search content by text')
+    @step('[Action][ShutterStock Page][Search] Search content by text')
     def search_text(self, value):
         search = self.exist(L.search.input_search)
         search.AXValue = value
@@ -984,7 +993,7 @@ class LensCorrection(BasePage):
         target[-1]["AXValue"] = type
         self.exist_click(L.fix_enhance.fix.lens_correction.menu_maker)
         self.exist_click(target)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         return True
 
     def get_marker_type(self):

@@ -7,6 +7,7 @@ from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
 #from .locator.hardcode_0408 import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -36,6 +37,16 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Import Download Media From CL] Close [Downloaded Media] Window')
+    def close_download_media_window(self):
+        try:
+            if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
+                logger("No downloaded media window show up")
+            self.exist_click(L.import_downloaded_media_from_cl.close_btn)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+        
     def tap_refresh_btn(self):
         try:
             if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
@@ -99,31 +110,37 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Import Download Media From CL] Tap Select/Deselect All button')
     def tap_select_deselect_all_btn(self):
         try:
             if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
                 logger("No downloaded media window show up")
-                raise Exception
+                raise Exception("No downloaded media window show up")
             self.exist_click(L.import_downloaded_media_from_cl.select_deselect_all_btn)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Import Download Media From CL] Get [Remove] button status')
+    def get_remove_btn_status(self):
+        return self.exist(L.import_downloaded_media_from_cl.delete_btn).AXEnabled
+    
+    @step('[Action][Import Download Media From CL] Tap [Remove] button')
     def tap_remove_btn(self):
         try:
             if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
                 logger("No downloaded media window show up")
-                raise Exception
+                raise Exception("No downloaded media window show up")
             self.exist_click(L.import_downloaded_media_from_cl.delete_btn)
             time.sleep(DELAY_TIME*2)
             if not self.exist(L.import_downloaded_media_from_cl.delete_dialog_text):
                 logger("No delete dialog show up")
-                raise Exception
+                raise Exception("No delete dialog show up")
             self.exist_click(L.import_downloaded_media_from_cl.delete_dialog_ok)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def set_content_checkbox_check_uncheck(self, folder_index, file_index= None):
@@ -231,16 +248,17 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Import Download Media From CL] Input text in search library')
     def input_text_in_seacrh_library(self, strName):
         try:
             if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
                 logger("No downloaded media window show up")
-                raise Exception
+                raise Exception("No downloaded media window show up")
             self.exist_click(L.import_downloaded_media_from_cl.search_textfield)
             self.keyboard.send(strName)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def clear_keyword_in_search_library(self):
@@ -349,6 +367,7 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Import Download Media From CL] Select content in folder level')
     def select_content_in_folder_level(self, folder_index, click_times=2):
         # folder_index = 0 (1st folder), 1 (2nd folder), etc
         # times = 2 : double click the folder to enter file level
@@ -359,12 +378,12 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
                 return None
             if not self.exist([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole": "AXGroup", "index": folder_index}]):
                 logger('Cannot find the folder')
-                raise Exception
+                raise Exception('Cannot find the folder')
             thumbnail_parent = self.exist([{"AXSubrole": "AXDialog"}, {"AXSubrole": "AXSectionList"}, {"AXRole": "AXGroup", "index": folder_index}])
             thumbnail = self.exist_click({'AXRole': 'AXImage'}, thumbnail_parent, times= click_times)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def select_content_in_file_level(self, file_index):

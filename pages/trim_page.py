@@ -7,6 +7,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -14,16 +15,16 @@ class Trim(BasePage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @step('[Verify][Trim Page] Check if enter [Trim] Window')
     def check_in_Trim(self):
         try:
             if not self.exist(L.trim.main_window):
-                return False
+                raise Exception("Not in Trim Window")
             if self.exist(L.trim.main_window).AXTitle.startswith('Trim |'):
-                logger('Enter Trim window')
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
 
     def get_trim_title(self):
         try:

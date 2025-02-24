@@ -7,6 +7,7 @@ from .main_page import Main_Page
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -441,8 +442,11 @@ class File_Missing_Dialog(BasePage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @step('[Action][Project_New][File Missing Dialog] Click [Browse] button')
     def click_browse(self):
-        return self.click(L.main.cyberlink_powerdirector_dialog.btn_browse)
+        result = self.click(L.main.cyberlink_powerdirector_dialog.btn_browse)
+        time.sleep(OPERATION_DELAY)
+        return result
 
     def select_file(self, file_path): # to select the missing file after click browse button
         return self.select_folder(file_path)
