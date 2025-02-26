@@ -406,10 +406,10 @@ class BasePage(BasePage):
     def select_right_click_menu(self, *arg, return_elem=False, click_it=True, return_is_selected=False):
         if return_elem or return_is_selected: click_it = False
         item = None
-        arg_list = list(arg) + ['']
+        arg_list = list(arg)
         logger(f'arg_list= {arg_list}')
         try:
-            while item_name := arg_list.pop(0):
+            while arg_list and (item_name := arg_list.pop(0)):
                 item = self.find({"AXRole": "AXMenuItem", "AXTitle": item_name}, parent=item)
                 # print(f"{item=}")
                 if not item.AXEnabled:
