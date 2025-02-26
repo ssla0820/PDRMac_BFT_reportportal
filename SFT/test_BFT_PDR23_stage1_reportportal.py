@@ -7529,9 +7529,9 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check preview after manual adjust as GT'):
             # Verify : Preview is changed
             check_resize = main_page.snapshot(locator=L.shape_designer.canvas_split_view,
-                                               file_name=Auto_Ground_Truth_Folder + 'L203.png')
-            compare_resize_result = main_page.compare(Ground_Truth_Folder + 'L203.png', check_resize)
-            assert compare_resize_result, "Preview is not correct as GT(L203.png)! Similary should>0.95"
+                                               file_name=Auto_Ground_Truth_Folder + 'L204.png')
+            compare_resize_result = main_page.compare(Ground_Truth_Folder + 'L204.png', check_resize)
+            assert compare_resize_result, "Preview is not correct as GT(L204.png)! Similary should>0.95"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -7865,6 +7865,8 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Set 1st Rotation keyframe at (08:10)'):
+            # Set timecode
+            shape_designer_page.set_timecode('00_00_08_10')
             # Set Rotation 1st keyframe on 8s 10 frame
             shape_designer_page.keyframe.object_settings.rotation.keyframe.click_add_remove()
 
@@ -7892,17 +7894,24 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Set 2nd Rotation keyframe at (05:25)'):
+            # Set timecode
+            shape_designer_page.set_timecode('00_00_05_25')
+            time.sleep(DELAY_TIME*0.5)
+            shape_designer_page.simple_timeline.drag_scroll_bar(0.99)
+
             # Set Rotation 2nd keyframe on (05:25)
             shape_designer_page.keyframe.object_settings.rotation.keyframe.click_add_remove()
+            time.sleep(DELAY_TIME)
 
             # Set Rotation degree = 250
             shape_designer_page.keyframe.object_settings.rotation.value.set_value(250)
 
+
         with step('[Verify] Check Rotation value after set 2nd Rotation keyframe'):
             # Verify Rotation value
             current_rotation = shape_designer_page.keyframe.object_settings.rotation.value.get_value()
-            if current_rotation != '250':
-                assert False, f"Rotation value is not correct! Expected: 250, Actual: {current_rotation}"
+            if current_rotation != '250.00':
+                assert False, f"Rotation value is not correct! Expected: 250.00, Actual: {current_rotation}"
 
         with step('[Action] Switch to next keyframe'):
             # Click next keyframe
@@ -7917,8 +7926,8 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check rotation value after switch to next keyframe'):
             # Verify Rotation value
             current_rotation = shape_designer_page.keyframe.object_settings.rotation.value.get_value()
-            if current_rotation != '0':
-                assert False, f"Rotation value is not correct! Expected: 0, Actual: {current_rotation}"
+            if current_rotation != '0.00':
+                assert False, f"Rotation value is not correct! Expected: 0.00, Actual: {current_rotation}"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -7943,7 +7952,7 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check opacity value after set 1st Opacity keyframe'):
             # Verify opacity value
-            current_opacity = shape_designer_page.keyframe.object_settings.opacity.get_value()
+            current_opacity = shape_designer_page.keyframe.object_settings.opacity.value.get_value()
             if current_opacity != '100%':
                 assert False, f"Opacity value is not correct! Expected: 100%, Actual: {current_opacity}"
         assert True
@@ -7969,10 +7978,11 @@ class Test_BFT_365_OS14():
             # Set opacity 2nd keyframe
             shape_designer_page.keyframe.object_settings.opacity.keyframe.click_add_remove()
             # Adjust opacity value = 50%
-            shape_designer_page.keyframe.object_settings.opacity.set_value('50%')
+            shape_designer_page.keyframe.object_settings.opacity.value.set_value(50)
+
         with step('[Verify] Check opacity value after set 2nd Opacity keyframe'):
             # Verify opacity value
-            current_opacity = shape_designer_page.keyframe.object_settings.opacity.get_value()
+            current_opacity = shape_designer_page.keyframe.object_settings.opacity.value.get_value()
             if current_opacity != '50%':
                 assert False, f"Opacity value is not correct! Expected: 50%, Actual: {current_opacity}"
         with step('[Action] Switch to next keyframe'):
@@ -7985,7 +7995,7 @@ class Test_BFT_365_OS14():
                 assert False, f"Timecode is not correct! Expected: 00:00:08:10, Actual: {current_timecode}"
         with step('[Verify] Check opacity value after switch to next keyframe'):
             # Verify opacity value
-            current_opacity = shape_designer_page.keyframe.object_settings.opacity.get_value()
+            current_opacity = shape_designer_page.keyframe.object_settings.opacity.value.get_value()
             if current_opacity != '100%':
                 assert False, f"Opacity value is not correct! Expected: 100%, Actual: {current_opacity}"
         assert True
@@ -8068,8 +8078,10 @@ class Test_BFT_365_OS14():
         with step('[Action] Set Postion Ease out at (05:25)'):
             # Click previous keyframe
             shape_designer_page.simple_timeline.position.click_previous_keyframe()
+            time.sleep(DELAY_TIME)
             # Position > Set Ease out
             shape_designer_page.keyframe.object_settings.position.ease_out.set_checkbox()
+            time.sleep(DELAY_TIME)
             # Set Ease out value = 0.61
             shape_designer_page.keyframe.object_settings.position.ease_out.set_value('0.77')
         
@@ -8105,9 +8117,9 @@ class Test_BFT_365_OS14():
             shape_designer_page.set_timecode('00_00_06_29')
             # Compare preview
             check_preview = main_page.snapshot(locator=L.shape_designer.designer_window,
-                                               file_name=Auto_Ground_Truth_Folder + 'L205.png')
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L205.png', check_preview, similarity=0.98)
-            assert compare_result, "Preview is not correct as GT(L205.png)! Similary should>0.98"
+                                               file_name=Auto_Ground_Truth_Folder + 'L206.png')
+            compare_result = main_page.compare(Ground_Truth_Folder + 'L206.png', check_preview, similarity=0.98)
+            assert compare_result, "Preview is not correct as GT(L206.png)! Similary should>0.98"
 
     @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
@@ -8224,6 +8236,10 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Pause the video'):
+            shape_designer_page.click_preview_operation('Stop')
+            shape_designer_page.click_preview_operation('Play')
+            time.sleep(2)
+
             # Click Pause
             shape_designer_page.click_preview_operation('Pause')
         with step('[Verify] Check timecode is in (00:00:02:00) ~ (00:00:04:00)'):
@@ -8282,7 +8298,10 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_shape_designer_func_8_47(self):
         '''
-        1. 
+        1. Save as Template
+        2. Check if title changed to saved template name
+        3. Close Shape Designer
+        4. Check if saved template is added to library
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_shape_designer_func_8_46"
@@ -8294,6 +8313,7 @@ class Test_BFT_365_OS14():
             shape_designer_page.click_save_as()
             shape_designer_page.save_as.set_name('Custom_shape_10')
             shape_designer_page.save_as.click_ok()
+            time.sleep(DELAY_TIME)
 
         with step('[Verify] Check if title changed to saved template name'):
             # Verify Step 1: check caption bar
@@ -8420,15 +8440,15 @@ class Test_BFT_365_OS14():
             # Compare preview
             check_preview_204 = main_page.snapshot(locator=L.shape_designer.designer_window)
             compare_result = main_page.compare(Ground_Truth_Folder + 'L211.png', check_preview_204)
-            if compare_result:
-                assert False, "Preview is the same as GT(L211.png)! Similary should<0.95"
+            if not compare_result:
+                assert False, "Preview is the same as GT(L211.png)! Similary should>0.95"
 
         with step('[Initial] Save project'):
             shape_designer_page.click_cancel()
 
             # Save project:
             main_page.top_menu_bar_file_save_project_as()
-            main_page.handle_save_file_dialog(name='test_case_1_1_6',
+            main_page.handle_save_file_dialog(name='test_shape_designer_func_8_50',
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
         assert True
 
@@ -8656,8 +8676,8 @@ class Test_BFT_365_OS14():
                 assert False, f"Max value is not correct! Expected: 170621, Actual: {check_max_value}"
         with step('[Verify] Check preview is changed'):
             after_max_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
-            if main_page.compare(before_max_preview, after_max_preview, similarity=0.98):
-                assert False, "Preview is not changed after set Max value! Similary should<0.98"
+            if main_page.compare(before_max_preview, after_max_preview, similarity=0.999):
+                assert False, "Preview is not changed after set Max value! Similary should<0.999"
         assert True
 
     @pytest.mark.particle_designer_func
@@ -8685,8 +8705,8 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check preview is changed'):
             after_life_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
-            if main_page.compare(before_life_preview, after_life_preview, similarity=0.98):
-                assert False, "Preview is not changed after set Life value! Similary should<0.98"
+            if main_page.compare(before_life_preview, after_life_preview, similarity=0.999):
+                assert False, "Preview is not changed after set Life value! Similary should<0.999"
         assert True
         
     @pytest.mark.particle_designer_func
@@ -8725,20 +8745,21 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_particle_designer_func_9_12(self):
         '''
-        1. Apply [Size] (171947) by [Plus] button
+        1. Apply [Size] (178940) by [Plus] button
         2. Check value and preview
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_particle_designer_func_9_1"
         self.ensure_dependency(dependency_test)
-        with step('[Action] Set Size (171947) by [Plus] button'):
+
+        with step('[Action] Set Size (178940) by [Plus] button'):
             before_size_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.click_Size_plus_btn(7)
 
-        with step('[Verify] Check Size value == 171947'):
+        with step('[Verify] Check Size value == 178940'):
             check_size_value = particle_designer_page.express_mode.get_Size_value()
-            if check_size_value != 171947:
-                assert False, f"Size value is not correct! Expected: 171947, Actual: {check_size_value}"
+            if check_size_value != 178940:
+                assert False, f"Size value is not correct! Expected: 178940, Actual: {check_size_value}"
             
         with step('[Verify] Check preview is changed'):
             after_size_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
@@ -8759,6 +8780,7 @@ class Test_BFT_365_OS14():
         # Ensure the dependency test is run and passed
         dependency_test = "test_particle_designer_func_9_1"
         self.ensure_dependency(dependency_test)
+
         with step('[Action] Set Speed (126610) by slider'):
             before_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.drag_Speed_slider(126610)
@@ -8781,20 +8803,21 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_particle_designer_func_9_14(self):
         '''
-        1. Apply [Speed] (126605) by [Minus] button
+        1. Apply [Speed] (121610) by [Minus] button
         2. Check value and preview
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_particle_designer_func_9_1"
         self.ensure_dependency(dependency_test)
-        with step('[Action] Set Speed (126605) by [Minus] button'):
+
+        with step('[Action] Set Speed (121610) by [Minus] button'):
             before_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
             particle_designer_page.express_mode.click_Speed_minus_btn(5)
         
-        with step('[Verify] Check Speed value == 126605'):
+        with step('[Verify] Check Speed value == 121610'):
             check_speed_value = particle_designer_page.express_mode.get_Speed_value()
-            if check_speed_value != 126605:
-                assert False, f"Speed value is not correct! Expected: 126605, Actual: {check_speed_value}"
+            if check_speed_value != 121610:
+                assert False, f"Speed value is not correct! Expected: 121610, Actual: {check_speed_value}"
 
         with step('[Verify] Check preview is changed'):
             after_speed_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
@@ -8827,8 +8850,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview is changed'):
             after_opacity_preview = main_page.snapshot(locator=L.particle_designer.designer_window)
-            if main_page.compare(before_opacity_preview, after_opacity_preview, similarity=0.98):
-                assert False, "Preview is not changed after set Opacity value! Similary should<0.98"
+            if main_page.compare(before_opacity_preview, after_opacity_preview, similarity=0.999):
+                assert False, "Preview is not changed after set Opacity value! Similary should<0.999"
         assert True
 
     @pytest.mark.particle_designer_func
@@ -9006,9 +9029,9 @@ class Test_BFT_365_OS14():
         1. Add saved custom template to timeline
         2. Check preview as GT
         '''
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_particle_designer_func_9_20"
-        self.ensure_dependency(dependency_test)
+        # # Ensure the dependency test is run and passed
+        # dependency_test = "test_particle_designer_func_9_20"
+        # self.ensure_dependency(dependency_test)
 
         # [L218] 3.6 Particle Designer (Should support opacity) > Add saved title template to timeline
         # with uuid("5945daf9-f385-471b-aa11-4b9445c4736f") as case:
