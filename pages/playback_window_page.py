@@ -160,6 +160,7 @@ class Playback_window(BasePage):
         self.keyboard.enter()
         return True
 
+    @step('[Action][Playback_window] Get timecode from slidebar')
     def get_timecode_slidebar(self):
         return self.find(L.playback_window.timecode).AXValue
 

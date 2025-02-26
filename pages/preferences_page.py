@@ -98,7 +98,7 @@ class Preferences_Page(BasePage):
         self.director_zone = self.DirectorZone(*args, **kwargs)
         self.cyberlink_cloud = self.CyberlinkCloud(*args, **kwargs)
 
-    @step('[Action][Preferences_Page] Click [OK] button')
+    @step('[Action][Preferences_Page] Click [OK] button to leave [Preferences page]')
     def click_ok(self):
         try:
             img_before = self.screenshot()
@@ -177,13 +177,14 @@ class Preferences_Page(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Preferences_Page] Switch to [Project] tab')
     def switch_to_project(self):
         try:
             if not self.exist_click(L.preferences.tab_project):
-                raise Exception
+                raise Exception('There is no [Project] tab')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def switch_to_confirmation(self):
@@ -850,12 +851,14 @@ class Preferences_Page(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Preferences_Page][Project] Set [Numbers of Recently Used Projects] to value')
         def numbers_of_recently_used_project_set_value(self, value):
             locator_parent = L.preferences.project.editbox_numbers_of_recently_used_projects_parent
             locator = locator_parent.copy()
             locator.append(L.preferences.editbox_unit)
             return editbox_set_value(self, locator, value)
 
+        @step('[Action][Preferences_Page][Project] Get [Numbers of Recently Used Projects] value')
         def numbers_of_recently_used_project_get_value(self):
             locator_parent = L.preferences.project.editbox_numbers_of_recently_used_projects_parent
             locator = locator_parent.copy()

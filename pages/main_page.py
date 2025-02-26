@@ -519,6 +519,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Set [Project Aspect Ratio] as (4:3)')
     def set_project_aspect_ratio_4_3(self):
         try:
             self.set_project_aspect_ratio('4_3')
@@ -527,6 +528,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Set [Project Aspect Ratio] as (9:16)')
     def set_project_aspect_ratio_9_16(self):
         try:
             self.set_project_aspect_ratio('9_16')
@@ -535,6 +537,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Set [Project Aspect Ratio] as (1:1)')
     def set_project_aspect_ratio_1_1(self):
         try:
             self.set_project_aspect_ratio('1_1')
@@ -761,6 +764,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click [New Project] from top menu bar')
     def top_menu_bar_file_new_project(self):
         try:
             img_before = self.screenshot()
@@ -811,10 +815,12 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Handle [Do you want to save changes] dialog')
     def handle_no_save_project_dialog(self, option='no'): # option: 'yes', 'no'
         try:
             btn_locator = eval(f'L.main.merge_media_to_library_dialog.btn_{option}')
             self.exist_click(btn_locator)
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
@@ -900,6 +906,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Enable/ Disable [Show Timeline Preview Volume Meter] from top menu bar')
     def top_menu_bar_view_show_timeline_preview_volume_meter(self):
         try:
             # img_before = self.snapshot(L.library_preview.display_panel)
@@ -1120,6 +1127,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Handle [Aspect Ratio Conflict] dialog')
     def handle_aspect_ratio_conflict(self, option='no'):
         try:
             self.exist_click(eval(f'L.main.merge_media_to_library_dialog.btn_{option}'))

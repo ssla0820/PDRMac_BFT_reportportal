@@ -189,11 +189,13 @@ class Timeline_Operation(Main_Page, BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action] Click the [View Entire Video] button')
     def click_view_entire_video_btn(self):
         try:
             if not self.exist_click(L.timeline_operation.view_entire_video):
                 logger("Can't click the [View Entire Video] btn")
                 raise Exception("Can't click the [View Entire Video] btn")
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')

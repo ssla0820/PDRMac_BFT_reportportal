@@ -7,6 +7,7 @@ from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
 #from .locator.hardcode_0408 import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -18,27 +19,29 @@ class Project_Room(Main_Page, BasePage):
         #self.pack_project = self.pack_project(*args, **kwargs)
         #self.designer_upload_template = self.designer_upload_template(*args, **kwargs)
 
+    @step('[Action][Project_Room] Enter [My Project]')
     def enter_project_room(self):
         #self.exist_click(L.project_room.button_project_room)
         try:
             if not self.exist(L.project_room.check_My_Project):
                 logger("Not find My Project")
-                raise Exception
+                raise Exception("Not find My Project")
             else:
                 self.click(L.project_room.check_My_Project)
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def check_in_Project_Room(self):
         try:
             if not self.exist(L.project_room.check_My_Project):
                 logger("Not enter project room")
-                raise Exception
+                raise Exception("Not enter project room")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def import_pds_project(self, full_path):  # full_path: /Users/...
@@ -372,10 +375,11 @@ class Project_Room(Main_Page, BasePage):
             raise Exception
         return self.exist(L.project_room.reset_all_undock_windows).AXEnabled
 
+    @step('[Action][Project_Room] Insert Project to seleted track')
     def tips_area_insert_project_to_selected_track(self):
         try:
             self.exist_click(L.project_room.btn_add_to_track)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True

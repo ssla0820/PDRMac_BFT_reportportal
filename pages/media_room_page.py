@@ -15,6 +15,7 @@ class Media_Room(BasePage):
         super().__init__(*args, **kwargs)
         self.svrt_info = SVRT_Info(*args, **kwargs)
 
+    @step('[Action][Media Room] Import [Media File] from local')
     def import_media_file(self, full_path): # full_path: /Users/...
         try:
             self.exist_click(L.media_room.btn_import_media)
@@ -22,7 +23,7 @@ class Media_Room(BasePage):
             self.select_file(full_path)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def import_media_folder(self, full_path): # full_path: /Users/...
@@ -63,15 +64,16 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Enter [Media Content] Category')
     def enter_media_content(self):
         try:
             self.exist_click(L.media_room.tag_media_content)
             if not self.exist(L.media_room.btn_import_media):
                 logger('Fail to enter media content')
-                raise Exception
+                raise Exception('Fail to enter media content')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def enter_color_boards(self):
@@ -86,15 +88,17 @@ class Media_Room(BasePage):
         return True
 
     # BGM (From CL source)
+    @step('[Action][Media Room] Enter [Background Music (CL)] Category')
     def enter_background_music_CL(self):
         try:
             self.exist_click(L.media_room.tag_background_music_CL)
             if not self.exist(L.media_room.scroll_area.list_icon_music):
                 logger('Fail to enter background music')
-                raise Exception
+                raise Exception('Fail to enter background music')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     # BGM (Meta)
@@ -273,7 +277,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
-    @step('[Action][Media Room] Click cancel button in search library')
+    @step('[Action][Media Room] Click [Cancel] button in search library')
     def search_library_click_cancel(self):
         try:
             self.exist_click(L.media_room.btn_search_cancel)
@@ -303,6 +307,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Add new tag with name')
     def add_new_tag(self, name):
         try:
             el_count_before = -1
@@ -310,7 +315,7 @@ class Media_Room(BasePage):
             tag_elements = self.exist_elements(L.media_room.unit_tag_room_text_field)
             if not tag_elements:
                 logger(f'Fail to find element.')
-                raise Exception
+                raise Exception(f'Fail to find element.')
             el_count_before = len(tag_elements)
             logger(f'{el_count_before=}')
             # click add new tag
@@ -330,7 +335,7 @@ class Media_Room(BasePage):
                 tag_elements = self.exist_elements(L.media_room.unit_tag_room_text_field)
                 if not tag_elements:
                     logger('Fail to verify element count after added.')
-                    raise Exception
+                    raise Exception('Fail to verify element count after added.')
                 el_count_after = len(tag_elements)
                 if el_count_after > el_count_before:
                     break
@@ -339,10 +344,11 @@ class Media_Room(BasePage):
             logger(f'{tag_name_new=}')
             if not tag_name_new == f'{name} (0)':
                 logger(f'Fail to verify new tag name.')
-                raise Exception
+                raise Exception(f'Fail to verify new tag name.')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def delete_tag(self, name, count=0): # tag format: name (count)
@@ -387,6 +393,7 @@ class Media_Room(BasePage):
             return False
         return True
 
+    @step('[Action][Media Room] Delete tag by right click')
     def right_click_delete_tag(self, name, count=0): # tag format: name (count)
         logger(f'delete_tag start - {name=}, {count=}')
         try:
@@ -426,10 +433,10 @@ class Media_Room(BasePage):
             logger(f'{el_count_after=}')
             if not el_count_before - el_count_after == 1:
                 logger(f'Fail to verify tag count. diff. is {el_count_before - el_count_after}')
-                raise Exception
+                raise Exception(f'Fail to verify tag count. diff. is {el_count_before - el_count_after}')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False
+            return False(f'Exception occurs. log={e}')
         return True
 
     def right_click_rename_tag(self, name, name_new, count=0):
@@ -1720,6 +1727,7 @@ class Media_Room(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Select specific category in meta by name')
     def select_specific_category_in_meta(self, category_name): # support all rooms category selection
         try:
             els_category = self.exist_elements(L.media_room.unit_tag_room_text_field)
@@ -1732,9 +1740,11 @@ class Media_Room(BasePage):
                     break
             if is_found == 0:
                 logger(f'Fail to select the specific category {category_name}')
+                raise Exception(f'Fail to select the specific category {category_name}')
+            time.sleep(OPERATION_DELAY*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def category_get_media_amount(self, name):
@@ -1889,6 +1899,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Select specific sound clips in library by name')
     def sound_clips_select_media(self, name):
         try:
             self.sound_clips_hover_library_clip(name, False)
@@ -1896,7 +1907,7 @@ class Media_Room(BasePage):
             self.left_click()
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def sound_clips_sort_button_click_duration(self):

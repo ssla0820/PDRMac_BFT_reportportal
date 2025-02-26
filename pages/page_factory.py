@@ -92,8 +92,8 @@ class PageFactory():
         #     page_obj = Pip_room(driver)
         # elif page_name == 'download_from_cl_dz_page':
         #     page_obj = DownloadFromCLDZ(driver)
-        # elif page_name == 'preferences_page':
-        #     page_obj = Preferences_Page(driver)
+        elif page_name == 'preferences_page':
+            page_obj = Preferences_Page(driver)
         elif page_name == 'tips_area_page':
             page_obj = Tips_area(driver)
         elif page_name == 'video_collage_designer_page':
@@ -120,14 +120,14 @@ class PageFactory():
         #     page_obj = Pan_Zoom(driver)
         # elif page_name == 'nest_project_page':
         #     page_obj = Nest_Project(driver)
-        # elif page_name == 'project_room_page':
-        #     page_obj = Project_Room(driver)
+        elif page_name == 'project_room_page':
+            page_obj = Project_Room(driver)
         elif page_name == 'project_new_page':
             page_obj = Project_New(driver)
         elif page_name == 'gettyimage_page':
             page_obj = Getty_Image(driver)
-        # elif page_name == 'shape_designer_page':
-        #     page_obj = Shape_Designer(driver)
+        elif page_name == 'shape_designer_page':
+            page_obj = Shape_Designer(driver)
         elif page_name == 'intro_video_room_page':
             page_obj = Intro_Video_Room(driver)
         # elif page_name == 'crop_image_page':

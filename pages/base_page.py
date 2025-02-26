@@ -632,6 +632,7 @@ class BasePage(BasePage):
         self.keyboard.release(key_2)
         self.keyboard.release(key_1)
 
+    @step("[Action][Base_page] Input keyboard")
     def input_keyboard(self, key):
         self.keyboard.press(key)
         self.keyboard.release(key)
@@ -656,12 +657,15 @@ class BasePage(BasePage):
     def release_command_key(self):
         self.keyboard.release(self.keyboard.key.cmd)
 
+    @step("[Action][Base_page] Press [Esc] key")
     def press_esc_key(self):
         self.keyboard.tap(self.keyboard.key.esc)
 
+    @step("[Action][Base_page] Press [Enter] key")
     def press_enter_key(self):
         self.keyboard.tap(self.keyboard.key.enter)
 
+    @step("[Action][Base_page] Press [Space] key")
     def press_space_key(self):
         self.keyboard.tap(self.keyboard.key.space)
 
@@ -670,6 +674,11 @@ class BasePage(BasePage):
 
     def release_Ctrl_key(self):
         self.keyboard.release(self.keyboard.key.ctrl)
+
+    @step("[Action][Base_page] Hover on button on launcher")
+    def hover_launcher_btn(self, locator):
+        launcher_btn = self.exist(locator)
+        self.mouse.move(*launcher_btn.center)
 
     def hover_library_media(self, name):
         x, y = self.exist({"AXIdentifier": "CollectionViewItemTextField", "AXValue": name}).AXParent.center
@@ -690,10 +699,11 @@ class BasePage(BasePage):
     def tap_CreateNewProject_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.cmd, "n"):
             pass
-
+    
+    @step('[Action][Base_page] Open [New Workspace] via hotkey')
     def tap_NewWorkspace_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.shift, self.keyboard.key.cmd, "w"):
-            pass
+            time.sleep(OPERATION_DELAY*0.5)
 
     def tap_OpenProject_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.cmd, "o"):
@@ -1247,6 +1257,7 @@ class BasePage(BasePage):
         time.sleep(OPERATION_DELAY * 2)
         return x, y, w, h
 
+    @step("[Action][Base_page] Delte 1st recently project")
     def delete_first_recently_project(self):
         # in Launcher
         x, y, w, h = self.hover_first_recently_project()
