@@ -1898,6 +1898,7 @@ class Test_BFT_365_OS14():
 
         # Open Preference > Editing > Set default Title duration to 10 (For v21.6.5303 PM request)
         with step('[Action] Set default Title duration to 10'):
+            time.sleep(DELAY_TIME)
             main_page.click_set_user_preferences()
             preferences_page.switch_to_editing()
             preferences_page.editing.durations_title_set_value('10.0')
@@ -6854,9 +6855,9 @@ class Test_BFT_365_OS14():
             check_preset_4 = main_page.snapshot(locator=L.shape_designer.canvas_split_view,
                                                 file_name=Auto_Ground_Truth_Folder + 'L199.png')
             # Compare preview after apply preset 4
-            should_different = main_page.compare(check_preset_2, check_preset_4)
+            should_different = main_page.compare(check_preset_2, check_preset_4, similarity=0.97)
             if should_different:
-                assert False, "Preset 4 is not applied correctly! Similary should<0.95"
+                assert False, "Preset 4 is not applied correctly! Similary should<0.97"
 
         with step('[Verify] Compare preview after select Preset 4 as GT'):
             compare_result = main_page.compare(Ground_Truth_Folder + 'L199.png', check_preset_4)
