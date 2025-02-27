@@ -102,15 +102,17 @@ class Media_Room(BasePage):
         return True
 
     # BGM (Meta)
+    @step('[Action][Media Room] Enter [Background Music (meta)] Category')
     def enter_background_music(self):
         try:
             self.exist_click(L.media_room.tag_background_music)
             if not self.exist(L.media_room.scroll_area.list_icon_music):
                 logger('Fail to enter background music')
-                raise Exception
+                raise Exception('Fail to enter background music')
+            time.sleep(OPERATION_DELAY*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     # BGM (Soundstripe)

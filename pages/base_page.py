@@ -735,6 +735,7 @@ class BasePage(BasePage):
         with self.keyboard.pressed(self.keyboard.key.backspace):
             pass
 
+    @step('[Action][Base_page] Tap [Select All] via hotkey')
     def tap_SelectAll_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.cmd, "a"):
             pass
@@ -759,7 +760,8 @@ class BasePage(BasePage):
     def tap_EffectRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f4):
             pass
-
+    
+    @step('[Action][Base_page] Tap [PiP Room] via hotkey')
     def tap_PiPRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f5):
             pass

@@ -5395,6 +5395,7 @@ class AdjustTitleOnCanvas(Main_Page, BasePage):
             return False
         return True
 
+    @step('[Action][TitleDesigner][AdjustTitleOnCanvas] Move [Particle] to left')
     def drag_move_particle_to_left(self, x):
         return bool(self.adjust_in_canvas.move_particle(x, is_left=True))
 
