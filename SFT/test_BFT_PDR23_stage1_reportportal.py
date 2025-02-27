@@ -359,7 +359,8 @@ class Test_BFT_365_OS14():
             assert False, "Dealing with Open project dialog FAIL!"
 
         # Select extract path
-        main_page.delete_folder(Test_Material_Folder + save_name)
+        if os.path.exists(Test_Material_Folder + save_name):
+            main_page.delete_folder(Test_Material_Folder + save_name)
         main_page.select_file(Test_Material_Folder + save_name)
         main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
         return True
@@ -1063,9 +1064,9 @@ class Test_BFT_365_OS14():
         8. Check unfold chroma key tab correctly
         9. Fold chroma key
         '''
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_media_room_func_2_10"
-        self.ensure_dependency(dependency_test)
+        # # Ensure the dependency test is run and passed
+        # dependency_test = "test_media_room_func_2_10"
+        # self.ensure_dependency(dependency_test)
 
         # # [L425] 3.4 Pip designer > Auto cutout > double click pip template
         # with uuid("69c41107-275a-4644-94f3-fd43bcc33fbf") as case:

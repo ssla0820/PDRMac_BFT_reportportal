@@ -408,27 +408,31 @@ class BasePage(BasePage):
         item = None
         arg_list = list(arg)
         logger(f'arg_list= {arg_list}')
-        try:
-            while arg_list and (item_name := arg_list.pop(0)):
-                item = self.find({"AXRole": "AXMenuItem", "AXTitle": item_name}, parent=item)
-                # print(f"{item=}")
-                if not item.AXEnabled:
-                    self._close_menu()
-                    return False
-                if arg_list or click_it:
-                    self.mouse.move(item.center[0], self.mouse.position()[1])
-                    self.mouse.click(*item.center)
-                elif return_elem:
-                    return item
-                elif return_is_selected:
-                    ret = bool(item.AXMenuItemMarkChar)
-                    self._close_menu()
-                    return ret
-                else:
-                    self._close_menu()
-                    return True
-        except IndexError:
-            raise Exception("Item is not found")
+        index = len(arg_list)-1
+        # try:
+        while index >=0:
+            item_name = arg_list[index]
+        # while item_name := arg_list.pop(0):
+            item = self.find({"AXRole": "AXMenuItem", "AXTitle": item_name}, parent=item)
+            # print(f"{item=}")
+            if not item.AXEnabled:
+                self._close_menu()
+                return False
+            if arg_list or click_it:
+                self.mouse.move(item.center[0], self.mouse.position()[1])
+                self.mouse.click(*item.center)
+            elif return_elem:
+                return item
+            elif return_is_selected:
+                ret = bool(item.AXMenuItemMarkChar)
+                self._close_menu()
+                return ret
+            else:
+                self._close_menu()
+                return True
+            index -=1
+        # except IndexError:
+        #     raise Exception("Item is not found")
         
 
     def is_right_click_menu_enabled(self, *arg):
