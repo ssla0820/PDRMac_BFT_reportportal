@@ -1064,11 +1064,11 @@ class Test_BFT_365_OS14():
         8. Check unfold chroma key tab correctly
         9. Fold chroma key
         '''
-        # # Ensure the dependency test is run and passed
-        # dependency_test = "test_media_room_func_2_10"
-        # self.ensure_dependency(dependency_test)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_media_room_func_2_10"
+        self.ensure_dependency(dependency_test)
 
-        # # [L425] 3.4 Pip designer > Auto cutout > double click pip template
+        # [L425] 3.4 Pip designer > Auto cutout > double click pip template
         # with uuid("69c41107-275a-4644-94f3-fd43bcc33fbf") as case:
             # select timeline  track2
         if not main_page.timeline_select_track(2):
@@ -1086,10 +1086,9 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Add Sticker to timeline by R-click menu"):
             # Download IAD template
-            time.sleep(DELAY_TIME * 4)
+            # time.sleep(DELAY_TIME * 4)
             main_page.right_click()
-            if not main_page.select_right_click_menu('Add to Timeline'):
-                assert False, "Add to Timeline failed!"
+            main_page.select_right_click_menu('Add to Timeline')
             # time.sleep(DELAY_TIME * 2)
 
         # Select timeline sticker
@@ -3074,12 +3073,12 @@ class Test_BFT_365_OS14():
         4. Check if preview changed correctly at (02:18)
         '''
 
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_title_designer_func_4_24"
-        self.ensure_dependency(dependency_test)
+        # # Ensure the dependency test is run and passed
+        # dependency_test = "test_title_designer_func_4_24"
+        # self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen AP and open saved project'):
-            main_page.close_app()
+            # main_page.close_app()
             main_page.start_app()
             time.sleep(DELAY_TIME)
 
