@@ -13434,6 +13434,188 @@ class Test_BFT_365_OS14():
         
         assert True
 
+
+    @pytest.mark.search_media_func
+    @pytest.mark.background_music
+    @pytest.mark.content_pack
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_search_media_func_15_12] Search library for "river water" and check selected specific sound clips "River Water" in library')
+    @exception_screenshot
+    def test_search_media_func_15_12(self):
+        """
+        1. Enter background music room (meta)
+        2. Select specific category in meta (Chinese)
+        3. Search library (river water)
+        4. Check selected specific sound clips ('River Water') in library
+        """
+        # [L162] 2.1 Media Room > BGM (Meta) > Input ENG character
+        # with uuid("3743a6fe-b4e7-41ca-81db-e48f2be7b24f") as case:
+        
+        with step("[Action] Enter background music room"):
+            media_room_page.enter_background_music()
+
+        with step("[Action] Select specific category in meta (Chinese)"):
+            media_room_page.select_specific_category_in_meta("Chinese")
+
+        with step("[Action] Search library for 'river water'"):
+            media_room_page.search_library("river water")
+
+        with step("[Verify] Check selected specific sound clips 'River Water' in library"):
+            assert media_room_page.sound_clips_select_media("River Water"), "Sound clip 'River Water' is not displayed in library!"
+
+        assert True
+
+
+    @pytest.mark.search_media_func
+    @pytest.mark.background_music
+    @pytest.mark.content_pack
+    @pytest.mark.name("[test_search_media_func_15_13] Download and Delete 'River Water' and verify download mark")
+    @exception_screenshot
+    def test_search_media_func_15_13(self):
+        """
+        0. Ensure the dependency test is run and passed
+        1. Select specific sound clips (River Water) in library > right click > select (Download) on the right-click menu > wait for download to complete (DELAY_TIME * 8)
+        2. Select specific sound clips (River Water) in library > right click > select (Delete from Disk) on the right-click menu > click [Yes] on the confirm dialog > wait for download to complete (DELAY_TIME * 3)
+        3. Check download mark is default status by verifying there is no download-ok element shown
+        """
+        dependency_test = "test_search_media_func_15_12"
+        self.ensure_dependency(dependency_test)
+
+        # [L161] 2.1 Media Room > BGM (Meta) > Delete from Disk
+        # with uuid("b7fdc0e7-7ac4-42b3-a5c5-11ebe8ae382d") as case:
+
+        with step("[Action] Select specific sound clips 'River Water' in library and right click for Download"):
+            media_room_page.sound_clips_select_media("River Water")
+            main_page.right_click()
+            main_page.select_right_click_menu("Download")
+            time.sleep(DELAY_TIME * 8)  # wait for download to complete
+
+        with step("[Action] Right click on 'River Water' and select Delete from Disk, then confirm deletion"):
+            media_room_page.sound_clips_select_media("River Water")
+            main_page.right_click()
+            main_page.select_right_click_menu("Delete from Disk")
+            main_page.exist_click(L.media_room.confirm_dialog.btn_yes)
+            time.sleep(DELAY_TIME * 3)  # wait for deletion process
+
+        with step("[Verify] Verify that download mark is in default status"):
+            if main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok):
+                assert False, "Download mark is not in default status: download-ok element found!"
+
+        assert True
+
+    @pytest.mark.search_media_func
+    @pytest.mark.background_music
+    @pytest.mark.content_pack
+    @pytest.mark.name("[test_search_media_func_15_14] Search not existed content and check preview")
+    @exception_screenshot
+    def test_search_media_func_15_14(self):
+        """
+        0. Ensure the dependency test is run and passed
+        1. Click [Cancel] button in search library
+        2. Search 'Rover Woter' in library and screenshot (L.base.Area.library_detail_view)
+        3. Click [Cancel] button in search library
+        4. Search '.' in library and screenshot (L.base.Area.library_detail_view)
+        5. Check the search result is different in 2 steps
+        """
+        dependency_test = "test_search_media_func_15_13"
+        self.ensure_dependency(dependency_test)
+
+        # [L164] 2.1 Media Room > BGM (Meta) > search .
+        # with uuid("59dbc4dc-eaec-4df3-8dcc-8ed370c7e4b0") as case:
+
+        # [L165] 2.1 Media Room > BGM (Meta) > search \
+        # with uuid("0ea5d15c-9237-42e0-b355-e4d765385ccc") as case:
+
+        with step("[Action] Click [Cancel] button in search library"):
+            media_room_page.search_library_click_cancel()
+            empty_search_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
+
+        with step("[Action] Search 'Rover Woter' in library and capture screenshot of library detail view"):
+            media_room_page.search_library("Rover Woter")
+            search_1_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
+
+        with step("[Verify] Check preview is the same as empty search preview due to no search results"):
+            if not main_page.compare(empty_search_preview, search_1_preview, similarity=0.99):
+                assert False, "Search results for 'Rover Woter' are not empty! Similarity should be 0.99"
+
+        with step("[Action] Click [Cancel] button in search library"):
+            media_room_page.search_library_click_cancel()
+
+        with step("[Action] Search '.' in library and capture screenshot of library detail view"):
+            media_room_page.search_library(".")
+            search_2_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
+
+        with step("[Verify] Check preview is the same as empty search preview due to no search results"):
+            if not main_page.compare(empty_search_preview, search_2_preview, similarity=0.99):
+                assert False, "Search results for '.' are not empty! Similarity should be 0.99"
+        
+        with step("[Action] Click [Cancel] button in search library"):
+            media_room_page.search_library_click_cancel()
+        
+        with step("[Action] Search '\\' in library and capture screenshot of library detail view"):
+            media_room_page.search_library("\\")
+            search_3_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
+
+        with step("[Verify] Check preview is the same as empty search preview due to no search results"):
+            if not main_page.compare(empty_search_preview, search_3_preview, similarity=0.99):
+                assert False, "Search results for '\\' are not empty! Similarity should be 0.99"
+        assert True
+
+    @pytest.mark.search_media_func
+    @pytest.mark.content_pack
+    @pytest.mark.pip_room
+    @pytest.mark.name("[test_search_media_func_15_15] Check Search filed in PiP Room")
+    @exception_screenshot
+    def test_search_media_func_15_15(self):
+        '''
+        0. Ensure the dependency test is run and passed
+        1. Tap [PiP Room] hotkey to enter PiP Room > Click search filed (L.media_room.input_search) to Unfold suggestion keyword
+        2. Click [Close] button of (First recently searched)
+        3. Verify search filed is updated
+        '''
+        # [L212] 2.3 Pip Room > Search IAD > click "x" button of "recent searched"
+        # with uuid("bf9d047b-f868-4c22-9fa3-a0fb9f79f5ed") as case:
+
+        with step('[Action] Tap [PiP Room] hotkey to enter PiP Room'):
+            # Click Hotkey F5 to enter Pip Room
+            main_page.tap_PiPRoom_hotkey()
+            time.sleep(DELAY_TIME)
+
+            # click search filed to Unfold suggestion keyword
+            main_page.click(L.media_room.input_search)
+            time.sleep(DELAY_TIME )
+
+        with step('[Action] Click [Close] button of (First recently searched)'):
+            # Click the Close button of (First recently searched)
+            target = main_page.exist(L.pip_room.suggestion_keyword)
+            # Click [X] in recently used keyword 'love'
+            x, y = target[1].AXPosition
+            w, h = target[1].AXSize
+            new_x = x + w + 8
+            new_y = y + (h * 0.5)
+            main_page.mouse.move(new_x, new_y)
+            main_page.mouse.click()
+
+        with step('[Verify] Verify search filed is updated'):
+            # Verify step:
+            # get search filed size / position
+            search_object = main_page.exist(L.media_room.input_search)
+
+            w, h = search_object.AXSize
+            x, y = search_object.AXPosition
+
+            # snapshot region (Region: From import button to My Favorites)
+            new_x = x
+            new_y = y
+            new_w = w + 5
+            new_h = h * 8.5
+            all_search_result = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L212_all_search.png', w=new_w, x=new_x, y=new_y, h=new_h)
+            if not main_page.compare(Ground_Truth_Folder + 'L212_all_search.png', all_search_result):
+                assert False, "Preview does not match (Ground_Truth_Folder + L212_all_search.png)! Similarity should > 0.95"
+        
+        assert True
+
+
     @pytest.mark.recent_project_func
     @pytest.mark.recent_project
     @pytest.mark.open_project
@@ -13940,9 +14122,34 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.launcher_func
     @pytest.mark.launcher
-    @pytest.mark.name('[test_launcher_func_17_11] Hover on launcher btn [Greener Grass], click intro video area, check import dialog, and press ESC to close')
+    @pytest.mark.name('[test_launcher_func_17_11] Hover on launcher btn [Wind Removal] and verify intro video is playing')
     @exception_screenshot
     def test_launcher_func_17_11(self):
+        """
+        0. Ensure the dependency test is run and passed
+        1. Hover on launcher btn (Wind Removal)(L.base.launcher_window.btn_wind_removal)
+        2. Verify intro video is playing
+        """
+        dependency_test = "test_launcher_func_17_10"
+        self.ensure_dependency(dependency_test)
+
+        # [L24] 1.3 New Launcher > Showcase > Wind Removal > Video
+        # with uuid("4c5e99ad-46bd-413f-be95-c56c45f80fb7") as case:
+
+        with step("[Action] Hover on launcher btn (Wind Removal) on launcher"):
+            main_page.hover_launcher_btn(L.base.launcher_window.btn_ai_body_effect)
+
+        with step("[Verify] Check intro video is playing"):
+            if not main_page.Check_PreviewWindow_is_different(L.base.launcher_window.show_case_video_area):
+                assert False, "Intro video is not playing!"
+
+        assert True
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.name('[test_launcher_func_17_12] Hover on launcher btn [Greener Grass], click intro video area, check import dialog, and press ESC to close')
+    @exception_screenshot
+    def test_launcher_func_17_12(self):
         """
         0. Ensure the dependency test is run and passed
         1. Hover on launcher btn (Greener Grass)(L.base.launcher_window.btn_greener_grass)
@@ -13950,7 +14157,7 @@ class Test_BFT_365_OS14():
         3. Check that import dialog is shown with title 'Greener Grass'
         4. Press [ESC] key to close import dialog
         """
-        dependency_test = "test_launcher_func_17_10"
+        dependency_test = "test_launcher_func_17_11"
         self.ensure_dependency(dependency_test)
 
         # [L28] 1.3 New Launcher > Showcase > Greener Grass > Single click on banner area
@@ -13972,14 +14179,13 @@ class Test_BFT_365_OS14():
 
         assert True
 
-
     @pytest.mark.launcher_func
     @pytest.mark.pip_room
     @pytest.mark.search_library
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_launcher_func_17_12] Search object in pip room')
+    @pytest.mark.name('[test_launcher_func_17_13] Click [New Project] > Search object in pip room')
     @exception_screenshot
-    def test_launcher_func_17_12(self):
+    def test_launcher_func_17_13(self):
         """
         0. Ensure the dependency test is run and passed
         1. Click [New Project] button on Launcher
@@ -13988,7 +14194,7 @@ class Test_BFT_365_OS14():
         4. Verify that search field is updated with 'love'
         5. Verify able to select media ('Love Sticker 06') by library icon view
         """
-        dependency_test = "test_search_media_func_17_11"
+        dependency_test = "test_search_media_func_17_12"
         self.ensure_dependency(dependency_test)
 
         # [L207] 2.3 Pip Room > Search IAD > by suggestion keyword
@@ -14021,260 +14227,196 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    # 6 uuid
-    # @pytest.mark.skip
+
+    @pytest.mark.cross_content_pack_func
+    @pytest.mark.search_library
+    @pytest.mark.content_pach
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_cross_content_pack_func_18_1] Add Title (Default) to timeline and enter Title designer')
     @exception_screenshot
-    def test_3_1_2(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # [L162] 2.1 Media Room > BGM (Meta) > Input ENG character
-        with uuid("3743a6fe-b4e7-41ca-81db-e48f2be7b24f") as case:
-            # Enter BGM(Meta)
-            media_room_page.enter_background_music()
-            time.sleep(DELAY_TIME * 5)
-
-            # Enter Chinese category
-            media_room_page.select_specific_category_in_meta('Chinese')
-            time.sleep(DELAY_TIME * 3)
-
-            # search keyword: river water
-            media_room_page.search_library('river water')
-            time.sleep(DELAY_TIME * 4)
-
-            # Verify step: can find river water
-            case.result = media_room_page.sound_clips_select_media('River Water')
-            time.sleep(DELAY_TIME * 4)
-
-        # [L161] 2.1 Media Room > BGM (Meta) > Delete from Disk
-        with uuid("b7fdc0e7-7ac4-42b3-a5c5-11ebe8ae382d") as case:
-            # Download the search BGM
-            # Select BGM > right click menu > download
-            media_room_page.sound_clips_select_media('River Water')
-            time.sleep(DELAY_TIME * 2)
-            main_page.right_click()
-            time.sleep(DELAY_TIME)
-            main_page.select_right_click_menu('Download')
-            time.sleep(DELAY_TIME * 8)
-
-            # Delete BGM from disk
-            media_room_page.sound_clips_select_media('River Water')
-            time.sleep(DELAY_TIME * 2)
-            main_page.right_click()
-            time.sleep(DELAY_TIME)
-            main_page.select_right_click_menu('Delete from Disk')
-            time.sleep(DELAY_TIME)
-            main_page.exist_click(L.media_room.confirm_dialog.btn_yes)
-            time.sleep(DELAY_TIME * 3)
-            # Download mark should become default status
-            case.result = not main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok)
-
-        # Click cancel search
-        media_room_page.search_library_click_cancel()
-        time.sleep(DELAY_TIME * 3)
-
-        # [L164] 2.1 Media Room > BGM (Meta) > search .
-        with uuid("59dbc4dc-eaec-4df3-8dcc-8ed370c7e4b0") as case:
-            # search : River Woter
-            media_room_page.search_library('Rover Woter')
-            time.sleep(DELAY_TIME * 4)
-
-            # snapshot current result (Empty library)
-            empty_detail_view = main_page.snapshot(L.base.Area.library_detail_view)
-
-            # Click cancel search
-            media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 3)
-
-            # search : .
-            media_room_page.search_library('.')
-            time.sleep(DELAY_TIME * 4)
-
-            # snapshot current result after search .
-            current_detail_view = main_page.snapshot(L.base.Area.library_detail_view)
-            case.result = main_page.compare(empty_detail_view, current_detail_view, similarity=0.99)
-
-        # [L165] 2.1 Media Room > BGM (Meta) > search \
-        with uuid("0ea5d15c-9237-42e0-b355-e4d765385ccc") as case:
-            # Click cancel search
-            media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 3)
-
-            # search : \
-            media_room_page.search_library('\\')
-            time.sleep(DELAY_TIME * 4)
-
-            # snapshot current result after search .
-            current_detail_view = main_page.snapshot(L.base.Area.library_detail_view)
-            case.result = main_page.compare(empty_detail_view, current_detail_view, similarity=0.99)
-
-        # [L212] 2.3 Pip Room > Search IAD > click "x" button of "recent searched"
-        with uuid("bf9d047b-f868-4c22-9fa3-a0fb9f79f5ed") as case:
-            # Click Hotkey F5 to enter Pip Room
-            main_page.tap_PiPRoom_hotkey()
-            time.sleep(DELAY_TIME * 3)
-
-            # click search filed to Unfold suggestion keyword
-            main_page.click(L.media_room.input_search)
-            time.sleep(DELAY_TIME * 2)
-
-            # Click the Close button of (First recently searched)
-            target = main_page.exist(L.pip_room.suggestion_keyword)
-            # Click [X] in recently used keyword 'love'
-            x, y = target[1].AXPosition
-            w, h = target[1].AXSize
-            new_x = x + w + 8
-            new_y = y + (h * 0.5)
-            main_page.mouse.move(new_x, new_y)
-            main_page.mouse.click()
-
-            # Verify step:
-            # get search filed size / position
-            search_object = main_page.exist(L.media_room.input_search)
-
-            w, h = search_object.AXSize
-            x, y = search_object.AXPosition
-
-            # snapshot region (Region: From import button to My Favorites)
-            new_x = x
-            new_y = y
-            new_w = w + 5
-            new_h = h * 8.5
-            all_search_result = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L212_all_search.png', w=new_w, x=new_x, y=new_y, h=new_h)
-            case.result = main_page.compare(Ground_Truth_Folder + 'L212_all_search.png', all_search_result)
-
-        # close PDR then back to launcher
-        main_page.click_close_then_back_to_launcher()
-        time.sleep(DELAY_TIME * 2)
-
-        # [L24] 1.3 New Launcher > Showcase > Wind Removal > Video
-        with uuid("4c5e99ad-46bd-413f-be95-c56c45f80fb7") as case:
-            # Hover Tool area (Wind Removal)
-            target = main_page.exist(L.base.launcher_window.btn_wind_removal)
-            main_page.mouse.move(*target.center)
-
-            # verify step:
-            case.result = main_page.Check_PreviewWindow_is_different(L.base.launcher_window.show_case_video_area)
-
-    # 9 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_3_1_3(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
+    def test_cross_content_pack_func_18_1(self):
+        '''
+        1. start app and enter room (Title Room)(1)
+        2. Select Library Room category (Plain Text)
+        3. Click timeline track3
+        4. Select media ('Default') by library icon view and click (L.main.tips_area.btn_insert_to_selected_track) to insert
+        5. Add media to timeline and Double click to enter Title designer
+        6. Check that title designer is opened with title 'Title Designer | My Title'
+        '''
         # [L217] 2.3 Title > Add each kind of template to timeline  > General Title
-        with uuid("84ed9ced-d8bc-49a9-ad78-01a5dd0083b1") as case:
-            # enter Title Room
+        # with uuid("84ed9ced-d8bc-49a9-ad78-01a5dd0083b1") as case:
+
+        with step("[Action] Start app and enter Title Room"):
+            main_page.start_app()
             main_page.enter_room(1)
-            time.sleep(DELAY_TIME * 3)
 
-            # select "Plain Text" category
+        with step("[Action] Select Library Room category (Plain Text)"):
             main_page.select_LibraryRoom_category('Plain Text')
-            time.sleep(DELAY_TIME * 3)
 
-            # click timeline track3
+        with step("[Action] Click timeline track3"):
             main_page.timeline_select_track(3)
 
-            # select default title
+        with step("[Action] Select media 'Default' and click to insert"):
             main_page.select_library_icon_view_media('Default')
-
-            # click [Insert]
             main_page.click(L.main.tips_area.btn_insert_to_selected_track)
 
-            # verify step:
-            # select timeline clip
+        with step("[Action] Add media to timeline and Double click to enter Title designer"):
             timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
-
-            # Double click to enter Title designer
             main_page.double_click()
-            time.sleep(DELAY_TIME * 3)
 
-            current_title = title_designer_page.get_full_title()
-            if current_title == 'Title Designer | My Title':
-                case.result = True
-            else:
-                case.result = False
-                logger(current_title)
+        with step("[Verify] Check that title designer is opened with title 'Title Designer | My Title'"):
+            actual_title = title_designer_page.get_full_title()
+            assert actual_title == 'Title Designer | My Title', f"Expected title 'Title Designer | My Title', got '{actual_title}'"
+
+
+    @pytest.mark.cross_content_pack_func
+    @pytest.mark.title_designer
+    @pytest.mark.particle
+    @pytest.mark.name('[test_cross_content_pack_func_18_2] Insert particle and verify text content')
+    @exception_screenshot
+    def test_cross_content_pack_func_18_2(self):
+        '''
+        0. Ensure the dependency test ('test_cross_content_pack_func_18_1') is run and passed
+        1. Switch to Advanced mode (2) in title designer
+        2. Click [Insert particle] button and insert particle (Nature > Love)(menu_index=7, particle_index=0)
+        3. Check (L.title_designer.area.edittext_text_content).AXValue is 'Kisses'
+        '''
+
+        # Ensure the dependency test is run and passed
+        self.ensure_dependency("test_cross_content_pack_func_18_1")
 
         # [L350] 3.2 Title designer (general template) > Move, resize and rotate
-        with uuid("8b1ebdc6-8076-4b6b-849d-3e1a6f72b20b") as case:
-            # switch to Advanced mode
-            title_designer_page.switch_mode(2)
+        # with uuid("8b1ebdc6-8076-4b6b-849d-3e1a6f72b20b") as case:
 
-            # insert (Particle) object
-            # Click [Insert particle]
+        with step("[Action] Switch to Advanced mode (2) in title designer"):
+             title_designer_page.switch_mode(2)
+
+        with step("[Action] Click [Insert particle] button and insert particle (Nature > Love)"):
             title_designer_page.click_insert_particle_btn()
-            # Select Nature > 1st template (naming: Love)
             title_designer_page.insert_particle(menu_index=7, particle_index=0)
 
-            # Check insert template title
+        with step("[Verify] Check that the edit text content is 'Kisses'"):
             elem = main_page.exist(L.title_designer.area.edittext_text_content)
-            if elem.AXValue == 'Kisses':
-                check_title = True
-            else:
-                check_title = False
-                logger(elem.AXValue)
-            logger(check_title)
+            assert elem.AXValue == "Kisses", f"Expected text content to be 'Kisses', got '{elem.AXValue}'"
 
-            # set title designer timecode (00:00:02:13)
+
+
+    @pytest.mark.cross_content_pack_func
+    @pytest.mark.title_designer
+    @pytest.mark.particle
+    @pytest.mark.canva
+    @pytest.mark.name("[test_cross_content_pack_func_18_3] Set timecode, move particle, and verify preview similarity")
+    @exception_screenshot
+    def test_cross_content_pack_func_18_3(self):
+        """
+        0. Ensure the dependency test ('test_cross_content_pack_func_18_2') is run and passed
+        1. Set timecode to '00_00_02_13' in title designer > switch to Advanced mode (2) > screenshot (locator=L.title_designer.area.frame_video_preview)
+        2. Move [Particle] to left (x=100) > screenshot (locator=L.title_designer.area.frame_video_preview)
+        3. Check similarity between 2 screenshots is within 0.95~0.985
+        """
+        dependency_test = "test_cross_content_pack_func_18_2"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Set timecode to '00_00_02_13' in title designer and switch to Advanced mode (2) then capture screenshot"):
             title_designer_page.set_timecode('00_00_02_13')
-            time.sleep(DELAY_TIME * 3)
-
-            # switch to Advanced mode
             title_designer_page.switch_mode(2)
-            time.sleep(DELAY_TIME * 2)
+            before_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
-            # snapshot current preview
-            current_image = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-
-            # Move particle position
+        with step("[Action] Move [Particle] to left (x=100) and capture screenshot of title designer preview"):
             title_designer_page.adjust_title_on_canvas.drag_move_particle_to_left(x=100)
-            time.sleep(DELAY_TIME * 3)
+            after_move_particle_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
-            # snapshot current preview
-            after_move_image = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
-            #  80% < similarity < 90%
-            preview_is_update = not main_page.compare(current_image, after_move_image, similarity=0.985)
-            preview_the_same = main_page.compare(current_image, after_move_image)
-            case.result = preview_is_update and preview_the_same and check_title
+        with step("[Verify] Check similarity between the two screenshots is within 0.95 ~ 0.985"):
+            if not main_page.compare(before_preview, after_move_particle_preview, similarity=0.95):
+                # Similarity should be greater than 0.95
+                assert False, "Similarity is lower than expected! Similarity should > 0.95"
+            if main_page.compare(before_preview, after_move_particle_preview, similarity=0.985):
+                # Similarity should be less than 0.985
+                assert False, "Similarity is higher than expected! Similarity should < 0.985"
+
+        assert True
+
+    @pytest.mark.cross_content_pack_func
+    @pytest.mark.title_designer
+    @pytest.mark.particle
+    @pytest.mark.canva
+    @pytest.mark.name("[test_cross_content_pack_func_18_4] Verify Border depth direction element exists and is disabled")
+    @exception_screenshot
+    def test_cross_content_pack_func_18_4(self):
+        """
+        0. Ensure the dependency test is run and passed
+        1. Switch to editing object by click (L.title_designer.area.view_title)
+        2. Tap [Select All] via hotkey
+        3. Unfold Border menu by click (L.title_designer.border.btn_border)
+        4. Check [Border depth direction] is exist and disabled (L.title_designer.border.value_box_depth)
+        """
+        dependency_test = "test_cross_content_pack_func_18_3"
+        self.ensure_dependency(dependency_test)
 
         # [L352] 3.2 Title designer (general template) > Advanced mode > Border depth > Default disable
-        with uuid("0136f478-abeb-429a-bf88-1719e4221862") as case:
-            # (L350: editing object is particle, L351: editing object is title object)
-            # Need to switch editing object
-            main_page.click(L.title_designer.area.view_title)
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("0136f478-abeb-429a-bf88-1719e4221862") as case:
 
-            # Then select all title object
+        with step("[Action] Switch to editing object by clicking view title"):
+            # title_designer_page.click_object_tab()
+            main_page.click(L.title_designer.area.view_title)
+            time.sleep(DELAY_TIME)
+
+        with step("[Action] Tap [Select All] via hotkey"):
             main_page.tap_SelectAll_hotkey()
 
-            # Unfold Border menu
-            main_page.click(L.title_designer.border.btn_border)
-            time.sleep(DELAY_TIME * 3)
+        with step("[Action] Unfold Border menu by clicking border button"):
+           main_page.click(L.title_designer.border.btn_border)
 
-            # check Border depth direction [status is Disable]
-            no_object = main_page.is_not_exist(L.title_designer.border.value_box_depth)
-            if no_object:
-                case.result = False
-            else:
-                target_obj = main_page.exist(L.title_designer.border.value_box_depth).AXEnabled
-                case.result = not target_obj
+        with step("[Verify] Check [Border depth direction] exists and is disabled"):
+            element = main_page.exist(L.title_designer.border.value_box_depth)
+            if not element:
+                assert False, "Border depth direction element does not exist!"
+            # Assuming the element has an is_enabled() method to verify its state.
+            if main_page.exist(L.title_designer.border.value_box_depth).AXEnabled:
+                assert False, "Border depth direction element is not disabled!"
+
+        assert True
+
+    @pytest.mark.cross_content_pack_func
+    @pytest.mark.name("[test_cross_content_pack_func_18_5] Verify title border depth and preview match GT")
+    @exception_screenshot
+    def test_cross_content_pack_func_18_5(self):
+        """
+        0. Ensure the dependency test is run and passed
+        1. Enable Border in title designer
+        2. Set Title border depth = 40
+        3. Verify preview (locator=L.title_designer.area.frame_video_preview) is the same as GT (Auto_Ground_Truth_Folder + 'L351_title.png') (similarity=0.93)
+        """
+        dependency_test = "test_cross_content_pack_func_18_4"
+        self.ensure_dependency(dependency_test)
 
         # [L351] 3.2 Title designer (general template) > Advanced mode > Border depth
-        with uuid("847e1d95-b03d-4180-816d-a8e538e0ffa2") as case:
-            # Enable Border
+        # with uuid("847e1d95-b03d-4180-816d-a8e538e0ffa2") as case:
+
+        with step("[Action] Enable Border in title designer"):
             title_designer_page.apply_border(bApply=1)
 
-            # Set Title border depth = 40
+        with step("[Action] Set Title border depth = 40"):
             title_designer_page.drag_border_depth_slider(40)
 
-            current_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L351_title.png')
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L351_title.png', current_preview, similarity=0.93)
-            case.result = compare_result
+        with step("[Verify] Verify preview matches GT (L351_title.png)"):
+            preview = main_page.snapshot(
+                locator=L.title_designer.area.frame_video_preview,
+                file_name=Auto_Ground_Truth_Folder + 'L351_title.png'
+            )
+            check_preview = main_page.compare(
+                Auto_Ground_Truth_Folder + 'L351_title.png',
+                preview,
+                similarity=0.93
+            )
+            if not check_preview:
+                # Similarity should be greater than 0.93 for matching preview
+                assert False, "Preview does not match Ground Truth (L351_title.png)! Similarity should > 0.93"
+
+        assert True
+
 
         # [L353] 3.2 Title designer (general template) > Advanced mode > Border depth > Can edit direction
         with uuid("bd771098-43b3-4c0c-ade2-ca443681e98f") as case:
