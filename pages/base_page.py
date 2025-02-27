@@ -409,30 +409,30 @@ class BasePage(BasePage):
         arg_list = list(arg)
         logger(f'arg_list= {arg_list}')
         index = len(arg_list)-1
-        # try:
-        while index >=0:
-            item_name = arg_list[index]
-        # while item_name := arg_list.pop(0):
-            item = self.find({"AXRole": "AXMenuItem", "AXTitle": item_name}, parent=item)
-            # print(f"{item=}")
-            if not item.AXEnabled:
-                self._close_menu()
-                return False
-            if arg_list or click_it:
-                self.mouse.move(item.center[0], self.mouse.position()[1])
-                self.mouse.click(*item.center)
-            elif return_elem:
-                return item
-            elif return_is_selected:
-                ret = bool(item.AXMenuItemMarkChar)
-                self._close_menu()
-                return ret
-            else:
-                self._close_menu()
-                return True
-            index -=1
-        # except IndexError:
-        #     raise Exception("Item is not found")
+        try:
+            while index >=0:
+                item_name = arg_list[index]
+            # while item_name := arg_list.pop(0):
+                item = self.find({"AXRole": "AXMenuItem", "AXTitle": item_name}, parent=item)
+                # print(f"{item=}")
+                if not item.AXEnabled:
+                    self._close_menu()
+                    return False
+                if arg_list or click_it:
+                    self.mouse.move(item.center[0], self.mouse.position()[1])
+                    self.mouse.click(*item.center)
+                elif return_elem:
+                    return item
+                elif return_is_selected:
+                    ret = bool(item.AXMenuItemMarkChar)
+                    self._close_menu()
+                    return ret
+                else:
+                    self._close_menu()
+                    return True
+                index -=1
+        except IndexError:
+            raise Exception("Item is not found")
         
 
     def is_right_click_menu_enabled(self, *arg):
@@ -842,10 +842,17 @@ class BasePage(BasePage):
         new_img = self.snapshot(area)
         return not self.compare(old_img, new_img, 0.9999)
 
-    @step("[Action][Base_page] Delte folder")
+    @step("[Action][Base_page] Delete folder")
     def delete_folder(self, path):
-        self.driver.shell(f"rm -r -f {path}")
+        # Check if the local folder exists before deleting
+        if os.path.exists(path):
+            #  Execute shell command on the remote device
+            self.driver.shell(f"rm -rf {path}")
+        else:
+            print(f"Warning: The path '{path}' does not exist locally.")
+
         return True
+
 
     def exist_file(self, path):
         return os.path.exists(path)

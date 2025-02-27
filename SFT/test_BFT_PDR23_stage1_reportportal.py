@@ -359,8 +359,7 @@ class Test_BFT_365_OS14():
             assert False, "Dealing with Open project dialog FAIL!"
 
         # Select extract path
-        if os.path.exists(Test_Material_Folder + save_name):
-            main_page.delete_folder(Test_Material_Folder + save_name)
+        main_page.delete_folder(Test_Material_Folder + save_name)
         main_page.select_file(Test_Material_Folder + save_name)
         main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
         return True
@@ -3073,9 +3072,9 @@ class Test_BFT_365_OS14():
         4. Check if preview changed correctly at (02:18)
         '''
 
-        # # Ensure the dependency test is run and passed
-        # dependency_test = "test_title_designer_func_4_24"
-        # self.ensure_dependency(dependency_test)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_designer_func_4_24"
+        self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen AP and open saved project'):
             # main_page.close_app()
@@ -3083,7 +3082,7 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME)
 
             project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
-            save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
+            save_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
             self.open_packed_project(project_name, save_name)
 
         with step('[Action] Enter title room and select saved template'):
