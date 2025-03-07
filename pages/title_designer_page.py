@@ -1316,17 +1316,33 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Set Border Depth by Value')
+    def input_border_depth_value(self, value):
+        try:
+            if not self.exist(L.title_designer.area.window_title_designer):
+                logger("No title designer window show up")
+                raise Exception("No title designer window show up")
+            self.exist_click(L.title_designer.border.edittext_depth)
+            self.mouse.click(times=3)
+            self.keyboard.send(value)
+            self.exist_click(L.title_designer.border.edittext_depth)
+            time.sleep(DELAY_TIME * 2)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+
+    @step('[Action][Title Designer] Set Border Depth by Slider')
     def drag_border_depth_slider(self, value):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
 
             self.exist(L.title_designer.border.slider_depth).AXValue = int(value)
             time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_border_blur_slider(self, value, image=0):

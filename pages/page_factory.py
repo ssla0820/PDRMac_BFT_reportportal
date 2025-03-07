@@ -64,18 +64,18 @@ class PageFactory():
         #     page_obj = Title_room(driver)
         # elif page_name == 'effect_room_page':
         #     page_obj = Effect_Room(driver)
-        # elif page_name == 'title_designer_page':
-        #     page_obj = Title_Designer(driver)
+        elif page_name == 'title_designer_page':
+            page_obj = Title_Designer(driver)
         # elif page_name == 'audio_mixing_room_page':
         #     page_obj = Audio_Mixing_Room(driver)
-        # elif page_name == 'library_preview_page':
-        #     page_obj = Library_Preview(driver)
+        elif page_name == 'library_preview_page':
+            page_obj = Library_Preview(driver)
         elif page_name == 'timeline_operation_page':
             page_obj = Timeline_Operation(driver)
         elif page_name == 'import_downloaded_media_from_cl_page':
             page_obj = Import_Downloaded_Media_From_CL(driver)
-        # elif page_name == 'pip_designer_page':
-        #     page_obj = Pip_Designer(driver)
+        elif page_name == 'pip_designer_page':
+            page_obj = Pip_Designer(driver)
         elif page_name == 'precut_page':
             page_obj = Precut(driver)
         # elif page_name == 'video_speed_page':

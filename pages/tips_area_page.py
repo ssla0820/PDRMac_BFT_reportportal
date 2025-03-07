@@ -1193,9 +1193,10 @@ class Tips_area(Main_Page, BasePage):
         #          2-insert_and_move_all_clips, 3-CrossFade, 4-Replace
         return self.tips_area_insert_media_to_selected_track(option)
 
+    @step('[Action][TipsArea] Click [Insert to Selected Track] button')
     def click_TipsArea_btn_insert_project(self):
         self.click(L.main.tips_area.btn_insert_to_selected_track_project)
-        time.sleep(DELAY_TIME * 2)
+        time.sleep(DELAY_TIME * 3)
         return True
 
     def click_TipsArea_btn_effect(self):
@@ -1512,6 +1513,7 @@ class Tips_area(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][TipsArea] Click [Trim] button in [Tips Area]')
     def click_TipsArea_btn_Trim(self, type):
         self.exist_click(L.tips_area.button.btn_trim)
         time.sleep(DELAY_TIME*2)
@@ -1532,7 +1534,7 @@ class Tips_area(Main_Page, BasePage):
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return None
         else:
             return self.is_exist([{"AXSubrole": "AXDialog", "recursive": False},
@@ -1570,6 +1572,7 @@ class Tips_area(Main_Page, BasePage):
         else:
             return False
 
+    @step('[Action][TipsArea] Click [Change Color] button in [Tips Area] and change color')
     def click_TipsArea_btn_ChangeColor(self, color=None):
         self.exist_click(L.tips_area.button.btn_change_color)
         if color:

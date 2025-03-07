@@ -87,6 +87,7 @@ class Main_Page(BasePage):
             raise Exception(f"Insert media fail. {locator=}")
         return True
 
+    @step('[Action][Main Page] Tap [Tool Menu] on [Tips Area]')
     def tap_TipsArea_Tools_menu(self, index):
         self.activate()
         tool = self.exist(L.main.tips_area.btn_tools)
@@ -98,6 +99,7 @@ class Main_Page(BasePage):
             tool.findAllR(AXTitle=index)[0].press()
         else:
             raise Exception(f"type error: parameter must be int or str, not >>{type(index)}<<")
+        time.sleep(1)
         return True
 
     @step('[Action][Main_page] Insert media to selected track')
@@ -222,7 +224,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
-    @step('[Action][Main_page] Open designer window by tips area')
+    @step('[Action][Main_page] Open [designer window] by [tips area]')
     def tips_area_click_designer(self, check_designer=1):
         try:
             # 1: title, 2: particle
@@ -336,6 +338,7 @@ class Main_Page(BasePage):
     def get_timeline_timecode(self):
         return self.exist(L.main.duration_setting_dialog.txt_duration).AXValue
 
+    @step('[Action][Main_page] Set Timecode on Library Preview')
     def set_library_preview_timecode(self, time_code): # time_code: format 'HH_MM_SS_mm', e.g. 00_00_01_03
         try:
             self.activate()
@@ -373,7 +376,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
     
-    @step('[Action][Main_page] select media by library icon view')
+    @step('[Action][Main_page] Select media by library icon view')
     def select_library_icon_view_media(self, name):
         try:
             self.activate()
@@ -395,6 +398,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click [Undo] button')
     def click_undo(self):
         try:
             self.exist_click(L.main.btn_undo)
@@ -887,6 +891,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click [Show Library Preview Window] from top menu bar')
     def top_menu_bar_view_show_library_preview_window(self, is_enable=1):
         try:
             self.exist_click(L.main.top_menu_bar.btn_view)
@@ -1092,6 +1097,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main Page] Drag Transition to timeline clip')
     def drag_transition_to_timeline_clip(self, transition_name, clip_2nd_name, clip_index=0): # drag transition to the left of 2nd clip
         try:
             self.hover_library_media(transition_name)

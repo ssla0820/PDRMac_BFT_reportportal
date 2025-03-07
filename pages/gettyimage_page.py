@@ -29,15 +29,16 @@ class Getty_Image(Main_Page, BasePage):
             self.exist_click(L.gettyimage.what_is_stock_media_dialog_ok)
         return True
 
+    @step('[Action][Getty Image] Switch to [Getty Image] tab in [Download from Shutterstock] window')
     def switch_to_GI(self):
         try:
             if not self.exist(L.download_from_shutterstock.window):
                 logger("No window show up")
-                raise Exception
+                raise Exception("No window show up")
             self.exist_click(L.gettyimage.gettyimage_tab)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def switch_to_SS(self):

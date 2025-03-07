@@ -118,6 +118,7 @@ class Intro_Video_Room(Main_Page, BasePage):
         if self.is_exist(L.intro_video_room.dialog_quick_tutorial):
             logger('Pop up Quick Tutorial dialog - press Esc to close it.')
             self.press_esc_key()
+        time.sleep(DELAY_TIME)
 
         return True
 
@@ -167,6 +168,7 @@ class Intro_Video_Room(Main_Page, BasePage):
         logger('Cannot find the specific category under Theme')
         return False
 
+    @step('[Action][Intro Video Room] Click specific category by name')
     def click_intro_specific_category(self, strName):
         el_option = ['', 'Beauty', 'Black & White', 'Business', 'Design', 'Education', 'Event', 'Family', 'Fashion',
                      'Food', 'Fun & Playful', 'Gaming', 'Handwritten', 'Health', 'Holiday', 'Life', 'Love',
@@ -324,6 +326,7 @@ class Intro_Video_Room(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
+    
     @step('[Action][Intro Video Room] Select Intro Template with method 2')
     def select_intro_template_method_2(self, index):
         try:
