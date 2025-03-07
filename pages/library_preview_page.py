@@ -7,6 +7,7 @@ from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
 #from .locator.hardcode_0408 import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -14,11 +15,12 @@ class Library_Preview(Main_Page, BasePage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @step('[Action][Library Preview] Click [Dock] button on [Preview Window]')
     def library_preview_click_dock(self):
         try:
             if not self.exist_click(L.library_preview.dock_preview_window):
                 logger("Can't click the dock button")
-                raise Exception
+                raise Exception("Can't click the dock button")
             time.sleep(DELAY_TIME)
 
             if not self.exist(L.library_preview.library_preview_window_close):
@@ -26,27 +28,29 @@ class Library_Preview(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Library Preview] Dock/ Undock [Preview Window]')
     def library_preview_click_undock(self):
         try:
             if not self.exist_click(L.library_preview.undock_preview_window):
                 logger("Can't find the undock button")
-                raise Exception
+                raise Exception("Can't find the undock button")
             if not self.exist(L.library_preview.dock_preview_window):
                 return False
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Library Preview] Click [Close] button on [Preview Window]')
     def library_preview_click_close_preview(self):
         try:
             if not self.exist_click(L.library_preview.library_preview_window_close):
                 logger("Can't click the close button")
-                raise Exception
+                raise Exception("Can't click the close button")
             time.sleep(DELAY_TIME)
 
             # Verify Step
@@ -54,7 +58,7 @@ class Library_Preview(Main_Page, BasePage):
                 return False
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_preview_click_maximize(self):
@@ -86,11 +90,12 @@ class Library_Preview(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Library Preview] Click [Minimize] button on [Preview Window]')
     def library_preview_click_minimize(self):
         try:
             if not self.exist_click(L.library_preview.library_preview_window_minimize):
                 logger("Can't click the minimize button")
-                raise Exception
+                raise Exception("Can't click the minimize button")
             time.sleep(DELAY_TIME)
 
             # Verify Step (Minimize)
@@ -99,17 +104,18 @@ class Library_Preview(Main_Page, BasePage):
             time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Library Preview] Click [Show Library Preview] button when [Minimized window]')
     def library_preview_show_library_preview(self):
         try:
             if not self.exist_click(L.library_preview.show_minimized_window):
                 logger("Can't find the button to show the minimized window")
-                raise Exception
+                raise Exception("Can't find the button to show the minimized window")
             if not self.exist_click(L.library_preview.restore_minimized_window):
                 logger("Can't show the library preview window")
-                raise Exception
+                raise Exception("Can't show the library preview window")
             time.sleep(DELAY_TIME)
 
             # Verify
@@ -118,7 +124,7 @@ class Library_Preview(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def view_menu_show_library_preview_window(self):
@@ -139,6 +145,7 @@ class Library_Preview(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Library Preview] Click Preview Operation for Play/ Pause/ Stop/ Previous Frame/ Next Frame/ Fast Forward')
     def library_preview_window_preview_operation(self, operation):
         try:
             #if not self.exist(L.library_preview.undock_preview_window):
@@ -187,7 +194,7 @@ class Library_Preview(Main_Page, BasePage):
                     self.click(L.library_preview.dock_window.dock_window_pause_btn)
                 else:
                     logger("Preview window cannot find the button")
-                    raise Exception
+                    raise Exception("Preview window cannot find the button")
 
             # Verify stop button
             elif operation == 1:
@@ -282,11 +289,11 @@ class Library_Preview(Main_Page, BasePage):
                     return True
             else:
                  logger("The clicked btn isn't play/stop/previous_frame/next_frame/fast forward")
-                 raise Exception
+                 raise Exception("The clicked btn isn't play/stop/previous_frame/next_frame/fast forward")
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_preview_window_click_take_snapshot_in_undocked_window(self):
@@ -407,43 +414,46 @@ class Library_Preview(Main_Page, BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Library Preview] Click [Mark In]')
     def edit_library_preview_window_click_mark_in(self):
         try:
             if self.exist(L.library_preview.library_preview_window_markin).AXEnabled == True:
                 if not self.exist_click(L.library_preview.library_preview_window_markin):
                     logger("Can't click mark-in btn")
-                    raise Exception
+                    raise Exception("Can't click mark-in btn")
             else:
                 logger("Current mark-in btn is gray out")
-                raise Exception
+                raise Exception("Current mark-in btn is gray out")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Library Preview] Click [Mark Out]')
     def edit_library_preview_window_click_mark_out(self):
         try:
             if self.exist(L.library_preview.library_preview_window_markout).AXEnabled == True:
                 if not self.exist_click(L.library_preview.library_preview_window_markout):
                     logger("Can't click mark-out btn")
-                    raise Exception
+                    raise Exception("Can't click mark-out btn")
             else:
                 logger("Current mark-out btn is gray out")
-                raise Exception
+                raise Exception("Current mark-out btn is gray out")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Library Preview] Click [Insert] on selected track')
     def edit_library_preview_window_click_insert_on_selected_track(self):
         try:
             if self.exist(L.library_preview.library_preview_window_click_insert_on_selected_track).AXEnabled == True:
                if not self.exist_click(L.library_preview.library_preview_window_click_insert_on_selected_track):
                    logger("Can't click to insert on the selected track")
-                   raise Exception
+                   raise Exception("Can't click to insert on the selected track")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def edit_library_preview_window_click_overwrite_on_selected_track(self):
@@ -457,28 +467,30 @@ class Library_Preview(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Library Preview] Click [Add Clip Marker]')
     def edit_library_preview_window_add_clip_marker(self):
         try:
             if self.exist(L.library_preview.library_preview_window_add_clip_marker).AXEnabled == True:
                 if not self.exist_click(L.library_preview.library_preview_window_add_clip_marker):
                     logger("Can't click to add clip marker")
-                    raise Exception
+                    raise Exception("Can't click to add clip marker")
             else:
                 logger("Current add clip marker btn is gray out")
-                raise Exception
+                raise Exception("Current add clip marker btn is gray out")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Library Preview] Input [Text] on [Modify Clip Marker]')
     def edit_library_preview_window_clip_marker_input_text(self, text):
         try:
             if not self.exist(L.library_preview.library_preview_window_modify_marker):
                 logger("No modify marker dialog pop up")
-                raise Exception
+                raise Exception("No modify marker dialog pop up")
             if not self.exist_click(L.library_preview.library_preview_window_add_clip_marker_text_field):
                 logger("Can't find the clip marker text field")
-                raise Exception
+                raise Exception("Can't find the clip marker text field")
             # Select all then press backspace (Delete all "old" clip marker text)
             self.tap_SelectAll_hotkey()
             self.press_backspace_key()
@@ -489,10 +501,10 @@ class Library_Preview(Main_Page, BasePage):
             time.sleep(DELAY_TIME)
             if not self.exist_click(L.library_preview.library_preview_window_clip_marker_ok):
                 logger("No OK button can be clicked in modify marker dialog")
-                raise Exception
+                raise Exception("No OK button can be clicked in modify marker dialog")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
     def edit_library_preview_window_undock_status_preview_operation(self, operation):
         # operation 0- Play, 1- Stop, 2- Previous Frame, 3- Next Frame, 4- Fast Forward

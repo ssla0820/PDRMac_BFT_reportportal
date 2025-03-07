@@ -51,6 +51,7 @@ class Media_Room(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Open [Shutterstock] dialog in media room')
     def import_media_from_shutterstock(self):
         try:
             self.exist_click(L.media_room.btn_import_media)
@@ -58,10 +59,10 @@ class Media_Room(BasePage):
             # verify if shutter stock dialog pops up
             if not self.exist(L.media_room.download_media_from_shutterstock_dialog.btn_close, None, 3):
                 logger('Fail to open download media window')
-                raise Exception
+                raise Exception('Fail to open download media window')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     @step('[Action][Media Room] Enter [Media Content] Category')
@@ -76,15 +77,16 @@ class Media_Room(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Enter [Color Boards]')
     def enter_color_boards(self):
         try:
             self.exist_click(L.media_room.tag_color_boards)
             if not self.exist(L.media_room.btn_create_new_color_board):
                 logger('Fail to enter color boards')
-                raise Exception
+                raise Exception('Fail to enter color boards')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     # BGM (From CL source)
@@ -127,18 +129,21 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Enter [Sound Clip] Category')
     def enter_sound_clips(self):
         try:
             self.exist_click(L.media_room.tag_sound_clips)
             time.sleep(OPERATION_DELAY * 4)
             if not self.exist(L.media_room.scroll_area.list_icon_music):
                 logger('Fail to enter sound clips')
-                raise Exception
+                raise Exception('Fail to enter sound clips')
+            time.sleep(OPERATION_DELAY * 6)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Enter [Download] Category')
     def enter_downloaded(self):
         try:
             time.sleep(OPERATION_DELAY)
@@ -151,7 +156,7 @@ class Media_Room(BasePage):
             time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_use_sample_media(self):
@@ -236,7 +241,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
-    @step('[Action][Media Room] search conponent in library')
+    @step('[Action][Media Room] Search conponent in library')
     def search_library(self, name, intro_room=False):
         try:
             img_collection_view_before = self.snapshot(L.media_room.library_listview.main_frame)
@@ -259,7 +264,8 @@ class Media_Room(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
+    @step('[Action][Media Room] Search conponent in Media Room (Sound Effects) category')
     def search_SFX_library(self, name):
         # This function is only for Media Room (Sound Effects) category
         try:
@@ -294,6 +300,7 @@ class Media_Room(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Click [Display/Hide Explore View] button')
     def click_display_hide_explore_view(self):
         try:
             main_frame_size_before = self.exist(L.media_room.library_listview.main_frame).AXSize
@@ -303,10 +310,10 @@ class Media_Room(BasePage):
             main_frame_size_after = self.exist(L.media_room.library_listview.main_frame).AXSize
             if main_frame_size_after[0] == main_frame_size_before[0]:
                 logger('Fail to click display/hide explore view button')
-                raise Exception
+                raise Exception('Fail to click display/hide explore view button')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     @step('[Action][Media Room] Add new tag with name')
@@ -404,7 +411,7 @@ class Media_Room(BasePage):
             tag_elements = self.exist_elements(L.media_room.unit_tag_room_text_field)
             if not tag_elements:
                 logger(f'Fail to find element.')
-                raise Exception
+                raise Exception(f'Fail to find element.')
             el_count_before = len(tag_elements)
             logger(f'{el_count_before=}')
             is_found = 0
@@ -428,7 +435,7 @@ class Media_Room(BasePage):
                 tag_elements = self.exist_elements(L.media_room.unit_tag_room_text_field)
                 if not tag_elements:
                     logger('Fail to verify element count after deleted.')
-                    raise Exception
+                    raise Exception('Fail to verify element count after deleted.')
                 el_count_after = len(tag_elements)
                 if el_count_after < el_count_before:
                     break
@@ -438,9 +445,10 @@ class Media_Room(BasePage):
                 raise Exception(f'Fail to verify tag count. diff. is {el_count_before - el_count_after}')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Rename tag by right click')
     def right_click_rename_tag(self, name, name_new, count=0):
         try:
             el_count_after = -1
@@ -473,7 +481,7 @@ class Media_Room(BasePage):
                 tag_elements = self.exist_elements(L.media_room.unit_tag_room_text_field)
                 if not tag_elements:
                     logger('Fail to verify element count after added.')
-                    raise Exception
+                    raise Exception('Fail to verify element count after added.')
                 el_count_after = len(tag_elements)
                 if el_count_after > el_count_before:
                     break
@@ -482,10 +490,10 @@ class Media_Room(BasePage):
             logger(f'{tag_name_new=}')
             if not tag_name_new == f'{name_new} ({count})':
                 logger(f'Fail to verify new tag name.')
-                raise Exception
+                raise Exception(f'Fail to verify new tag name.')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def tag_get_media_amount(self, tag_name):
@@ -706,6 +714,7 @@ class Media_Room(BasePage):
         return True
 
     # color board ===================
+    @step('[Action][Media Room] Modify [Color Board] Color')
     def library_menu_new_color_board(self, hex_color): # e.g. hex_color: FFFEEE
         try:
             self.exist(L.media_room.btn_create_new_color_board).press()
@@ -722,9 +731,10 @@ class Media_Room(BasePage):
             self.exist(L.media_room.colors.btn_close).press()
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Set [Gradient Color]')
     def library_menu_new_gradient_color(self, hex_color): # e.g. hex_color: FFFEEE
         try:
             self.exist(L.media_room.btn_create_new_color_board).press()
@@ -737,12 +747,14 @@ class Media_Room(BasePage):
             # Handle (Save as Template)
             # Need to call follow page function
             # title_designer_page.click_custom_name_ok('custom_purple')
+            time.sleep(OPERATION_DELAY)
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Handle Color Gradient')
     def handle_color_gradient(self, hex_color):
         # --- Handle Create Color Gradient ---
         self.exist(L.base.create_color_gradient.input_hex_color).press()
@@ -1209,6 +1221,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Add media to specific tag by right click')
     def library_clip_context_menu_add_to(self, tag_name):
         try:
             self.activate()
@@ -1220,10 +1233,10 @@ class Media_Room(BasePage):
             logger(f'{tag_media_amount_after=}')
             if not tag_media_amount_after - tag_media_amount_before == 1:
                 logger('Fail to add media to tag')
-                raise Exception
+                raise Exception('Fail to add media to tag')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_clip_context_menu_insert_on_selected_track(self):
@@ -1423,6 +1436,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Open [File Location] from [Library Clip] context menu by right click')
     def library_clip_context_menu_open_file_location(self):
         try:
             from ATFramework.drivers.driver_factory import DriverFactory
@@ -1440,17 +1454,17 @@ class Media_Room(BasePage):
             finder_main_page = PageFactory().get_page_object('main_page', driver_finder)
             if not finder_main_page.exist(L.base.finder_window.btn_close):
                 logger('Fail to open finder window')
-                raise Exception
+                raise Exception('Fail to open finder window')
             finder_main_page.exist_click(L.base.finder_window.btn_close)
             time.sleep(OPERATION_DELAY)
             img_collection_view_after = self.screenshot()
             result_verify = self.compare(img_collection_view_before, img_collection_view_after)
             if result_verify:
                 logger(f'Fail to close finder window')
-                raise Exception
+                raise Exception(f'Fail to close finder window')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def color_board_switch_category_to_RGB(self):
@@ -2159,12 +2173,39 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Verify][Media Room] Check [Download] mark if shown on BG music for specific music')
     def background_music_check_download_mark(self, name):
         try:
             els_row = self.exist_elements(L.media_room.scroll_area.table_view_row_unit)
             if not els_row:
                 logger('Fail to list rows from table view')
-                raise Exception
+                raise Exception('Fail to list rows from table view')
+            is_found = 0
+            logger(f'the {len(els_row)=}')
+            for el_row in els_row:
+                el_name = self.exist(L.media_room.scroll_area.table_view_text_field_name, el_row)
+                if el_name.AXValue == name:
+                    is_found = 1
+                    # check if download ok exists
+                    if not self.exist(L.media_room.scroll_area.table_view_text_field_download_button, el_row, timeout=8):
+                        logger('Fail to verify download icon')
+                        raise Exception('Fail to verify download icon')
+                    break
+            if is_found == 0:
+                logger(f'Fail to verify download button of {name=}')
+                raise Exception(f'Fail to verify download button of {name=}')
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+        return True
+    
+    @step('[Verify][Media Room] Check [Download OK] mark if shown on BG music for specific music')
+    def background_music_check_download_ok_mark(self, name):
+        try:
+            els_row = self.exist_elements(L.media_room.scroll_area.table_view_row_unit)
+            if not els_row:
+                logger('Fail to list rows from table view')
+                raise Exception('Fail to list rows from table view')
             is_found = 0
             logger(f'the {len(els_row)=}')
             for el_row in els_row:
@@ -2174,15 +2215,15 @@ class Media_Room(BasePage):
                     # check if download ok exists
                     if not self.exist(L.media_room.scroll_area.table_view_text_field_download_ok, el_row, timeout=8):
                         logger('Fail to verify download ok icon')
-                        raise Exception
+                        raise Exception('Fail to verify download ok icon')
                     logger('Verify download ok icon Pass')
                     break
             if is_found == 0:
                 logger(f'Fail to verify download ok of {name=}')
-                raise Exception
+                raise Exception(f'Fail to verify download ok of {name=}')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def background_music_get_download_icon_image(self, name):
@@ -2288,7 +2329,7 @@ class Media_Room(BasePage):
 
     def sound_clips_check_download_mark(self, name):
         try:
-            if not self.background_music_check_download_mark(name):
+            if not self.background_music_check_download_ok_mark(name):
                 raise Exception
         except Exception as e:
             logger(f'Exception occurs. log={e}')
@@ -2369,7 +2410,7 @@ class Media_Room(BasePage):
             logger(f'Exception occurs. log={e}')
             return False
         return True
-    @step('[Action] Handle high definition dialog')
+    @step('[Action][Media_Room] Handle high definition dialog')
     def handle_high_definition_dialog(self, option='no'):
         try:
             btn_option = eval(f'L.media_room.confirm_dialog.btn_{option}')

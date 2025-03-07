@@ -114,6 +114,7 @@ class Precut(Main_Page, BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Precut] Switch [Trim Mode] in [Precut Window]')
     def edit_precut_switch_trim_mode(self, mode):
         if mode == 'Single':
             self.exist_click(L.precut.single_trim)
@@ -123,7 +124,7 @@ class Precut(Main_Page, BasePage):
             return True
         else:
             logger("Can't found the mode in precut window")
-            return False
+            raise Exception("Can't found the mode in precut window")
 
     def handle_changes_not_applied_want_continue(self):
         try:

@@ -1673,23 +1673,24 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Pip Designer] Set [Border Size] by Slider')
     def drag_border_size_slider(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.border.border).AXValue == 0:
                 self.exist_click(L.pip_designer.border.border)
             if int(value) < 0:
                 logger("value can't less than 0")
-                raise Exception
+                raise Exception("value can't less than 0")
             elif int(value) > 10:
                 logger("value can't greater than 10")
-                raise Exception
+                raise Exception("value can't greater than 10")
             self.exist(L.pip_designer.border.size_slider).AXValue = int(value)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def input_border_size_value(self, value):
@@ -1858,11 +1859,12 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Apply [Border Uniform Color] by RGB code')
     def apply_border_uniform_color(self, red='255', green='255', blue='255'):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.border.border).AXValue == 0:
                 self.exist_click(L.pip_designer.border.border)
             self.exist_click(L.pip_designer.border.fill_type)
@@ -1885,7 +1887,7 @@ class Pip_Designer(Main_Page, BasePage):
             self.exist_click(L.pip_designer.border.uniform_color_close_button)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def apply_border_2_color(self, red1='255', green1='255', blue1='255', red2='255', green2='255', blue2='255'):
@@ -2063,23 +2065,24 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Set [Shadow Distance] by Slider')
     def drag_shadow_distance_slider(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
                 logger("No pip designer window show up")
-                raise Exception
+                raise Exception("No pip designer window show up")
             if self.exist(L.pip_designer.shadow.shadow).AXValue == 0:
                 self.exist_click(L.pip_designer.shadow.shadow)
             if float(value) < 0.0:
                 logger("value can't less than 0")
-                raise Exception
+                raise Exception("value can't less than 0")
             elif float(value) > 100.0:
                 logger("value can't greater than 100")
-                raise Exception
+                raise Exception("value can't greater than 100")
             self.exist(L.pip_designer.shadow.distance_slider).AXValue = float(value)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     @step('[Action][Pip Designer] Input Shadow Distance Value')
@@ -2247,6 +2250,7 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Designer] Select [Shadow Color] by RGB color')
     def select_shadow_color(self, red='0', green='0', blue="0"):
         try:
             if not self.exist(L.pip_designer.designer_window):

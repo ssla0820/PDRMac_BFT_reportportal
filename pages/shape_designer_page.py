@@ -134,6 +134,7 @@ class Shape_Designer(Main_Page, BasePage):
                 current_value = self.exist(L.shape_designer.shape_preset.btn_shape_preset).AXValue
                 if current_value != set_unfold:
                     self.exist_click(L.shape_designer.shape_preset.btn_shape_preset)
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
                 raise Exception(f'Exception occurs. log={e}')
@@ -145,6 +146,7 @@ class Shape_Designer(Main_Page, BasePage):
                 current_value = self.exist(L.shape_designer.shape_fill.btn_shape_fill).AXValue
                 if current_value != set_unfold:
                     self.exist_click(L.shape_designer.shape_fill.btn_shape_fill)
+                time.sleep(DELAY_TIME)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
                 raise Exception(f'Exception occurs. log={e}')
@@ -254,6 +256,7 @@ class Shape_Designer(Main_Page, BasePage):
 
                     if not self.el_click(elem_item):
                         raise Exception('Cannot find element')
+                    time.sleep(DELAY_TIME)
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
@@ -309,7 +312,7 @@ class Shape_Designer(Main_Page, BasePage):
                     logger(f'Exception occurs. log={e}')
                     raise Exception
                 return True
-
+            @step('[Action][Properties][Shape Fill] Set Uniform Color to hexcolor')
             def set_uniform_color(self, hexcolor):
                 try:
                     if not self.is_exist(L.shape_designer.shape_fill.fill_type_uniform_color):
@@ -329,7 +332,7 @@ class Shape_Designer(Main_Page, BasePage):
 
                 except Exception as e:
                     logger(f'Exception occurs. log={e}')
-                    raise Exception
+                    raise Exception(f'Exception occurs. log={e}')
                 return True
             
             @step('[Action][Properties][Shape Fill] Set Gradient Begin Color')
@@ -1531,6 +1534,7 @@ class Shape_Designer(Main_Page, BasePage):
                     raise Exception
                 return True
 
+    @step('[Verify][Shape Designer] Check Shape Designer is opened')
     def check_in_shape_designer(self):
         if not self.is_exist(L.shape_designer.designer_window):
             logger('not enter Shape Designer')
