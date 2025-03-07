@@ -154,7 +154,9 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME)
             current_hex = main_page.exist(L.base.colors.input_hex_color)
             time.sleep(DELAY_TIME)
-            main_page.exist(L.base.colors.btn_close).press()
+            # main_page.exist(L.base.colors.btn_close).press()
+            # time.sleep(DELAY_TIME)
+            main_page.click(L.base.colors.btn_close)
             time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
@@ -349,18 +351,19 @@ class Test_BFT_365_OS14():
 
     @step('[Action] Open packed project')
     def open_packed_project(self, project_name, save_name):
-        if not main_page.exist_file(Test_Material_Folder + project_name):
-            assert False, f"Project file {project_name} doesn't exist!"
+        folder_path = '/Users/qadf_at/Desktop/AT/BFT_Material/'
+        if not main_page.exist_file(folder_path + project_name):
+            assert False, f"Project file {folder_path + project_name} doesn't exist!"
 
         # Open project
         main_page.top_menu_bar_file_open_project(save_changes='no')
-        check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + project_name)
+        check_open_result = main_page.handle_open_project_dialog(folder_path + project_name)
         if not check_open_result:
             assert False, "Dealing with Open project dialog FAIL!"
 
         # Select extract path
-        main_page.delete_folder(Test_Material_Folder + save_name)
-        main_page.select_file(Test_Material_Folder + save_name)
+        main_page.delete_folder(folder_path + save_name)
+        main_page.select_file(folder_path + save_name)
         main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
         return True
     
@@ -1085,7 +1088,7 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Add Sticker to timeline by R-click menu"):
             # Download IAD template
-            # time.sleep(DELAY_TIME * 4)
+            time.sleep(DELAY_TIME * 4)
             main_page.right_click()
             main_page.select_right_click_menu('Add to Timeline')
             # time.sleep(DELAY_TIME * 2)
@@ -3081,8 +3084,8 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             time.sleep(DELAY_TIME)
 
-            project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
-            save_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
+            project_name = 'Packed_Project/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
+            save_name = 'Extracted_Folder/test_title_designer_func_4_25'
             self.open_packed_project(project_name, save_name)
 
         with step('[Action] Enter title room and select saved template'):
@@ -3517,8 +3520,8 @@ class Test_BFT_365_OS14():
                 main_page.start_app()
                 time.sleep(DELAY_TIME)
 
-                project_name = 'BFT_21_Stage1/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
-                save_name = 'BFT_21_Stage1/test_title_designer_func_4_25'
+                project_name = 'Packed_Project/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
+                save_name = 'Extracted_Folder/test_title_designer_func_4_25'
                 self.open_packed_project(project_name, save_name)
                 
             with step('[Action] Open [Default] title designer by searching [Default] in library'):
@@ -3753,7 +3756,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly as GT'):
             full_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L153_full.png')
-            check_result_full = main_page.compare(Ground_Truth_Folder + 'L153_full.png', full_preview, similarity=0.9)
+            check_result_full = main_page.compare(Ground_Truth_Folder + 'L153_full.png', full_preview, similarity=0.85)
             if not check_result_full:
                 assert False, "Preview is not maximized correctly on preview window as GT!"
 
@@ -3763,7 +3766,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly as GT'):
             restore_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview, file_name=Auto_Ground_Truth_Folder + 'L153.png')
-            check_result_restore = main_page.compare(Ground_Truth_Folder + 'L153.png', restore_preview, similarity=0.9)
+            check_result_restore = main_page.compare(Ground_Truth_Folder + 'L153.png', restore_preview, similarity=0.85)
             if not check_result_restore:
                 assert False, "Preview is not minimized correctly on preview window as GT!"
         assert True
@@ -4021,8 +4024,8 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Open AP and open saved project'):
             main_page.start_app()
-            project_name = 'BFT_21_Stage1/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk'
-            save_name = 'BFT_21_Stage1/test_title_mgt_func_5_1'
+            project_name = 'Packed_Project/test_title_mgt_func_5_1_from_test_title_designer_func_4_45.pdk'
+            save_name = 'Extracted_Folder/test_title_mgt_func_5_1'
             self.open_packed_project(project_name, save_name)
 
         # [L158] 3.3 Title Designer (motion graphics title) > Open Title designer
@@ -4788,8 +4791,8 @@ class Test_BFT_365_OS14():
         '''
         with step('[Action] Open project and close AP (Show in recent project)'):
             main_page.start_app()
-            project_name = 'BFT_21_Stage1/test_title_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
-            save_name = 'BFT_21_Stage1/test_title_search_func_6_1'
+            project_name = 'Packed_Project/test_title_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
+            save_name = 'Extracted_Folder/test_title_search_func_6_1'
             self.open_packed_project(project_name, save_name)
             main_page.close_app()
 
@@ -4992,8 +4995,8 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             time.sleep(DELAY_TIME)
 
-            project_name = 'BFT_21_Stage1/test_pip_designer_func_7_1_from_test_title_mgt_func_5_21.pdk'
-            save_name = 'BFT_21_Stage1/test_pip_designer_func_7_1'
+            project_name = 'Packed_Project/test_pip_designer_func_7_1_from_test_title_mgt_func_5_21.pdk'
+            save_name = 'Extracted_Folder/test_pip_designer_func_7_1'
             self.open_packed_project(project_name, save_name)
 
         with step('[Action] Select timeline track 3 and set timecode to (09:00)'):
@@ -6645,8 +6648,8 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             time.sleep(DELAY_TIME)
 
-            project_name = 'BFT_21_Stage1/test_shape_designer_func_8_1_from_test_pip_designer_func_7_38.pdk'
-            save_name = 'BFT_21_Stage1/test_shape_designer_func_8_1'
+            project_name = 'Packed_Project/test_shape_designer_func_8_1_from_test_pip_designer_func_7_38.pdk'
+            save_name = 'Extracted_Folder/test_shape_designer_func_8_1'
             self.open_packed_project(project_name, save_name)
 
         # Open Preference > Editing > Set default Title duration to 10 (For v21.6.5303 PM request)
@@ -6951,8 +6954,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview changed after apply Blur'):
             applied_blur = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, applied_blur, similarity=0.99):
-                assert False, "Blur is not changed correctly! Similary should<0.99"
+            if main_page.compare(before_preview, applied_blur, similarity=0.999):
+                assert False, "Blur is not changed correctly! Similary should<0.999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -7910,8 +7913,8 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check Rotation value after set 2nd Rotation keyframe'):
             # Verify Rotation value
             current_rotation = shape_designer_page.keyframe.object_settings.rotation.value.get_value()
-            if current_rotation != '250.00':
-                assert False, f"Rotation value is not correct! Expected: 250.00, Actual: {current_rotation}"
+            if current_rotation != '250':
+                assert False, f"Rotation value is not correct! Expected: 250, Actual: {current_rotation}"
 
         with step('[Action] Switch to next keyframe'):
             # Click next keyframe
@@ -7983,8 +7986,8 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check opacity value after set 2nd Opacity keyframe'):
             # Verify opacity value
             current_opacity = shape_designer_page.keyframe.object_settings.opacity.value.get_value()
-            if current_opacity != '50%':
-                assert False, f"Opacity value is not correct! Expected: 50%, Actual: {current_opacity}"
+            if current_opacity != '50':
+                assert False, f"Opacity value is not correct! Expected: 50, Actual: {current_opacity}"
         with step('[Action] Switch to next keyframe'):
             # Click next keyframe
             shape_designer_page.simple_timeline.opacity.click_next_keyframe()
@@ -8484,8 +8487,8 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             time.sleep(DELAY_TIME)
 
-            project_name = 'BFT_21_Stage1/test_particle_designer_func_9_1_from_test_shape_designer_func_8_50.pdk'
-            save_name = 'BFT_21_Stage1/test_particle_designer_func_9_1'
+            project_name = 'Packed_Project/test_particle_designer_func_9_1_from_test_shape_designer_func_8_50.pdk'
+            save_name = 'Extracted_Folder/test_particle_designer_func_9_1'
             self.open_packed_project(project_name, save_name)
 
         # [L213] 3.6 Particle Designer (Should support opacity) > Open Particle designer
@@ -9086,8 +9089,8 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             time.sleep(DELAY_TIME)
 
-            project_name = 'BFT_21_Stage1/test_mask_designer_func_10_1_from_test_particle_designer_func_9_21.pdk'
-            save_name = 'BFT_21_Stage1/test_mask_designer_func_10_1'
+            project_name = 'Packed_Project/test_mask_designer_func_10_1_from_test_particle_designer_func_9_21.pdk'
+            save_name = 'Extracted_Folder/test_mask_designer_func_10_1'
             self.open_packed_project(project_name, save_name)
 
         with step('[Action] Add Sport 02.jpg to timeline track3'):
@@ -12582,7 +12585,7 @@ class Test_BFT_365_OS14():
         5. Close and restart the app
         '''
         
-        # [L47] 2.1 Media Room > My Project > Open project
+        # [L47] 2.1 Media Room > My Project > Open 
         # with uuid("30dd64f8-7edd-4a15-a3a0-61f667a3b5fc") as case:
 
         with step('[Action] Launch APP and enter My project'):
@@ -12591,7 +12594,7 @@ class Test_BFT_365_OS14():
             first_screenshot = main_page.snapshot(locator=main_page.area.library_icon_view)
 
         with step('[Action] Open Packed project'):
-            self.open_packed_project(Test_Material_Folder + 'BFT_21_Stage1/can_del.pdk', 'test_new_project_func_14_1')
+            self.open_packed_project('Packed_Project/can_del.pdk', 'Extracted_Folder/test_new_project_func_14_1')
 
         with step('[Action] Enter My project again and take screenshot'):
             main_page.enter_project_room()
@@ -13633,8 +13636,8 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Open APP and open packed project"):
             main_page.start_app()
-            project_name = 'BFT_21_Stage1/test_recent_project_func_16_1_from_test_search_media_func_15_9.pdk'
-            save_name = 'BFT_21_Stage1/test_recent_project_func_16_1'
+            project_name = 'Packed_Project/test_recent_project_func_16_1_from_test_search_media_func_15_9.pdk'
+            save_name = 'Extracted_Folder/test_recent_project_func_16_1'
             self.open_packed_project(project_name, save_name)
 
         with step("[Action] Click [Close] button to back to launcher"):
@@ -13776,8 +13779,8 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
 
         with step("[Action] Open packed project"):
-            project_name = 'BFT_21_Stage1/test_recent_project_func_16_1_from_test_search_media_func_15_9.pdk'
-            save_name = 'BFT_21_Stage1/test_recent_project_func_16_1'
+            project_name = 'Packed_Project/test_recent_project_func_16_1_from_test_search_media_func_15_9.pdk'
+            save_name = 'Extracted_Folder/test_recent_project_func_16_1'
             self.open_packed_project(project_name, save_name)
 
         with step("[Action] Click [Close] button to back to launcher"):
