@@ -676,6 +676,7 @@ class Title_room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Room] Drag [Scroll Bar] in [Title Room] with (value)')
     def drag_TitleRoom_Scroll_Bar(self, value):
         try:
             self.exist(L.title_room.scroll_bar.scroll_elem).AXValue = float(value)
@@ -687,7 +688,7 @@ class Title_room(Main_Page, BasePage):
                 return False
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_freeTemplate(self):

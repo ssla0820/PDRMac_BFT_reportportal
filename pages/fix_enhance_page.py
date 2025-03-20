@@ -477,6 +477,7 @@ class SpeechEnhancement(BasePage):
         super().__init__(*args, **kwargs)
         self.compensation = AdjustSet(self, L.fix_enhance.enhance.speech_enhancement.compensation.group)
 
+    @step('[Action][Fix Enhance][Speech Enhancement] Apply Effect in [Speech Enhancement] Window')
     def click_apply(self, delay_time=10):
         if not self.exist(L.fix_enhance.enhance.speech_enhancement.main_window):
             logger('Not enter Speech Enhancement window, return False')

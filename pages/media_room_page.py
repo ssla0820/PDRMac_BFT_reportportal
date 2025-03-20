@@ -15,7 +15,7 @@ class Media_Room(BasePage):
         super().__init__(*args, **kwargs)
         self.svrt_info = SVRT_Info(*args, **kwargs)
 
-    @step('[Action][Media Room] Import [Media File] from local')
+    @step('[Action][Media Room] Import media for local file')
     def import_media_file(self, full_path): # full_path: /Users/...
         try:
             self.exist_click(L.media_room.btn_import_media)

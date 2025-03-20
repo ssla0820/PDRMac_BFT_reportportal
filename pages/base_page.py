@@ -277,6 +277,7 @@ class BasePage(BasePage):
             logger(f"[Warning] : {e}")
             return None
 
+    @step("[Action][Base Page] Snapshot [Heart Icon] on thumbnail (name)")
     def snapshot_library_heart_icon(self, name, file_name=None):
         try:
             # If find Template > Find his parent
@@ -655,10 +656,12 @@ class BasePage(BasePage):
         except:
             return None
 
+    @step("[Action][Base_page] Move mouse to position (0, 0)")
     def move_mouse_to_0_0(self):
         try:
             pos = self.mouse.position()
             self.mouse.move(0, 0)
+            time.sleep(OPERATION_DELAY*0.5)
             return pos
         except:
             return None
@@ -805,12 +808,13 @@ class BasePage(BasePage):
     def tap_MediaRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f3):
             pass
-
+    
+    @step('[Action][Base_page] Enter [Effect Room] via hotkey')
     def tap_EffectRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f4):
             pass
     
-    @step('[Action][Base_page] Tap [PiP Room] via hotkey')
+    @step('[Action][Base_page] Enter [PiP Room] via hotkey')
     def tap_PiPRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f5):
             pass
