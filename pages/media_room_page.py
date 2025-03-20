@@ -36,7 +36,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
-    @step('[Action][Media Room] import media from CyberLink Cloud')
+    @step('[Action][Media Room] Import media from [CyberLink Cloud]')
     def import_media_from_cyberlink_cloud(self):
         try:
             self.exist_click(L.media_room.btn_import_media)
@@ -241,7 +241,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
-    @step('[Action][Media Room] Search conponent in library')
+    @step('[Action][Media Room] Search library for (content name)')
     def search_library(self, name, intro_room=False):
         try:
             img_collection_view_before = self.snapshot(L.media_room.library_listview.main_frame)
@@ -577,6 +577,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Sort by [Created Date] in [Library Menu]')
     def library_menu_sort_by_created_date(self):
         try:
             self.library_menu_sort_by(L.media_room.library_menu.option_sort_by_created_date)
@@ -584,12 +585,12 @@ class Media_Room(BasePage):
             self.library_menu_sort_by()
             if self.exist(L.media_room.library_menu.option_sort_by_created_date).AXMenuItemMarkChar == '':
                 logger('Fail to verify option mark')
-                raise Exception
+                raise Exception('Fail to verify option mark')
             self.keyboard.esc()
             time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_menu_sort_by_modified_date(self):
@@ -2421,6 +2422,26 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+
+
+    @step('[Action][Media_Room] Click [Meta] icon')
+    def click_meta_icon(self):
+        try:
+            object_library_default_tag_tableview = self.exist(L.media_room.tag_main_frame)
+
+            x, y = object_library_default_tag_tableview.AXPosition
+            w, h = object_library_default_tag_tableview.AXSize
+
+            # Click [Meta logo]
+            new_x = x + w - 15
+            new_y = y - 25
+
+            self.mouse.move(new_x, new_y)
+            self.mouse.click()
+        except Exception as e:
+            raise Exception(f'Exception occurs. log={e}')
+    
+    @step('[Verify][Media_Room] Check [Meta] webpage is opened after clicked [Meta] icon')
     def verify_after_click_meta_icon(self):
         try:
             #self.click(L.media_room.meta_music.icon_meta)

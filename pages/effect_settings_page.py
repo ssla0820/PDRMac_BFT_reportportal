@@ -5,6 +5,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 build_in_loop_time = 5
@@ -216,6 +217,18 @@ class Effect_Settings(BasePage):
         self.click(L.effect_settings.btn_remove_effect)
         time.sleep(DELAY_TIME*2)
 
+    @step('[Action][Effect Settings] Click [Close] button to leave [Effect Settings]')
+    def close_window(self):
+        try:
+            if not self.exist(L.tips_area.button.btn_effect_close):
+                logger('Can NOT find [Close] button')
+                raise Exception('Can NOT find [Close] button')
+            self.click(L.tips_area.button.btn_effect_close)
+        except Exception as e:
+            logger(f'Exception occurs. log={e}')
+            raise Exception(f'Exception occurs. log={e}')
+
+
     class Aberration(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -317,7 +330,7 @@ class Effect_Settings(BasePage):
     class Broken_Glass(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-
+        @step('[Action][Effect Settings][Broken Glass] Adjust Degree slider')
         def adjust_degree_slider(self):
             return _adjust_slider_in_loop(self, L.effect_settings.slider_1, 0, 200, build_in_loop_time)
 
@@ -969,9 +982,11 @@ class Effect_Settings(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Effect Settings Page][TV_Wall] Adjust Horizontal Slider')
         def adjust_horizontal_slider(self):
             return _adjust_slider_in_loop(self, L.effect_settings.slider_1, 0, 200, build_in_loop_time)
 
+        @step('[Action][Effect Settings Page][TV_Wall] Adjust Vertical Slider')
         def adjust_vertical_slider(self):
             return _adjust_slider_in_loop(self, L.effect_settings.slider_2, 190, 18, build_in_loop_time)
 

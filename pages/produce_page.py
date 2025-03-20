@@ -150,6 +150,7 @@ class Produce(BasePage):
             return False
         return True
 
+    @step('[Verify][Produce] Check [Produce] page show')
     def check_enter_produce_page(self):
         return self.is_exist(L.produce.tab_mode_local)
 
@@ -219,6 +220,7 @@ class Produce(BasePage):
             self.profile_analyzer = self.ProfileAnalyzer(*args, **kwargs)
             self.quality_profile_setup = self.QualityProfileSetup(*args, **kwargs)
 
+        @step('[Action][Produce][Local] Select file format')
         def select_file_format(self, container):
             try:
                 locator = eval(f'L.produce.local.btn_file_format_{container}')
@@ -226,7 +228,7 @@ class Produce(BasePage):
                 time.sleep(OPERATION_DELAY)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         @step('[Action][Produce][Local] Check [Upload Copy to CyberLink Cloud] is visible')
@@ -622,13 +624,15 @@ class Produce(BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Produce][Local] Enable/ Disable [Fast Video Rendering]')
         def set_fast_video_rendering(self, is_checked=1):
             try:
                 locator = L.produce.local.chx_fast_video_rendering
                 checkbox_set_check(self, locator, is_checked)
+                time.sleep(OPERATION_DELAY*0.5)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_fast_video_rendering_svrt(self):
@@ -658,13 +662,15 @@ class Produce(BasePage):
         def get_fast_video_rendering_svrt_status(self):
             return bool(self.exist(L.produce.local.rdb_fast_video_rendering_svrt).AXValue)
 
+        @step('[Action][Produce][Local] Enable/ Disable [Surround Sound]')
         def set_surround_sound(self, is_checked=1):
             try:
                 locator = L.produce.local.chx_surround_sound
                 checkbox_set_check(self, locator, is_checked)
+                time.sleep(OPERATION_DELAY*0.5)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_surround_sound_aac51(self):
@@ -700,6 +706,7 @@ class Produce(BasePage):
             option = 'living_room'
             return self.set_surround_sound_true_theater_option(option)
 
+        @step('[Action][Produce][Local] Set [Surround Sound] to (Theater) option')
         def set_surround_sound_true_theater_option_theater(self):
             option = 'theater'
             return self.set_surround_sound_true_theater_option(option)
@@ -763,16 +770,18 @@ class Produce(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Produce] Click [Select Output Folder] button and select output folder')
     def select_output_folder(self, file_path): # file_path: the full path of output file
         try:
             self.exist_click(L.produce.btn_select_output_folder)
             self.select_file(file_path)
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
     
-    @step('[Action][Produce] get [Produced Filename]')
+    @step('[Action][Produce] Get [Produced Filename]')
     def get_produced_filename(self):
         try:
             file_path = self.exist(L.produce.edittext_output_folder).AXValue

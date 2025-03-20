@@ -275,6 +275,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click [Split] button on [Tips Area]')
     def tips_area_click_split(self, compare_similarity=0.99):
         try:
             img_before = self.snapshot(L.main.timeline.table_view)
@@ -282,7 +283,7 @@ class Main_Page(BasePage):
             self.wait_for_image_changes(img_before, L.main.timeline.table_view, OPERATION_DELAY*5, compare_similarity)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False
+            raise Exception(f'Exception occurs. log={e}')
         return True
     
     @step('[Action][Main_page] Set Timecode')
@@ -335,6 +336,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Get Timeline Timecode')
     def get_timeline_timecode(self):
         return self.exist(L.main.duration_setting_dialog.txt_duration).AXValue
 
@@ -937,6 +939,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Drag current position media to timeline playhead position')
     def drag_current_pos_media_to_timeline_playhead_position(self, track_no=1): # track_no: 1, 2, 3
         try:
             # This page function only for BGM used
@@ -1254,3 +1257,4 @@ class Main_Page(BasePage):
         result = self.click(L.main.main_window.btn_close)
         time.sleep(1)
         return result 
+        

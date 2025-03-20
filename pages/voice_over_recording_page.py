@@ -9,6 +9,8 @@ from .locator import locator as L
 from .main_page import Main_Page
 #from .locator.hardcode_0408 import locator as L
 
+from reportportal_client import step
+
 DELAY_TIME = 1 # sec
 
 class Voice_Over_Recording_Room(Main_Page, BasePage):
@@ -48,11 +50,12 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Enable/Disable [Time Limit] checkbox in [Voice Over Recording Room - Preferences]')
     def set_check_recording_preferences_timelimit(self, bCheck=1):
         try:
             if not self.exist(L.voice_over_recording.window_recording_preference):
                 logger("No recording preference window show up")
-                raise Exception
+                raise Exception("No recording preference window show up")
             value = self.exist(L.voice_over_recording.chx_timelimit).AXValue
             if value == 0 and bCheck == 0:
                 return True
@@ -62,16 +65,18 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                 self.exist_click(L.voice_over_recording.chx_timelimit)
             elif value == 1 and bCheck == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Enable/ Disable [Delay 3s] checkbox in [Voice Over Recording Room - Preferences]')
     def set_check_recording_preferences_delay_3s(self, bCheck=1):
         try:
             if not self.exist(L.voice_over_recording.window_recording_preference):
                 logger("No recording preference window show up")
-                raise Exception
+                raise Exception("No recording preference window show up")
             value = self.exist(L.voice_over_recording.chx_delay_3s).AXValue
             if value == 0 and bCheck == 0:
                 return True
@@ -81,16 +86,18 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                 self.exist_click(L.voice_over_recording.chx_delay_3s)
             elif value == 1 and bCheck == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Enable/Disable [Auto Fade In] checkbox in [Voice Over Recording Room - Preferences]')
     def set_check_recording_preferences_auto_fade_in(self, bCheck=1):
         try:
             if not self.exist(L.voice_over_recording.window_recording_preference):
                 logger("No recording preference window show up")
-                raise Exception
+                raise Exception("No recording preference window show up")
             value = self.exist(L.voice_over_recording.chx_auto_fade_in).AXValue
             if value == 0 and bCheck == 0:
                 return True
@@ -100,16 +107,18 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                 self.exist_click(L.voice_over_recording.chx_auto_fade_in)
             elif value == 1 and bCheck == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Enable/Disable [Auto Fade Out] checkbox in [Voice Over Recording Room - Preferences]')
     def set_check_recording_preferences_auto_fade_out(self, bCheck=1):
         try:
             if not self.exist(L.voice_over_recording.window_recording_preference):
                 logger("No recording preference window show up")
-                raise Exception
+                raise Exception("No recording preference window show up")
             value = self.exist(L.voice_over_recording.chx_auto_fade_out).AXValue
             if value == 0 and bCheck == 0:
                 return True
@@ -119,20 +128,22 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                 self.exist_click(L.voice_over_recording.chx_auto_fade_out)
             elif value == 1 and bCheck == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Click [OK] button to leave [Voice Over Recording Room - Preferences]')
     def click_recording_preferences_ok(self):
         try:
             if not self.exist(L.voice_over_recording.window_recording_preference):
                 logger("No recording preference window show up")
-                raise Exception
+                raise Exception("No recording preference window show up")
             self.exist_click(L.voice_over_recording.btn_recording_preferences_ok)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_recording_preferences_cancel(self):
@@ -146,11 +157,12 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Click [Record] button')
     def click_record_btn(self, recording_time, skip_press_stop=0):
         try:
             if not self.exist(L.voice_over_recording.btn_record):
                 logger('Didnot find the audio_mixer')
-                raise Exception
+                raise Exception('Did not find the audio_mixer')
             self.click(L.voice_over_recording.btn_record)
             time.sleep(3+recording_time)
             if skip_press_stop:
@@ -161,12 +173,10 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                                {'AXRole': 'AXRow', 'AXRoleDescription': 'table row', 'index': 6},
                                {'AXIdentifier': 'VideoCellItem', 'AXRole': 'AXGroup', 'index': 0}]):
                 return True
-            else:
-                return False
+            return False
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-        return True
+            raise Exception(f'Exception occurs. log={e}')
 
     def get_mute_all_track_value(self):
         try:
@@ -186,11 +196,12 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Voice_Over_Recording_Room] Enable/ Disable [Mute All Tracks When Recording] checkbox')
     def set_check_mute_all_track(self, bCheck=1):
         try:
             if not self.exist(L.voice_over_recording.btn_record):
-                logger('Didnot find the audio_mixer')
-                raise Exception
+                logger('Did not find the audio_mixer')
+                raise Exception('Did not find the audio_mixer')
             value = self.exist(L.voice_over_recording.chx_mute_all_tracks_when_recording).AXValue
             if value == 0 and bCheck == 0:
                 return True
@@ -200,9 +211,10 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                 self.exist_click(L.voice_over_recording.chx_mute_all_tracks_when_recording)
             elif value == 1 and bCheck == 1:
                 return True
+            time.sleep(DELAY_TIME)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_audio_setup_mixer_btn(self):
@@ -260,15 +272,16 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
                 return True
         return False
 
+    @step('[Action][Voice_Over_Recording_Room] Click [Preferences] button in [Voice Over Recording Room]')
     def click_preferences_btn(self):
         self.exist_click(L.voice_over_recording.btn_preference)
         try:
             if not self.exist(L.voice_over_recording.window_recording_preference):
                 logger("No recording preference window show up")
-                raise Exception
+                raise Exception("No recording preference window show up")
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def set_timelimit_hour(self, value):
@@ -352,6 +365,7 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
             raise Exception
         return current_sec
 
+    @step('[Action][Voice_Over_Recording_Room] Set [Time Limit] to (value)')
     def set_timelimit_sec(self, value):
         '''
         :param value: 0, 1, 2, 3, ..., 59
@@ -359,13 +373,13 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
         try:
             if (int(value) > 59) or (int(value) < 0):
                 logger('Invalid parameter')
-                return False
+                raise Exception('Invalid parameter')
 
             time.sleep(DELAY_TIME * 2)
             # if Time limit checkbox = 0, return Exception
             if not self.exist(L.voice_over_recording.chx_timelimit).AXValue:
                 logger('Time limit checkbox is disable now.')
-                raise Exception
+                raise Exception('Time limit checkbox is disable now.')
 
             # Get current sec
             current_sec = self.get_timelimit_sec()
@@ -387,7 +401,7 @@ class Voice_Over_Recording_Room(Main_Page, BasePage):
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def get_timelimit_hour(self):

@@ -1199,6 +1199,7 @@ class Tips_area(Main_Page, BasePage):
         time.sleep(DELAY_TIME * 3)
         return True
 
+    @step('[Action][TipsArea] Click [Effect] button on [Tips Area]')
     def click_TipsArea_btn_effect(self):
         self.click(L.tips_area.button.btn_effect_modify)
         time.sleep(DELAY_TIME * 2)

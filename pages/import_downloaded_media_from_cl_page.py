@@ -37,7 +37,7 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
             raise Exception
         return True
 
-    @step('[Action][Import Download Media From CL] Close [Downloaded Media] Window')
+    @step('[Action][Import Download Media From CL] Close [Downloaded Media From Cyberlink Cloud] Window')
     def close_download_media_window(self):
         try:
             if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):

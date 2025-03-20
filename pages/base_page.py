@@ -393,8 +393,28 @@ class BasePage(BasePage):
             if item.AXValue == name:
                 self.mouse.click(*item.center)
                 return True
-        time.sleep(OPERATION_DELAY*0.5)
+        time.sleep(OPERATION_DELAY)
         return False
+    
+    @step("[Action][Base_page] Unfold [CLUT] category")
+    def unfold_clut_category(self):
+        try:
+            # unfold CLUT category
+            tags_2 = self.exist(L.base.tag_list_2)
+            for tag in tags_2:
+                if tag.AXValue.startswith(f"Color LUT ("):
+                    x, y = tag.AXPosition  # 61, 267
+                    # w, h = 143, 16
+
+                    new_x = x + 18
+                    new_y = y - 2
+                    self.mouse.move(new_x, new_y)
+                    self.mouse.click()
+                    break
+            time.sleep(OPERATION_DELAY * 2)
+        except Exception as e:
+            logger(f"[Warning] : {e}")
+            raise Exception("Unfold CLUT category failed")
 
     def _close_menu(self):
         x, y = self.mouse.position()
@@ -879,6 +899,7 @@ class BasePage(BasePage):
         return True
 
 
+    @step("[Verify][Base_page] Check if the file exists")
     def exist_file(self, path):
         return os.path.exists(path)
 
@@ -927,6 +948,7 @@ class BasePage(BasePage):
         except:
             return False
 
+    @step("[Action][Base_page] Clear [AI Module] files")
     def clear_AI_module(self):
         # Clear AI module
         # /Users/qadf_12/Library/Group Containers/FPY8L862BK.com.cyberlink.powerdirector/Library/Shared Library/AI Component
@@ -939,11 +961,12 @@ class BasePage(BasePage):
         # Clear Voice-Over Recording file
         self.driver.shell(f"rm -r ~/Movies/PowerDirector/{file_name}")
 
+    @step("[Initial][Base Page] Clear capture file")
     def clear_capture_file(self):
         # Clear Voice-Over Recording file
         self.driver.shell(f"rm -r ~/Movies/PowerDirector/Capture.m4a")
 
-    @step("[Initial] clear login account cache")
+    @step("[Initial][Base Page] Clear login account cache")
     def clear_log_in(self):
         logger("Clear login account cache")
         file_list= ["~Downloads/.Cyberlink/.CSE",
@@ -1241,6 +1264,7 @@ class BasePage(BasePage):
             raise Exception
         return True
 
+    @step("[Action][Base Page] Click [CEIP] dialog")
     def click_CEIP_dialog(self):
         # if find CEIP dialog
         if self.is_exist(L.base.ceip_dialog, timeout=20):
@@ -1313,6 +1337,7 @@ class BasePage(BasePage):
 
         return True
 
+    @step("[Action][Base_page] Apply [Sample Clip] on [AI Module Import dialog] on Launcher")
     def apply_sample_clip_when_open_AI_import_dialog(self):
         if self.is_not_exist(L.base.launcher_window.txt_try_sample_clip):
             logger('CANNOT find txt_try_sample_clip locator')
@@ -1333,6 +1358,7 @@ class BasePage(BasePage):
 
         return True
 
+    @step("[Action][Base_page] Click [Import] button on [AI Module Import dialog] on Launcher and import media")
     def click_to_import_media_when_open_AI_import_dialog(self, full_path):
         if self.is_not_exist(L.base.launcher_window.import_dialog):
             logger('CANNOT find txt_try_sample_clip locator')

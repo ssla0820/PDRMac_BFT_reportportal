@@ -26,16 +26,17 @@ class Trim(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
 
+    @step('[Action][Trim Page] Get [Trim] Window Title')
     def get_trim_title(self):
         try:
             if not self.exist(L.trim.main_window):
                 logger("No trim window in current view")
-                raise Exception
+                raise Exception("No trim window in current view")
             title = self.exist(L.trim.main_window).AXTitle
             return title[7:]
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
 
     def handle_effects_are_ignored(self, Option):
         '''

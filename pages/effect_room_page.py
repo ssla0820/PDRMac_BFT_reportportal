@@ -8,6 +8,7 @@ from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
 from .main_page import Main_Page
 #from .locator.hardcode_0408 import locator as L
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -123,6 +124,7 @@ class Effect_Room(Main_Page, BasePage):
         return True
 
 
+    @step('[Action][Effect Room] Import [CLUTs] with file path')
     def import_CLUTs(self, full_path):
         try:
             self.exist_click(L.effect_room.clut_effect_tag).AXValue
@@ -130,13 +132,13 @@ class Effect_Room(Main_Page, BasePage):
             #logger(current_clut_amount)
             if not self.exist_click(L.effect_room.import_media.import_media):
                 logger("Can't find the import button")
-                raise Exception
+                raise Exception("Can't find the import button")
             if not self.exist_click(L.effect_room.import_media.import_media_clut):
                 logger("Can't find the import CLUTs button")
-                raise Exception
+                raise Exception("Can't find the import CLUTs button")
             if not self.select_file(full_path):
                 logger("Can't select the CLUTs file")
-                raise Exception
+                raise Exception("Can't select the CLUTs file")
 
             #after_clut_amount = self.exist(L.effect_room.clut_effect_tag).AXValue
             #logger(after_clut_amount)
@@ -152,14 +154,14 @@ class Effect_Room(Main_Page, BasePage):
             result_verify = self.compare(current_amount, after_amount, similarity=1)
             if result_verify:
                  logger('Fail to import the clut file.')
-                 raise Exception
+                 raise Exception('Fail to import the clut file.')
                 #el_count_after = len(tag_elements)
                 #if after_clut_amount != current_clut_amount:
                 #break
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def displayhideexplorerview(self):
@@ -468,6 +470,7 @@ class Effect_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Effect Room] Remove from [Effect Settings]')
     def remove_from_effectsettings(self):
         return self.exist_click(L.effect_room.remove_effect_setting)
 

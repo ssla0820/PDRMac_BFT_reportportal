@@ -3,8 +3,9 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 
 def arrow(obj, button="up", times=1, locator=None):
@@ -204,6 +205,7 @@ class FixEnhance(BasePage):
         def click_wind_removal(self):
             self.click(L.fix_enhance.fix.wind_removal.btn_wind_removal)
 
+        @step('[Action][Fix Enhance][Fix] Click [Apply] Button in [Wind Removal] Window')
         def click_wind_removal_apply(self, delay_time=10):
             if not self.exist(L.fix_enhance.fix.wind_removal.main_window):
                 logger('Not enter Wind Removal window, return False')
@@ -263,9 +265,11 @@ class FixEnhance(BasePage):
         def enable_color_enhancement(self, value=True):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_color_enhancement, value)
 
+        @step('[Action][Fix Enhance][Enhance] Get [Color Adjustment] Checkbox Status')
         def get_color_adjustment(self):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_color_adjustment, _get_status_only=True)
 
+        @step('[Action][Fix Enhance][Enhance] Get [Color Enhancement] Checkbox Status')
         def get_color_enhancement(self):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_color_enhancement, _get_status_only=True)
 

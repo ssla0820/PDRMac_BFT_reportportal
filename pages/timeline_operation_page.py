@@ -1365,6 +1365,7 @@ class Timeline_Operation(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
 
+    @step('[Action][Timeline Operation] Add audio to tarck (number) with option (position)')
     def set_add_tracks_audio(self, number, position):
         try:
             #if self.exist(L.timeline_operation.timeline_vertical_scroll_bar):

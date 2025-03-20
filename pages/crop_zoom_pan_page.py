@@ -3,8 +3,9 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -13,6 +14,7 @@ class Crop_Zoom_Pan(BasePage):
         super().__init__(*args, **kwargs)
         self.keyframe = self.Keyframe(*args, **kwargs)
 
+    @step('[Action][Crop Zoom Pan] Close [Crop Zoom Pan] Window')
     def close_window(self):
         self.exist_click(L.crop_zoom_pan.close)
         return self.is_not_exist({'AXIdentifier': 'IDC_MAGIC_MOTION_DESIGNER_WINDOW'}, timeout=3)
@@ -24,6 +26,7 @@ class Crop_Zoom_Pan(BasePage):
         self.exist_click(L.crop_zoom_pan.maximize)
         return
 
+    @step('[Action][Crop Zoom Pan] Set Timecode')
     def set_timecode(self, timecode):
         self.activate()
         elem = self.find(L.crop_zoom_pan.timecode)
@@ -36,16 +39,17 @@ class Crop_Zoom_Pan(BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Crop Zoom Pan] Get Timecode')
     def get_timecode(self):
         try:
             if not self.exist(L.crop_zoom_pan.window):
                 logger("No crop zoom pan window show up")
-                raise Exception
+                raise Exception("No crop zoom pan window show up")
             timecode = self.exist(L.crop_zoom_pan.timecode).AXValue
             return timecode
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def set_AspectRatio_4_3(self):

@@ -260,6 +260,7 @@ class Preferences_Page(BasePage):
                 return False
             return True
 
+        @step('[Action][Preferences_Page][General] Set [Audio Channels] to (Stereo)')
         def audio_channels_set_stereo(self):
             try:
                 self.exist_click(L.preferences.general.audio_channels.btn_combobox)
@@ -269,12 +270,14 @@ class Preferences_Page(BasePage):
                 # verify the result
                 if self.exist(L.preferences.general.audio_channels.btn_combobox).AXTitle != L.preferences.general.audio_channels.menu_item_stereo['AXValue']:
                     logger('Fail to verify set stereo')
-                    raise Exception
+                    raise Exception('Fail to verify set stereo')
+                time.sleep(OPERATION_DELAY)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Preferences_Page][General] Set [Audio Channels] to (5.1 Surround)')
         def audio_channels_set_51_surround(self):
             try:
                 self.exist_click(L.preferences.general.audio_channels.btn_combobox)
@@ -284,10 +287,10 @@ class Preferences_Page(BasePage):
                 # verify the result
                 if self.exist(L.preferences.general.audio_channels.btn_combobox).AXTitle != L.preferences.general.audio_channels.menu_item_51_surround['AXValue']:
                     logger('Fail to verify set stereo')
-                    raise Exception
+                    raise Exception('Fail to verify set stereo')
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def timeline_frame_rate_set_value(self, value): # value: 24, 25, 30, 50, 60
@@ -652,6 +655,7 @@ class Preferences_Page(BasePage):
             locator.append(L.preferences.editbox_unit)
             return editbox_get_value(self, locator)
 
+        @step('[Action][Preferences_Page] Set [Subtitle] default Duration to (value)')
         def durations_subtitle_set_value(self, value):
             locator_parent = L.preferences.editing.duration.editbox_subtitle_parent
             locator = locator_parent.copy()

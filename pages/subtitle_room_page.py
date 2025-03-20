@@ -4,6 +4,8 @@ from .base_page import BasePage
 from ATFramework.utils import logger
 from .locator import locator as L
 
+from reportportal_client import step
+
 DELAY_TIME = 1 # sec
 
 def _set_radio(self, _locator_radio_group, option=1, get_status=False):
@@ -108,6 +110,7 @@ class Subtitle_Room(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Subtitle_Room][Library Menu] Click [Auto Transcribe] button')
         def click_auto_transcribe(self):
             result = self.exist(L.subtitle_room.library_menu.btn_speech_to_text)
             if result:
@@ -118,11 +121,12 @@ class Subtitle_Room(BasePage):
                     return True
                 else:
                     logger('Cannot find (Speech to text) button')
-                    return False
+                    raise Exception('Cannot find (Speech to text) button')
             else:
                 logger('Cannot find (Speech to text) button')
-                return False
+                raise Exception('Cannot find (Speech to text) button')
 
+        @step('[Action][Subtitle_Room][Library Menu] Click [Manually Create] button')
         def click_manually_create(self):
             result = self.exist(L.subtitle_room.library_menu.btn_create_manually)
             if result:
@@ -134,10 +138,10 @@ class Subtitle_Room(BasePage):
                     return True
                 else:
                     logger('Verify NG - Still find the button [btn_create_manually]')
-                    return False
+                    raise Exception('Still find the button [btn_create_manually]')
             else:
                 logger('Cannot find the button [btn_create_manually]')
-                return False
+                raise Exception('Cannot find the button [btn_create_manually]')
 
         def click_import_subtitle_file(self, full_path):
             try:
@@ -165,16 +169,19 @@ class Subtitle_Room(BasePage):
             time.sleep(DELAY_TIME*0.5)
             self.select_right_click_menu('Speech to Text')
 
+        @step('[Action][Subtitle_Room][More Button] Click [Clear All Subtitles] from [More] button')
         def click_clear_all_subtitles(self):
             self.click(L.subtitle_room.btn_more)
             time.sleep(DELAY_TIME*0.5)
             self.select_right_click_menu('Clear All Subtitles')
 
+        @step('[Action][Subtitle_Room][More Button] Click [Import subtitles from SRT/TXT file] from [More] button')
         def click_import_subtitle_file(self):
             self.click(L.subtitle_room.btn_more)
             time.sleep(DELAY_TIME * 0.5)
             self.select_right_click_menu('Import subtitles from SRT/TXT file')
 
+        @step('[Action][Subtitle_Room][More Button] Click [Export SRT] button with option')
         def click_export_str(self, no_font=1):
             # Argument:
             # no_font = 1 : select "Export Without Style Formatting"
@@ -195,7 +202,7 @@ class Subtitle_Room(BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
         def get_clear_all_subtitle_status(self):
             self.click(L.subtitle_room.btn_more)
@@ -233,6 +240,7 @@ class Subtitle_Room(BasePage):
             else:
                 return None
 
+        @step('[Action][Subtitle_Room][Auto_Function] Select [Language] option')
         def select_LANG(self, option):
             el_option = ['ENG', 'JPN', 'CHT']
             # el_menu = ['English (United States)', 'Japanese', 'Mandarin Chinese (Taiwan)']
@@ -287,7 +295,7 @@ class Subtitle_Room(BasePage):
             # self.press_enter_key()
             # time.sleep(DELAY_TIME * 0.5)
 
-
+        @step('[Action][Subtitle_Room][Auto_Function] Get [Language] status')
         def get_LANG_status(self):
             elem = self.exist(L.subtitle_room.speech_to_text_window.btn_language)
             if elem:
@@ -313,6 +321,7 @@ class Subtitle_Room(BasePage):
         def click_close(self):
             self.click(L.subtitle_room.speech_to_text_window.btn_close)
 
+        @step('[Action][Subtitle_Room][Auto_Function] Click [Create] button')
         def click_create(self):
             self.click(L.subtitle_room.speech_to_text_window.btn_create)
 
@@ -320,27 +329,33 @@ class Subtitle_Room(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Subtitle_Room][Position] Set [X] position to (value) by slider')
         def set_x_slider(self, value):
             _adjust_slider(self, L.subtitle_room.position.x_slider, value)
             time.sleep(DELAY_TIME)
 
+        @step('[Action][Subtitle_Room][Position] Set [X] position to (value) by textbox')
         def set_x_value(self, value):
             target = L.subtitle_room.position.editbox_x_field
             _set_edittext(self, target, value)
 
+        @step('[Action][Subtitle_Room][Position] Get [X] position')
         def get_x_value(self):
             elem = L.subtitle_room.position.editbox_x_field
             target = self.exist(elem)
             return target.AXValue
 
+        @step('[Action][Subtitle_Room][Position] Set [Y] position to (value) by slider')
         def set_y_slider(self, value):
             _adjust_slider(self, L.subtitle_room.position.y_slider, value)
             time.sleep(DELAY_TIME)
 
+        @step('[Action][Subtitle_Room][Position] Set [Y] position to (value) by textbox')
         def set_y_value(self, value):
             target = L.subtitle_room.position.editbox_y_field
             _set_edittext(self, target, value)
 
+        @step('[Action][Subtitle_Room][Position] Get [Y] position')
         def get_y_value(self):
             elem = L.subtitle_room.position.editbox_y_field
             target = self.exist(elem)
@@ -350,10 +365,12 @@ class Subtitle_Room(BasePage):
             self.click(L.subtitle_room.position.btn_apply_to_all)
             time.sleep(DELAY_TIME * 0.5)
 
+        @step('[Action][Subtitle_Room][Position] Click [Reset] button to reset position')
         def click_reset_btn(self):
             self.click(L.subtitle_room.position.btn_reset)
             time.sleep(DELAY_TIME * 0.5)
 
+        @step('[Action][Subtitle_Room][Position] Click [Close] button to close position window')
         def close_window(self):
             self.click(L.subtitle_room.position.btn_close)
 
@@ -368,10 +385,11 @@ class Subtitle_Room(BasePage):
             else:
                 return target_elem.AXValue
 
+        @step('[Action][Subtitle_Room][Character] Set [Font Type] to (font_type)')
         def apply_font_type(self, font_type):
             try:
                 if not self.exist(L.subtitle_room.character.cbx_font):
-                    raise Exception
+                    raise Exception('Cannot find the [Font Type] combobox')
                 target_elem = self.exist(L.subtitle_room.character.cbx_font)
                 ori_pos = target_elem.AXPosition
                 size_w, size_h = target_elem.AXSize
@@ -401,7 +419,7 @@ class Subtitle_Room(BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
 
         def get_style_status(self):
             try:
@@ -447,13 +465,14 @@ class Subtitle_Room(BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception
 
+        @step('[Action][Subtitle_Room][Character] Set [Size] to (value)')
         def apply_size(self, value):
             # parameter: value should be string type
             # e.g. apply_size('36')
             try:
                 target_elem = self.exist(L.subtitle_room.character.cbx_size)
                 if not target_elem:
-                    raise Exception
+                    raise Exception('Cannot find the [Size] combobox')
                 self.click(L.subtitle_room.character.cbx_size)
                 self.keyboard.send(value)
                 self.press_enter_key()
@@ -465,7 +484,7 @@ class Subtitle_Room(BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def get_alignment(self):
@@ -586,16 +605,17 @@ class Subtitle_Room(BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception
 
+        @step('[Action][Subtitle_Room][Character] Set [Text Color] to (HexColor)')
         def set_text_color(self, HexColor):
             try:
                 if not self.exist(L.subtitle_room.character.colorpicker_text):
                     logger("No text colorpicker")
-                    raise Exception
+                    raise Exception("No text colorpicker")
                 self.click(L.subtitle_room.character.colorpicker_text)
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return _set_color(self, HexColor)
 
         def get_text_color(self):
@@ -634,10 +654,12 @@ class Subtitle_Room(BasePage):
             self.click(L.subtitle_room.character.colorpicker_border)
             return _get_color(self)
 
+        @step('[Action][Subtitle_Room][Character] Click [Apply To All] button')
         def apply_to_all(self):
             self.click(L.subtitle_room.character.btn_apply_all)
             time.sleep(DELAY_TIME * 0.5)
 
+        @step('[Action][Subtitle_Room][Character] Click [OK] button to close [Character] window')
         def click_ok(self):
             self.click(L.subtitle_room.character.btn_ok)
             time.sleep(DELAY_TIME * 0.5)
@@ -688,6 +710,7 @@ class Subtitle_Room(BasePage):
             logger('Verify NG - Cannot find the string (How to edit in subtitle room?)')
             return False
 
+    @step('[Action][Subtitle_Room] Click [Add] button')
     def click_add_btn(self, is_click=1):
         elem = self.exist(L.subtitle_room.btn_add_subtitle)
         #logger(elem.AXEnabled)
@@ -697,8 +720,10 @@ class Subtitle_Room(BasePage):
         else:
             if is_click:
                 self.click(L.subtitle_room.btn_add_subtitle)
+            time.sleep(DELAY_TIME)
             return True
 
+    @step('[Action][Subtitle_Room] Click [Delete] button')
     def click_del_btn(self, is_click=1):
         elem = self.exist(L.subtitle_room.btn_del_subtitle)
         #logger(elem.AXEnabled)
@@ -708,8 +733,10 @@ class Subtitle_Room(BasePage):
         else:
             if is_click:
                 self.click(L.subtitle_room.btn_del_subtitle)
+                time.sleep(DELAY_TIME)
             return True
 
+    @step('[Action][Subtitle_Room] Click [Change Subtitle Format] button')
     def click_change_subtitle_format(self):
         elem = self.exist(L.subtitle_room.btn_change_format)
         #logger(elem.AXEnabled)
@@ -718,8 +745,10 @@ class Subtitle_Room(BasePage):
             return False
         else:
             self.click(L.subtitle_room.btn_change_format)
+            time.sleep(DELAY_TIME*0.5)
             return True
 
+    @step('[Action][Subtitle_Room] Click the (no) subtitle text')
     def select_subtitle_row(self, no):
         # no = 1, select 1st subtitle text
         # no = 2, select 2nd subtitle text
@@ -739,8 +768,9 @@ class Subtitle_Room(BasePage):
             return True
         else:
             logger(f"Cannot find the {no}th subtitle")
-            return False
+            raise Exception(f"Cannot find the {no}th subtitle")
 
+    @step('[Action][Subtitle_Room] Select multiple subtitle text (no1) and (no2)')
     def multiple_select_subtitle_row(self, no1, no2, no3=None):
         self.select_subtitle_row(no1)
         self.tap_command_and_hold()
@@ -750,6 +780,7 @@ class Subtitle_Room(BasePage):
         self.release_command_key()
         time.sleep(0.5)
 
+    @step('[Action][Subtitle_Room] Get [start time] of the (no) subtitle text')
     def get_start_time(self, no):
         # no = 1, select 1st subtitle text
         # no = 2, select 2nd subtitle text
@@ -764,7 +795,7 @@ class Subtitle_Room(BasePage):
             return elem.AXValue
         else:
             logger("Cannot find the elem")
-            return None
+            raise Exception("Cannot find the elem")
 
     def set_start_time(self, no, timecode):
         try:
@@ -871,6 +902,7 @@ class Subtitle_Room(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
 
+    @step('[Action][Subtitle_Room] Modify the (no) subtitle text to (string)')
     def modify_subtitle_text(self, no, string1, string2=None):
         try:
             # no = 1, select 1st subtitle text
@@ -905,11 +937,13 @@ class Subtitle_Room(BasePage):
 
             # Leave (Edit mode)
             self.mouse.click(x - 5, y)
+            time.sleep(DELAY_TIME)
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
-
+            raise Exception(f'Exception occurs. log={e}')
+    
+    @step('[Action][Subtitle_Room] Click [Adjust Position] button')
     def click_adjust_pos_btn(self):
         elem = self.exist(L.subtitle_room.btn_adjust_pos)
         #logger(elem.AXEnabled)
@@ -918,6 +952,7 @@ class Subtitle_Room(BasePage):
             return False
         else:
             self.click(L.subtitle_room.btn_adjust_pos)
+            time.sleep(DELAY_TIME)
             return True
 
     def drag_scroll_bar(self, value):
@@ -983,6 +1018,7 @@ class Subtitle_Room(BasePage):
             self.click(L.subtitle_room.btn_next)
             time.sleep(DELAY_TIME*0.6)
 
+    @step('[Action][Subtitle_Room] Click [Split] button')
     def click_split_btn(self):
         elem = self.exist(L.subtitle_room.btn_split)
         #logger(elem.AXEnabled)
@@ -998,6 +1034,7 @@ class Subtitle_Room(BasePage):
         #logger(elem.AXEnabled)
         return elem.AXEnabled
 
+    @step('[Action][Subtitle_Room] Click [Merge] button')
     def click_merge_btn(self):
         elem = self.exist(L.subtitle_room.btn_merge)
         #logger(elem.AXEnabled)
@@ -1006,6 +1043,7 @@ class Subtitle_Room(BasePage):
             return False
         else:
             self.click(L.subtitle_room.btn_merge)
+            time.sleep(DELAY_TIME*0.5)
             return True
 
     def get_merge_btn(self):

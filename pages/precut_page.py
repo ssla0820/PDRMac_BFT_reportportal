@@ -80,13 +80,15 @@ class Precut(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
+    
+    @step('[Action][Precut] Click [Cancel] Button to leave [Precut] Window')
     def click_cancel(self):
         try:
             if not self.exist_click(L.precut.btn_cancel):
-                raise Exception
+                raise Exception('Unable to find [Cancel] button in [Precut] window')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def get_precut_preview_timecode(self):
