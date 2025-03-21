@@ -42,18 +42,19 @@ class Pip_room(Main_Page, BasePage):
         else:
             return False
 
+    @step('[Action][Pip Room] Sort [Library View] by [Name]')
     def sort_by_name(self):
         try:
-            logger('pip now')
+            # logger('pip now')
             if not self.exist_click(L.media_room.library_menu.btn_menu):
-                raise Exception
+                raise Exception('Cannot find library menu')
 
             if not self.select_right_click_menu('Sort by', 'Name'):
-                raise Exception
+                raise Exception('Unable to sort by name by right click menu')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def sort_by_category(self):
@@ -70,18 +71,19 @@ class Pip_room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Pip Room] Sort [library menu] by [Created Date]')
     def sort_by_created_date(self):
         try:
-            logger('pip now')
+            # logger('pip now')
             if not self.exist_click(L.media_room.library_menu.btn_menu):
-                raise Exception
+                raise Exception('Cannot find library menu')
 
             if not self.select_right_click_menu('Sort by', 'Created Date'):
-                raise Exception
+                raise Exception('Unable to sort by date by right click menu')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def select_LibraryMenu_ExtraLargeIcons(self):

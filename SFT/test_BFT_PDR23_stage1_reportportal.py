@@ -21578,328 +21578,671 @@ class Test_BFT_365_OS14():
         
         assert True
 
-
-
-
-        # [L234] 2.3 Effect Room > Body Effect > Close AP -> re-launch AP and apply effect again
-        with uuid("5bd28737-eec8-410c-81c9-b5578a31344a") as case:
-            main_page.close_and_restart_app()
-
-            # Import video to media room
-            video_path = Test_Material_Folder + 'Mark_Clips/2.mp4'
-            media_room_page.import_media_file(video_path)
-            time.sleep(DELAY_TIME * 2)
-            media_room_page.handle_high_definition_dialog()
-
-            main_page.click(L.main.tips_area.btn_insert_to_selected_track)
-            time.sleep(DELAY_TIME * 2)
-
-            # enter Effect room with press hotkey
-            main_page.tap_EffectRoom_hotkey()
-            time.sleep(DELAY_TIME * 3)
-
-            # search keyword: Geometric Light Shadow
-            media_room_page.search_library('Geometric Light Shadow')
-            time.sleep(DELAY_TIME * 4)
-
-            # Select  effect to insert video track
-            main_page.drag_media_to_timeline_playhead_position('Geometric Light Shadow')
-            time.sleep(DELAY_TIME * 4)
-
-            # set timecode 00:00:20:19
-            main_page.set_timeline_timecode('00_00_20_19')
-            time.sleep(DELAY_TIME * 2)
-
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            check_preview = main_page.compare(Ground_Truth_Folder + 'L230_timelinepreview.png', current_preview, similarity=0.97)
-            case.result = check_preview
-
-    # 8 uuid
-    # @pytest.mark.skip
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_5] Relaunch AP, Search library, drag media, wait download, set timecode, and verify preview for timeline')
     @exception_screenshot
-    def test_7_1_2(self):
-        # launch APP
-        main_page.clear_cache()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_sss_func_30_5(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_4') is run and passed
+        1. Close and Restart App
+        2. Import media for local file (Test_Material_Folder + 'Mark_Clips/2.mp4') > Handle high definition dialog
+        3. Insert media to selected track
+        4. Enter [Effect Room] via hotkey
+        5. Search library for ('Geometric Light Shadow')
+        6. Drag media ('Geometric Light Shadow') to timeline playhead position
+        7. Set Timecode to ('00_00_20_19') at main page
+        8. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L230_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L230_timelinepreview.png') with similarity 0.97
+        '''
+        with step("[Action] Ensure the dependency test ('test_sss_func_30_4') is run and passed"):
+            self.ensure_dependency('test_sss_func_30_4')
+        
+        # [L234] 2.3 Effect Room > Body Effect > Close AP -> re-launch AP and apply effect again
+        # with uuid("5bd28737-eec8-410c-81c9-b5578a31344a") as case:
 
-        # enter Title room with press hotkey
-        main_page.tap_TitleRoom_hotkey()
-        time.sleep(DELAY_TIME * 4)
+        with step("[Action] Close and Restart App"):
+            main_page.close_and_restart_app()
+        
+        with step("[Action] Import media for local file (Test_Material_Folder + 'Mark_Clips/2.mp4') > Handle high definition dialog"):
+            media_path = Test_Material_Folder + "Mark_Clips/2.mp4"
+            media_room_page.import_media_file(media_path)
+            media_room_page.handle_high_definition_dialog()
+        
+        with step("[Action] Insert media to selected track"):
+            main_page.tips_area_insert_media_to_selected_track()
+            # main_page.click(L.main.tips_area.btn_insert_to_selected_track)
+            # time.sleep(DELAY_TIME * 2)
 
+        with step("[Action] Enter [Effect Room] via hotkey"):
+            main_page.tap_EffectRoom_hotkey()
+        
+        with step("[Action] Search library for ('Geometric Light Shadow')"):
+            media_room_page.search_library("Geometric Light Shadow")
+        
+        with step("[Action] Drag media ('Geometric Light Shadow') to timeline playhead position"):
+            main_page.drag_media_to_timeline_playhead_position("Geometric Light Shadow")
+        
+        with step("[Action] Set Timecode to ('00_00_20_19') at main page"):
+            main_page.set_timeline_timecode("00_00_20_19")
+        
+        with step("[Verify] Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L230_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L230_timelinepreview.png') with similarity 0.97"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + "L230_timelinepreview.png"
+            )
+            if not main_page.compare(Ground_Truth_Folder + "L230_timelinepreview.png", preview, similarity=0.97):
+                # Similarity should be greater than 0.97 for matching preview
+                assert False, "Preview does not match GT (L230_timelinepreview.png)! Similarity should > 0.97"
+        
+        assert True
+
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_6] Verify preview update after downloading a template')
+    @exception_screenshot
+    def test_sss_func_30_6(self):
+        '''
+        1. Clear Cache > Start APP
+        2. Enter [Title Room] via hotkey
+        3. Select ('Downloads') tag > Screenshot (locator=L.media_room.library_frame)
+        4. Select ('Love') tag
+        5. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
+        6. Select ('Downloads') tag
+        7. Check if the preview is updated after download an template (similarity<0.99)
+        '''
+        with step("[Action] Clear Cache > Start APP"):
+            main_page.clear_cache()
+            main_page.start_app()
+        
+        with step("[Action] Enter [Title Room] via hotkey"):
+            main_page.tap_TitleRoom_hotkey()
+        
         # [L236] 2.3 Title Room > Continue above case > Check sorting case
-        with uuid("6259470e-4fbf-4cb5-9748-2d2bb4b945c7") as case:
-            # enter Downloads category
+        # with uuid("6259470e-4fbf-4cb5-9748-2d2bb4b945c7") as case:
+
+        with step("[Action] Select ('Downloads') tag > Screenshot (locator=L.media_room.library_frame)"):
             main_page.select_specific_tag('Downloads')
-            time.sleep(DELAY_TIME * 3)
-            empty_result = main_page.snapshot(locator=L.media_room.library_frame)
-            logger(empty_result)
-
-            # enter Love category
-            main_page.select_specific_tag('Love')
-            time.sleep(DELAY_TIME * 3)
-
-            # Click to download 2nd IAD template
+            downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+        
+        with step("[Action] Select ('Love') tag"):
+            main_page.select_specific_tag("Love")
+        
+        with step("[Action] Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download"):
             main_page.click(L.media_room.library_listview.unit_collection_view_item_second)
             time.sleep(DELAY_TIME * 3)
+        
+        with step("[Action] Select ('Downloads') tag"):
+            main_page.select_specific_tag("Downloads")
+        
+        with step("[Verify] Check if the preview is updated after download an template (similarity<0.99)"):
+            new_preview = main_page.snapshot(locator=L.media_room.library_frame)
+            # Similarity should be less than 0.99 indicating the preview has changed
+            if main_page.compare(downloads_snapshot, new_preview, similarity=0.99):
+                assert False, "Preview did not update after download! Similarity should < 0.99"
+        
+        assert True
 
-            # enter YouTube category
-            main_page.select_specific_tag('YouTube')
-            time.sleep(DELAY_TIME * 3)
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_7] Verify preview update after downloading a template from YouTube')
+    @exception_screenshot
+    def test_sss_func_30_7(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_6') is run and passed
+        1. Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag
+        2. Select ('YouTube') tag
+        3. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
+        4. Select ('Downloads') tag
+        5. Check if the preview is updated after download an template (similarity<0.99)
+        '''
+        with step("[Action] Ensure the dependency test ('test_sss_func_30_6') is run and passed"):
+            self.ensure_dependency('test_sss_func_30_6')
+        
+        with step("[Action] Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag"):
+            downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
 
-            # Click to download 2nd IAD template
+        with step("[Action] Select ('YouTube') tag"):
+            main_page.select_specific_tag("YouTube")
+        
+        with step("[Action] Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download"):
             main_page.click(L.media_room.library_listview.unit_collection_view_item_second)
             time.sleep(DELAY_TIME * 3)
+        
+        with step("[Action] Select ('Downloads') tag"):
+            main_page.select_specific_tag("Downloads")
+        
+        with step("[Verify] Check if the preview is updated after download an template (similarity<0.99)"):
+            new_preview = main_page.snapshot(locator=L.media_room.library_frame)
+            # Similarity should be less than 0.99 indicating the preview has changed
+            if main_page.compare(downloads_snapshot, new_preview, similarity=0.99):
+                assert False, "Preview did not update after download! Similarity should < 0.99"
+        
+        assert True
 
-            # enter Holidays category
-            main_page.select_specific_tag('Holidays')
-            time.sleep(DELAY_TIME * 3)
 
-            # Click to download 2nd IAD template
+
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_8] Verify preview update after downloading an IAD template')
+    @exception_screenshot
+    def test_sss_func_30_8(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_7') is run and passed
+        1. Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag
+        2. Select specific tag ('Holidays')
+        3. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
+        4. Select specific tag ('Downloads')
+        5. Check if the preview is updated after download an template (similarity<0.99)
+        '''
+        with step("[Action] Ensure the dependency test ('test_sss_func_30_7') is run and passed"):
+            self.ensure_dependency('test_sss_func_30_7')
+        
+        with step("[Action] Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag"):
+            downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+        
+        with step("[Action] Select specific tag ('Holidays')"):
+            main_page.select_specific_tag("Holidays")
+        
+        with step("[Action] Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download"):
             main_page.click(L.media_room.library_listview.unit_collection_view_item_second)
             time.sleep(DELAY_TIME * 3)
+        
+        with step("[Action] Select specific tag ('Downloads')"):
+            main_page.select_specific_tag("Downloads")
+        
+        with step("[Verify] Check if the preview is updated after download an template (similarity<0.99)"):
+            new_preview = main_page.snapshot(locator=L.media_room.library_frame)
+            # Similarity should be less than 0.99 indicating the preview has changed
+            if main_page.compare(downloads_snapshot, new_preview, similarity=0.99):
+                assert False, "Preview did not update after download! Similarity should < 0.99"
+        
+        assert True
 
-            # enter Lower Third category
-            main_page.select_specific_tag('Lower Third')
-            time.sleep(DELAY_TIME * 3)
 
-            # Click to download 2nd IAD template
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_9] Verify preview update after downloading an IAD template for (Lower Third)')
+    @exception_screenshot
+    def test_sss_func_30_9(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_8') is run and passed
+        1. Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag
+        2. Select specific tag ('Lower Third')
+        3. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
+        4. Select specific tag ('Downloads')
+        5. Check if the preview is updated after download an template (similarity<0.99)
+        '''
+        with step("[Action] Ensure the dependency test ('test_sss_func_30_8') is run and passed"):
+            self.ensure_dependency('test_sss_func_30_8')
+        
+        with step("[Action] Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag"):
+            downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+        
+        with step("[Action] Select specific tag ('Lower Third')"):
+            main_page.select_specific_tag("Lower Third")
+        
+        with step("[Action] Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download"):
             main_page.click(L.media_room.library_listview.unit_collection_view_item_second)
             time.sleep(DELAY_TIME * 3)
+        
+        with step("[Action] Select specific tag ('Downloads')"):
+            main_page.select_specific_tag("Downloads")
+        
+        with step("[Verify] Check if the preview is updated after download an template (similarity<0.99)"):
+            new_preview = main_page.snapshot(locator=L.media_room.library_frame)
+            # Similarity should be less than 0.99 indicating the preview has changed
+            if main_page.compare(downloads_snapshot, new_preview, similarity=0.99):
+                assert False, "Preview did not update after download! Similarity should < 0.99"
+        
+        assert True
 
-            # after download ...
-            # enter Downloads category to verify
-            main_page.select_specific_tag('Downloads')
-            time.sleep(DELAY_TIME * 3)
-            name_result = main_page.snapshot(locator=L.media_room.library_frame)
-            logger(name_result)
 
-            # sort by create date
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_10] Verify preview update after sort by [Created Date]')
+    @exception_screenshot
+    def test_sss_func_30_10(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_9') is run and passed
+        1. Screenshot (locator=L.media_room.library_frame)
+        2. Sort [library menu] by [Created Date]
+        3. Check preview is updated after sort by [Created Date] (Similarity should <0.94)
+        '''
+        with step("[Action] Ensure the dependency test ('test_sss_func_30_9') is run and passed"):
+            self.ensure_dependency('test_sss_func_30_9')
+        
+        with step("[Action] Screenshot (locator=L.media_room.library_frame)"):
+            initial_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+        
+        with step("[Action] Sort [library menu] by [Created Date]"):
             pip_room_page.sort_by_created_date()
-            time.sleep(DELAY_TIME * 2)
-            create_date_result = main_page.snapshot(locator=L.media_room.library_frame)
-            logger(create_date_result)
+        
+        with step("[Verify] Check preview is updated after sort by [Created Date] (Similarity should <0.94)"):
+            updated_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+            # Similarity should be less than 0.94 indicating the preview has changed
+            if main_page.compare(initial_snapshot, updated_snapshot, similarity=0.94):
+                assert False, "Preview did not update after sort! Similarity should <0.94"
+        
+        assert True
 
-            verify_step_1 = not main_page.compare(empty_result, name_result, similarity=0.94)
-            verify_step_2 = not main_page.compare(create_date_result, name_result, similarity=0.94)
-            case.result = verify_step_1 and verify_step_2
 
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.transition_room
+    @pytest.mark.name('[test_sss_func_30_11] Verify preview difference between [Effect Room] and [Transition Room] for (My Favorites)')
+    @exception_screenshot
+    def test_sss_func_30_11(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_10') is run and passed
+        1. Select Library Room category ('My Favorites') in [Effect Room]
+        2. Screenshot (locator=L.base.Area.library_icon_view)
+        3. Enter [Transition Room] via hotkey
+        4. Select Library Room category ('My Favorites') in [Transition Room]
+        5. Check [Details View] button (L.main.btn_library_details_view) is not shown in ('My Favorites') category
+        6. Check ('My Favorites') preview is different in [Effect Room] and [Transition Room] (similarity should < 0.99)
+        '''
+
+        self.ensure_dependency('test_sss_func_30_10')
+        
         # [L241] 2.3 Transition Room > Check Downloaded, My Favorites category
-        with uuid("fd0c7598-ac0c-403a-8c4a-4f0ad5da5d03") as case:
-            main_page.select_LibraryRoom_category('My Favorites')
-            time.sleep(DELAY_TIME * 2)
-            img_title_my_favorite = main_page.snapshot(L.base.Area.library_icon_view)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
+        # with uuid("fd0c7598-ac0c-403a-8c4a-4f0ad5da5d03") as case:
 
-            # enter Transition room with press hotkey
+        with step("[Action] Select Library Room category ('My Favorites') in [Effect Room]"):
+            if not main_page.select_LibraryRoom_category("My Favorites"):
+                assert False, "Failed to select Library Room category ('My Favorites') in [Effect Room]"
+        
+        with step("[Action] Screenshot (locator=L.base.Area.library_icon_view)"):
+            effect_room_snapshot = main_page.snapshot(locator=L.base.Area.library_icon_view)
+        
+        with step("[Action] Enter [Transition Room] via hotkey"):
             main_page.tap_TransitionRoom_hotkey()
-            time.sleep(DELAY_TIME * 4)
+        
+        with step("[Action] Select Library Room category ('My Favorites') in [Transition Room]"):
+            if not main_page.select_LibraryRoom_category("My Favorites"):
+                assert False, "Failed to select Library Room category ('My Favorites') in [Transition Room]"
 
-            # verify_detail_view: No exist detail view icon
-            check_detail_view = True
-
-            # Check My Favorites / Downloaded count = 0
-            main_page.select_LibraryRoom_category('My Favorites')
-            time.sleep(DELAY_TIME * 2)
-            img_my_favorite = main_page.snapshot(L.base.Area.library_icon_view)
+        with step("[Verify] Check [Details View] button (L.main.btn_library_details_view) is not shown in ('My Favorites') category"):
             if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
+                assert False, "[Detail view] icon is shown in [Transition Room] for category ('My Favorites')!"
+        
+        with step("[Verify] Check ('My Favorites') preview is different in [Effect Room] and [Transition Room] (similarity should < 0.99)"):
+            transition_room_snapshot = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            # Similarity should be less than 0.99 indicating a different preview between the two rooms
+            if main_page.compare(effect_room_snapshot, transition_room_snapshot, similarity=0.99):
+                assert False, "Preview did not update between [Effect Room] and [Transition Room]! Similarity should < 0.99"
+        
+        assert True
 
+
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.name('[test_sss_func_30_12] Verify Downloads category count=0 in Transition Room')
+    @exception_screenshot
+    def test_sss_func_30_12(self):
+        """
+        0. Ensure the dependency test ('test_sss_func_30_11') is run and passed
+        1. Select Library Room category ('Downloads')
+        2. Check [Details View] button (L.main.btn_library_details_view) is shown in ("Downloads") category
+        3. Check Downloads count is (0) by checking main_page.exist(L.transition_room.explore_view_region.Downloads_category).AXValue
+        """
+        dependency_test = "test_sss_func_30_11"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Select Library Room category ('Downloads')"):
             main_page.select_LibraryRoom_category('Downloads')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
 
-            # Verify step: check Downloads count
-            check_download_category_count = main_page.exist(L.transition_room.explore_view_region.Downloads_category)
-            verify_Downloads_count = False
-            if check_download_category_count.AXValue == 'Downloads (0)':
-                verify_Downloads_count = True
-            else:
-                logger(check_download_category_count.AXValue)
+        with step("[Verify] Check [Details View] button (L.main.btn_library_details_view) is shown in ('Downloads') category"):
+            if not main_page.exist(L.main.btn_library_details_view):
+                assert False, "The [Details View] button does not exist in Downloads category!"
 
-            # Verify step: check My favorites between Title room and Transition room
-            check_favorites_custom = main_page.compare(img_my_favorite, img_title_my_favorite, similarity=0.99)
-            logger(check_favorites_custom)
+        with step("[Verify] Check Downloads count is (0) by checking main_page.exist(L.transition_room.explore_view_region.Downloads_category).AXValue"):
+            downloads_count = main_page.exist(L.transition_room.explore_view_region.Downloads_category).AXValue
+            if downloads_count != 0:
+                assert False, f"Expected Downloads count to be (0), but got ({downloads_count})."
 
-            case.result = check_detail_view and verify_Downloads_count and check_favorites_custom
+        assert True
 
-        img_empty_downloads = main_page.snapshot(L.base.Area.library_icon_view)
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_12] Verify preview update after downloading an IAD template from (Glitch) tag')
+    @exception_screenshot
+    def test_sss_func_30_12(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_12') is run and passed
+        1. Screenshot (L.base.Area.library_icon_view) for empty ("Downloads") category
+        2. Select specific tag with name ('Glitch')
+        3. Drag [Scroll Bar] in [Transition Room] with (0)
+        4. Click to download 2nd IAD template (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
+        5. Select specific tag with name ('Downloads')
+        6. Check if the preview is updated after download an template (similarity<0.7)
+        '''
 
+        self.ensure_dependency('test_sss_func_30_12')
+        
+        with step("[Action] Screenshot (L.base.Area.library_icon_view) for empty (\"Downloads\") category"):
+            downloads_snapshot = main_page.snapshot(locator=L.base.Area.library_icon_view)
+        
         # [L242] 2.3 Transition Room > Continue above case > Check sorting case
-        with uuid("8e104e18-b0d0-46bb-b53d-9600050b24c9") as case:
-            # enter Glitch category
-            main_page.select_specific_tag('Glitch')
-            time.sleep(DELAY_TIME * 3)
+        # with uuid("8e104e18-b0d0-46bb-b53d-9600050b24c9") as case:
 
-            # scroll upper (scroll bar)
+        with step("[Action] Select specific tag with name ('Glitch')"):
+            main_page.select_specific_tag("Glitch")
+        
+        with step("[Action] Drag [Scroll Bar] in [Transition Room] with (0)"):
             transition_room_page.drag_TransitionRoom_Scroll_Bar(0)
-            time.sleep(DELAY_TIME * 2)
-
-            # Click to download 2nd IAD template
+        
+        with step("[Action] Click to download 2nd IAD template (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download"):
             main_page.click(L.media_room.library_listview.unit_collection_view_item_second)
             time.sleep(DELAY_TIME * 3)
+        
+        with step("[Action] Select specific tag with name ('Downloads')"):
+            main_page.select_specific_tag("Downloads")
+        
+        with step("[Verify] Check if the preview is updated after download an template (similarity<0.7)"):
+            new_snapshot = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            # Similarity should be less than 0.7 indicating the preview has updated noticeably
+            if main_page.compare(downloads_snapshot, new_snapshot, similarity=0.7):
+                assert False, "Preview did not update after download! Similarity should < 0.7"
+        
+        assert True
 
-            # after download ...
-            # enter Downloads category to verify
-            main_page.select_specific_tag('Downloads')
-            time.sleep(DELAY_TIME * 3)
-            name_result = main_page.snapshot(locator=L.media_room.library_frame)
-            logger(name_result)
 
-            # sort by name
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libaray
+    @pytest.mark.name('[test_sss_func_30_13] Verify preview update after sorting [Library View] by [Name]')
+    @exception_screenshot
+    def test_sss_func_30_13(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_12') is run and passed
+        1. Screenshot (locator=L.media_room.library_frame) for original sort
+        2. Sort [Library View] by [Name]
+        3. Check preview is updated after Sort [Library View] by [Name] with similarity < 0.7
+        '''
+
+        self.ensure_dependency('test_sss_func_30_12')
+        
+        with step("[Action] Screenshot (locator=L.media_room.library_frame) for original sort"):
+            original_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+        
+        with step("[Action] Sort [Library View] by [Name]"):
             pip_room_page.sort_by_name()
-            time.sleep(DELAY_TIME * 2)
-            sort_by_name_again = main_page.snapshot(locator=L.media_room.library_frame)
-            logger(create_date_result)
+        
+        with step("[Verify] Check preview is updated after Sort [Library View] by [Name] with similarity < 0.7"):
+            updated_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
+            # Similarity should be less than 0.7 indicating the preview has updated
+            if main_page.compare(original_snapshot, updated_snapshot, similarity=0.7):
+                assert False, "Preview did not update after sorting by [Name]! Similarity should < 0.7"
+        
+        assert True
 
-            verify_step_1 = not main_page.compare(img_empty_downloads, name_result, similarity=0.7)
-            verify_step_2 = not main_page.compare(sort_by_name_again, name_result, similarity=0.7)
-            case.result = verify_step_1 and verify_step_2
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_sss_func_30_14] Verify no [Detail View] icon for IAD category in Popular, Brush, and Slideshow')
+    @exception_screenshot
+    def test_sss_func_30_14(self):
+        '''
+        0. Ensure the dependency test ('test_sss_func_30_13') is run and passed
+        1. Select Library Room category ('Popular')
+        2. Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category
+        3. Select Library Room category ('Brush')
+        4. Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category
+        5. Select Library Room category ('Slideshow')
+        6. Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category
+        '''
+
+        self.ensure_dependency('test_sss_func_30_13')
 
         # [L243] 2.3 Transition Room > Check other IAD category > remove "Detail view" icon
-        with uuid("f2373b47-3df6-4a24-b2ce-9f48cf13b534") as case:
-            # verify_detail_view: No exist detail view icon
-            check_detail_view = True
+        # with uuid("f2373b47-3df6-4a24-b2ce-9f48cf13b534") as case:
 
-            main_page.select_LibraryRoom_category('Popular')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
+        with step("[Action] Select Library Room category ('Popular')"):
+            if not main_page.select_LibraryRoom_category("Popular"):
+                assert False, "Failed to select Library Room category ('Popular')"
+        
+        with step("[Verify] Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category"):
+            if main_page.exist(L.main.btn_library_details_view):
+                assert False, "Detail View icon exists for IAD category in 'Popular'"
+        
+        with step("[Action] Select Library Room category ('Brush')"):
+            if not main_page.select_LibraryRoom_category("Brush"):
+                assert False, "Failed to select Library Room category ('Brush')"
+        
+        with step("[Verify] Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category"):
+            if main_page.exist(L.main.btn_library_details_view):
+                assert False, "Detail View icon exists for IAD category in 'Brush'"
+        
+        with step("[Action] Select Library Room category ('Slideshow')"):
+            if not main_page.select_LibraryRoom_category("Slideshow"):
+                assert False, "Failed to select Library Room category ('Slideshow')"
+        
+        with step("[Verify] Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category"):
+            if main_page.exist(L.main.btn_library_details_view):
+                assert False, "Detail View icon exists for IAD category in 'Slideshow'"
+        
+        assert True
 
-            main_page.select_LibraryRoom_category('Brush')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
-
-            main_page.select_LibraryRoom_category('Slideshow')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
-
-            case.result = check_detail_view
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_sss_func_30_15] Switch category, and check preview is updated')
+    def test_sss_func_30_15(self):
+        ''' 
+        0. Ensure the dependency test ('test_sss_func_30_14') is run and passed
+        1. Screenshot (locator=L.media_room.library_frame) for category ('Slideshow')
+        2. Select Library Room category ('Speed Blur')
+        3. Check update is true after switching to ('Speed Blur') category with similarity <0.94 and >0.7
+        '''
+        dependency_test = "test_sss_func_30_14"
+        self.ensure_dependency(dependency_test)
 
         # [L244] 2.3 Transition Room > IAD category > Check sorting rule
-        with uuid("bf9fb6de-faa0-4c71-ac66-289e9dd0ed13") as case:
-            time.sleep(DELAY_TIME * 2)
-            img_Slideshow = main_page.snapshot(L.media_room.library_frame)
+        # with uuid("bf9fb6de-faa0-4c71-ac66-289e9dd0ed13") as case:
 
-            main_page.select_LibraryRoom_category('Speed Blur')
-            time.sleep(DELAY_TIME * 2)
-            img_Speed_Blur  = main_page.snapshot(L.media_room.library_frame)
+        with step("[Action] Screenshot (locator=L.media_room.library_frame) for category ('Slideshow')"):
+            screenshot_slideshow = main_page.snapshot(locator=L.media_room.library_frame)
 
-            # Verify step: From Mood to Social Media, Library content is updated
-            check_update = not main_page.compare(img_Slideshow, img_Speed_Blur, similarity=0.94)
-            check_partial_the_same = main_page.compare(img_Slideshow, img_Speed_Blur, similarity=0.7)
-            case.result = check_update and check_partial_the_same
+        with step("[Action] Select Library Room category ('Speed Blur')"):
+            if not main_page.select_LibraryRoom_category("Speed Blur"):
+                assert False, "Failed to select Library Room category 'Speed Blur'"
+
+        with step("[Verify] Check update is true after switching to ('Speed Blur') category with similarity <0.94 and >0.7"):
+            screenshot_speed_blur = main_page.snapshot(locator=L.media_room.library_frame)
+            if not main_page.compare(screenshot_slideshow, screenshot_speed_blur, similarity=0.94):
+                # Similarity should be greater than 0.7 but less than 0.94
+                assert False, "Similarity is not in the expected range! Similarity should be < 0.94"
+
+            if main_page.compare(screenshot_slideshow, screenshot_speed_blur, similarity=0.7):
+                # Similarity should be greater than 0.7 but less than 0.94
+                assert False, "Similarity is not in the expected range! Similarity should be >0.7"
+        assert True
+
+
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_library
+    @pytest.mark.import_media
+    @pytest.mark.name('[test_sss_func_30_16] Import media and apply Transition template to timeline')
+    def test_sss_func_30_16(self):
+        ''' 
+        0. Ensure the dependency test ('test_sss_func_30_15') is run and passed
+        1. Enter Room (Media)(0)
+        2. Import media file (Test_Material_Folder + 'Mark_Clips/2.mp4')
+        3. Insert media to selected track
+        4. Enter [Transition Room] via hotkey
+        5. Set timeline timecode ('00_00_09_24') at main page
+        6. Enter [Split] via hotkey
+        7. Select Library Room category ('Graphic')
+        8. Search library ('Sparkle Transitions 03')
+        9. Drag media ('Sparkle Transitions 03') to timeline playhead position
+        10. Click timeline track (2)
+        11. Set timeline timecode ('00_00_09_20') at main page
+        12. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L218_transition.png') matches GT (Ground_Truth_Folder + 'L218_transition.png') with similarity 0.95
+        '''
+        dependency_test = "test_sss_func_30_15"
+        self.ensure_dependency(dependency_test)
 
         # [L218] 2.3 Transition Room > Add each kind of template to timeline & Preview
-        with uuid("9153adb7-af17-4dd7-a2f2-c11f780b5793") as case:
-            # back to media room
+        # with uuid("9153adb7-af17-4dd7-a2f2-c11f780b5793") as case:
+
+        with step("[Action] Enter Room (Media)(0)"):
             main_page.enter_room(0)
-            time.sleep(DELAY_TIME * 2)
 
-            # Import video to media room
-            video_path = Test_Material_Folder + 'Mark_Clips/2.mp4'
-            media_room_page.import_media_file(video_path)
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Import media file (Test_Material_Folder + 'Mark_Clips/2.mp4')"):
+            media_room_page.import_media_file(Test_Material_Folder + 'Mark_Clips/2.mp4')
 
-            # insert video to timeline
+        with step("[Action] Insert media to selected track"):
             main_page.tips_area_insert_media_to_selected_track()
-            time.sleep(DELAY_TIME * 2)
 
-            # enter Transition room with press hotkey
+        with step("[Action] Enter [Transition Room] via hotkey"):
             main_page.tap_TransitionRoom_hotkey()
-            time.sleep(DELAY_TIME * 4)
 
-            # Set timeline timecode (00:00:09:24)
+        with step("[Action] Set timeline timecode ('00_00_09_24') at main page"):
             main_page.set_timeline_timecode('00_00_09_24')
-            time.sleep(DELAY_TIME * 2)
 
-            # press Split hotkey
+        with step("[Action] Enter [Split] via hotkey"):
             main_page.tap_Split_hotkey()
-            time.sleep(DELAY_TIME * 2)
 
+        with step("[Action] Select Library Room category ('Graphic')"):
             main_page.select_LibraryRoom_category('Graphic')
-            time.sleep(DELAY_TIME * 2)
 
-            # Select template (search library: Sparkle Transitions 03)
+        with step("[Action] Search library ('Sparkle Transitions 03')"):
             media_room_page.search_library('Sparkle Transitions 03')
-            time.sleep(DELAY_TIME * 4)
 
-            # drag media to timeline pleayhead
-            main_page.drag_media_to_timeline_playhead_position('Sparkle Transitions 03')
-            time.sleep(DELAY_TIME * 3)
+        with step("[Action] Drag media ('Sparkle Transitions 03') to timeline playhead position"):
+            main_page.drag_media_to_timeline_playhead_position('Sparkle Transitions 03', track_no=2)
 
-            # click timeline track 2
+        with step("[Action] Click timeline track (2)"):
             main_page.timeline_select_track(2)
 
-            # Set timeline timecode (00:00:09:20)
+        with step("[Action] Set timeline timecode ('00_00_09_20') at main page"):
             main_page.set_timeline_timecode('00_00_09_20')
-            time.sleep(DELAY_TIME * 2)
 
-            timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L218_transition.png')
-            check_transition = main_page.compare(Ground_Truth_Folder + 'L218_transition.png', timeline_preview)
-            case.result = check_transition
+        with step("[Verify] Check preview matches GT (L218_transition.png) with similarity 0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L218_transition.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L218_transition.png', preview_snapshot, similarity=0.95):
+                # Similarity should be greater than 0.95 for a matching preview
+                assert False, "Preview does not match GT (L218_transition.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.sss_func
+    @pytest.mark.transition_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_sss_func_30_17] Search (.) in library in [Transition] Room')
+    def test_sss_func_30_17(self):
+        ''' 
+        0. Ensure the dependency test ('test_sss_func_30_16') is run and passed
+        1. Select Library Room category ('All Content')
+        2. Search library ('.')
+        3. Check no results (L.media_room.txt_no_results_for_dot) for '.' in library
+        4. Click [Close] to back to Launcher
+        5. Handle [Do you want to save changes] dialog with option [No]
+        '''
+        dependency_test = "test_sss_func_30_16"
+        self.ensure_dependency(dependency_test)
 
         # [L246] 2.3 Transition Room > Input "." character
-        with uuid("84a0952f-506c-4b6a-b8e3-de72f85add62") as case:
+        # with uuid("84a0952f-506c-4b6a-b8e3-de72f85add62") as case:
+
+        with step("[Action] Select Library Room category ('All Content')"):
             main_page.select_LibraryRoom_category('All Content')
-            time.sleep(DELAY_TIME * 2)
 
-            # Select template (search library: .
+        with step("[Action] Search library ('.')"):
             media_room_page.search_library('.')
-            time.sleep(DELAY_TIME * 4)
 
-            # verify step:
-            case.result = main_page.is_exist(L.media_room.txt_no_results_for_dot)
+        with step("[Verify] Check no results (L.media_room.txt_no_results_for_dot) for '.' in library"):
+            if not main_page.is_exist(L.media_room.txt_no_results_for_dot):
+                assert False, "No results text for '.' not found!"
 
-        # close [x] to back to launcher
-        main_page.click_close_then_back_to_launcher()
-        time.sleep(DELAY_TIME * 2)
+        with step("[Action] Click [Close] to back to Launcher"):
+            main_page.click_close_then_back_to_launcher()
 
-        # click [No] when pop up "save project" dialog
-        main_page.handle_no_save_project_dialog()
+        with step("[Action] Handle [Do you want to save changes] dialog with option [No]"):
+            main_page.handle_aspect_ratio_conflict(option='no')
+
+        assert True
+
+
+    @pytest.mark.sss_func
+    @pytest.mark.launcher
+    @pytest.mark.ai_background_remover
+    @pytest.mark.name('[test_sss_func_30_18] Close import dialog and verify title')
+    def test_sss_func_30_18(self):
+        ''' 
+        0. Ensure the dependency test ('test_sss_func_30_17') is run and passed
+        1. Click on btn (AI Background Remover)(L.base.launcher_window.btn_ai_bg_remover) on launcher
+        2. Verify title is 'AI Background Remover'
+        3. Press [ESC] to close import dialog
+        '''
+        dependency_test = "test_sss_func_30_17"
+        self.ensure_dependency(dependency_test)
 
         # [L31] 1.3 New Launcher > Showcase > AI Background Remover > Single click on banner area
-        with uuid("e4e8c649-b90e-455b-9cf2-53ef9de9402f") as case:
-            # Hover Tool area (Greener Grass)
-            target = main_page.exist(L.base.launcher_window.btn_ai_bg_remover)
-            main_page.mouse.move(*target.center)
+        # with uuid("e4e8c649-b90e-455b-9cf2-53ef9de9402f") as case:
 
-            # click in (show case area)
-            main_page.click(L.base.launcher_window.show_case_video_area)
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Click [Close] button to back to launcher"):
+            main_page.click_close_then_back_to_launcher()
 
-            # verify step:
-            import_object = main_page.exist(L.base.launcher_window.import_dialog)
-            if import_object.AXTitle == 'AI Background Remover':
-                case.result = True
-            else:
-                case.result = False
-                logger(import_object.AXTitle)
+        with step("[Action] Click on btn (AI Background Remover) on launcher"):
+            main_page.click(L.base.launcher_window.btn_ai_bg_remover)
 
-        # Press [ESC] to close import dialog
-        main_page.press_esc_key()
+        with step("[Verify] Check that show case title is 'AI Background Remover'"):
+            target = main_page.exist(L.base.launcher_window.show_case_title)
+            if target.AXTitle != "AI Background Remover":
+                assert False, f"Show case title does not match expected value! Expected 'AI Background Remover', got '{target.AXTitle}'"
 
-    # 7 uuid
-    # @pytest.mark.skip
-    @exception_screenshot
-    def test_7_1_3(self):
-        # launch APP
-        main_page.clear_cache()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+        with step("[Action] Press [ESC] to close import dialog"):
+            main_page.press_esc_key()
 
-        # enter Effect room with press hotkey
-        main_page.tap_EffectRoom_hotkey()
+        assert True
+
+
+    @pytest.mark.sss_func
+    @pytest.mark.launch
+    @pytest.mark.effect_room
+    @pytest.mark.name('[test_sss_func_30_19] Check [Hot] icon shows on ("Popular") tag in [Effect Room]')
+    def test_sss_func_30_19(self):
+        ''' 
+        1. Clear cache > Start App
+        2. Enter [Effect Room] via hotkey
+        3. Find the specific tag ('Popular') and return tag name
+        4. Check preview (file_name=Auto_Ground_Truth_Folder + 'L224_hot_icon.png', w=new_w, x=new_x, y=new_y, h=new_h) matches (Ground_Truth_Folder + 'L224_hot_icon.png', img_hot_icon, similarity=0.9)
+        '''
+
+        with step("[Action] Start App"):
+            main_page.clear_cache()
+            main_page.start_app()
+
+        with step("[Action] Enter [Effect Room] via hotkey"):
+            main_page.tap_EffectRoom_hotkey()
 
         # [L224] 2.3 Effect Room > Check hot icon
-        with uuid("c48e2e7c-2bea-48ba-8d6c-c83d02f537b9") as case:
-            # find Popular category then get target object
-            target_object = effect_room_page.find_specific_tag_return_tag('Popular')
+        # with uuid("c48e2e7c-2bea-48ba-8d6c-c83d02f537b9") as case:
 
+        with step("[Action] Find the specific tag ('Popular') and return tag object"):
+            target_object = effect_room_page.find_specific_tag_return_tag('Popular')
             x, y = target_object.AXPosition
             w, h = target_object.AXSize
 
@@ -21907,53 +22250,97 @@ class Test_BFT_365_OS14():
             new_y = y
             new_w = h + 10
             new_h = h
-            img_hot_icon = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L224_hot_icon.png', w=new_w, x=new_x, y=new_y, h=new_h)
-            case.result = main_page.compare(Ground_Truth_Folder + 'L224_hot_icon.png', img_hot_icon, similarity=0.9)
 
+        with step("[Verify] Check preview matches GT (L224_hot_icon.png) with similarity 0.9"):
+            preview_snapshot = main_page.snapshot(
+                file_name=Auto_Ground_Truth_Folder + 'L224_hot_icon.png',
+                w=new_w, x=new_x, y=new_y, h=new_h
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L224_hot_icon.png', preview_snapshot, similarity=0.9
+            )
+            if not check_preview:
+                assert False, "Preview does not match Ground Truth (L224_hot_icon.png)! Similarity should > 0.9"
+
+        assert True
+
+    @pytest.mark.sss_func
+    @pytest.mark.background_music
+    @pytest.mark.content_pack
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_sss_func_30_20] Check [Download OK] Icon before/ after downloading background music')
+    def test_sss_func_30_20(self):
+        ''' 
+        0. Ensure the dependency test ('test_sss_func_30_19') is run and passed
+        1. Enter zoom (media)(0)
+        2. Enter [Background Music (meta)] Category
+        3. Select specific category in meta by name ('Asian')
+        4. Search library ('Rindu')
+        5. Check [Download OK] icon is not shown by is_not_exist(L.media_room.scroll_area.table_view_text_field_download_ok)
+        6. Click [Download] icon (L.media_room.scroll_area.table_view_text_field_download_button) and wait DELAY_TIME*5 for downloading
+        7. Check [Download OK] icon is not shown after downloading by is_not_exist(L.media_room.scroll_area.table_view_text_field_download_ok)
+        '''
         # [L157] 2.1 Media Room > BGM (Meta) > Download by click [Download] icon
-        with uuid("7b599fbd-6ae8-460b-a41d-0513af82027c") as case:
-            # Enter Media room
+        # with uuid("7b599fbd-6ae8-460b-a41d-0513af82027c") as case:
+
+        dependency_test = "test_sss_func_30_19"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Enter zoom (media)(0)"):
             main_page.enter_room(0)
-            time.sleep(DELAY_TIME * 3)
 
-            # Enter BGM(Meta)
+        with step("[Action] Enter [Background Music (meta)] Category"):
             media_room_page.enter_background_music()
-            time.sleep(DELAY_TIME * 4)
 
-            # Enter (Asian) category
+        with step("[Action] Select specific category in meta by name ('Asian')"):
             media_room_page.select_specific_category_in_meta('Asian')
-            time.sleep(DELAY_TIME * 4)
 
-            # search keyword: Brainwaves
+        with step("[Action] Search library ('Rindu')"):
             media_room_page.search_library('Rindu')
-            time.sleep(DELAY_TIME * 4)
 
-            # before download: verify step:
-            target_not_download = main_page.is_not_exist(L.media_room.scroll_area.table_view_text_field_download_ok)
-            # find the download icon : download the BGM "Rindu (feat. Cuurley)"
-            main_page.click(L.media_room.scroll_area.table_view_text_field_download_button)
+        with step("[Verify] Check [Download OK] icon is not shown"):
+            if not main_page.is_not_exist(L.media_room.scroll_area.table_view_text_field_download_ok):
+                assert False, "[Download OK] icon should not be shown before downloading!"
+
+        with step("[Action] Click [Download] icon and wait for downloading"):
+            main_page.click(L.media_room.scroll_area.table_view_text_field_download_button, times=1)
             time.sleep(DELAY_TIME * 5)
 
-            # Verify step:
-            target_download = main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok)
-            case.result = target_not_download and target_download
+        with step("[Verify] Check [Download OK] icon is not shown after downloading"):
+            if main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok):
+                assert False, "[Download OK] icon should not be shown after downloading!"
+
+        assert True
+
+    @pytest.mark.sss_func
+    @pytest.mark.effect_room
+    @pytest.mark.name('[test_sss_func_30_21] Verify Detail View icon visibility in My Favorites')
+    def test_sss_func_30_21(self):
+        ''' 
+        0. Ensure the dependency test ('test_sss_func_30_20') is run and passed
+        1. Enter [Effect Room] via hotkey
+        2. Select Library Room category ('My Favorites')
+        3. Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('My Favorites') category
+        '''
+        dependency_test = "test_sss_func_30_20"
+        self.ensure_dependency(dependency_test)
 
         # [L247] 2.3 Effect Room > Check My Favorites category > Remove detail view
-        with uuid("4a20ca5c-a67a-42a6-8add-d5ba9c15aefb") as case:
-            # enter Effect room with press hotkey
+        # with uuid("4a20ca5c-a67a-42a6-8add-d5ba9c15aefb") as case:
+
+        with step("[Action] Enter [Effect Room] via hotkey"):
             main_page.tap_EffectRoom_hotkey()
-            time.sleep(DELAY_TIME * 4)
 
-            # verify_detail_view: No exist detail view icon
-            check_detail_view = True
+        with step("[Action] Select Library Room category ('My Favorites')"):
+            main_page.select_LibraryRoom_category("My Favorites")
 
-            # Check My Favorites / Downloaded count = 0
-            main_page.select_LibraryRoom_category('My Favorites')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Verify] Check [Detail View] icon is not shown in 'My Favorites' category"):
             if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
+                assert False, "[Detail View] icon should not be shown in 'My Favorites' category!"
 
-            case.result = check_detail_view
+        assert True
+
+
 
         # [L249] 2.3 Effect Room > Check IAD category > Remove detail view
         with uuid("ff0733c7-eccf-4188-8c55-7f15164f6a0d") as case:

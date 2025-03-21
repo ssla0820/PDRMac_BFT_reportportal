@@ -37,6 +37,7 @@ class Effect_Room(Main_Page, BasePage):
                 return True
         return False
 
+    @step('[Action][Effect Room] Find the specific tag and return tag object')
     def find_specific_tag_return_tag(self, name):
         tags = self.exist(L.effect_room.effect_room_tag_list)
         for tag in tags:

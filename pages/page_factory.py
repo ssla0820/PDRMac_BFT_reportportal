@@ -82,14 +82,14 @@ class PageFactory():
         #     page_obj = Video_speed_page(driver)
         elif page_name == 'voice_over_recording_page':
             page_obj = Voice_Over_Recording_Room(driver)
-        # elif page_name == 'transition_room_page':
-        #     page_obj = Transition_room(driver)
+        elif page_name == 'transition_room_page':
+            page_obj = Transition_room(driver)
         # elif page_name == 'particle_room_page':
         #     page_obj = Particle_room(driver)
         elif page_name == 'playback_window_page':
             page_obj = Playback_window(driver)
-        # elif page_name == 'pip_room_page':
-        #     page_obj = Pip_room(driver)
+        elif page_name == 'pip_room_page':
+            page_obj = Pip_room(driver)
         # elif page_name == 'download_from_cl_dz_page':
         #     page_obj = DownloadFromCLDZ(driver)
         elif page_name == 'preferences_page':

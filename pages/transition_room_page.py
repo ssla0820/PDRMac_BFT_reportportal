@@ -5,6 +5,7 @@ from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 # from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -336,6 +337,7 @@ class Transition_room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Transition Room] Drag [Scroll Bar] to (value)')
     def drag_TransitionRoom_Scroll_Bar(self, value):
         try:
             self.exist(L.transition_room.scroll_bar.scroll_elem).AXValue = float(value)

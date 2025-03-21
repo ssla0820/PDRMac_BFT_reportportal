@@ -375,6 +375,7 @@ class BasePage(BasePage):
     def left_click(self, locator=None, btn="left"):
         self.click(locator, btn)
 
+    @step("[Action][Base_page] Select specific tag with name")
     def select_specific_tag(self, name):
         tags = self.exist(L.base.tag_list)
         tags_2 = self.exist(L.base.tag_list_2)
@@ -822,11 +823,13 @@ class BasePage(BasePage):
     def tap_ParticleRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f6):
             pass
-
+    
+    @step('[Action][Base_page] Enter [Title Room] via hotkey')
     def tap_TitleRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f7):
             pass
 
+    @step('[Action][Base_page] Enter [Transition Room] via hotkey')
     def tap_TransitionRoom_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.f8):
             pass
@@ -871,6 +874,7 @@ class BasePage(BasePage):
         with self.keyboard.pressed("o"):
             pass
 
+    @step('[Action][Base_page] Enter [Split] via hotkey')
     def tap_Split_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.cmd, "t"):
             pass
