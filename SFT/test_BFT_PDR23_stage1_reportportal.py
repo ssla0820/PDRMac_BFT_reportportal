@@ -22041,6 +22041,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.sss_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_15] Switch category, and check preview is updated')
     def test_sss_func_30_15(self):
         ''' 
@@ -22079,6 +22080,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.content_pack
     @pytest.mark.search_library
     @pytest.mark.import_media
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_16] Import media and apply Transition template to timeline')
     def test_sss_func_30_16(self):
         ''' 
@@ -22150,6 +22152,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.transition_room
     @pytest.mark.content_pack
     @pytest.mark.search_library
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_17] Search (.) in library in [Transition] Room')
     def test_sss_func_30_17(self):
         ''' 
@@ -22188,6 +22191,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.sss_func
     @pytest.mark.launcher
     @pytest.mark.ai_background_remover
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_18] Close import dialog and verify title')
     def test_sss_func_30_18(self):
         ''' 
@@ -22222,6 +22226,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.sss_func
     @pytest.mark.launch
     @pytest.mark.effect_room
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_19] Check [Hot] icon shows on ("Popular") tag in [Effect Room]')
     def test_sss_func_30_19(self):
         ''' 
@@ -22268,6 +22273,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.background_music
     @pytest.mark.content_pack
     @pytest.mark.search_library
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_20] Check [Download OK] Icon before/ after downloading background music')
     def test_sss_func_30_20(self):
         ''' 
@@ -22314,6 +22320,7 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.sss_func
     @pytest.mark.effect_room
+    @exception_screenshot
     @pytest.mark.name('[test_sss_func_30_21] Verify Detail View icon visibility in My Favorites')
     def test_sss_func_30_21(self):
         ''' 
