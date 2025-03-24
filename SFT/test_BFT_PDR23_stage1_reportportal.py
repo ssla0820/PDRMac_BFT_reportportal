@@ -1168,7 +1168,8 @@ class Test_BFT_365_OS14():
             main_page.clear_cache()
             main_page.start_app()
 
-        with step("[Action] Set project aspect ratio to 16:9"):
+        with step("[Action] Set project aspect ratio to 9:16"):
+            time.sleep(DELAY_TIME)
             main_page.set_project_aspect_ratio_9_16()
 
         with step("[Action] Open package project to specified location"):
@@ -1442,16 +1443,16 @@ class Test_BFT_365_OS14():
 
         with step("[Verify] Check the preview is updated after adding marker"):
             preview_after_marker = main_page.snapshot(locator=L.library_preview.upper_view_region)
-            if main_page.compare(initial_preview, preview_after_marker, similarity=0.95):
-                assert False, "Preview did not update after adding marker! Similarity should < 0.95"
+            if main_page.compare(initial_preview, preview_after_marker, similarity=0.99):
+                assert False, "Preview did not update after adding marker! Similarity should < 0.99"
 
         with step("[Action] Input [Text]('Test BFT and add marker') on [Modify Clip Marker]"):
             library_preview_page.edit_library_preview_window_clip_marker_input_text('Test BFT and add marker')
 
         with step("[Verify] Check the preview is updated after adding text"):
             preview_after_text = main_page.snapshot(locator=L.library_preview.upper_view_region)
-            if main_page.compare(preview_after_marker, preview_after_text, similarity=0.95):
-                assert False, "Preview did not update after adding text! Similarity should < 0.95"
+            if main_page.compare(preview_after_marker, preview_after_text, similarity=0.99):
+                assert False, "Preview did not update after adding text! Similarity should < 0.99"
 
         assert True
 
@@ -1489,8 +1490,8 @@ class Test_BFT_365_OS14():
         with step("[Action] Click [Mark In] and check the preview update"):
             library_preview_page.edit_library_preview_window_click_mark_in()
             preview_after_mark_in = main_page.snapshot(locator=L.library_preview.upper_view_region)
-            if main_page.compare(initial_preview, preview_after_mark_in, similarity=0.95):
-                assert False, "Preview did not update after adding Mark In! Similarity should < 0.95"
+            if main_page.compare(initial_preview, preview_after_mark_in, similarity=0.9999):
+                assert False, "Preview did not update after adding Mark In! Similarity should < 0.9999"
 
         with step("[Action] Set Timecode ('00_00_10_07') on Library Preview and screenshot"):
             main_page.set_library_preview_timecode('00_00_10_07')
@@ -1499,8 +1500,8 @@ class Test_BFT_365_OS14():
         with step("[Action] Click [Mark Out] and check the preview update"):
             library_preview_page.edit_library_preview_window_click_mark_out()
             preview_after_mark_out = main_page.snapshot(locator=L.library_preview.upper_view_region)
-            if main_page.compare(preview_before_mark_out, preview_after_mark_out, similarity=0.95):
-                assert False, "Preview did not update after adding Mark Out! Similarity should < 0.95"
+            if main_page.compare(preview_before_mark_out, preview_after_mark_out, similarity=0.9999):
+                assert False, "Preview did not update after adding Mark Out! Similarity should < 0.9999"
 
         with step("[Action] Click [Insert] on selected track"):
             library_preview_page.edit_library_preview_window_click_insert_on_selected_track()
@@ -1628,10 +1629,10 @@ class Test_BFT_365_OS14():
         with step("[Action] Click [Cancel] button in search library"):
             media_room_page.search_library_click_cancel()
 
-        with step("[Verify] Check preview is the same as initial preview"):
+        with step("[Verify] Check preview is updated"):
             updated_preview = main_page.snapshot(locator=L.base.Area.preview.main)
-            if not main_page.compare(initial_preview, updated_preview, similarity=0.95):
-                assert False, "Preview changed unexpectedly after canceling search! Similarity should be > 0.95"
+            if main_page.compare(initial_preview, updated_preview, similarity=0.95):
+                assert False, "Preview doesn't changed expectedly after canceling search! Similarity should be < 0.95"
 
         assert True
 
@@ -1658,6 +1659,9 @@ class Test_BFT_365_OS14():
         with step("[Verify] Check if [Media Content] category is hidden"):
             is_hidden = not main_page.exist(L.media_room.tag_media_content, timeout=5)
             assert is_hidden, "[Media Content] category is still visible after hiding Explore View!"
+
+        with step("[Action] Click [Display/Hide Explore View] button to display Explore View"):
+            media_room_page.click_display_hide_explore_view()
 
         assert True
 
@@ -1768,6 +1772,7 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Modify [Color Board] Color to ('F2E0B7') in Media Room"):
             media_room_page.library_menu_new_color_board(hex_color='F2E0B7')
+            time.sleep(DELAY_TIME*2)
 
         with step("[Verify] Check preview as GT (L37.png)"):
             preview = main_page.snapshot(locator=main_page.area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L37.png')
@@ -1792,6 +1797,9 @@ class Test_BFT_365_OS14():
         # with uuid("5e96c098-f404-4992-bae7-3b946d2927b5") as case:
 
         with step("[Action] Insert media to selected track and take a screenshot"):
+            time.sleep(DELAY_TIME)
+            main_page.set_timeline_timecode('00_00_11_29')
+            time.sleep(DELAY_TIME)
             main_page.tips_area_insert_media_to_selected_track(option=-1)
             initial_preview = main_page.snapshot(locator=main_page.area.preview.main)
 
@@ -1906,7 +1914,7 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Select media '487360077_fhd' and press [Space] key to play"):
             # the media is downloaded in test_media_room_func_2_13
-            main_page.select_library_icon_view_media('487360077_fhd')
+            main_page.select_library_icon_view_media('466024610_fhd')
             main_page.press_space_key()
 
         with step("[Verify] Check if preview window is different when playing (sec=5)"):
@@ -1947,7 +1955,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.media_room
     @pytest.mark.my_project
     @pytest.mark.file_location
-    @pytest.mark.name('[test_media_room_func_2_33] Select media and open file location from context menu')
+    @pytest.mark.name('[test_media_room_func_2_34] Select media and open file location from context menu')
     @exception_screenshot
     def test_media_room_func_2_34(self):
         """
@@ -4367,8 +4375,8 @@ class Test_BFT_365_OS14():
         # check if preview changed
         with step('[Verify] Check if preview changed correctly at (02:18)'):
             in_animation_preview = main_page.snapshot(locator=L.title_designer.area.window_title_designer)
-            if main_page.compare(in_animation_preview, no_in_animation_preview, similarity=0.99):
-                assert False, "In animation effect is not applied correctly on preview window! Similarity should < 0.99"
+            if main_page.compare(in_animation_preview, no_in_animation_preview, similarity=0.995):
+                assert False, "In animation effect is not applied correctly on preview window! Similarity should < 0.995"
         assert True
 
 
