@@ -21400,13 +21400,13 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.import_media
     @pytest.mark.launch
-    @pytest.mark.name('[test_sss_func_30_1] Clear Cache > Start APP, Import media, Insert media, Enter [Effect Room], Select Library Room category (Body Effect), Drag [Scroll Bar] in Title Room with (0.5) and (1), and verify preview update')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_1] Clear Cache > Start APP, Import media, Insert media, Enter [Effect Room], Select Library Room category (Body Effect), Drag [Scroll Bar] in Title Room with (0.5) and (1), and verify preview update')
     @exception_screenshot
-    def test_sss_func_30_1(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_1(self):
         '''
         1. Clear Cache > Start APP
         2. Import media for local file (Test_Material_Folder + 'Mark_Clips/2.mp4') > Handle high definition dialog
@@ -21461,20 +21461,20 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_sss_func_30_2] Drag [Scroll Bar], Hover on 2nd Template, Check preview difference, and Move mouse to (0, 0)')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_2] Drag [Scroll Bar], Hover on 2nd Template, Check preview difference, and Move mouse to (0, 0)')
     @exception_screenshot
-    def test_sss_func_30_2(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_2(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_1') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_1') is run and passed
         1. Drag [Scroll Bar] in [Title Room] with (0)
         2. Hover on 2nd Template
         3. Check if the preview window is different when playing (area=L.media_room.library_listview.unit_collection_view_item_second, sec=2)
         4. Move mouse to position (0, 0)
         '''
-        self.ensure_dependency('test_sss_func_30_1')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_1')
         
         # [L228] 2.3 Effect Room > Body Effect > Hover on each effect thumbnail
         # with uuid("939f02b7-69b5-4be4-b70e-e89603af3592") as case:
@@ -21498,21 +21498,21 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_sss_func_30_3] Get 2nd Template name, Click 2nd Template, Move mouse, and verify Heart Icon update')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_3] Get 2nd Template name, Click 2nd Template, Move mouse, and verify Heart Icon update')
     @exception_screenshot
-    def test_sss_func_30_3(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_3(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_2') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_2') is run and passed
         1. Get 2nd Template name > Snapshot [Heart Icon] on thumbnail (2nd template name)
         3. Click 2nd Template (L.media_room.library_listview.unit_collection_view_item_second) > Wait Download for (DELAY_TIME*3)
         4. Move mouse to (0,0)
         5. Snapshot [Heart Icon] on thumbnail (2nd template name)
         6. Check 2 screenshots are updated (Similarity should <0.8)
         '''
-        self.ensure_dependency('test_sss_func_30_2')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_2')
         
         # [L229] 2.3 Effect Room > Body Effect > Download each effect
         # with uuid("1dd660d2-56fa-49f7-80e9-91dc6f0e9558") as case:
@@ -21540,23 +21540,23 @@ class Test_BFT_365_OS14():
         
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
     @pytest.mark.timecode
-    @pytest.mark.name('[test_sss_func_30_4] Search library, drag media, wait download, set timecode, and verify preview for timeline')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_4] Search library, drag media, wait download, set timecode, and verify preview for timeline')
     @exception_screenshot
-    def test_sss_func_30_4(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_4(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_3') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_3') is run and passed
         1. Search library for ('Geometric Light Shadow')
         2. Drag media ('Geometric Light Shadow') to timeline playhead position
         3. Wait until download [Body Effect] complete and check result is true
         4. Set Timecode to ('00_00_20_19') at main page
         5. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L230_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L230_timelinepreview.png') with similarity 0.97
         '''
-        self.ensure_dependency('test_sss_func_30_3')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_3')
         
         # [L230] 2.3 Effect Room > Body Effect > Apply each effect: Free content
         # with uuid("18db8069-f36c-4cd5-98ab-626c6faed905") as case:
@@ -21586,15 +21586,15 @@ class Test_BFT_365_OS14():
         
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_5] Relaunch AP, Search library, drag media, wait download, set timecode, and verify preview for timeline')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_5] Relaunch AP, Search library, drag media, wait download, set timecode, and verify preview for timeline')
     @exception_screenshot
-    def test_sss_func_30_5(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_5(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_4') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_4') is run and passed
         1. Close and Restart App
         2. Import media for local file (Test_Material_Folder + 'Mark_Clips/2.mp4') > Handle high definition dialog
         3. Insert media to selected track
@@ -21604,8 +21604,8 @@ class Test_BFT_365_OS14():
         7. Set Timecode to ('00_00_20_19') at main page
         8. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L230_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L230_timelinepreview.png') with similarity 0.97
         '''
-        with step("[Action] Ensure the dependency test ('test_sss_func_30_4') is run and passed"):
-            self.ensure_dependency('test_sss_func_30_4')
+        with step("[Action] Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_4') is run and passed"):
+            self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_4')
         
         # [L234] 2.3 Effect Room > Body Effect > Close AP -> re-launch AP and apply effect again
         # with uuid("5bd28737-eec8-410c-81c9-b5578a31344a") as case:
@@ -21646,13 +21646,13 @@ class Test_BFT_365_OS14():
         
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_6] Verify preview update after downloading a template')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_6] Verify preview update after downloading a template')
     @exception_screenshot
-    def test_sss_func_30_6(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_6(self):
         '''
         1. Clear Cache > Start APP
         2. Enter [Title Room] via hotkey
@@ -21694,23 +21694,23 @@ class Test_BFT_365_OS14():
         
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_7] Verify preview update after downloading a template from YouTube')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_7] Verify preview update after downloading a template from YouTube')
     @exception_screenshot
-    def test_sss_func_30_7(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_7(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_6') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_6') is run and passed
         1. Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag
         2. Select ('YouTube') tag
         3. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
         4. Select ('Downloads') tag
         5. Check if the preview is updated after download an template (similarity<0.99)
         '''
-        with step("[Action] Ensure the dependency test ('test_sss_func_30_6') is run and passed"):
-            self.ensure_dependency('test_sss_func_30_6')
+        with step("[Action] Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_6') is run and passed"):
+            self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_6')
         
         with step("[Action] Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag"):
             downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
@@ -21735,23 +21735,23 @@ class Test_BFT_365_OS14():
 
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_8] Verify preview update after downloading an IAD template')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_8] Verify preview update after downloading an IAD template')
     @exception_screenshot
-    def test_sss_func_30_8(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_8(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_7') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_7') is run and passed
         1. Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag
         2. Select specific tag ('Holidays')
         3. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
         4. Select specific tag ('Downloads')
         5. Check if the preview is updated after download an template (similarity<0.99)
         '''
-        with step("[Action] Ensure the dependency test ('test_sss_func_30_7') is run and passed"):
-            self.ensure_dependency('test_sss_func_30_7')
+        with step("[Action] Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_7') is run and passed"):
+            self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_7')
         
         with step("[Action] Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag"):
             downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
@@ -21775,23 +21775,23 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_9] Verify preview update after downloading an IAD template for (Lower Third)')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_9] Verify preview update after downloading an IAD template for (Lower Third)')
     @exception_screenshot
-    def test_sss_func_30_9(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_9(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_8') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_8') is run and passed
         1. Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag
         2. Select specific tag ('Lower Third')
         3. Download 2nd IAD template by click (L.media_room.library_listview.unit_collection_view_item_second) > Wait DELAY_TIME*3 for download
         4. Select specific tag ('Downloads')
         5. Check if the preview is updated after download an template (similarity<0.99)
         '''
-        with step("[Action] Ensure the dependency test ('test_sss_func_30_8') is run and passed"):
-            self.ensure_dependency('test_sss_func_30_8')
+        with step("[Action] Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_8') is run and passed"):
+            self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_8')
         
         with step("[Action] Screenshot (locator=L.media_room.library_frame) in ('Downloads') tag"):
             downloads_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
@@ -21815,21 +21815,21 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_10] Verify preview update after sort by [Created Date]')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_10] Verify preview update after sort by [Created Date]')
     @exception_screenshot
-    def test_sss_func_30_10(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_10(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_9') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_9') is run and passed
         1. Screenshot (locator=L.media_room.library_frame)
         2. Sort [library menu] by [Created Date]
         3. Check preview is updated after sort by [Created Date] (Similarity should <0.94)
         '''
-        with step("[Action] Ensure the dependency test ('test_sss_func_30_9') is run and passed"):
-            self.ensure_dependency('test_sss_func_30_9')
+        with step("[Action] Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_9') is run and passed"):
+            self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_9')
         
         with step("[Action] Screenshot (locator=L.media_room.library_frame)"):
             initial_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
@@ -21846,14 +21846,14 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @pytest.mark.transition_room
-    @pytest.mark.name('[test_sss_func_30_11] Verify preview difference between [Effect Room] and [Transition Room] for (My Favorites)')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_11] Verify preview difference between [Effect Room] and [Transition Room] for (My Favorites)')
     @exception_screenshot
-    def test_sss_func_30_11(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_11(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_10') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_10') is run and passed
         1. Select Library Room category ('My Favorites') in [Effect Room]
         2. Screenshot (locator=L.base.Area.library_icon_view)
         3. Enter [Transition Room] via hotkey
@@ -21862,7 +21862,7 @@ class Test_BFT_365_OS14():
         6. Check ('My Favorites') preview is different in [Effect Room] and [Transition Room] (similarity should < 0.99)
         '''
 
-        self.ensure_dependency('test_sss_func_30_10')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_10')
         
         # [L241] 2.3 Transition Room > Check Downloaded, My Favorites category
         # with uuid("fd0c7598-ac0c-403a-8c4a-4f0ad5da5d03") as case:
@@ -21894,18 +21894,18 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
-    @pytest.mark.name('[test_sss_func_30_12] Verify Downloads category count=0 in Transition Room')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_12] Verify Downloads category count=0 in Transition Room')
     @exception_screenshot
-    def test_sss_func_30_12(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_12(self):
         """
-        0. Ensure the dependency test ('test_sss_func_30_11') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_11') is run and passed
         1. Select Library Room category ('Downloads')
         2. Check [Details View] button (L.main.btn_library_details_view) is shown in ("Downloads") category
         3. Check Downloads count is (0) by checking main_page.exist(L.transition_room.explore_view_region.Downloads_category).AXValue
         """
-        dependency_test = "test_sss_func_30_11"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_11"
         self.ensure_dependency(dependency_test)
 
         with step("[Action] Select Library Room category ('Downloads')"):
@@ -21922,15 +21922,15 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_12] Verify preview update after downloading an IAD template from (Glitch) tag')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_13] Verify preview update after downloading an IAD template from (Glitch) tag')
     @exception_screenshot
-    def test_sss_func_30_12(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_13(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_12') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_12') is run and passed
         1. Screenshot (L.base.Area.library_icon_view) for empty ("Downloads") category
         2. Select specific tag with name ('Glitch')
         3. Drag [Scroll Bar] in [Transition Room] with (0)
@@ -21939,7 +21939,7 @@ class Test_BFT_365_OS14():
         6. Check if the preview is updated after download an template (similarity<0.7)
         '''
 
-        self.ensure_dependency('test_sss_func_30_12')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_12')
         
         with step("[Action] Screenshot (L.base.Area.library_icon_view) for empty (\"Downloads\") category"):
             downloads_snapshot = main_page.snapshot(locator=L.base.Area.library_icon_view)
@@ -21969,21 +21969,21 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
     @pytest.mark.search_libaray
-    @pytest.mark.name('[test_sss_func_30_13] Verify preview update after sorting [Library View] by [Name]')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_14] Verify preview update after sorting [Library View] by [Name]')
     @exception_screenshot
-    def test_sss_func_30_13(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_14(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_12') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_13') is run and passed
         1. Screenshot (locator=L.media_room.library_frame) for original sort
         2. Sort [Library View] by [Name]
         3. Check preview is updated after Sort [Library View] by [Name] with similarity < 0.7
         '''
 
-        self.ensure_dependency('test_sss_func_30_12')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_13')
         
         with step("[Action] Screenshot (locator=L.media_room.library_frame) for original sort"):
             original_snapshot = main_page.snapshot(locator=L.media_room.library_frame)
@@ -21999,14 +21999,14 @@ class Test_BFT_365_OS14():
         
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
-    @pytest.mark.name('[test_sss_func_30_14] Verify no [Detail View] icon for IAD category in Popular, Brush, and Slideshow')
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_15] Verify no [Detail View] icon for IAD category in Popular, Brush, and Slideshow')
     @exception_screenshot
-    def test_sss_func_30_14(self):
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_15(self):
         '''
-        0. Ensure the dependency test ('test_sss_func_30_13') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_13') is run and passed
         1. Select Library Room category ('Popular')
         2. Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category
         3. Select Library Room category ('Brush')
@@ -22015,7 +22015,7 @@ class Test_BFT_365_OS14():
         6. Check there is no [Detail View] icon (L.main.btn_library_details_view) for IAD category
         '''
 
-        self.ensure_dependency('test_sss_func_30_13')
+        self.ensure_dependency('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_14')
 
         # [L243] 2.3 Transition Room > Check other IAD category > remove "Detail view" icon
         # with uuid("f2373b47-3df6-4a24-b2ce-9f48cf13b534") as case:
@@ -22046,19 +22046,19 @@ class Test_BFT_365_OS14():
         
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_15] Switch category, and check preview is updated')
-    def test_sss_func_30_15(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_16] Switch category, and check preview is updated')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_16(self):
         ''' 
-        0. Ensure the dependency test ('test_sss_func_30_14') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_15') is run and passed
         1. Screenshot (locator=L.media_room.library_frame) for category ('Slideshow')
         2. Select Library Room category ('Speed Blur')
         3. Check update is true after switching to ('Speed Blur') category with similarity <0.94 and >0.7
         '''
-        dependency_test = "test_sss_func_30_14"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_15"
         self.ensure_dependency(dependency_test)
 
         # [L244] 2.3 Transition Room > IAD category > Check sorting rule
@@ -22083,16 +22083,16 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
     @pytest.mark.search_library
     @pytest.mark.import_media
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_16] Import media and apply Transition template to timeline')
-    def test_sss_func_30_16(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_17] Import media and apply Transition template to timeline')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_17(self):
         ''' 
-        0. Ensure the dependency test ('test_sss_func_30_15') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_16') is run and passed
         1. Enter Room (Media)(0)
         2. Import media file (Test_Material_Folder + 'Mark_Clips/2.mp4')
         3. Insert media to selected track
@@ -22106,7 +22106,7 @@ class Test_BFT_365_OS14():
         11. Set timeline timecode ('00_00_09_20') at main page
         12. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L218_transition.png') matches GT (Ground_Truth_Folder + 'L218_transition.png') with similarity 0.95
         '''
-        dependency_test = "test_sss_func_30_15"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_16"
         self.ensure_dependency(dependency_test)
 
         # [L218] 2.3 Transition Room > Add each kind of template to timeline & Preview
@@ -22156,22 +22156,22 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.transition_room
     @pytest.mark.content_pack
     @pytest.mark.search_library
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_17] Search (.) in library in [Transition] Room')
-    def test_sss_func_30_17(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_18] Search (.) in library in [Transition] Room')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_18(self):
         ''' 
-        0. Ensure the dependency test ('test_sss_func_30_16') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_17') is run and passed
         1. Select Library Room category ('All Content')
         2. Search library ('.')
         3. Check no results (L.media_room.txt_no_results_for_dot) for '.' in library
         4. Click [Close] to back to Launcher
         5. Handle [Do you want to save changes] dialog with option [No]
         '''
-        dependency_test = "test_sss_func_30_16"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_17"
         self.ensure_dependency(dependency_test)
 
         # [L246] 2.3 Transition Room > Input "." character
@@ -22196,19 +22196,19 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.launcher
     @pytest.mark.ai_background_remover
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_18] Close import dialog and verify title')
-    def test_sss_func_30_18(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_19] Close import dialog and verify title')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_19(self):
         ''' 
-        0. Ensure the dependency test ('test_sss_func_30_17') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_18') is run and passed
         1. Click on btn (AI Background Remover)(L.base.launcher_window.btn_ai_bg_remover) on launcher
         2. Verify title is 'AI Background Remover'
         3. Press [ESC] to close import dialog
         '''
-        dependency_test = "test_sss_func_30_17"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_18"
         self.ensure_dependency(dependency_test)
 
         # [L31] 1.3 New Launcher > Showcase > AI Background Remover > Single click on banner area
@@ -22231,12 +22231,12 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.launch
     @pytest.mark.effect_room
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_19] Check [Hot] icon shows on ("Popular") tag in [Effect Room]')
-    def test_sss_func_30_19(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_20] Check [Hot] icon shows on ("Popular") tag in [Effect Room]')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_20(self):
         ''' 
         1. Clear cache > Start App
         2. Enter [Effect Room] via hotkey
@@ -22277,15 +22277,15 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.background_music
     @pytest.mark.content_pack
     @pytest.mark.search_library
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_20] Check [Download OK] Icon before/ after downloading background music')
-    def test_sss_func_30_20(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_21] Check [Download OK] Icon before/ after downloading background music')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_21(self):
         ''' 
-        0. Ensure the dependency test ('test_sss_func_30_19') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_20') is run and passed
         1. Enter zoom (media)(0)
         2. Enter [Background Music (meta)] Category
         3. Select specific category in meta by name ('Asian')
@@ -22297,7 +22297,7 @@ class Test_BFT_365_OS14():
         # [L157] 2.1 Media Room > BGM (Meta) > Download by click [Download] icon
         # with uuid("7b599fbd-6ae8-460b-a41d-0513af82027c") as case:
 
-        dependency_test = "test_sss_func_30_19"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_20"
         self.ensure_dependency(dependency_test)
 
         with step("[Action] Enter zoom (media)(0)"):
@@ -22326,18 +22326,18 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.sss_func
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
     @pytest.mark.effect_room
     @exception_screenshot
-    @pytest.mark.name('[test_sss_func_30_21] Verify Detail View icon visibility in My Favorites')
-    def test_sss_func_30_21(self):
+    @pytest.mark.name('[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_22] Verify Detail View icon visibility in My Favorites')
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_22(self):
         ''' 
-        0. Ensure the dependency test ('test_sss_func_30_20') is run and passed
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_21') is run and passed
         1. Enter [Effect Room] via hotkey
         2. Select Library Room category ('My Favorites')
         3. Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('My Favorites') category
         '''
-        dependency_test = "test_sss_func_30_20"
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_21"
         self.ensure_dependency(dependency_test)
 
         # [L247] 2.3 Effect Room > Check My Favorites category > Remove detail view
@@ -22355,335 +22355,577 @@ class Test_BFT_365_OS14():
 
         assert True
 
-
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
+    @pytest.mark.effect_room
+    @pytest.mark.name("[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_23] Verify detail view icon absence in Library Room categories and close to launcher")
+    @exception_screenshot
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_23(self):
+        """
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_22') is run and passed
+        1. Select Library Room category ('Blending Effect')
+        2. Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('Blending Effect') category
+        3. Select Library Room category ('Body Effect')
+        4. Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('Body Effect') category
+        5. Select Library Room category ('Color LUT')
+        6. Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('Color LUT') category
+        7. Click [Close] button to back to launcher
+        """
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_22"
+        self.ensure_dependency(dependency_test)
 
         # [L249] 2.3 Effect Room > Check IAD category > Remove detail view
-        with uuid("ff0733c7-eccf-4188-8c55-7f15164f6a0d") as case:
-            # verify_detail_view: No exist detail view icon
-            check_detail_view = True
+        # with uuid("ff0733c7-eccf-4188-8c55-7f15164f6a0d") as case:
 
-            # Check Blending Effect category
+        with step("Select Library Room category ('Blending Effect')"):
             main_page.select_LibraryRoom_category('Blending Effect')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
 
-            # Check Body Effect category
+        with step("Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('Blending Effect') category"):
+            if main_page.is_exist(L.main.btn_library_details_view):
+                # [Detail View] icon should not exist in ('Blending Effect') category
+                assert False, "[Detail View] icon is shown in ('Blending Effect') category"
+
+        with step("Select Library Room category ('Body Effect')"):
             main_page.select_LibraryRoom_category('Body Effect')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
 
-            # Check Body Effect category
+        with step("Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('Body Effect') category"):
+            if main_page.is_exist(L.main.btn_library_details_view):
+                # [Detail View] icon should not exist in ('Body Effect') category
+                assert False, "[Detail View] icon is shown in ('Body Effect') category"
+
+        with step("Select Library Room category ('Color LUT')"):
             main_page.select_LibraryRoom_category('Color LUT')
-            time.sleep(DELAY_TIME * 2)
+
+        with step("Check [Detail View] icon is not shown (L.main.btn_library_details_view) in ('Color LUT') category"):
             if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view = False
+                # [Detail View] icon should not exist in ('Color LUT') category
+                assert False, "[Detail View] icon is shown in ('Color LUT') category"
 
-            case.result = check_detail_view
+        with step("Click [Close] button to back to launcher"):
+            main_page.click_close_then_back_to_launcher()
 
-        # close [x] to back to launcher
-        main_page.click_close_then_back_to_launcher()
-        time.sleep(DELAY_TIME * 2)
+        assert True
+
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
+    @pytest.mark.launcher
+    @pytest.mark.video_stabilizer
+    @pytest.mark.name("[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_24] Hover on (Video Stabilizer) button, click [Show Case Area], verify import dialog title and press [ESC]")
+    @exception_screenshot
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_24(self):
+        """
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_23') is run and passed
+        1. Hover on (Video Stabilizer) button (L.base.launcher_window.btn_video_stabilizer) on launcher
+        2. Click [Show Case Area] (L.base.launcher_window.show_case_video_area)
+        3. Verify the title of the import dialog is ('Video Stabilizer')
+        4. Press [ESC] key to close the import dialog
+        """
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_23"
+        self.ensure_dependency(dependency_test)
 
         # [L19] 1.3 New Launcher > Showcase > Video Stabilizer > Single click on banner area
-        with uuid("3650a1e8-965e-4079-b366-653374490c93") as case:
-            # Hover Tool area (Video Stabilizer)
-            target = main_page.exist(L.base.launcher_window.btn_video_stabilizer)
-            main_page.mouse.move(*target.center)
+        # with uuid("3650a1e8-965e-4079-b366-653374490c93") as case:
 
-            # click in (show case area)
+        with step("[Action] Hover on (Video Stabilizer) button (L.base.launcher_window.btn_video_stabilizer) on launcher"):
+            main_page.hover_launcher_btn(L.base.launcher_window.btn_video_stabilizer)
+
+        with step("[Action] Click [Show Case Area] (L.base.launcher_window.show_case_video_area)"):
             main_page.click(L.base.launcher_window.show_case_video_area)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify step:
-            import_object = main_page.exist(L.base.launcher_window.import_dialog)
-            if import_object.AXTitle == 'Video Stabilizer':
-                case.result = True
-            else:
-                case.result = False
-                logger(import_object.AXTitle)
+        with step("[Verify] Verify the title of the import dialog is ('Video Stabilizer')"):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != 'Video Stabilizer':
+                assert False, f"Import dialog title does not match expected value! Expected ('Video Stabilizer'), got ({dialog.AXTitle})"
 
-        # Press [ESC] to close import dialog
-        main_page.press_esc_key()
+        with step("[Action] Press [ESC] key to close the import dialog"):
+            main_page.press_esc_key()
+
+        assert True
+
+
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
+    @pytest.mark.launcher
+    @pytest.mark.audio_denoise
+    @pytest.mark.name("[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_25] Hover on (AI Audio Denoise) button, click [Show Case Area], verify import dialog title and press [ESC]")
+    @exception_screenshot
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_25(self):
+        """
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_24') is run and passed
+        1. Hover on (AI Audio Denoise) button (L.base.launcher_window.btn_audio_denoise) on launcher
+        2. Click [Show Case Area] (L.base.launcher_window.show_case_video_area)
+        3. Verify the title of the import dialog is ('AI Audio Denoise')
+        4. Press [ESC] key to close the import dialog
+        """
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_24"
+        self.ensure_dependency(dependency_test)
 
         # [L34] 1.3 New Launcher > Showcase > AI Audio Denoise > Single click on banner area
-        with uuid("d96086ba-e995-428d-96d2-e9ca83d86a8a") as case:
-            # Hover Tool area (AI Audio Denoise)
-            target = main_page.exist(L.base.launcher_window.btn_audio_denoise)
-            main_page.mouse.move(*target.center)
+        # with uuid("d96086ba-e995-428d-96d2-e9ca83d86a8a") as case:
 
-            # click in (show case area)
+        with step("[Action] Hover on (AI Audio Denoise) button (L.base.launcher_window.btn_audio_denoise) on launcher"):
+            main_page.hover_launcher_btn(L.base.launcher_window.btn_audio_denoise)
+
+        with step("[Action] Click [Show Case Area] (L.base.launcher_window.show_case_video_area)"):
             main_page.click(L.base.launcher_window.show_case_video_area)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify step:
-            import_object = main_page.exist(L.base.launcher_window.import_dialog)
-            if import_object.AXTitle == 'AI Audio Denoise':
-                case.result = True
-            else:
-                case.result = False
-                logger(import_object.AXTitle)
+        with step("[Verify] Verify the title of the import dialog is ('AI Audio Denoise')"):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != 'AI Audio Denoise':
+                # Title similarity should exactly match ('AI Audio Denoise')
+                assert False, f"Import dialog title does not match expected value! Expected ('AI Audio Denoise'), got ({dialog.AXTitle})"
 
-        # Press [ESC] to close import dialog
-        main_page.press_esc_key()
+        with step("[Action] Press [ESC] key to close the import dialog"):
+            main_page.press_esc_key()
+
+        assert True
+
+
+    @pytest.mark.effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func
+    @pytest.mark.launcher
+    @pytest.mark.ai_wind_remover
+    @pytest.mark.name("[test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_26] Hover on (AI Wind Removal) button, click [Show Case Area], verify import dialog title and press [ESC]")
+    @exception_screenshot
+    def test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_26(self):
+        """
+        0. Ensure the dependency test ('test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_25') is run and passed
+        1. Hover on (AI Wind Removal) button (L.base.launcher_window.btn_wind_removal) on launcher
+        2. Click [Show Case Area] (L.base.launcher_window.show_case_video_area)
+        3. Verify the title of the import dialog is ('AI Wind Removal')
+        4. Press [ESC] key to close the import dialog
+        """
+        dependency_test = "test_effect_n_transition_n_bg_music_n_launcher_category_searching_n_import_dlg_func_30_25"
+        self.ensure_dependency(dependency_test)
 
         # [L25] 1.3 New Launcher > Showcase > AI Wind Removal > Single click on banner area
-        with uuid("b8a06d0a-f9b4-48c8-b390-8a6f15ef5032") as case:
-            # Hover Tool area (AI Wind Removal)
-            target = main_page.exist(L.base.launcher_window.btn_wind_removal)
-            main_page.mouse.move(*target.center)
+        # with uuid("b8a06d0a-f9b4-48c8-b390-8a6f15ef5032") as case:
 
-            # click in (show case area)
+        with step("[Action] Hover on (AI Wind Removal) button (L.base.launcher_window.btn_wind_removal) on launcher"):
+            main_page.hover_launcher_btn(L.base.launcher_window.btn_wind_removal)
+
+        with step("[Action] Click [Show Case Area] (L.base.launcher_window.show_case_video_area)"):
             main_page.click(L.base.launcher_window.show_case_video_area)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify step:
-            import_object = main_page.exist(L.base.launcher_window.import_dialog)
-            if import_object.AXTitle == 'AI Wind Removal':
-                case.result = True
-            else:
-                case.result = False
-                logger(import_object.AXTitle)
+        with step("[Verify] Verify the title of the import dialog is ('AI Wind Removal')"):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != 'AI Wind Removal':
+                # Title similarity should exactly match ('AI Wind Removal')
+                assert False, f"Import dialog title does not match expected value! Expected ('AI Wind Removal'), got ({dialog.AXTitle})"
 
-        # Press [ESC] to close import dialog
-        main_page.press_esc_key()
-
-    # 10 uuid < Essential test >
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_8_1_1(self):
-        # Clear Cache (Clear sign in log) to become Essential build
-        main_page.clear_log_in()
-
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
-
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
-
-        # Click [Launch Free Version]
-        click_free_version = main_page.launch_free_version()
-        if not click_free_version:
-            logger('[AT Execution] launch_free_version [NG]')
-            raise Exception
-
-        # [L80] 1.3 New Launcher > Tool area > AI Speech to Text > Single click Module on button
-        with uuid("bd309792-2782-4f4b-8511-a46c5acad285") as case:
-            # verify step: Find the button (AI Speech to Text) in Tool area
-            if main_page.is_not_exist(L.base.launcher_window.btn_STT, timeout=6):
-                case.result = False
-                case.fail_log = 'CANNOT find btn'
-            else:
-                main_page.click(L.base.launcher_window.btn_STT)
-                time.sleep(DELAY_TIME * 2)
-
-            # verify step:
-            target = main_page.exist(L.base.launcher_window.import_dialog, timeout=9)
-            if target.AXTitle == 'AI Speech to Text':
-                case.result = True
-            else:
-                case.result = False
-                case.fail_log = target.AXValue
-
-        # [L81] 1.3 New Launcher > Tool area > AI Speech to Text > Select custom video in import dialog
-        with uuid("a9469954-7145-4c5b-a188-440a3f083979") as case:
-            # Import video path
-            video_path = Test_Material_Folder + 'Mark_Clips/2.mp4'
-            time.sleep(DELAY_TIME)
-
-            # click center in import dialog
-            import_custom_result = main_page.click_to_import_media_when_open_AI_import_dialog(video_path)
-            time.sleep(DELAY_TIME * 6)
-
-            # [L82] 1.3 New Launcher > Tool area > AI Speech to Text > Select custom video in import dialog
-            with uuid("25fad442-9d95-4a28-8c45-a4315eb7162d") as case:
-                case.result = main_page.is_exist(L.subtitle_room.library_menu.bb_first_time, timeout=8)
-                time.sleep(DELAY_TIME * 3)
-
-            # verify step: enter Fix / Enhance > Enable (AI Speech to Text) checkbox
-            enter_subtitle_room = main_page.is_exist(L.subtitle_room.library_menu.btn_speech_to_text, timeout=8)
-
-            case.result = import_custom_result and enter_subtitle_room
-
-        # [L83] 1.3 New Launcher > Tool area > AI Speech to Text > [Premium feature mechanism: Try Before Buy]: Try to enable the function
-        with uuid("3d63e98e-19e7-4dda-98bc-e728d923689d") as case:
-            main_page.click(L.subtitle_room.library_menu.btn_speech_to_text)
-
-            verify_premium2_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium, timeout=6)
-            verify_try_one = main_page.is_exist(L.base.try_for_free_dialog.btn_try_once, timeout=6)
-            if verify_premium2_icon and verify_try_one:
-                main_page.click(L.base.try_for_free_dialog.btn_try_once)
-                time.sleep(DELAY_TIME)
-            case.result = main_page.is_exist(L.subtitle_room.speech_to_text_window.main_window, timeout=6)
-            time.sleep(DELAY_TIME )
-
-            # press [Esc] to close STT dialog
+        with step("[Action] Press [ESC] key to close the import dialog"):
             main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
 
-        # [L88] 1.4 Content notification > Click "New Advertising" icon on caption bar
-        with uuid("bc48f6fb-a3a7-41c7-938e-bf8e07fd7a7d") as case:
-            main_page.click(L.main.btn_whats_new_update)
+        assert True
 
-            result = main_page.is_exist(L.main.dlg_whats_name_title)
-            time.sleep(DELAY_TIME * 2)
-            # if open What's new BB, should close it
-            if result:
-                main_page.press_esc_key()
-
-            case.result = result
-
-        # close PDR then back to launcher
-        main_page.click_close_then_back_to_launcher()
-        time.sleep(DELAY_TIME * 2)
-
-        # click [No] when pop up "save project" dialog
-        main_page.handle_no_save_project_dialog()
-
-        # [L50] 1.3 New Launcher > Tool area > Video Denoise > [Premium feature mechanism: Try Before Buy]: Try to enable the function
-        with uuid("60dd982c-374c-4e9b-9e26-9425a41b02d5") as case:
-            # verify step: Find the button (Video Denoise) in Tool area
-            if main_page.is_not_exist(L.base.launcher_window.btn_video_denoise, timeout=10):
-                case.result = False
-                case.fail_log = 'CANNOT find btn'
-            else:
-                main_page.click(L.base.launcher_window.btn_video_denoise)
-                time.sleep(DELAY_TIME * 2)
-
-            # Select sample video to enter (Fix/Enhance)
-            main_page.apply_sample_clip_when_open_AI_import_dialog()
-            time.sleep(DELAY_TIME * 2)
-
-            check_download_AI_module = self.download_AI_module_complete()
-            logger(check_download_AI_module)
-
-            # verify step:
-            verify_try_dialog = main_page.click_btn_try_for_free()
-
-            case.result = check_download_AI_module and verify_try_dialog
-
-        # close PDR then back to launcher
-        main_page.click_close_then_back_to_launcher()
-        time.sleep(DELAY_TIME * 2)
-
-        # click [No] when pop up "save project" dialog
-        main_page.handle_no_save_project_dialog()
-
-        # [L60] 1.3 New Launcher > Tool area > AI BG Remover > [Premium feature mechanism: Try Before Buy]: Try to enable the function
-        with uuid("554ac013-782e-40bd-ae70-f377c33ecc8b") as case:
-            # verify step: Find the button (AI BG Remover) in Tool area
-            if main_page.is_not_exist(L.base.launcher_window.btn_ai_bg_remover, timeout=10):
-                case.result = False
-                case.fail_log = 'CANNOT find btn'
-            else:
-                main_page.click(L.base.launcher_window.btn_ai_bg_remover)
-                time.sleep(DELAY_TIME * 2)
-
-            # Select sample video to enter (Pip Designer)
-            main_page.apply_sample_clip_when_open_AI_import_dialog()
+    @pytest.mark.zzz_func
+    @pytest.mark.launch
+    @pytest.mark.essential
+    @pytest.mark.launcher
+    @pytest.mark.ai_speech_to_text
+    @pytest.mark.name("[test_zzz_func_31_1] Verify [AI Speech to Text] dialog behavior on launcher")
+    @exception_screenshot
+    def test_zzz_func_31_1(self):
+        """
+        1. Clear login account cache > Clear [AI Module] files > Clear cache > launch APP > wait DELAY_TIMES*3
+        2. Click [Launch Free version] button on [Ess dialog] and check result is True
+        3. Check [AI Speech to Text] button is on launcher by is_not_exist(L.base.launcher_window.btn_STT, timeout=6)
+        4. Click [AI Speech to Text] button on launcher
+        5. Check [AI Speech to Text] dialog title is 'AI Speech to Text' by target.AXTitle == 'AI Speech to Text'
+        """
+        with step("[Action] Clear login account cache > Clear [AI Module] files > Clear cache > launch APP > wait DELAY_TIMES*3"):
+            main_page.clear_log_in()
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.launch_app()
             time.sleep(DELAY_TIME * 3)
 
-            verify_try_dialog = main_page.click_btn_try_for_free()
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Click [Launch Free version] button on [Ess dialog] and check result is True"):
+            result = main_page.launch_free_version()
+            if not result:
+                assert False, "Unable to click [Launcher Free Version] on [Ess dialog]"
 
-            check_download_AI_module = self.download_AI_module_complete()
-            logger(check_download_AI_module)
-            time.sleep(DELAY_TIME * 2)
+        # [L80] 1.3 New Launcher > Tool area > AI Speech to Text > Single click Module on button
+        # with uuid("bd309792-2782-4f4b-8511-a46c5acad285") as case:
 
-            # verify step:
-            case.result = check_download_AI_module and verify_try_dialog
+        with step("[Verify] Check [AI Speech to Text] button is on launcher by is_not_exist(L.base.launcher_window.btn_STT, timeout=6)"):
+            if main_page.is_not_exist(L.base.launcher_window.btn_STT, timeout=6):
+                assert False, "[AI Speech to Text] button exists when it should not"
 
-            # Click [OK] to leave Pip designer (back to timeline)
+        with step("[Action] Click [AI Speech to Text] button on launcher"):
+            main_page.click(L.base.launcher_window.btn_STT)
+
+        with step("[Verify] Check [AI Speech to Text] dialog title is 'AI Speech to Text' by target.AXTitle == 'AI Speech to Text'"):
+            target = main_page.exist(L.base.launcher_window.import_dialog, timeout=9)
+            if target.AXTitle != 'AI Speech to Text':
+                assert False, f"Dialog title does not match expected value! Expected 'AI Speech to Text', got {target.AXTitle}"
+
+        assert True
+
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.launcher
+    @pytest.mark.ai_speech_to_text
+    @pytest.mark.import_media
+    @pytest.mark.name("[test_zzz_func_31_2] Verify [AI Speech to Text] bubble and checkbox on launcher after media import")
+    @exception_screenshot
+    def test_zzz_func_31_2(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_1') is run and passed
+        1. Click [Import] button on [AI Module Import dialog] on Launcher and import media (Test_Material_Folder + 'Mark_Clips/2.mp4')
+        2. Check [AI Speech to Text] bubble is shown after import video by is_exist(L.subtitle_room.library_menu.bb_first_time, timeout=8) and check result is True
+        3. Check [AI Speech to Text] checkbox (L.subtitle_room.library_menu.btn_speech_to_text) is exist
+        """
+        dependency_test = "test_zzz_func_31_1"
+        self.ensure_dependency(dependency_test)
+
+        # [L81] 1.3 New Launcher > Tool area > AI Speech to Text > Select custom video in import dialog
+        # with uuid("a9469954-7145-4c5b-a188-440a3f083979") as case:
+
+        with step("[Action] Click [Import] button on [AI Module Import dialog] on Launcher and import media (Test_Material_Folder + 'Mark_Clips/2.mp4')"):
+            main_page.click_to_import_media_when_open_AI_import_dialog(Test_Material_Folder + "Mark_Clips/2.mp4")
+
+        # [L82] 1.3 New Launcher > Tool area > AI Speech to Text > Select custom video in import dialog
+        # with uuid("25fad442-9d95-4a28-8c45-a4315eb7162d") as case:
+
+        with step("[Verify] Check [AI Speech to Text] bubble is shown after import video by is_exist(L.subtitle_room.library_menu.bb_first_time, timeout=8) and check result is True"):
+            if not main_page.is_exist(L.subtitle_room.library_menu.bb_first_time, timeout=8):
+                assert False, "[AI Speech to Text] bubble is not shown after import video"
+
+        with step("[Verify] Check [AI Speech to Text] checkbox (L.subtitle_room.library_menu.btn_speech_to_text) is exist"):
+            if not main_page.is_exist(L.subtitle_room.library_menu.btn_speech_to_text, timeout=8):
+                assert False, "[AI Speech to Text] checkbox does not exist"
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.ai_speech_to_text
+    @pytest.mark.name("[test_zzz_func_31_3] Verify [AI Speech to Text] effect and dialog behavior")
+    @exception_screenshot
+    def test_zzz_func_31_3(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_2') is run and passed
+        1. Click [Speech To Text] button (L.subtitle_room.library_menu.btn_speech_to_text) to apply effect
+        2. Check [Premium] Icon (L.base.try_for_free_dialog.icon_premium) is shown
+        3. Check [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_once) is shown
+        4. Click [Try for Free] button
+        5. Check [AI Speech to Text] dialog (L.subtitle_room.speech_to_text_window.main_window) is shown
+        6. Press [ESC] key to close the dialog
+        """
+        dependency_test = "test_zzz_func_31_2"
+        self.ensure_dependency(dependency_test)
+
+        # [L83] 1.3 New Launcher > Tool area > AI Speech to Text > [Premium feature mechanism: Try Before Buy]: Try to enable the function
+        # with uuid("3d63e98e-19e7-4dda-98bc-e728d923689d") as case:
+
+        with step("[Action] Click [Speech To Text] button (L.subtitle_room.library_menu.btn_speech_to_text) to apply effect"):
+            main_page.click(L.subtitle_room.library_menu.btn_speech_to_text)
+
+        with step("[Verify] Check [Premium] Icon (L.base.try_for_free_dialog.icon_premium) is shown"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.icon_premium):
+                assert False, "[Premium] Icon is not shown"
+
+        with step("[Verify] Check [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_once) is shown"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.btn_try_once):
+                assert False, "[Try for Free] dialog is not shown"
+
+        with step("[Action] Click [Try for Free] button"):
+            main_page.click(L.base.try_for_free_dialog.btn_try_once)
+
+        with step("[Verify] Check [AI Speech to Text] dialog (L.subtitle_room.speech_to_text_window.main_window) is shown"):
+            if not main_page.is_exist(L.subtitle_room.speech_to_text_window.main_window):
+                assert False, "[AI Speech to Text] dialog is not shown"
+
+        with step("[Action] Press [ESC] key to close the dialog"):
+            main_page.press_esc_key()
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.whats_new
+    @pytest.mark.name("[test_zzz_func_31_4] Verify [What's New] dialog and handle save changes dialog")
+    @exception_screenshot
+    def test_zzz_func_31_4(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_3') is run and passed
+        1. Click [What's New] button (L.main.btn_whats_new_update) on top bar
+        2. Check [What's New] dialog (L.main.dlg_whats_name_title) is shown
+        3. Close the dialog by press [ESC] key
+        4. Click [Close] button to back to launcher
+        5. Handle [Do you want to save changes] dialog with option [No]
+        """
+        dependency_test = "test_zzz_func_31_3"
+        self.ensure_dependency(dependency_test)
+
+        # [L88] 1.4 Content notification > Click "New Advertising" icon on caption bar
+        # with uuid("bc48f6fb-a3a7-41c7-938e-bf8e07fd7a7d") as case:
+
+        with step("[Action] Click [What's New] button (L.main.btn_whats_new_update) on top bar"):
+            main_page.click(L.main.btn_whats_new_update)
+
+        with step("[Verify] Check [What's New] dialog (L.main.dlg_whats_name_title) is shown"):
+            if not main_page.exist(L.main.dlg_whats_name_title):
+                assert False, "[What's New] dialog is not shown"
+
+        with step("[Action] Close the dialog by press [ESC] key"):
+            main_page.press_esc_key()
+
+        with step("[Action] Click [Close] button to back to launcher"):
+            main_page.click_close_then_back_to_launcher()
+
+        with step("[Action] Handle [Do you want to save changes] dialog with option [No]"):
+            main_page.handle_no_save_project_dialog(option='no')
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.launcher
+    @pytest.mark.ai_module
+    @pytest.mark.import_media
+    @pytest.mark.video_denoise
+    @pytest.mark.name("[test_zzz_func_31_5] Verify [Video Denoise] button functionality, sample clip application, download, and Try for Free action")
+    @exception_screenshot
+    def test_zzz_func_31_5(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_4') is run and passed
+        1. Check if [Video Denoise] button (L.base.launcher_window.btn_video_denoise) is on launcher
+        2. Click [Video Denoise] button on launcher
+        3. Apply [Sample Clip] on [AI Module Import dialog] on Launcher
+        4. Download [AI Module] and check result is True
+        5. Click [Try for Free] button and check result is True
+        6. Click [Close] button to back to launcher > Handle [Do you want to save changes] dialog with option [No]
+        """
+        dependency_test = "test_zzz_func_31_4"
+        self.ensure_dependency(dependency_test)
+
+        # [L50] 1.3 New Launcher > Tool area > Video Denoise > [Premium feature mechanism: Try Before Buy]: Try to enable the function
+        # with uuid("60dd982c-374c-4e9b-9e26-9425a41b02d5") as case:
+
+        with step("[Verify] Check if [Video Denoise] button (L.base.launcher_window.btn_video_denoise) is on launcher"):
+            if main_page.is_not_exist(L.base.launcher_window.btn_video_denoise):
+                assert False, "[Video Denoise] button is not on launcher"
+
+        with step("[Action] Click [Video Denoise] button on launcher"):
+            main_page.click(L.base.launcher_window.btn_video_denoise)
+
+        with step("[Action] Apply [Sample Clip] on [AI Module Import dialog] on Launcher"):
+            main_page.apply_sample_clip_when_open_AI_import_dialog()
+
+        with step("[Action] Download [AI Module] and check result is True"):
+            result = self.download_AI_module_complete()
+            if not result:
+                assert False, "Downloading [AI Module] failed, result is not True"
+
+        with step("[Action] Click [Try for Free] button and check result is True"):
+            result = main_page.click_btn_try_for_free()
+            if not result:
+                assert False, "[Try for Free] button click did not return True"
+
+        with step("[Action] Click [Close] button to back to launcher > Handle [Do you want to save changes] dialog with option [No]"):
+            main_page.click_close_then_back_to_launcher()
+            main_page.handle_no_save_project_dialog(option='no')
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.launcher
+    @pytest.mark.ai_module
+    @pytest.mark.import_media
+    @pytest.mark.ai_background_remover
+    @pytest.mark.name("[test_zzz_func_31_6] Verify [AI BG Remover] functionality, sample clip application, Try for Free action, download and exit Pip Designer")
+    @exception_screenshot
+    def test_zzz_func_31_6(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_5') is run and passed
+        1. Check if [AI BG Remover] button (L.base.launcher_window.btn_ai_bg_remover) is on launcher
+        2. Click [AI BG Remover] button on launcher
+        3. Apply [Sample Clip] on [AI Module Import dialog] on Launcher
+        4. Click [Try for Free] button and check result is True
+        5. Download [AI Module] and check result is True
+        6. Click [OK] to leave [Pip Designer] (back to timeline)
+        """
+        dependency_test = "test_zzz_func_31_5"
+        self.ensure_dependency(dependency_test)
+
+        # [L60] 1.3 New Launcher > Tool area > AI BG Remover > [Premium feature mechanism: Try Before Buy]: Try to enable the function
+        # with uuid("554ac013-782e-40bd-ae70-f377c33ecc8b") as case:
+
+        with step("[Verify] Check if [AI BG Remover] button (L.base.launcher_window.btn_ai_bg_remover) is on launcher"):
+            if main_page.is_not_exist(L.base.launcher_window.btn_ai_bg_remover):
+                assert False, "[AI BG Remover] button is not on launcher"
+
+        with step("[Action] Click [AI BG Remover] button on launcher"):
+            main_page.click(L.base.launcher_window.btn_ai_bg_remover)
+
+        with step("[Action] Apply [Sample Clip] on [AI Module Import dialog] on Launcher"):
+            main_page.apply_sample_clip_when_open_AI_import_dialog()
+
+        with step("[Action] Click [Try for Free] button and check result is True"):
+            result = main_page.click_btn_try_for_free()
+            if not result:
+                assert False, "[Try for Free] button click did not return True"
+
+        with step("[Action] Download [AI Module] and check result is True"):
+            result = self.download_AI_module_complete()
+            if not result:
+                assert False, "Downloading [AI Module] failed, result is not True"
+
+        with step("[Action] Click [OK] to leave [Pip Designer] (back to timeline)"):
             pip_designer_page.click_ok()
-            time.sleep(DELAY_TIME * 2)
+
+        assert True
+
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.media_room
+    @pytest.mark.background_music
+    @pytest.mark.search_library
+    @pytest.mark.content_pack
+    @pytest.mark.name("[test_zzz_func_31_7] Verify sound clip selection, timeline drag, Try for Free action and download OK status")
+    @exception_screenshot
+    def test_zzz_func_31_7(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_6') is run and passed
+        1. Enter [Background Music (meta)] Category
+        2. Select specific category in meta by name ('Brazilian')
+        3. Search library ('Conexão Maior')
+        4. Select specific sound clips in library by name ('Conexão Maior') > Wait DELAY_TIME*2 for downloading
+        5. Drag current position media to timeline playhead position (track_no=1)
+        6. Click [Try for Free] button and check result is True
+        7. Check [Download OK] button (L.media_room.scroll_area.table_view_text_field_download_ok) is shown
+        """
+        dependency_test = "test_zzz_func_31_6"
+        self.ensure_dependency(dependency_test)
 
         # [L159] 2.1 Media Room > BGM (Meta) Add to timeline preview > show [Try before buy] dialog
-        with uuid("39e063e9-d7e6-405a-9853-77c7fe598db9") as case:
-            # Enter BGM(Meta)
+        # with uuid("39e063e9-d7e6-405a-9853-77c7fe598db9") as case:
+
+        with step("[Action] Enter [Background Music (meta)] Category"):
             media_room_page.enter_background_music()
-            time.sleep(DELAY_TIME * 4)
 
-            # Enter (Brazilian) category
-            media_room_page.select_specific_category_in_meta('Brazilian')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Select specific category in meta by name ('Brazilian')"):
+            media_room_page.select_specific_category_in_meta("Brazilian")
 
-            # search keyword: Conexão Maior
-            media_room_page.search_library('Conexão Maior')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Search library ('Conexão Maior')"):
+            media_room_page.search_library("Conexão Maior")
 
-            # select specific BGM
+        with step("[Action] Select specific sound clips in library by name ('Conexão Maior') > Wait DELAY_TIME*2 for downloading"):
             media_room_page.sound_clips_select_media('Conexão Maior')
             time.sleep(DELAY_TIME * 2)
 
-            # drag BGM to timeline playhead position
+        with step("[Action] Drag current position media to timeline playhead position (track_no=1)"):
             main_page.drag_current_pos_media_to_timeline_playhead_position(track_no=1)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify step 1:
-            verify_try_dialog = main_page.click_btn_try_for_free()
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Click [Try for Free] button and check result is True"):
+            result = main_page.click_btn_try_for_free()
+            if not result:
+                assert False, "[Try for Free] button click did not return True"
 
-            # Verify step 2: check download icon
-            target_download = main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok, timeout=7)
+        with step("[Verify] Check [Download OK] button (L.media_room.scroll_area.table_view_text_field_download_ok) is shown"):
+            if not main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok):
+                assert False, "[Download OK] button is not shown"
 
-            case.result = verify_try_dialog and target_download
+        assert True
+
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.media_room
+    @pytest.mark.background_music
+    @pytest.mark.search_library
+    @pytest.mark.content_pack
+    @pytest.mark.name("[test_zzz_func_31_8] Verify sound clip selection, timeline drag and Prenium icon on launcher")
+    @exception_screenshot
+    def test_zzz_func_31_8(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_7') is run and passed
+        1. Click [Cancel] button in search library
+        2. Select timeline track (2)
+        3. Search library ('Electr')
+        4. Select specific sound clips in library by name ('Electrucada') > Wait DELAY_TIME*2 for downloading
+        5. Drag current position media to timeline playhead position (track_no=2)
+        6. Check [Prenium] icon (L.base.try_for_free_dialog.icon_premium) is shown
+        """
+        dependency_test = "test_zzz_func_31_7"
+        self.ensure_dependency(dependency_test)
 
         # [L179] 2.1 Media Room > Insert clips to timeline & preview > show [Try before buy] dialog
-        with uuid("77bc7a1f-1e8e-4b83-95f8-01ee75175d49") as case:
-            # click [x] to cancel search
-            media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("77bc7a1f-1e8e-4b83-95f8-01ee75175d49") as case:
 
-            # click timeline track 2
+        with step("[Action] Click [Cancel] button in search library"):
+            media_room_page.search_library_click_cancel()
+
+        with step("[Action] Select timeline track (2)"):
             main_page.timeline_select_track(2)
 
-            # search : Ribbons
-            media_room_page.search_library('Electr')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Search library ('Electr')"):
+            media_room_page.search_library("Electr")
 
-            # select specific BGM
-            media_room_page.sound_clips_select_media('Electrucada')
+        with step("[Action] Select specific sound clips in library by name ('Electrucada') > Wait DELAY_TIME*2 for downloading"):
+            media_room_page.sound_clips_select_media("Electrucada")
             time.sleep(DELAY_TIME * 2)
 
-            # drag BGM to timeline playhead position
+        with step("[Action] Drag current position media to timeline playhead position (track_no=2)"):
             main_page.drag_current_pos_media_to_timeline_playhead_position(track_no=2)
-            time.sleep(DELAY_TIME * 2)
 
-            case.result = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step("[Verify] Check [Prenium] icon (L.base.try_for_free_dialog.icon_premium) is shown"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.icon_premium):
+                assert False, "[Prenium] icon is not shown"
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.media_room
+    @pytest.mark.background_music
+    @pytest.mark.search_library
+    @pytest.mark.content_pack
+    @pytest.mark.name("[test_zzz_func_31_9] Verify [Try for Free] action, undo, sound clip selection, timeline drag, search cancel and download OK status")
+    @exception_screenshot
+    def test_zzz_func_31_9(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_8') is run and passed
+        1. Click [Try for Free] button with (option_dont_show_again=1) > Wait DELAY_TIME*4 for downloading
+        2. [Undo] via hotkey
+        3. Select specific sound clips in library by name ('Ancestrais') > Wait DELAY_TIME*2 for downloading
+        4. Drag current position media to timeline playhead position (track_no=2)
+        5. Click [Cancel] button in search library
+        6. Search library ('Ancestrais')
+        7. Check [Download OK] button (L.media_room.scroll_area.table_view_text_field_download_ok) is shown
+        """
+        dependency_test = "test_zzz_func_31_8"
+        self.ensure_dependency(dependency_test)
 
         # [L180] 2.1 Media Room > Insert clips to timeline & preview > Not pop up "tro before buy" dialog
-        with uuid("11236769-ffd1-4a45-a846-c22c2b348b67") as case:
+        # with uuid("11236769-ffd1-4a45-a846-c22c2b348b67") as case:
 
-            # Click [Try for free]
+        with step("[Action] Click [Try for Free] button with (option_dont_show_again=1) > Wait DELAY_TIME*4 for downloading"):
             main_page.click_btn_try_for_free(option_dont_show_again=1)
             time.sleep(DELAY_TIME * 4)
 
-            # press cmd + Z / (undo)
+        with step("[Action] [Undo] via hotkey"):
             main_page.tap_Undo_hotkey()
 
-            # select specific BGM
-            media_room_page.sound_clips_select_media('Ancestrais')
+        with step("[Action] Select specific sound clips in library by name ('Ancestrais') > Wait DELAY_TIME*2 for downloading"):
+            media_room_page.sound_clips_select_media("Ancestrais")
             time.sleep(DELAY_TIME * 2)
 
-            # drag BGM to timeline playhead position
+        with step("[Action] Drag current position media to timeline playhead position (track_no=2)"):
             main_page.drag_current_pos_media_to_timeline_playhead_position(track_no=2)
-            time.sleep(DELAY_TIME * 4)
 
-            # click [x] to cancel search
+        with step("[Action] Click [Cancel] button in search library"):
             media_room_page.search_library_click_cancel()
-            time.sleep(DELAY_TIME * 2)
 
-            # search : Ancestrais
-            media_room_page.search_library('Ancestrais')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Search library ('Ancestrais')"):
+            media_room_page.search_library("Ancestrais")
 
-            # verify step:
-            case.result = main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok, timeout=7)
+        with step("[Verify] Check [Download OK] button (L.media_room.scroll_area.table_view_text_field_download_ok) is shown"):
+            if not main_page.is_exist(L.media_room.scroll_area.table_view_text_field_download_ok):
+                assert False, "[Download OK] button is not shown"
+
+        assert True
 
     # 10 uuid < Essential test >
     # @pytest.mark.skip

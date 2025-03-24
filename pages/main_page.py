@@ -47,7 +47,7 @@ class Main_Page(BasePage):
             raise Exception(f"Exception occurs. log={e}")
         return True
 
-    step('[Action][Main_page] click Launch Free version button on Ess dialog')
+    step('[Action][Main_page] Click [Launch Free version] button on [Ess dialog]')
     def launch_free_version(self):
         try:
             check_free_version = False

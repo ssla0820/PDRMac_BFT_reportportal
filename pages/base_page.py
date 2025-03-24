@@ -667,6 +667,7 @@ class BasePage(BasePage):
         except:
             return None
 
+    @step("[Action][Base_page] [Undo] via hotkey")
     def tap_Undo_hotkey(self):
         with self.keyboard.pressed(self.keyboard.key.cmd, "z"): pass
 
@@ -1411,11 +1412,12 @@ class BasePage(BasePage):
 
         return True
 
+    @step("[Action][Base_page] Click [Try for Free] button")
     def click_btn_try_for_free(self, option_dont_show_again=0):
         # Step1: Check to find premium icon
         if not self.is_exist(L.base.try_for_free_dialog.icon_premium):
             logger('Verify NG, cannot find premium icon')
-            raise Exception
+            raise Exception('Verify NG, cannot find premium icon')
         # Click the checkbox of (don't show again) to fit custom setting
         current_value = self.exist(L.base.try_for_free_dialog.chx_do_not_show_again).AXValue
         time.sleep(OPERATION_DELAY)
