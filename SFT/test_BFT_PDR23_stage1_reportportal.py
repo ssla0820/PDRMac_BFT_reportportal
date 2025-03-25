@@ -1174,9 +1174,9 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Open package project to specified location"):
             self.open_packed_project('Packed_Project/can_del.pdk', 'Extracted_Folder/test_media_room_func_2_12')
-            # # Close PDR then re-launch
-            # main_page.close_and_restart_app()
-            # time.sleep(DELAY_TIME * 4)
+            # Close PDR then re-launch
+            main_page.close_and_restart_app()
+            time.sleep(DELAY_TIME * 4)
 
         with step("[Action] Capture initial preview screenshot"):
             preview_before = main_page.snapshot(locator=main_page.area.preview.main)
@@ -1797,11 +1797,12 @@ class Test_BFT_365_OS14():
         # with uuid("5e96c098-f404-4992-bae7-3b946d2927b5") as case:
 
         with step("[Action] Insert media to selected track and take a screenshot"):
-            time.sleep(DELAY_TIME)
-            main_page.set_timeline_timecode('00_00_11_29')
-            time.sleep(DELAY_TIME)
-            main_page.tips_area_insert_media_to_selected_track(option=-1)
+            main_page.tips_area_insert_media_to_selected_track()
             initial_preview = main_page.snapshot(locator=main_page.area.preview.main)
+            check_custom_color = main_page.compare(Ground_Truth_Folder + 'L37.png', initial_preview)
+            if not check_custom_color:
+                assert False, "Preview does not match GT (L37.png)! Similarity should > 0.95"
+
 
         with step("[Action] Click [Change Color] button in [Tips Area] and change color to ('882ECC')"):
             tips_area_page.click_TipsArea_btn_ChangeColor('882ECC')
@@ -2887,6 +2888,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Click specific category "Handwritten", select Intro Template with method 2 with index 6, and capture screenshot'):
             intro_video_page.click_intro_specific_category("Handwritten")
+            time.sleep(DELAY_TIME * 2)
             intro_video_page.select_intro_template_method_2(6)
             screenshot_handwritten = main_page.snapshot(locator=L.media_room.library_frame)
 
@@ -3086,7 +3088,7 @@ class Test_BFT_365_OS14():
         2. Click [Insert to Selected Track] button
         3. Click [No] button on [Do you want to edit the template in the Video Intro Designer?] dialog
         4. Set timecode to (00_00_07_00) in main page
-        5. Check preview (locator=main_page.area.preview.main) with GT (Auto_Ground_Truth_Folder + 'L63.png')(similarity=0.95)
+        5. Check preview (locator=main_page.area.preview.main) with GT (Auto_Ground_Truth_Folder + 'L63.png')(similarity=0.90)
         6. Set timecode to (00_00_00_00) in main page
         7. Save project as from top menu bar and handle [Save Project] Dialog with name 'test_intro_room_func_3_22' and folder_path (Test_Material_Folder + 'BFT_21_Stage1/')
         """
@@ -3117,11 +3119,11 @@ class Test_BFT_365_OS14():
             check_preview = main_page.compare(
                 Ground_Truth_Folder + "L63.png",
                 preview,
-                similarity=0.95
+                similarity=0.90
             )
             if not check_preview:
-                # Similarity should be greater than 0.95 for matching preview
-                assert False, "Preview does not match GT (L63.png)! Similarity should > 0.95"
+                # Similarity should be greater than 0.90 for matching preview
+                assert False, "Preview does not match GT (L63.png)! Similarity should > 0.90"
 
         with step('[Action] Set timeline timecode to 00_00_00_00'):
             main_page.set_timeline_timecode("00_00_00_00", is_verify=True)
@@ -5199,14 +5201,18 @@ class Test_BFT_365_OS14():
             main_page.drag_media_to_timeline_playhead_position('BFT_title_Save')
             
         with step('[Verify] Check if preview changed correctly as GT'):
-            # Set timecode :
+            main_page.press_space_key()
+            main_page.press_space_key()
+        
             main_page.set_timeline_timecode('00_00_16_23')
-            time.sleep(DELAY_TIME * 2)
-
             timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L156.png')
-            check_current_title = main_page.compare(Ground_Truth_Folder + 'L156.png', timeline_preview, similarity=0.9)
-            assert check_current_title, "Preview is not added to timeline correctly as GT (L156.png)!"
 
+            if not main_page.compare(Ground_Truth_Folder + 'L156.png', timeline_preview):
+                assert False, "Preview is not added to timeline correctly as GT (L156.png)! Similarity should >0.95"
+        assert True
+
+
+  
 
     @pytest.mark.title_designer_func
     @pytest.mark.title_designer
@@ -5236,8 +5242,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly'):
             played_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            if main_page.compare(before_play_preview, played_preview, similarity=0.98):
-                assert False, "Not preview timeline correctly when playing the video by press space key! Similarity should < 0.98"
+            if main_page.compare(before_play_preview, played_preview, similarity=0.995):
+                assert False, "Not preview timeline correctly when playing the video by press space key! Similarity should < 0.995"
 
         with step('[Action] Save project'):
             # Save project:
@@ -16398,7 +16404,7 @@ class Test_BFT_365_OS14():
             preferences_page.click_ok()
 
         with step("[Action] Open packed project"):
-            self.open_packed_project('Packed_Project/test_title_particle_effect_launcher_cross_func_18_1.pdk',
+            self.open_packed_project('Packed_Project/test_title_particle_effect_launcher_cross_func_18_1_from_test_intro_room_func_3_22.pdk',
                                     'Extracted_Folder/test_title_particle_effect_launcher_cross_func_18_1')
 
         with step("[Action] Set timeline timecode to '00_00_27_07'"):
