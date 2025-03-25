@@ -22933,396 +22933,597 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    # 10 uuid < Essential test >
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.effect_room
+    @pytest.mark.body_effect
+    @pytest.mark.content_pack
+    @pytest.mark.search_library
+    @pytest.mark.import_media
+    @pytest.mark.timeline
     @exception_screenshot
-    def test_8_1_2(self):
-        # Clear Cache (Clear sign in log) to become Essential build
-        main_page.clear_log_in()
+    def test_zzz_func_31_10(self):
+        """
+        1. Clear log in > Clear Cache > Launch APP > Launch App
+        2. Click [Launch Free Version] button and enter main program by new project
+        3. If [What's new] dialog (L.base.seasonal_bb_window.main) is shown, close it by press [ESC] key
+        4. Import media for local file (Test_Material_Folder + 'Mark_Clips/1.mp4')
+        5. Insert media to selected track
+        6. Enter Effect room by hotkey and Select Library Room category [Body Effect]
+        7. Search library ('Light Waves') and drag media to timeline playhead position
+        8. Click [Try for Free] button and check result is True
+        9. Wait until download [Body Effect] complete
+        """
+        with step("[Action] Clear log in > Clear Cache > Launch APP > Launch App"):
+            main_page.clear_log_in()
+            main_page.clear_cache()
+            main_page.launch_app()
 
-        # launch APP
-        main_page.clear_cache()
+        with step("[Action] Click [Launch Free Version] button and enter main program by new project"):
+            self.launch_Essential_build()
 
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
+        with step("[Action] If [What's new] dialog (L.base.seasonal_bb_window.main) is shown, close it by press [ESC] key"):
+            if main_page.exist(L.base.seasonal_bb_window.main):
+                main_page.press_esc_key()
 
-        # launch Essential build to enter timeline mode
-        self.launch_Essential_build()
+        with step("[Action] Import media for local file (Test_Material_Folder + 'Mark_Clips/1.mp4')"):
+            media_path = Test_Material_Folder + 'Mark_Clips/1.mp4'
+            media_room_page.import_media_file(media_path)
 
-        if main_page.exist(L.base.seasonal_bb_window.main):
-            # Close seasonal BB dialog (What's new dialog)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
-
-        # Import video to media room
-        video_path = Test_Material_Folder + 'Mark_Clips/1.mp4'
-        media_room_page.import_media_file(video_path)
-        time.sleep(DELAY_TIME * 4)
-
-        # insert video to timeline
-        main_page.tips_area_insert_media_to_selected_track()
-        time.sleep(DELAY_TIME * 2)
+        with step("[Action] Insert media to selected track"):
+            main_page.tips_area_insert_media_to_selected_track()
 
         # [L231] 2.3 Effect Room - Body effect > Apply each effect : Premium content
-        with uuid("d395a903-e843-4537-8f70-787ed096259e") as case:
-            # enter Effect room with press hotkey
+        # with uuid("d395a903-e843-4537-8f70-787ed096259e") as case:
+
+        with step("[Action] Enter Effect room by hotkey and Select Library Room category [Body Effect]"):
             main_page.tap_EffectRoom_hotkey()
-            time.sleep(DELAY_TIME * 4)
+            main_page.select_LibraryRoom_category("Body Effect")
 
-            # Enter Body Effect category
-            main_page.select_LibraryRoom_category('Body Effect')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Search library ('Light Waves') and drag media to timeline playhead position"):
+            media_room_page.search_library("Light Waves")
+            main_page.drag_media_to_timeline_playhead_position("Light Waves")
 
-            # search Premium template: Light Waves
-            media_room_page.search_library('Light Waves')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Click [Try for Free] button and check result is True"):
+            result = main_page.click_btn_try_for_free(option_dont_show_again=0)
+            assert result is True
 
-            # drag media to timeline
-            main_page.drag_media_to_timeline_playhead_position('Light Waves')
-            time.sleep(DELAY_TIME * 3)
-
-            # verify step: pop up [Try before buy] dialog
-            case.result = main_page.click_btn_try_for_free(option_dont_show_again=0)
-            time.sleep(DELAY_TIME * 2)
-
-            # wait for download body effect
+        with step("[Action] Wait until download [Body Effect] complete"):
             self.check_download_body_effect()
 
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.effect_room
+    @pytest.mark.body_effect
+    @pytest.mark.timeline
+    @exception_screenshot
+    @pytest.mark.name('[test_zzz_func_31_11] Verify timeline preview matches GT')
+    def test_zzz_func_31_11(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_10') is run and passed
+        1. Set timecode to ('00_00_29_16') at main page
+        2. Check preview (L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L232_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L232_timelinepreview.png') with similarity 0.95
+        """
+        dependency_test = "test_zzz_func_31_10"
+        self.ensure_dependency(dependency_test)
+
         # [L232] 2.3 Effect Room - Body effect > Continue above case > click [OK] in [Try before buy] dialog
-        with uuid("64e855bd-610c-4735-8ed1-a90fd90df4eb") as case:
+        # with uuid("64e855bd-610c-4735-8ed1-a90fd90df4eb") as case:
 
-            # set timecode
-            main_page.set_timeline_timecode('00_00_29_16')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Set timecode to ('00_00_29_16') at main page"):
+            main_page.set_timeline_timecode("00_00_29_16", is_verify=True)
 
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L232_timelinepreview.png')
-            check_preview = main_page.compare(Ground_Truth_Folder + 'L232_timelinepreview.png', current_preview)
-            case.result = check_preview
+        with step("[Verify] Check preview (L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L232_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L232_timelinepreview.png') with similarity 0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L232_timelinepreview.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L232_timelinepreview.png', preview_snapshot, similarity=0.95):
+                # Similarity should be greater than 0.95 for a matching preview
+                assert False, "Preview does not match Ground Truth (L232_timelinepreview.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.bubble
+    @pytest.mark.speech_to_text
+    @pytest.mark.subtitle_room
+    @pytest.mark.name('[test_zzz_func_31_12] Verify [Speech to Text] button and [Premium] Icon are shown')
+    @exception_screenshot
+    def test_zzz_func_31_12(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_11') is run and passed
+        1. Enter Room (Subtitle) (8)
+        2. Check if [Speech to Text] button (L.subtitle_room.library_menu.btn_speech_to_text) is shown
+        3. Click [Speech to Text] button (L.subtitle_room.library_menu.btn_speech_to_text)
+        4. Check [Premium] Icon (L.base.try_for_free_dialog.icon_premium) is shown
+        """
+        dependency_test = "test_zzz_func_31_11"
+        self.ensure_dependency(dependency_test)
 
         # [L287] 2.6 Subtitle Room > [Ess.] Auto Transcribe subtitle > should try before buy dialog
-        with uuid("c4fcaf3b-87ed-4aa1-89ce-d63d637b7469") as case:
-            # enter subtitle room
+        # with uuid("c4fcaf3b-87ed-4aa1-89ce-d63d637b7469") as case:
+
+        with step("[Action] Enter Room (Subtitle) (8)"):
             main_page.enter_room(8)
-            time.sleep(DELAY_TIME*2)
 
-            btn_STT = main_page.is_exist(L.subtitle_room.library_menu.btn_speech_to_text)
-            if not btn_STT:
-                logger("[Verify NG] Subtitle Rom : CANNOT  find btn_speech_to_text, raise exception")
-                raise Exception
+        with step("[Verify] Check if [Speech to Text] button (L.subtitle_room.library_menu.btn_speech_to_text) is shown"):
+            speech_to_text_button = main_page.is_exist(L.subtitle_room.library_menu.btn_speech_to_text)
+            if not speech_to_text_button:
+                assert False, "[Speech to Text] button is not shown"
 
-            # Click (Auto Transcribe Subtitle)
+        with step("[Action] Click [Speech to Text] button (L.subtitle_room.library_menu.btn_speech_to_text)"):
             main_page.click(L.subtitle_room.library_menu.btn_speech_to_text)
-            time.sleep(DELAY_TIME * 2)
 
-            case.result = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step("[Verify] Check [Premium] Icon (L.base.try_for_free_dialog.icon_premium) is shown"):
+            premium_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+            if not premium_icon:
+                assert False, "[Premium] Icon is not shown"
+
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.speech_to_text
+    @pytest.mark.subtitle_room
+    @pytest.mark.body_effect
+    @pytest.mark.name('[test_zzz_func_31_13] Verify [Try Once] and Speech to Text window functionality')
+    @exception_screenshot
+    def test_zzz_func_31_13(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_12') is run and passed
+        1. Click [Try Once] button and check result is True
+        2. Check if [Speech to Text] window (L.subtitle_room.speech_to_text_window.main_window, timeout=6) is shown
+        3. Click [Create] button on [Speech to Text] window
+        4. Wait until [Progress Dialog] (L.subtitle_room.handle_progress_dialog.btn_cancel) is closed
+        5. Select timeline media with name ('1')
+        6. Check if [Effect] button (L.tips_area.button.btn_effect_modify) shows up on [Tips Area] 
+        7. Click [Effect] button on [Tips Area]
+        8. Remove (Body Effect) from [Effect Settings] 
+        """
+        dependency_test = "test_zzz_func_31_12"
+        self.ensure_dependency(dependency_test)
 
         # [L288] 2.6 Subtitle Room > [Ess.] click "try Once"
-        with uuid("257c6a24-17a3-4be5-8994-90f01ee29f06") as case:
-            # Click [Try Once]
-            click_try_btn = main_page.click_btn_try_once()
+        # with uuid("257c6a24-17a3-4be5-8994-90f01ee29f06") as case:
 
-            # verify step: Pop up STT dialog
-            verify_step = main_page.is_exist(L.subtitle_room.speech_to_text_window.main_window, timeout=6)
+        with step("[Action] Click [Try Once] button and check result is True"):
+            result = main_page.click_btn_try_once()
+            if not result:
+                assert False, "[Try Once] button click did not return True"
 
-            if verify_step:
-                # click [Create]
-                subtitle_room_page.auto_function.click_create()
+        with step("[Verify] Check if [Speech to Text] window (L.subtitle_room.speech_to_text_window.main_window, timeout=6) is shown"):
+            speech_to_text_window = main_page.is_exist(L.subtitle_room.speech_to_text_window.main_window, timeout=6)
+            if not speech_to_text_window:
+                assert False, "[Speech to Text] window is not shown"
 
-                for x in range(200):
-                    if main_page.exist(L.subtitle_room.handle_progress_dialog.btn_cancel):
-                        time.sleep(DELAY_TIME)
-                    else:
-                        break
-            else:
-                logger('[Verify NG] CANNOT find speech_to_text_window > main window')
-                raise Exception
+        with step("[Action] Click [Create] button on [Speech to Text] window"):
+            subtitle_room_page.auto_function.click_create()
 
-            case.result = click_try_btn and verify_step
+        with step("[Action] Wait until [Progress Dialog] (L.subtitle_room.handle_progress_dialog.btn_cancel) is closed"):
+            for _ in range(200):
+                if not main_page.exist(L.subtitle_room.handle_progress_dialog.btn_cancel):
+                    break
+                time.sleep(DELAY_TIME)
 
-        # should remove body effect (because click [Export] then pop up POU]
-        # select timeline clip
-        main_page.select_timeline_media('1')
+        with step("[Action] Select timeline media with name ('1')"):
+            main_page.select_timeline_media('1')
 
-        # click [Effect] on tips area to enter Effect setting
-        if main_page.is_exist(L.tips_area.button.btn_effect_modify):
-            tips_area_page.click_TipsArea_btn_effect()
+        with step("[Verify] Check if [Effect] button (L.tips_area.button.btn_effect_modify) shows up on [Tips Area]"):
+            if not main_page.is_exist(L.tips_area.button.btn_effect_modify):
+                assert False, "[Effect] button (L.tips_area.button.btn_effect_modify) does not show up on [Tips Area]"
 
-            # Remove Body Effect on Effect Setting
+        with step("[Action] Click [Effect] button on [Tips Area]"):
+           tips_area_page.click_TipsArea_btn_effect()
+
+        with step("[Action] Remove (Body Effect) from [Effect Settings]"):
             effect_room_page.remove_from_effectsettings()
-            time.sleep(DELAY_TIME)
-        else:
-            logger('[Verify NG] CANNOT find Effect button on tips area')
-            raise Exception
+            
+        assert True
 
-        # click [Sign in] icon to sign in Essential account
-        main_page.handle_sign_in(account='sistarftcn.006@gmail.com', pw='ilovecc680520')
-        time.sleep(DELAY_TIME * 3)
+
+    @pytest.mark.zzz_func
+    @pytest.mark.produce_page
+    @pytest.mark.sign_in
+    @pytest.mark.name('[test_zzz_func_31_14] Verify Produce page sign in, produce button, Premium dialog absence and Edit button click')
+    @exception_screenshot
+    def test_zzz_func_31_14(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_13') is run and passed
+        1. Sign in to PDR (account='sistarftcn.006@gmail.com', pw='ilovecc680520')
+        2. Click [Produce] button
+        3. Check [Premium dialog] is not shown by verifying [H264] button (L.produce.local.btn_file_format_avc) is shown
+        4. Click [Edit] button on produce page
+        """
+        dependency_test = "test_zzz_func_31_13"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Sign in to PDR (account='sistarftcn.006@gmail.com', pw='ilovecc680520')"):
+            main_page.handle_sign_in(account='sistarftcn.006@gmail.com', pw='ilovecc680520')
 
         # [L289] 2.6 Subtitle Room > [Ess.] click "Export"
-        with uuid("d1dd188c-032d-475d-bd54-504f32f792cf") as case:
-            # click [Export]
+        # with uuid("d1dd188c-032d-475d-bd54-504f32f792cf") as case:
+
+        with step("[Action] Click [Produce] button"):
             main_page.click_produce()
-            time.sleep(DELAY_TIME * 5)
 
-            # Verify Step: No pop up "Premium dialog" / Can find H264 button
-            verify_step = main_page.is_exist(L.produce.local.btn_file_format_avc)
-            if verify_step:
-                # back to edit without produce
-                produce_page.click_edit()
-                time.sleep(DELAY_TIME * 2)
+        with step("[Verify] Check [Premium dialog] is not shown by verifying [H264] button (L.produce.local.btn_file_format_avc) is shown"):
+            if not main_page.is_exist(L.produce.local.btn_file_format_avc):
+                assert False, "[H264] button (L.produce.local.btn_file_format_avc) is not shown"
 
-            case.result = verify_step
+        with step("[Action] Click [Edit] button on produce page"):
+            produce_page.click_edit()
+
+        assert True
+
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.speech_to_text
+    @pytest.mark.subtitle_room
+    @pytest.mark.bubble
+    @pytest.mark.name('[test_zzz_func_31_15] Verify [Speech to Text] button and [POU] dialog behavior')
+    @exception_screenshot
+    def test_zzz_func_31_15(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_14') is run and passed
+        1. Enter Room (Subtitle) (8)
+        2. Check [Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT) is shown by is_exist()
+        3. Click [Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT)
+        4. Check [POU] (L.base.pou_dialog.btn_get_premium, timeout=7) pops up
+        5. Press [ESC] key to close the dialog
+        """
+        dependency_test = "test_zzz_func_31_14"
+        self.ensure_dependency(dependency_test)
 
         # [L290] 2.6 Subtitle Room > [Ess.] Auto Transcribe subtitle > should try before buy dialog
-        with uuid("56c3bf80-c6f2-4b67-864d-9765ad73ddb0") as case:
-            # enter subtitle room
+        # with uuid("56c3bf80-c6f2-4b67-864d-9765ad73ddb0") as case:
+
+        with step("[Action] Enter Room (Subtitle) (8)"):
             main_page.enter_room(8)
-            time.sleep(DELAY_TIME * 2)
 
-            # should find STT button
-            target_object = main_page.is_exist(L.subtitle_room.library_menu.uppper_btn_STT)
-            if not target_object:
-                logger('[Verify NG] CANNOT find the button (uppper_btn_STT) now.')
-                raise Exception
+        with step("[Verify] Check [Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT) is shown by is_exist()"):
+            stt_button = main_page.is_exist(L.subtitle_room.library_menu.uppper_btn_STT)
+            if not stt_button:
+                assert False, "[Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT) is not shown"
 
-            # Click (Auto Transcribe Subtitle)
+        with step("[Action] Click [Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT)"):
             main_page.click(L.subtitle_room.library_menu.uppper_btn_STT)
-            time.sleep(DELAY_TIME * 2)
 
-            # Verify step: pop up POU
-            check_target_pou = main_page.is_exist(L.base.pou_dialog.btn_get_premium, timeout=7)
+        with step("[Verify] Check [POU] (L.base.pou_dialog.btn_get_premium, timeout=7) pops up"):
+            pou_dialog = main_page.is_exist(L.base.pou_dialog.btn_get_premium, timeout=7)
+            if not pou_dialog:
+                assert False, "[POU] (L.base.pou_dialog.btn_get_premium, timeout=7) did not pop up"
 
-            case.result = check_target_pou
+        with step("[Action] Press [ESC] key to close the dialog"):
+            main_page.press_esc_key()
 
-            # click [esc] to close POU dialog
-            if check_target_pou:
-                main_page.press_esc_key()
-                time.sleep(DELAY_TIME * 2)
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.media_room
+    @pytest.mark.background_music
+    @pytest.mark.produce_page
+    @pytest.mark.premium
+    @pytest.mark.name('[test_zzz_func_31_16] Verify BGM export Premium dialog and remove all BGM')
+    @exception_screenshot
+    def test_zzz_func_31_16(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_15') is run and passed
+        1. Enter Room (Media) (0) > Enter [Background Music (meta)] Category
+        2. Select specific category in meta by name ('Blue')
+        3. Search library for ('Honky Mother')
+        4. Select track (2)
+        5. Select specific sound clips in library by name ('Honky Mother')
+        6. Drag current position media to timeline playhead position
+        7. Click [Try for Free] button
+        8. Click [Produce] button
+        9. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        10. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        11. Click [Remove All] button (L.base.pou_dialog.btn_remove_all) to remove BGM then back to timeline
+        """
+        dependency_test = "test_zzz_func_31_15"
+        self.ensure_dependency(dependency_test)
+
 
         # [L160] 2.1 Media Room > BGM(Meta) > [Ess.] click [Export]
-        with uuid("f417bcf1-9403-4af0-bb6e-bda5596a7817") as case:
-            # Enter BGM(Meta)
+        # with uuid("f417bcf1-9403-4af0-bb6e-bda5596a7817") as case:
+
+        with step("[Action] Enter Room (Media) (0) > Enter [Background Music (meta)] Category"):
             main_page.enter_room(0)
-            time.sleep(DELAY_TIME * 2)
-
             media_room_page.enter_background_music()
-            time.sleep(DELAY_TIME * 4)
 
-            # Enter (Blue) category
-            media_room_page.select_specific_category_in_meta('Blue')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Select specific category in meta by name ('Blue')"):
+            media_room_page.select_specific_category_in_meta("Blue")
 
-            # search keyword: Honky Mother
-            media_room_page.search_library('Honky Mother')
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Search library for ('Honky Mother')"):
+            media_room_page.search_library("Honky Mother")
 
-
-            # click timeline track 2
+        with step("[Action] Select track (2)"):
             main_page.timeline_select_track(2)
-            time.sleep(DELAY_TIME)
 
-            # select specific BGM
-            media_room_page.sound_clips_select_media('Honky Mother')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Select specific sound clips in library by name ('Honky Mother')"):
+            media_room_page.sound_clips_select_media("Honky Mother")
 
-            # drag BGM to timeline playhead position
+        with step("[Action] Drag current position media to timeline playhead position"):
             main_page.drag_current_pos_media_to_timeline_playhead_position(track_no=2)
-            time.sleep(DELAY_TIME * 3)
 
-            # Click [Try for free]
-            main_page.click_btn_try_for_free(option_dont_show_again=0)
-            time.sleep(DELAY_TIME * 4)
+        with step("[Action] Click [Try for Free] button"):
+            result = main_page.click_btn_try_for_free(option_dont_show_again=0)
+            if not result:
+                assert False, "[Try for Free] button click failed!"
 
-            # click [Export]
+        with step("[Action] Click [Produce] button"):
             main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step("[Verify] Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.icon_premium):
+                assert False, "[Premium for exporting] dialog did not pop up!"
 
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
+        with step("[Verify] Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog"):
+            if not main_page.is_exist(L.base.pou_dialog.btn_not_now):
+                assert False, "[Now Now] button is not shown on [Premium for exporting] dialog!"
 
-            case.result = target_icon and target_btn
-            case.fail_log = f'{target_icon}  {target_btn}'
+        with step("[Action] Click [Remove All] button (L.base.pou_dialog.btn_remove_all) to remove BGM then back to timeline"):
+            main_page.click(L.base.pou_dialog.btn_remove_all)
 
-            # click [Remove all] to remove BGM(Meta) then back to timeline
-            if target_btn:
-                main_page.click(L.base.pou_dialog.btn_remove_all)
-                time.sleep(DELAY_TIME)
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.media_room
+    @pytest.mark.video_denoise
+    @pytest.mark.fix_enhance
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_zzz_func_31_17] Verify Fix Enhance and Video Denoise checkbox and Try for Free dialog')
+    @exception_screenshot
+    def test_zzz_func_31_17(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_16') is run and passed
+        1. Select timeline media with name ('1')
+        2. Click [Fix Enhance] button on [Tips Area]
+        3. Check [Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise) is shown
+        4. Enable [Video Denoise] checkbox
+        5. Check of [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_for_free) pops up
+        """
+        dependency_test = "test_zzz_func_31_16"
+        self.ensure_dependency(dependency_test)
 
         # [L567] 4.3 Fix / Enhance > Fix > [Ess.] Apply [Video Denoise] > Should  show "Try Before Buy"
-        with uuid("a89bc4aa-12b2-4ed0-b232-d14da5fe94e7") as case:
-            # click timeline media
-            main_page.select_timeline_media('1')
-            time.sleep(DELAY_TIME)
+        # with uuid("a89bc4aa-12b2-4ed0-b232-d14da5fe94e7") as case:
 
+        with step("[Action] Select timeline media with name ('1')"):
+            main_page.select_timeline_media("1")
 
-            # click Fix / Enhance in tips area
+        with step("[Action] Click [Fix Enhance] button on [Tips Area]"):
             main_page.tips_area_click_fix_enhance()
-            time.sleep(DELAY_TIME * 2)
 
-            # Find checkbox of [Video Denoise]
-            target_object = main_page.is_exist(L.fix_enhance.fix.checkbox_video_denoise)
-            if not target_object:
-                logger('[Verify NG] Cannot find locator : L.fix_enhance.fix.checkbox_video_denoise')
-                raise Exception
+        with step("[Verify] Check [Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise) is shown"):
+            checkbox = main_page.is_exist(L.fix_enhance.fix.checkbox_video_denoise)
+            if not checkbox:
+                assert False, "[Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise) is not shown"
 
-            # set Video Denoise
+        with step("[Action] Enable [Video Denoise] checkbox"):
             fix_enhance_page.fix.enable_video_denoise()
-            time.sleep(DELAY_TIME * 2)
 
-            # Verify Step : pop up [Try for Free] dialog
-            target_free_btn = main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free)
+        with step("[Verify] Check of [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_for_free) pops up"):
+            if not main_page.exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "[Try for Free] dialog (L.base.try_for_free_dialog.btn_try_for_free) did not pop up"
 
-            case.result = target_free_btn
+        assert True
+
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.video_denoise
+    @pytest.mark.fix_enhance
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_zzz_func_31_18] Verify [Video Denoise] checkbox status and absence of [Try for Free] button')
+    @exception_screenshot
+    def test_zzz_func_31_18(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_17') is run and passed
+        1. Select timeline media with name ('1')
+        2. Click [Try For Free] button (L.base.try_for_free_dialog.btn_try_for_free)
+        3. Check [Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise).AXvalue ==1
+        4. Check [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is not shown
+        """
+        dependency_test = "test_zzz_func_31_17"
+        self.ensure_dependency(dependency_test)
 
         # [L568] 4.3 Fix / Enhance > Fix > [Ess.] Apply [Video Denoise] > Click Try for Free
-        with uuid("5c1b0c2c-c345-4d2f-a4df-afe1efd9667b") as case:
-            time.sleep(DELAY_TIME * 2)
-            main_page.select_timeline_media('1')
+        # with uuid("5c1b0c2c-c345-4d2f-a4df-afe1efd9667b") as case:
 
-            # click [Try for Free]
-            for x in range(6):
-                target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-                if target:
-                    main_page.mouse.click(*target.center)
-                    time.sleep(DELAY_TIME)
-                else:
-                    logger(x)
-                    break
+        with step("[Action] Select timeline media with name ('1')"):
+            main_page.select_timeline_media("1")
 
-            # Verify Step1 : get checkbox == 1
-            target_value = main_page.exist(L.fix_enhance.fix.checkbox_video_denoise).AXValue
-            logger(target_value)
+        with step("[Action] Click [Try For Free] button (L.base.try_for_free_dialog.btn_try_for_free)"):
+            main_page.click(L.base.try_for_free_dialog.btn_try_for_free)
 
-            # Verify Step 2: cannot find [Try for Free] button
-            btn_object = main_page.is_not_exist(L.base.try_for_free_dialog.btn_try_for_free)
-            logger(btn_object)
+        with step("[Verify] Check [Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise).AXvalue ==1"):
+            checkbox = main_page.exist(L.fix_enhance.fix.checkbox_video_denoise)
+            if checkbox.AXValue != 1:
+                assert False, "[Video Denoise] checkbox AXvalue is not 1!"
 
-            case.result = target_value and btn_object
+        with step("[Verify] Check [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is not shown"):
+            if not main_page.is_not_exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "[Try for Free] button is still shown!"
+
+        assert True
+
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.video_denoise
+    @pytest.mark.fix_enhance
+    @pytest.mark.timeline
+    @pytest.mark.produce_page
+    @pytest.mark.name('[test_zzz_func_31_19] Verify Premium for exporting dialog and remove all BGM via Export')
+    @exception_screenshot
+    def test_zzz_func_31_19(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_18') is run and passed
+        1. Click [Export] button (L.main.btn_produce)
+        2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        4. Click [Remove All] button (L.base.pou_dialog.btn_remove_all) to remove BGM then back to timeline
+        """
+        dependency_test = "test_zzz_func_31_18"
+        self.ensure_dependency(dependency_test)
 
         # [L569] 4.3 Fix / Enhance > Fix > [Ess.] Apply [Video Denoise] > click Export
-        with uuid("97e7fda3-edd8-447c-9df5-7631e276dcf4") as case:
-            # click [Export]
+        # with uuid("97e7fda3-edd8-447c-9df5-7631e276dcf4") as case:
+
+        with step("[Action] Click [Export] button (L.main.btn_produce)"):
             main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step("[Verify] Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.icon_premium):
+                assert False, "[Premium for exporting] dialog did not pop up"
 
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
+        with step("[Verify] Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog"):
+            if not main_page.is_exist(L.base.pou_dialog.btn_not_now):
+                assert False, "[Now Now] button is not shown on [Premium for exporting] dialog"
 
-            case.result = target_icon and target_btn
-            case.fail_log = f'{target_icon}  {target_btn}'
+        with step("[Action] Click [Remove All] button (L.base.pou_dialog.btn_remove_all) to remove BGM then back to timeline"):
+            main_page.click(L.base.pou_dialog.btn_remove_all)
 
-            # click [Remove all] to remove BGM(Meta) then back to timeline
-            if target_btn:
-                main_page.click(L.base.pou_dialog.btn_remove_all)
-                time.sleep(DELAY_TIME)
+        assert True
 
-    # 3 uuid < Essential test >
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_zzz_func_31_20] Verify Pip Designer export and AI module download workflow')
     @exception_screenshot
-    def test_8_1_3(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
+    def test_zzz_func_31_20(self):
+        """
+        1. Clear [AI Module] files > Clear Cache > Launch APP
+        2. Click [Launch Free Version] button
+        3. If [What's new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close
+        4. Import media for local file (Test_Material_Folder + 'Title_Designer_3/background01.jpg')
+        5. Select media by library icon view ('background01.jpg') > Right click > Select right click menu ('Insert on Selected Track')
+        6. Select [Pip Designer] from [Tools] and check result is True
+        7. Click [Express] button (L.pip_designer.express)
+        8. Screenshot (L.pip_designer.preview)
+        9. Enable [Chromakey]
+        10. Check if [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_for_free) is shown 
+        11. Click [Try for Free] button
+        12. Wait for downloading AI module
+        13. Check preview is updated with similarity <0.75 and >0.4
+        14. Click [OK] to close [Pip Designer]
+        """
+        with step("[Action] Clear [AI Module] files > Clear Cache > Launch APP"):
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.launch_app()
 
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
+        with step("[Action] Click [Launch Free Version] button"):
+            self.launch_Essential_build()
 
-        # launch Essential build to enter timeline mode
-        self.launch_Essential_build()
+        with step("[Action] If [What's new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close"):
+            if main_page.exist(L.base.seasonal_bb_window.main):
+                main_page.press_esc_key()
 
-        if main_page.exist(L.base.seasonal_bb_window.main):
-            # Close seasonal BB dialog (What's new dialog)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Import media for local file (Test_Material_Folder + 'Title_Designer_3/background01.jpg')"):
+            media_path = Test_Material_Folder + "Title_Designer_3/background01.jpg"
+            media_room_page.import_media_file(media_path)
 
-        # Import JPG photo to media room
-        jpg_path = Test_Material_Folder + 'Title_Designer_3/background01.jpg'
-        media_room_page.import_media_file(jpg_path)
-        time.sleep(DELAY_TIME * 4)
-
-        # insert to timeline
-        main_page.select_library_icon_view_media('background01.jpg')
-        main_page.right_click()
-        main_page.select_right_click_menu('Insert on Selected Track')
-        time.sleep(DELAY_TIME * 2)
+        with step("[Action] Select media by library icon view ('background01.jpg') > Right click > Select right click menu ('Insert on Selected Track')"):
+            main_page.select_library_icon_view_media("background01.jpg")
+            main_page.right_click()
+            main_page.select_right_click_menu("Insert on Selected Track")
 
         # [L416] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
-        with uuid("4d267db6-55ba-43cf-849c-f57a1ee116f4") as case:
-            # Click TipsArea > Pip Designer
-            check_status = tips_area_page.tools.select_PiP_Designer()
-            if not check_status:
-                raise Exception
+        # with uuid("4d267db6-55ba-43cf-849c-f57a1ee116f4") as case:
 
-            time.sleep(DELAY_TIME * 3)
-            # Enter Express mode
+        with step("[Action] Select [Pip Designer] from [Tools] and check result is True"):
+            result = tips_area_page.tools.select_PiP_Designer()
+            if not result:
+                assert False, "Select [Pip Designer] from [Tools] Fail"
+
+        with step("[Action] Click [Express] button (L.pip_designer.express)"):
             main_page.click(L.pip_designer.express)
-            time.sleep(DELAY_TIME * 2)
 
-            # init preview
-            before_img = main_page.snapshot(L.pip_designer.preview)
+        with step("[Action] Screenshot (L.pip_designer.preview)"):
+            preview_initial = main_page.snapshot(locator=L.pip_designer.preview)
 
-            # Enable AI Background Remover
-            pip_designer_page.apply_chromakey()
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Enable [Chromakey]"):
+            pip_designer_page.apply_chromakey(bApply=1)
 
-            # Verify Step : pop up [Try for Free] dialog
-            target_free_btn = main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free)
+        with step("[Verify] Check if [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_for_free) is shown"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "[Try for Free] dialog is not shown"
 
-            # [L417] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
-            with uuid("bab1a707-3fc4-496d-9c7e-fd1f0c33c015") as case:
-                # Click [Try for Free]
-                target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-                if target_free_btn:
-                    main_page.mouse.click(*target.center)
-                    time.sleep(DELAY_TIME)
-                else:
-                    raise Exception
+        # [L417] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
+        # with uuid("bab1a707-3fc4-496d-9c7e-fd1f0c33c015") as case
+        with step("[Action] Click [Try for Free] button"):
+            main_page.click(L.base.try_for_free_dialog.btn_try_for_free)
 
-                self.check_downloading_AI_module()
-                time.sleep(DELAY_TIME * 2)
+        with step("[Action] Wait for downloading AI module"):
+            self.check_downloading_AI_module()
 
-                # apply cutout preview
-                after_img = main_page.snapshot(L.pip_designer.preview)
-                check_no_update = main_page.compare(before_img, after_img, similarity=0.75)
-                check_some_update = main_page.compare(before_img, after_img, similarity=0.4)
+        with step("[Verify] Check preview is updated with similarity <0.75 and >0.4"):
+            preview_updated = main_page.snapshot(locator=L.pip_designer.preview)
+            # If preview similarity is >= 0.75, then the update did not occur as expected
+            if main_page.compare(preview_initial, preview_updated, similarity=0.75):
+                assert False, "Preview similarity is not less than 0.75"
+            # If preview similarity is < 0.4, then the update did not occur as expected
+            if not main_page.compare(preview_initial, preview_updated, similarity=0.4):
+                assert False, "Preview similarity is not greater than 0.4"
 
-                case.result = (not check_no_update) and check_some_update
-            case.result = target_free_btn
-
-            # click [OK] to back to timeline
+        with step("[Action] Click [OK] to close [Pip Designer]"):
             pip_designer_page.click_ok()
 
+        assert True
+
+    @pytest.mark.zzz_func
+    @pytest.mark.essential
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module    
+    @pytest.mark.name('[test_zzz_func_31_21] Verify Export button and Premium dialog for exporting')
+    @exception_screenshot
+    def test_zzz_func_31_21(self):
+        """
+        0. Ensure the dependency test ('test_zzz_func_31_20') is run and passed
+        1. Click [Export] button (L.main.btn_produce)
+        2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        4. Click [Not Now] button (L.base.pou_dialog.btn_not_now) to close the dialog
+        """
+        dependency_test = "test_zzz_func_31_20"
+        self.ensure_dependency(dependency_test)
+
         # [L418] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
-        with uuid("df9a73b4-21fb-42dc-8130-b565c77cb2ea") as case:
-            # click [Export]
+        # with uuid("df9a73b4-21fb-42dc-8130-b565c77cb2ea") as case:
+
+        with step("[Action] Click [Export] button (L.main.btn_produce)"):
             main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step("[Verify] Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up"):
+            if not main_page.is_exist(L.base.try_for_free_dialog.icon_premium):
+                assert False, "[Premium for exporting] dialog did not pop up!"
 
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
+        with step("[Verify] Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog"):
+            if not main_page.is_exist(L.base.pou_dialog.btn_not_now):
+                assert False, "[Now Now] button is not shown on [Premium for exporting] dialog"
 
-            case.result = target_icon and target_btn
-            case.fail_log = f'{target_icon}  {target_btn}'
+        with step("[Action] Click [Not Now] button (L.base.pou_dialog.btn_not_now) to close the dialog"):
+            main_page.click(L.base.pou_dialog.btn_not_now)
 
-            # click [Not Now]
-            if target_btn:
-                main_page.click(L.base.pou_dialog.btn_not_now)
-                time.sleep(DELAY_TIME)
+        assert True
+
+
+
 
     # 3 uuid < Essential test >
     # @pytest.mark.skip

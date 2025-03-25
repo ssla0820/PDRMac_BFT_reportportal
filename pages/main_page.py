@@ -244,6 +244,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Click [Fix Enhance] button on [Tips Area]')
     def tips_area_click_fix_enhance(self):
         try:
             img_before = self.snapshot(L.media_room.library_frame)
@@ -433,6 +434,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Select timeline media with name')
     def select_timeline_media(self, name, index=0): # index: 0-based row first
         try:
             locator = L.main.timeline.clip_name_unit

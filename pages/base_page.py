@@ -1429,11 +1429,12 @@ class BasePage(BasePage):
         self.click(L.base.try_for_free_dialog.btn_try_for_free)
         return True
 
+    @step("[Action][Base_page] Click [Try Once] button")
     def click_btn_try_once(self):
         # Step1: Check to find premium icon
         if not self.is_exist(L.base.try_for_free_dialog.icon_premium):
             logger('Verify NG, cannot find premium icon')
-            raise Exception
+            raise Exception('Verify NG, cannot find premium icon')
 
         # Click [Try Once]
         self.click(L.base.try_for_free_dialog.btn_try_once)

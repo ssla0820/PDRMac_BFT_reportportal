@@ -181,6 +181,7 @@ class FixEnhance(BasePage):
         def enable_lighting_adjustment(self, value=True):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_lighting_adjustment, value)
 
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [Video Denoise]')
         def enable_video_denoise(self, value=True):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_video_denoise, value)
 

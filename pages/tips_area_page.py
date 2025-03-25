@@ -30,12 +30,13 @@ class Tips_area(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Tip Areas][Tools] Select [Pip Designer] from [Tools]')
         def select_PiP_Designer(self):
             # Description : Click TipsArea [Tools] button > Select (PiP Designer)
             try:
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 self.select_right_click_menu('PiP Designer')
 
@@ -45,7 +46,7 @@ class Tips_area(Main_Page, BasePage):
                     return False
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def select_Mask_Designer(self):

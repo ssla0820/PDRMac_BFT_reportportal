@@ -154,15 +154,17 @@ class Produce(BasePage):
     def check_enter_produce_page(self):
         return self.is_exist(L.produce.tab_mode_local)
 
+    @step('[Action][Produce] Click [Edit] button')
     def click_edit(self):
         try:
             self.exist_click(L.main.btn_edit)
             if not self.exist(L.main.room_entry.btn_media_room, 3):
                 logger('Fail to click confirm dialog yes')
-                raise Exception
+                raise Exception('Fail to click confirm dialog yes')
+            time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
     @step('[Action][Produce] Get timecode')
     def get_preview_timecode(self):
