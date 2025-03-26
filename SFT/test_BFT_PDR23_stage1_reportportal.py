@@ -4766,34 +4766,42 @@ class Test_BFT_365_OS14():
         # Ensure the dependency test is run and passed
         # Start a new section, starts from "test_title_designer_func_4_1"
         
-        with step('[Initialize] Open project and enter Title room'):
-            with step('[Action] Reopen AP and open saved project'):
-                main_page.close_app()
-                main_page.start_app()
-                time.sleep(DELAY_TIME)
+        with step('[Action] Reopen AP and open saved project'):
+            main_page.close_app()
+            main_page.start_app()
+            time.sleep(DELAY_TIME)
 
-                project_name = 'Packed_Project/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
-                save_name = 'Extracted_Folder/test_title_designer_func_4_25'
-                self.open_packed_project(project_name, save_name)
+            project_name = 'Packed_Project/test_title_designer_func_4_25_from_test_intro_room_func_3_16.pdk'
+            save_name = 'Extracted_Folder/test_title_designer_func_4_25'
+            self.open_packed_project(project_name, save_name)
                 
-            with step('[Action] Open [Default] title designer by searching [Default] in library'):
-                # enter Title room
-                main_page.enter_room(1)
 
-                # Select default title (21.6.5219 : search then select default title)
-                media_room_page.search_library('Default')
-                time.sleep(DELAY_TIME * 2)
-                main_page.select_library_icon_view_media('Default')
-                main_page.double_click()
+        # Open Preference > Editing > Set default Title duration to 10 (For v21.6.5303 PM request)
+        with step('[Action] Set default Title duration to 10'):
+            time.sleep(DELAY_TIME)
+            main_page.click_set_user_preferences()
+            preferences_page.switch_to_editing()
+            preferences_page.editing.durations_title_set_value('10.0')
+            preferences_page.click_ok()
 
-            with step('[Verify] Check open [Default] title designer'):
-                # Verify Step
-                check_selected_object = title_designer_page.get_title_text_content()
-                if check_selected_object != 'My Title':
-                    assert False, f"Open [Default] title designer failed! Expected: My Title, Actual: {check_selected_object}"
-                check_caption_bar_content = title_designer_page.get_full_title()
-                if check_caption_bar_content != 'Title Designer | Default':
-                    assert False, f"Open [Default] title designer failed! Expected: Title Designer | Default, Actual: {check_caption_bar_content}"
+        with step('[Action] Open [Default] title designer by searching [Default] in library'):
+            # enter Title room
+            main_page.enter_room(1)
+
+            # Select default title (21.6.5219 : search then select default title)
+            media_room_page.search_library('Default')
+            time.sleep(DELAY_TIME * 2)
+            main_page.select_library_icon_view_media('Default')
+            main_page.double_click()
+
+        with step('[Verify] Check open [Default] title designer'):
+            # Verify Step
+            check_selected_object = title_designer_page.get_title_text_content()
+            if check_selected_object != 'My Title':
+                assert False, f"Open [Default] title designer failed! Expected: My Title, Actual: {check_selected_object}"
+            check_caption_bar_content = title_designer_page.get_full_title()
+            if check_caption_bar_content != 'Title Designer | Default':
+                assert False, f"Open [Default] title designer failed! Expected: Title Designer | Default, Actual: {check_caption_bar_content}"
 
 
         # [L150] 3.2 Title Designer > Insert object > Particle
@@ -5387,8 +5395,8 @@ class Test_BFT_365_OS14():
             
         with step('[Verify] Check if preview changed correctly after modify font type'):
             applied_font_type = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(before_img, applied_font_type, similarity=0.98):
-                assert False, "Font type is not applied correctly on preview window! Similarity should < 0.98"
+            if main_page.compare(before_img, applied_font_type, similarity=0.999):
+                assert False, "Font type is not applied correctly on preview window! Similarity should < 0.999"
         
         with step('[Action] Apply Bold'):
             # Apply Bold
@@ -5405,8 +5413,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply font color'):
             applied_font_color = main_page.snapshot(locator=L.title_designer.main_window)
-            if main_page.compare(applied_bold, applied_font_color, similarity=0.999):
-                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.999"
+            if main_page.compare(applied_bold, applied_font_color, similarity=0.99999):
+                assert False, "Font color is not applied correctly on preview window! Similarity should < 0.99999"
         assert True
 
     @pytest.mark.title_mgt_func
@@ -5900,20 +5908,20 @@ class Test_BFT_365_OS14():
     @pytest.mark.title_mgt_func
     @pytest.mark.title_designer
     @pytest.mark.mgt
-    @pytest.mark.name('[test_title_mgt_func_5_19] Check preview at 08:16 (from test_title_mgt_func_5_7~18)')
+    @pytest.mark.name('[test_title_mgt_func_5_19] Check preview at 03:00 (from test_title_mgt_func_5_7~18)')
     @exception_screenshot
     def test_title_mgt_func_5_19(self):
         '''
-        1. Set timecode to 00:00:08:16
+        1. Set timecode to 00:00:03:00
         2. Check if preview changed correctly after set timecode as GT
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_title_mgt_func_5_18"
         self.ensure_dependency(dependency_test)
 
-        with step('[Action] Set timecode to 00:00:08:16'):
+        with step('[Action] Set timecode to 00:00:03:00'):
             # Set timecode :
-            title_designer_page.set_timecode('00_00_08_16')
+            title_designer_page.set_timecode('00_00_03_00')
 
         with step('[Verify] Check if preview changed correctly after set timecode as GT'):
 
@@ -5928,12 +5936,13 @@ class Test_BFT_365_OS14():
     @pytest.mark.mgt
     @pytest.mark.timecode
     @pytest.mark.save_template
-    @pytest.mark.name('[test_title_mgt_func_5_20] Check preview at 08:16 (from test_title_mgt_func_5_7~18)')
+    @pytest.mark.name('[test_title_mgt_func_5_20] Save the template and apply > Check preview as GT')
     @exception_screenshot
     def test_title_mgt_func_5_20(self):
         '''
-        1. Set timecode to 00:00:08:16
-        2. Check if preview changed correctly after set timecode as GT
+        1. Save Template
+        2. Apply the saved templated
+        3. Check if preview changed correctly after set timecode as GT
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_title_mgt_func_5_19"
@@ -5957,7 +5966,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after apply the saved template as GT'):
             # Set timecode :
-            title_designer_page.set_timecode('00_00_08_16')
+            title_designer_page.set_timecode('00_00_03_00')
             time.sleep(DELAY_TIME*2)
 
             # # Set zoom menu to 67%
@@ -5997,6 +6006,7 @@ class Test_BFT_365_OS14():
             # Drag BFT_title_Save to timeline track 2
             main_page.drag_media_to_timeline_playhead_position('BFT_MGT_Save', track_no=2)
 
+
         with step('[Verify] Check if preview changed correctly after set timecode as GT'):
             # Set timecode :
             main_page.set_timeline_timecode('00_00_07_19')
@@ -6021,19 +6031,15 @@ class Test_BFT_365_OS14():
     @pytest.mark.launch
     @pytest.mark.open_project
     @pytest.mark.recent_project
-    @pytest.mark.name('[test_title_search_func_6_1] Open Recent Project')
+    @pytest.mark.name('[test_title_search_func_6_1] Open Recent Project on launcher')
     @exception_screenshot
     def test_title_search_func_6_1(self):
         '''
-        1. Open project and close AP (Show in recent project)
-        2. Reopen APP and open project from recent project
+        1. Reopen APP and open project from recent project ('test_title_mgt_func_5_21.pds') from launcher
         '''
-        with step('[Action] Open project and close AP (Show in recent project)'):
-            main_page.start_app()
-            project_name = 'Packed_Project/test_title_search_func_6_1_from_test_title_mgt_func_5_21.pdk'
-            save_name = 'Extracted_Folder/test_title_search_func_6_1'
-            self.open_packed_project(project_name, save_name)
-            main_page.close_app()
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_title_mgt_func_5_21"
+        self.ensure_dependency(dependency_test)
 
         with step('[Action] Reopen APP and open project from recent project'):
             # launch APP
@@ -6048,7 +6054,7 @@ class Test_BFT_365_OS14():
                 # Verify Step:
                 if not main_page.exist(L.base.main_caption):
                     assert False, 'Cannot find locator main_caption / Not find project name locator'
-                elif main_page.exist(L.base.main_caption).AXValue == 'test_title_search_func_6_1_from_test_title_mgt_func_5_21':
+                elif main_page.exist(L.base.main_caption).AXValue == 'test_title_mgt_func_5_21':
                     assert True
 
     @pytest.mark.title_search_func
@@ -6117,7 +6123,6 @@ class Test_BFT_365_OS14():
     def test_title_search_func_6_3(self):
         '''
         1. Click cancel search and search again with keyword [.] and check if nothing found
-
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_title_search_func_6_2"
@@ -6194,6 +6199,7 @@ class Test_BFT_365_OS14():
         # [L100] 2.1 Media Room > New One Boarding > On Boarding 1 > [Case 2] open one project
         # with uuid("fd97c083-8de8-4d12-b7a9-2ddf7caf9e0d") as case:
             # Verify step: should NOT show any hint due to import project's content in Library
+
         with step('[Action] Enter Media room'):
             # enter Media room
             main_page.enter_room(0)
