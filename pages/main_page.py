@@ -71,7 +71,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return check_free_version
 
-
+    @step('[Action][Main_page] Insert media (name) to selected track')
     def insert_media(self, name, aspect_ratio_conflict_option=None): # aspect_ratio_conflict_option - 'yes', 'no'
         self.activate()
         self.hover_library_media(name)
@@ -994,6 +994,7 @@ class Main_Page(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Main_page] Drag media to timeline playhead position with offset')
     def drag_media_to_timeline_playhead_position_offset(self, name, track_no=1):  # track_no: 1, 2, 3
         try:
             # hover to media

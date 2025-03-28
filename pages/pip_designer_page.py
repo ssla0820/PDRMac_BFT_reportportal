@@ -2765,7 +2765,7 @@ class Pip_Designer(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
         return True
-
+    
     def click_cancel(self):
         try:
             if not self.exist(L.pip_designer.designer_window):
@@ -2946,7 +2946,7 @@ class Pip_Designer(Main_Page, BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
-    @step('[Action][Pip Designer] Drag properties scroll bar')
+    @step('[Action][Pip Designer] Drag [Properties Scroll Bar]')
     def drag_properties_scroll_bar(self, value):
         try:
             if not self.exist(L.pip_designer.designer_window):
@@ -4000,7 +4000,7 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception(f'Exception occurs. log={e}')
             return True
 
-        @step('[Action][Pip Designer][Advanced Mode] Switch to Properties tab')
+        @step('[Action][Pip Designer][Advanced Mode] Switch to [Properties] tab')
         def switch_to_properties(self):
             try:
                 if not self.exist(L.pip_designer.tab_properties):
@@ -4020,7 +4020,7 @@ class Pip_Designer(Main_Page, BasePage):
                 logger(f'Exception occurs. log={e}')
                 raise Exception(f'Exception occurs. log={e}')
 
-        @step('[Action][Pip Designer][Advanced Mode] Switch to Animation tab')
+        @step('[Action][Pip Designer][Advanced Mode] Switch to [Animation] tab')
         def switch_to_animation(self):
             try:
                 if not self.exist(L.pip_designer.tab_animation):
@@ -4038,7 +4038,7 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception(f'Exception occurs. log={e}')
             return True
 
-        @step('[Action][Pip Designer][Advanced Mode] Fold/ Unfold in animation menu')
+        @step('[Action][Pip Designer][Advanced Mode] Fold/ Unfold [in animation] menu')
         def unfold_in_animation_menu(self, set_unfold=1):
             try:
                 current_value = self.exist(L.pip_designer.in_animation.btn_in_animation).AXValue
@@ -4059,6 +4059,7 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Pip Designer][Advanced Mode] Fold/ Unfold [Loop Animation] menu')
         def unfold_loop_animation_menu(self, set_unfold=1):
             try:
                 current_value = self.exist(L.pip_designer.loop_animation.btn_loop_animation).AXValue
@@ -4069,7 +4070,7 @@ class Pip_Designer(Main_Page, BasePage):
                 raise Exception
             return True
 
-        @step('[Action][Pip Designer][Advanced Mode] Fold/ Unfold path menu')
+        @step('[Action][Pip Designer][Advanced Mode] Fold/ Unfold [Path] menu')
         def unfold_path_menu(self, set_unfold=1):
             try:
                 current_value = self.exist(L.pip_designer.path.btn_path).AXValue

@@ -3,8 +3,9 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -14,21 +15,23 @@ class Crop_Image(BasePage):
         self.aspect_ratio = self.Aspect_Ratio(*args, **kwargs)
         self.crop_size = self.Crop_Size(*args, **kwargs)
 
+    @step('[Action][Crop Image] Click [OK] button to leave [Crop Image] window')
     def click_ok(self):
         try:
             if not self.is_exist(L.crop_image.crop_window):
                 logger('CANNOT find the crop image window')
-                raise Exception
+                raise Exception('CANNOT find the crop image window')
             self.exist_click(L.crop_image.ok_button)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     class Aspect_Ratio(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
+        @step('[Action][Crop Image][Aspect Ratio] Set [Crop Aspect Ratio] to (4:3)')
         def set_4_3(self):
             self.exist_click(L.crop_image.aspect_ratio.aspect_ratio_btn)
             items = self.exist(L.crop_image.aspect_ratio.aspect_ratio_list)

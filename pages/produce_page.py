@@ -675,13 +675,14 @@ class Produce(BasePage):
                 raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Produce][Local] Set [Surround Sound] to (AAC 5.1)')
         def set_surround_sound_aac51(self):
             try:
                 locator = L.produce.local.rdb_surround_sound_ac51
                 checkbox_set_check(self, locator, 1)
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_surround_sound_true_theater_option(self, option):

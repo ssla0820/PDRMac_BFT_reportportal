@@ -122,6 +122,7 @@ class Intro_Video_Room(Main_Page, BasePage):
 
         return True
 
+    @step('[Action][Intro Video Room] Enter [Season Theme] category')
     def enter_season_theme_category(self, strName):
         time.sleep(1)
         self.exist(L.intro_video_room.category_scroll_bar).AXValue = 0
@@ -609,6 +610,7 @@ class Intro_Video_Room(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
 
+    @step('[Action][Intro Video Room] Click [Close] button')
     def click_btn_close(self):
         try:
             if not self.check_in_intro_designer():
@@ -616,7 +618,7 @@ class Intro_Video_Room(Main_Page, BasePage):
             self.click(L.intro_video_room.intro_video_designer.btn_close)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         
     @step('[Action][Intro Video Room] Click Save As Button and Save')
     def click_btn_save_as(self, custom_name, option=1): # 1: yes, 0: no
@@ -736,6 +738,7 @@ class Intro_Video_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Intro Video Room] Handle [Save Change Warning] dialog before leaving')
     def handle_warning_save_change_before_leaving(self, option):
         try:
             if option == 'Yes':
@@ -747,17 +750,17 @@ class Intro_Video_Room(Main_Page, BasePage):
 
             if not self.exist(L.main.confirm_dialog.main_window):
                 logger("No Warning dialog show up")
-                raise Exception
+                raise Exception("No Warning dialog show up")
 
             warning_message = self.exist(L.main.confirm_dialog.alter_msg)
             if warning_message.AXValue.startswith("Do you want to save your changes before leaving"):
                 self.click(selected)
             else:
-                raise Exception
+                raise Exception("Incorrect Warning message")
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_DZ_btn(self):
@@ -910,6 +913,7 @@ class Intro_Video_Room(Main_Page, BasePage):
             return True
         return False
 
+    @step('[Action][Intro Video Room] Click [Flip] button and choose option')
     def click_flip(self, option=0):
         # option = 0 >> Only click [Flip] button
         # option = 1 >> Click [Flip] > Select Flip horizontally
@@ -1514,6 +1518,7 @@ class Intro_Video_Room(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Intro Video Room][Motion Graphics] Click [Remove] button')
         def click_remove_button(self):
             try:
                 self.click(L.intro_video_room.intro_video_designer.motion_graphics.btn_remove)
@@ -1525,7 +1530,7 @@ class Intro_Video_Room(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def set_title_text(self, strTitle):

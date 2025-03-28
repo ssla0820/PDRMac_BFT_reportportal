@@ -103,6 +103,7 @@ class Precut(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Precut] Set Timecode')
     def set_precut_timecode(self, timecode):
 
         self.activate()
@@ -220,29 +221,31 @@ class Precut(Main_Page, BasePage):
         return True
     '''
 
+    @step('[Action][Precut] Set [Single Trim Mark In]')
     def tap_single_trim_mark_in(self):
         try:
             if not self.exist(L.precut.single_trim_mark_in):
                 logger("No [mark-in] btn in the window")
-                raise Exception
+                raise Exception("No [mark-in] btn in the window")
             self.exist_click(L.precut.single_trim_mark_in)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Precut] Set [Single Trim Mark Out]')
     def tap_single_trim_mark_out(self):
         try:
             if not self.exist(L.precut.single_trim_mark_out):
-                logger("No [mark-in] btn in the window")
-                raise Exception
+                logger("No [mark-out] btn in the window")
+                raise Exception("No [mark-out] btn in the window")
             self.exist_click(L.precut.single_trim_mark_out)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
     
-    @step('[Action][Precut] Get Single Trim Duration')
+    @step('[Action][Precut] Get [Single Trim] Duration')
     def get_precut_single_trim_duration(self):
         duration = self.exist(L.precut.single_trim_precut_duration).AXValue
         return duration
@@ -416,26 +419,28 @@ class Precut(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Precut] Set [Multi Trim Mark In]')
     def tap_multi_trim_mark_in(self):
         try:
             if not self.exist(L.precut.multi_trim_mark_in):
                 logger("No mark-in button in multi trim page")
-                raise Exception
+                raise Exception("No mark-in button in multi trim page")
             self.exist_click(L.precut.multi_trim_mark_in)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Precut] Set [Multi Trim Mark Out]')
     def tap_multi_trim_mark_out(self):
         try:
             if not self.exist(L.precut.multi_trim_mark_out):
                 logger("No mark-out button in multi trim page")
-                raise Exception
+                raise Exception("No mark-out button in multi trim page")
             self.exist_click(L.precut.multi_trim_mark_out)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_multi_trim_slider(self, hour, min, sec, mini_sec):
@@ -461,15 +466,16 @@ class Precut(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Precut] Click [Remove] Button in [Multi Trim] Window')
     def tap_multi_trim_remove(self):
         try:
             if not self.exist(L.precut.multi_trim_mark_in):
                 logger("Didn't stay in multi trim page")
-                raise Exception
+                raise Exception("Didn't stay in multi trim page")
             self.exist_click(L.precut.multi_trim_remove)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def click_multi_trim_segment(self, segment_index):
@@ -598,6 +604,7 @@ class Precut(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Precut] Close [Precut] Window')
     def close_precut_window(self, option= -1):
         try:
             if not self.exist(L.precut.main_window):
@@ -614,5 +621,5 @@ class Precut(Main_Page, BasePage):
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True

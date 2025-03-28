@@ -54,17 +54,18 @@ class Effect_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Effect Room] Sort by [Name]')
     def sort_by_name(self):
         try:
             if not self.exist_click(L.media_room.library_menu.btn_menu):
-                raise Exception
+                raise Exception('Unable to click [Library Menu]')
 
             if not self.select_right_click_menu('Sort By', 'Name'):
-                raise Exception
+                raise Exception('Unable to click [Sort By Name] in right click menu')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def sort_by_type(self):
@@ -259,6 +260,7 @@ class Effect_Room(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Effect Room] Drag [Scroll Bar]')
     def drag_EffectRoom_Scroll_Bar(self, value):
         try:
             self.exist(L.effect_room.scroll_bar.scroll_bar).AXValue = float(value)

@@ -5,8 +5,9 @@ import numpy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator.locator import blending_mode as L
+from reportportal_client import step
 
 
 def arrow(obj, button="up", times=1, locator=None):
@@ -115,7 +116,7 @@ class Blending(BasePage):
 
     def is_in_blending_mode(self, timeout=5):
         return self.is_exist(L.main_window, timeout=timeout)
-
+    @step('[Action][Blending] Click [OK] button to leave [Blending]')
     def click_ok(self):
         return bool(self.exist_press(L.btn_ok))
 
@@ -126,6 +127,7 @@ class Blending(BasePage):
         mode = self.exist(L.menu_mode)
         return mode.AXTitle
 
+    @step("[Action][Blending] Set [Blending Mode] value")
     def set_blending_mode(self, value):
         target = L.menu_item_mode.copy()
         target.append({"AXValue": value})

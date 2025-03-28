@@ -35,6 +35,7 @@ class Timeline_Operation(Main_Page, BasePage):
         self.undock_timeline = self.Undock_Timeline(*args, **kwargs)
         self.timeline_marker = self.Timeline_Marker(*args, **kwargs)
 
+    @step('[Action][Timeline Operation] Click the [Render Preview] button')
     def edit_timeline_render_preview(self):
         try:
             img_workspace_before_render_preview = self.snapshot(L.timeline_operation.workspace)
@@ -941,6 +942,7 @@ class Timeline_Operation(Main_Page, BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Timeline Operation] Select multiple clips on timeline')
     def select_multiple_timeline_media(self, media1_track_index, media1_clip_index, media2_track_index, media2_clip_index):
         '''
         e.g. first audio track's second clip = [{'AXIdentifier': 'IDC_TIMELINE_TABLEVIEW_TRACK'}, {'AXRole': 'AXRow', 'AXRoleDescription': 'table row', 'index': 1}, {'AXIdentifier': 'VideoCellItem', 'AXRole': 'AXGroup', 'index': 1}]
@@ -1449,14 +1451,14 @@ class Timeline_Operation(Main_Page, BasePage):
             return option_2
         else:
             return option_1
-
+    @step('[Action][Timeline Operation] Click [Timeline Track Visible] Button')
     def click_timeline_track_visible_button(self, track_index):
         # video track 1 : track_index = 0, audio track 1 : track_index = 1
         # video track 2 : track_index = 2, audio track 2 : track_index = 3
         # video track 2 : track_index = 4, audio track 3 : track_index = 5
         self.exist_click([[{'AXIdentifier': 'IDC_TIMELINE_TABLEVIEW_TRACKHEAD'}, {'AXRole': 'AXRow', 'index': track_index}], {'AXIdentifier': 'IDC_TRACKHEADER_VISIBLE_BTN'}])
 
-
+    @step('[Action][Timeline Operation] Set Track Enable/Disable')
     def edit_specific_video_track_set_enable(self, track_index, option):
         # 0-disable 1-enable
         try:
@@ -1911,7 +1913,7 @@ class Timeline_Operation(Main_Page, BasePage):
         self.select_right_click_menu(option_1, option_2)
         time.sleep(DELAY_TIME)
         return True
-
+    @step('[Action][Timeline Operation] Set [Mark In/ Mark Out] Range')
     def set_range_markin_markout(self, frame_mark_in, frame_mark_out):
         return self.backdoor.set_range_select_time(frame_mark_in, frame_mark_out)
 

@@ -1200,11 +1200,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Set [Font Face] with 4 Color')
     def apply_font_face_4_color(self, left_top_hex, right_top_hex, left_bottom_hex, right_bottom_hex):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
-                raise Exception
+                raise Exception("No title designer window show up")
             self.click(L.title_designer.font_face.colorpicker_left_top)
             _set_color(self, left_top_hex)
             self.click(L.title_designer.font_face.colorpicker_right_top)
@@ -1215,9 +1216,10 @@ class Title_Designer(Main_Page, BasePage):
             _set_color(self, right_bottom_hex)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Title Designer] Apply [Font Face Fill Type] to [Gradient]')
     def apply_font_face_fill_type_to_gradient(self):
         if self.exist(L.title_designer.font_face.btn_font_face).AXValue == 0:
             self.exist_click(L.title_designer.font_face.btn_font_face)
@@ -1225,6 +1227,7 @@ class Title_Designer(Main_Page, BasePage):
         self.click(L.title_designer.font_face.option_gradient_color)
         time.sleep(DELAY_TIME)
 
+    @step('[Action][Title Designer] Apply [Font Face Gradient Style]')
     def apply_font_face_gradient_style(self, option):
         # option = 1: Linear, 2: Radial, 3: Corner
         if (option < 1) or (option > 3):
@@ -3137,10 +3140,12 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Set [Object Setting Render Method] with index')
     def set_object_setting_render_method(self, index):
         target_option = L.title_designer.object_setting.method_group
         return bool(_set_option(self, L.title_designer.object_setting.cbx_render_method, target_option, option=index))
 
+    @step('[Action][Title Designer] Get [Object Setting Render Method]')
     def get_object_setting_render_method(self):
         target = self.is_exist(L.title_designer.object_setting.cbx_render_method)
         logger(target)
@@ -3789,6 +3794,7 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Title Designer] Fold/ Unfold [Character Presets] Tab')
     def unfold_object_character_presets_tab(self, unfold=1):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
@@ -3805,7 +3811,7 @@ class Title_Designer(Main_Page, BasePage):
                 return True
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def unfold_object_font_paragraph_tab(self, unfold=1):
@@ -5048,14 +5054,14 @@ class Title_Designer(Main_Page, BasePage):
             self.offset_y = self.OffsetY(*args, *kwargs)
             self.curve_radius = self.CurveRadius(*args, *kwargs)
 
-        @step('[Action][TitleDesigner][Backdrop] Fold/ Unfold the tab')
+        @step('[Action][TitleDesigner][Backdrop] Fold/ Unfold [Backdrop] tab')
         def set_unfold_tab(self, unfold=1):
             return _checkbox_status(self, L.title_designer.backdrop.btn_backdrop, unfold, get_status=False)
 
         def get_tab_status(self):
             return _checkbox_status(self, L.title_designer.backdrop.btn_backdrop, get_status=True)
         
-        @step('[Action][TitleDesigner][Backdrop] Enable/ Disable the checkbox')
+        @step('[Action][TitleDesigner][Backdrop] Enable/ Disable [Backdrop] checkbox')
         def set_checkbox(self, bApply):
             return bool(_checkbox_status(self, L.title_designer.backdrop.chx_backdrop, bApply, get_status=False))
 
@@ -5085,11 +5091,12 @@ class Title_Designer(Main_Page, BasePage):
         def check_curve_radius_disable(self):
             return bool(_checkbox_status(self, L.title_designer.backdrop.curve_radius.slider, get_enable=True))
 
+        @step('[Action][TitleDesigner][Backdrop] Set [Backdrop - Fill Type] to (index)')
         def set_fill_type(self, index, image_path=None):
             target_option = L.title_designer.backdrop.fill_type_group
             return bool(_set_option(self, L.title_designer.backdrop.cbx_fill_type, target_option, option=index,
                                     path=image_path))
-
+        @step('[Action][TitleDesigner][Backdrop] Get [Backdrop - Fill Type]')
         def get_fill_type(self):
             target_option = L.title_designer.backdrop.fill_type_group
             return _set_option(self, L.title_designer.backdrop.cbx_fill_type, target_option, get_status=True)
@@ -5099,10 +5106,12 @@ class Title_Designer(Main_Page, BasePage):
             self.click(L.title_designer.backdrop.btn_uniform_color)
             return _set_color(self, HexColor)
 
+        @step('[Action][TitleDesigner][Backdrop] Apply [Backdrop - Gradient Begin] color')
         def apply_gradient_begin(self, HexColor):
             self.click(L.title_designer.backdrop.btn_begin_with)
             return _set_color(self, HexColor)
 
+        @step('[Action][TitleDesigner][Backdrop] Apply [Backdrop - Gradient End] color')
         def apply_gradient_end(self, HexColor):
             self.click(L.title_designer.backdrop.btn_end_with)
             return _set_color(self, HexColor)

@@ -303,12 +303,12 @@ class Test_BFT_365_OS14():
                 time.sleep(1.5)
         return download_status
 
-    step("[Action] Click [Launch Free Version] button and enter main program by new project")
+    @step("[Action] Click [Launch Free Version] button and enter main program by new project")
     def launch_Essential_build(self):
         # Click [Launch Free Version]
         check_free_version = main_page.launch_free_version()
         if not check_free_version:
-            raise Exception ('Unable to Launch Free Version due to "Launch Free Version" button not found on Essential dialog')
+            raise Exception('Unable to Launch Free Version due to "Launch Free Version" button not found on Essential dialog')
 
         time.sleep(DELAY_TIME * 2)
         main_page.refresh_top()
@@ -431,6 +431,87 @@ class Test_BFT_365_OS14():
         time.sleep(DELAY_TIME * 2)
         main_page.press_enter_key()
 
+    @exception_screenshot
+    def easy_cutout(self):
+        # Bug regression (VDE235413-0028)
+        # Insert Sport 01.jpg
+        main_page.select_library_icon_view_media('Sport 02.jpg')
+        time.sleep(DELAY_TIME * 2)
+        media_room_page.library_clip_context_menu_insert_on_selected_track()
+
+        # Click TipsArea > Pip Designer
+        check_status = tips_area_page.tools.select_PiP_Designer()
+        if not check_status:
+            raise Exception
+
+        # Switch to Advanced mode
+        pip_designer_page.switch_mode('Advanced')
+        time.sleep(DELAY_TIME * 2)
+
+        # Switch (Motion) tab
+        pip_designer_page.advanced.switch_to_motion()
+
+        # Unfold path
+        pip_designer_page.advanced.unfold_path_menu(set_unfold=1)
+
+        # Apply one path
+        pip_designer_page.path.select_template(4)
+
+        # Switch (Animation) tab
+        pip_designer_page.advanced.switch_to_animation()
+
+        # Unfold (In Animation) then apply one (In Animation)
+        pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
+
+        # Apply one animation
+        pip_designer_page.in_animation.select_template(7)
+
+        # Switch (Properties) tab
+        pip_designer_page.advanced.switch_to_properties()
+
+        # Apply cutout
+        pip_designer_page.apply_chromakey()
+        time.sleep(DELAY_TIME * 2)
+
+        # Get cutout status after Enable (Auto cutout)
+        self.check_downloading_AI_module()
+        time.sleep(DELAY_TIME * 3)
+
+        # Click [OK]
+        pip_designer_page.click_ok()
+        time.sleep(DELAY_TIME * 2)
+
+        # Select clip # 1 of track 1 to Enter Pip Designer again
+        timeline_operation_page.select_timeline_media(0,0)
+        time.sleep(DELAY_TIME * 2)
+
+        # Click TipsArea > Pip Designer
+        check_status = tips_area_page.tools.select_PiP_Designer()
+        if not check_status:
+            raise Exception
+        time.sleep(DELAY_TIME * 3)
+
+        # Check cutout preview
+        preview_0sec = main_page.snapshot(L.pip_designer.preview)
+
+
+        # seek time code to (00:00:03:15)
+        pip_designer_page.set_timecode('00_00_03_15')
+        time.sleep(DELAY_TIME * 2)
+        preview_new = main_page.snapshot(L.pip_designer.preview)
+        effect_result_same = not main_page.compare(preview_0sec, preview_new, similarity=0.7)
+        effect_result_diff = main_page.compare(preview_0sec, preview_new, similarity=0.4)
+        check_cutout_result = effect_result_same and effect_result_diff
+        if not check_cutout_result:
+            logger('Verify preview no update after apply cutout then seek other timecode')
+            raise Exception
+
+        # Click [OK]
+        pip_designer_page.click_ok()
+        time.sleep(DELAY_TIME * 2)
+
+        return check_cutout_result
+    
     #  Only for debug
     @pytest.mark.skip
     @exception_screenshot
@@ -3134,6 +3215,138 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.intro_room_func
+    @pytest.mark.intro_video_designer
+    @pytest.mark.launch
+    @pytest.mark.flip
+    @pytest.mark.name('[test_intro_room_func_3_24] Enter Intro Video Room, apply flips, and verify preview')
+    @exception_screenshot
+    def test_intro_room_func_3_24(self):
+        '''
+        1. Clear Cache > Start App
+        2. Enter Intro Video Room  > Enter My Favorites
+        3. Select Intro Template (1) with method 2
+        4. Double click to enter [Intro Video Designer]
+        5. Check enter [Intro Video Designer] by checking (L.intro_video_room.intro_video_designer) shows in 50 secs
+        6. Click Preview Center > Click [Remove] button twice
+        7. Click [Flip] button with option (1) to flip horizontally
+        8. Click [Flip] button with option (2) to flip vertically
+        9. Check preview (locator=L.intro_video_room.intro_video_designer.preview_area, file_name=Auto_Ground_Truth_Folder + 'L311_flip.png') matches Ground Truth (Ground_Truth_Folder + 'L311_flip.png') with similarity=0.95
+        10. Click [Close] button to leave [Intro Video Designer]
+        11. Handle [Save Change Warning] dialog before leaving with option ('No')
+        '''
+
+        with step('[Action] Clear Cache and Start App'):
+            main_page.clear_cache()
+            main_page.start_app()
+
+        with step('[Action] Enter [Intro Video Room] and [My Favorites]'):
+            # Enter Intro Video Room and select template
+            intro_video_page.enter_intro_video_room()
+            intro_video_page.enter_my_favorites()
+
+        with step('[Action] Select Intro Template (1) with method 2'):
+            intro_video_page.select_intro_template_method_2(1)
+
+        # Double click to enter Intro Video Designer
+        with step("[Action] Double click to enter [Intro Video Designer]"):
+            main_page.double_click()
+
+        # Check if Intro Video Designer is shown
+        with step("[Verify] Check if intro video designer is shown"):
+            if not main_page.exist(L.intro_video_room.intro_video_designer.main_window, timeout=50):
+                assert False, "Intro video designer not found!"
+        
+        # [L311] 3.1 Video Intro Designer > Edit > Flip
+        # with uuid("a24fa4d4-41c5-4de6-98c1-7a2912d599a4") as case:
+
+        # Click Preview Center > Click [Remove] button
+        with step("[Action] Click Preview Center > Click [Remove] button twice"):
+            for _ in range(2):
+                intro_video_page.click_preview_center()
+                intro_video_page.motion_graphics.click_remove_button()
+                time.sleep(DELAY_TIME)
+
+        # Click [Flip] button with option (1) to flip horizontally
+        with step("[Action] Click [Flip] button with option (1) to flip horizontally"):
+            intro_video_page.click_flip_button(1)
+
+        # Click [Flip] button with option (2) to flip vertically
+        with step("[Action] Click [Flip] button with option (2) to flip vertically"):
+            intro_video_page.click_flip_button(2)
+
+        # Verify preview matches Ground Truth
+        with step("[Verify] Check preview matches Ground Truth with similarity 0.95"):
+            preview = main_page.snapshot(
+                locator=L.intro_video_room.intro_video_designer.preview_area,
+                file_name=Auto_Ground_Truth_Folder + 'L311_flip.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L311_flip.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L311_flip.png)! Similarity should > 0.95"
+
+        # Click [Close] button to leave [Intro Video Designer]
+        with step("[Action] Click [Close] button to leave [Intro Video Designer]"):
+            intro_video_page.click_btn_close()
+
+        # Handle [Save Change Warning] dialog with option ('No')
+        with step("[Action] Handle [Save Change Warning] dialog with option ('No')"):
+           intro_video_page.handle_warning_save_change_before_leaving('No')
+
+        assert True
+
+    @pytest.mark.intro_room_func
+    @pytest.mark.intro_video_designer
+    @pytest.mark.content_pack
+    @pytest.mark.content_pack
+    @pytest.mark.new_tag
+    @pytest.mark.name('[test_intro_room_func_3_25] Verify New icon preview in Season Theme category')
+    def test_intro_room_func_3_25(self):
+        '''
+        0. Ensure the dependency test ('test_intro_room_func_3_24') is run and passed
+        1. Enter [Season Theme] category
+        2. Find the specific tag ('New') and return tag object
+        3. Check [New] icon preview (file_name=Auto_Ground_Truth_Folder + 'L192_new_icon.png', w=new_w, x=new_x, y=new_y, h=new_h) matches Ground Truth (Ground_Truth_Folder + 'L192_new_icon.png') with similarity=0.9
+        '''
+        dependency_test = "test_intro_room_func_3_24"
+        self.ensure_dependency(dependency_test)
+
+        # [L192] 2.2 Intro Video Room > New category / New icon
+        # with uuid("d26cdbfa-4dec-4d94-81d1-30c26066c3a8") as case:
+
+        with step("[Action] Enter [Season Theme] category"):
+            can_find_category = intro_video_page.enter_season_theme_category('New')
+            if not can_find_category:
+                assert False, "[Season Theme] category not found!"
+
+        with step("[Action] Find the specific tag ('New') and return tag object"):
+            target_object = effect_room_page.find_specific_tag_return_tag("New")
+
+        with step("[Verify] Check [New] icon preview matches Ground Truth"):
+            x, y = target_object.AXPosition
+            w, h = target_object.AXSize
+
+            new_x = x + 13
+            new_y = y
+            new_w = h + 10
+            new_h = h
+
+            preview_snapshot = main_page.snapshot(
+                locator=L.new_icon.area, 
+                file_name=Auto_Ground_Truth_Folder + 'L192_new_icon.png',
+                w=new_w, x=new_x, y=new_y, h=new_h
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L192_new_icon.png', 
+                preview_snapshot, 
+                similarity=0.9
+            )
+            if not check_preview:
+                assert False, "Preview does not match Ground Truth (L192_new_icon.png)! Similarity should > 0.9"
+
+        assert True
+
+
     @pytest.mark.title_designer_func
     @pytest.mark.launch
     @pytest.mark.preferences
@@ -5251,6 +5464,280 @@ class Test_BFT_365_OS14():
             main_page.handle_save_file_dialog(name='test_title_designer_func_4_45',
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
             time.sleep(DELAY_TIME * 2)
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.object_setting
+    @pytest.mark.render_order
+    @pytest.mark.name('[test_title_designer_func_4_46] Verify Title Designer Render Order after adjusting object setting')
+    @exception_screenshot
+    def test_title_designer_func_4_46(self):
+        '''
+        0. Ensure the dependency test ('test_title_designer_func_32_2') is run and passed
+        1. Enter Room (Title)(1)
+        2. Select media ('Default') by library icon view
+        3. Double Click to enter [Title Designer] > Switch to (Advanced mode)(2)
+        4. Unfold [Object Setting] Tab > Drag Vertical Slider to (1)
+        5. Check [Render Order] title (L.title_designer.object_setting.text_render_method) is shown
+        '''
+        dependency_test = "test_title_designer_func_32_2"
+        self.ensure_dependency(dependency_test)
+
+        # [L354] 3.2 Title Room (General title) > Advanced mode > render order > show "Render Method" in object Setting
+        # with uuid("e8030cc4-82a8-439c-ac9a-0bcd3d49c522") as case:
+
+        with step("[Action] Enter Room (Title)(1)"):
+            main_page.enter_room(1)
+
+        with step("[Action] Select media ('Default') by library icon view"):
+            main_page.select_library_icon_view_media("Default")
+
+        with step("[Action] Double Click to enter [Title Designer] > Switch to (Advanced mode)(2)"):
+            main_page.double_click()
+            title_designer_page.switch_mode(2)
+
+        with step("[Action] Unfold [Object Setting] Tab > Drag Vertical Slider to (1)"):
+            title_designer_page.unfold_object_object_setting_tab()
+            title_designer_page.drag_object_vertical_slider(1)
+
+        with step("[Verify] Check [Render Order] title (L.title_designer.object_setting.text_render_method) is shown"):
+            render_order_title = main_page.is_exist(L.title_designer.object_setting.text_render_method)
+            if not render_order_title:
+                assert False, "[Render Order] title not found!"
+
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.object_setting
+    @pytest.mark.render_order
+    @pytest.mark.name('[test_title_designer_func_4_47] Verify Object Setting Render Method is Entire Title')
+    @exception_screenshot
+    def test_title_designer_func_4_47(self):
+        '''
+        0. Ensure the dependency test ('test_title_designer_func_4_46') is run and passed
+        1. Get [Object Setting Render Method] and check result is ('Entire Title')
+        '''
+        dependency_test = "test_title_designer_func_4_46"
+        self.ensure_dependency(dependency_test)
+
+        # [L355] 3.2 Title Room (General title) > Advanced mode > render order > Default value
+        # with uuid("7758cbe9-d24a-4d6c-a8e6-04e83e83807c") as case:
+
+        with step("[Action] Get [Object Setting Render Method]"):
+            render_method = title_designer_page.get_object_setting_render_method()
+
+        with step("[Verify] Check result is ('Entire Title')"):
+            if render_method != 'Entire Title':
+                assert False, f"Expected render method to be 'Entire Title', got '{render_method}'"
+
+        assert True
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.object_setting
+    @pytest.mark.render_order
+    @pytest.mark.name('[test_title_designer_func_4_48] Apply [Object Setting Render Method] and check the title is changed')
+    @exception_screenshot
+    def test_title_designer_func_4_48(self):
+        '''
+        0. Ensure the dependency test ('test_title_designer_func_4_47') is run and passed
+        1. Set [Object Setting Render Method] with index (2) to ('Each Character')
+        2. Get [Object Setting Render Method] and check result is ('Each Character')
+        3. Set [Object Setting Render Method] with index (1) to ('Entire Title')
+        4. Get [Object Setting Render Method] and check result is ('Entire Title')
+        5. Drag Vertical Slider to (0.37)
+        6. Fold [Object Setting] Tab (0)
+        7. Click [Cancel] Button (1)
+        '''
+        dependency_test = "test_title_designer_func_4_47"
+        self.ensure_dependency(dependency_test)
+
+        # [L356] 3.2 Title Room (General title) > Advanced mode > render order > Can select "Entire Title" / "Each Charater"
+        # with uuid("b64c71ab-fe02-491f-b07e-cf3da4e442d1") as case:
+
+        with step("[Action] Set [Object Setting Render Method] with index (2) to ('Each Character')"):
+            title_designer_page.set_object_setting_render_method(2)
+
+        with step("[Verify] Get [Object Setting Render Method] and check result is ('Each Character')"):
+            render_method = title_designer_page.get_object_setting_render_method()
+            if render_method != 'Each Character':
+                assert False, f"Expected render method to be 'Each Character', got '{render_method}'"
+
+        with step("[Action] Set [Object Setting Render Method] with index (1) to ('Entire Title')"):
+            title_designer_page.set_object_setting_render_method(1)
+
+        with step("[Verify] Get [Object Setting Render Method] and check result is ('Entire Title')"):
+            render_method = title_designer_page.get_object_setting_render_method()
+            if render_method!= 'Entire Title':
+                assert False, f"Expected render method to be 'Entire Title', got '{render_method}'"
+
+        with step("[Action] Drag Vertical Slider to (0.37)"):
+            title_designer_page.drag_object_vertical_slider(0.37)
+
+        with step("[Action] Fold [Object Setting] Tab (0)"):
+            title_designer_page.unfold_object_object_setting_tab(unfold=0)
+
+        with step("[Action] Click [Cancel] Button (1)"):
+            title_designer_page.click_cancel()
+
+        assert True
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.object_setting
+    @pytest.mark.backdrop
+    @pytest.mark.name('[test_title_designer_func_4_49] Verify Backdrop Settings and Preview in Title Designer')
+    @exception_screenshot
+    def test_title_designer_func_4_49(self):
+        '''
+        0. Ensure the dependency test ('test_title_designer_func_4_48') is run and passed
+        1. Select media ('Default') by library icon view
+        2. Double Click to enter [Title Designer] > Apply Character Presets (2)
+        3. Unfold [Character Presets] Tab > Unfold [Backdrop] tab
+        4. Enable [Backdrop] checkbox
+        5. Set [Backdrop - Fill Type] to (2)
+        6. Apply [Backdrop - Gradient Begin] color to ('33BE9A')
+        7. Check preview (L.title_designer.backdrop.btn_begin_with, file_name=Auto_Ground_Truth_Folder + 'L358_begin_color.png') matches Ground Truth (Ground_Truth_Folder + 'L358_begin_color.png') with similarity=0.95
+        8. Apply [Backdrop - Gradient End] color to ('C14E88')
+        9. Check preview (L.title_designer.backdrop.btn_end_with, file_name=Auto_Ground_Truth_Folder + 'L358_end_color.png') matches Ground Truth (Ground_Truth_Folder + 'L358_end_color.png') with similarity=0.95
+        10. Fold [Backdrop] tab (0)
+        '''
+        dependency_test = "test_title_designer_func_4_48"
+        self.ensure_dependency(dependency_test)
+
+        # [L358] 3.2 Title Room (General title) > Advanced mode > WER regression (VDE235420-0025)
+        # with uuid("d4132047-105f-4ebf-a861-0206ad6dd8f6") as case:
+            
+        with step("[Action] Select media ('Default') by library icon view"):
+            main_page.select_library_icon_view_media("Default")
+
+        with step("[Action] Double Click to enter [Title Designer] > Apply Character Presets (2)"):
+            main_page.double_click()
+            title_designer_page.apply_character_presets(2)
+
+        with step("[Action] Unfold [Character Presets] Tab > Unfold [Backdrop] tab"):
+            title_designer_page.unfold_object_character_presets_tab(0)
+            title_designer_page.backdrop.set_unfold_tab()
+
+        with step("[Action] Enable [Backdrop] checkbox"):
+            title_designer_page.backdrop.set_checkbox(bApply=1)
+
+        with step("[Action] Set [Backdrop - Fill Type] to (2)"):
+            title_designer_page.backdrop.set_fill_type(2)
+
+        with step("[Action] Apply [Backdrop - Gradient Begin] color to ('33BE9A')"):
+            title_designer_page.backdrop.apply_gradient_begin('33BE9A')
+
+        with step("[Verify] Check preview matches GT (L358_begin_color.png)"):
+            preview = main_page.snapshot(
+                locator=L.title_designer.backdrop.btn_begin_with, 
+                file_name=Auto_Ground_Truth_Folder + 'L358_begin_color.png'
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L358_begin_color.png', 
+                preview, 
+                similarity=0.95
+            )
+            if not check_preview:
+                assert False, "Preview does not match Ground Truth (L358_begin_color.png)! Similarity should > 0.95"
+
+        with step("[Action] Apply [Backdrop - Gradient End] color to ('C14E88')"):
+            title_designer_page.backdrop.apply_gradient_end('C14E88')
+
+        with step("[Verify] Check preview matches GT (L358_end_color.png)"):
+            preview = main_page.snapshot(
+                locator=L.title_designer.backdrop.btn_end_with, 
+                file_name=Auto_Ground_Truth_Folder + 'L358_end_color.png'
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L358_end_color.png', 
+                preview, 
+                similarity=0.95
+            )
+            if not check_preview:
+                assert False, "Preview does not match Ground Truth (L358_end_color.png)! Similarity should > 0.95"
+
+        with step("[Action] Fold [Backdrop] tab (0)"):
+            title_designer_page.backdrop.set_unfold_tab(unfold=0)
+
+        assert True
+
+
+    @pytest.mark.title_designer_func
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.object_setting
+    @pytest.mark.render_method
+    @pytest.mark.save_template
+    @pytest.mark.name('[test_title_designer_func_4_50] Save [Title] template and check [Render Method] is not changed after re-enter')
+    @exception_screenshot
+    def test_title_designer_func_4_50(self):
+        '''
+        0. Ensure the dependency test ('test_title_designer_func_4_49') is run and passed
+        1. Unfold [Object Setting] Tab in [Title Designer]
+        2. Drag Vertical Slider to (1) in [Title Designer]
+        3. Check if [Render Order] title is shown in [Title Designer] by checking (L.title_designer.object_setting.text_render_method)
+        4. Set [Object Setting Render Method] with index (2) to ('Each Character')
+        5. Get [Object Setting Render Method] and check result is ('Each Character')
+        6. Save template as ('test_title_designer_func_4_49') in [Title Designer]
+        7. Click [OK] to leave [Title Designer]
+        8. Select media ('test_title_designer_func_4_49') by library icon view
+        9. Double Click to enter [Title Designer] > Drag Vertical Slider (1) in [Title Designer]
+        10. Get [Object Setting Render Method] and check result is ('Each Character')
+        11. Click [OK] button to leave [Title Designer]
+        '''
+        dependency_test = "test_title_designer_func_4_49"
+        self.ensure_dependency(dependency_test)
+
+        # [L357] 3.2 Title Room (General title) > Advanced mode > render order > Default is "Each character" when previous template is applied
+        # with uuid("e8701bd9-89ab-416d-b587-74cd1ec92c5e") as case:
+
+        with step("[Action] Unfold [Object Setting] Tab in [Title Designer]"):
+            title_designer_page.unfold_object_object_setting_tab(unfold=1)
+
+        with step("[Action] Drag Vertical Slider to (1) in [Title Designer]"):
+            title_designer_page.drag_object_vertical_slider(1)
+
+        with step("[Verify] Check if [Render Order] title is shown in [Title Designer]"):
+            if main_page.is_not_exist(L.title_designer.object_setting.text_render_method):
+                assert False, "Render Order title not found!"
+
+        with step("[Action] Set [Object Setting Render Method] with index (2) to ('Each Character')"):
+            title_designer_page.set_object_setting_render_method(2)
+
+        with step("[Verify] Get [Object Setting Render Method] and check result is ('Each Character')"):
+            render_method = title_designer_page.get_object_setting_render_method()
+            if render_method != 'Each Character':
+                assert False, f"Expected render method to be 'Each Character', got '{render_method}'"
+
+        with step("[Action] Save template as ('test_title_designer_func_4_49') in [Title Designer]"):
+            title_designer_page.save_as_name('test_title_designer_func_4_49', click_ok=1)
+
+        with step("[Action] Click [OK] to leave [Title Designer]"):
+            title_designer_page.click_ok()
+
+        with step("[Action] Select media ('test_title_designer_func_4_49') by library icon view"):
+            main_page.select_library_icon_view_media('test_title_designer_func_4_49')
+
+        with step("[Action] Double Click to enter [Title Designer] > Drag Vertical Slider (1) in [Title Designer]"):
+            main_page.double_click()
+            title_designer_page.drag_object_vertical_slider(1)
+
+        with step("[Verify] Get [Object Setting Render Method] and check result is ('Each Character')"):
+            render_method = title_designer_page.get_object_setting_render_method()
+            if render_method != 'Each Character':
+                assert False, f"Expected render method to be 'Each Character after re-enter', got '{render_method}'"
+
+        with step("[Action] Click [OK] button to leave [Title Designer]"):
+            title_designer_page.click_ok()
+
         assert True
 
     # 13 uuid
@@ -7847,6 +8334,647 @@ class Test_BFT_365_OS14():
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
             
         assert check_current_dialog09, "Cannot add saved template to timeline correctly as GT (L193.png)!"
+
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.launch
+    @pytest.mark.timeline
+    @pytest.mark.pip_designer
+    @pytest.mark.motion
+    @pytest.mark.path
+    @pytest.mark.animation
+    @pytest.amrk.in_animation
+    @pytest.mark.properties
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_pip_designer_func_7_40] Apply [Path]/ [In Animation]/ [Chromakey] in [Pip Designer] and create [New Workspace] for 5 times')
+    @exception_screenshot
+    def test_pip_designer_func_7_40(self):
+        '''
+        1. Clear Cache > Start App
+        2. Clear [AI Module] files
+        3. Select media ('Sport 02.jpg') by library icon view
+        4. Insert clip in library to selected track
+        5. Select [Pip Designer] from [Tip Areas] and check the result
+        6. Switch to ('Advanced') mode in [Pip Designer] > Switch to Motion tab in [Pip Designer]
+        7. Unfold [Path] menu > Select certain template (4) in [Path] menu
+        8. Switch to [Animation] tab > Unfold [in animation] menu > Select [In Animation] template (7)
+        9. Switch to [Properties] tab > Enable [Chromakey] in [Pip Designer]
+        10. Wait for downloading AI module
+        11. Click [OK] to leave [Pip Designer]
+        12. Select timeline media with (0,0)
+        13. Select [Pip Designer] from [Tip Areas] and check the result
+        14. Screenshot (L.pip_designer.preview)
+        15. Set timecode to ('00_00_03_15') at [Pip Designer]
+        16. Check preview is different at 0 sec and 3 sec (similarity<0.7 and similarity>0.4)
+        17. Click [OK] to leave [Pip Designer]
+        18. Tap [New Workspace] via hotkey > Handle [No Save] dialog with option ('no')
+        19. Repeat step 4 to step 18 for 5 times
+        '''
+        with step("[Action] Clear [AI Module] files > Clear Cache > Start App"):
+            main_page.clear_cache()
+            main_page.start_app()
+
+        # [L426] 3.4 Auto Cutout > WER regression (VDE235413-0028)
+        # with uuid("dc3024bf-ea9e-4c5a-9a05-f507cc8a3718") as case:
+
+        for _ in range(5):
+            logger(f'Doing the loop for the {_+1} time')
+            with step("[Action] Clear [AI Module] files"):
+                main_page.clear_AI_module()
+
+            with step("[Action] Select media ('Sport 02.jpg') by library icon view"):
+                main_page.select_library_icon_view_media('Sport 02.jpg')
+
+            with step("[Action] Insert clip in library to selected track"):
+                media_room_page.library_clip_context_menu_insert_on_selected_track()
+
+            with step("[Action] Select [Pip Designer] from [Tip Areas] and check the result"):
+                if not tips_area_page.tools.select_PiP_Designer():
+                    assert False, "Pip Designer not selected correctly"
+
+            with step("[Action] Switch to ('Advanced') mode in [Pip Designer] > Switch to Motion tab in [Pip Designer]"):
+                pip_designer_page.switch_mode('Advanced')
+                pip_designer_page.advanced.switch_to_motion()
+
+            with step("[Action] Unfold [Path] menu > Select certain template (4) in [Path] menu"):
+                pip_designer_page.advanced.unfold_path_menu(set_unfold=1)
+                pip_designer_page.path.select_template(4)
+
+            with step("[Action] Switch to [Animation] tab > Unfold [in animation] menu > Select [In Animation] template (7)"):
+                pip_designer_page.advanced.switch_to_animation()
+                pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
+                pip_designer_page.in_animation.select_template(7)
+
+            with step("[Action] Switch to [Properties] tab > Enable [Chromakey] in [Pip Designer]"):
+                pip_designer_page.advanced.switch_to_properties()
+                pip_designer_page.apply_chromakey(bApply=1)
+
+            with step("[Action] Wait for downloading AI module"):
+                self.check_downloading_AI_module()
+
+            with step("[Action] Click [OK] to leave [Pip Designer]"):
+                pip_designer_page.click_ok()
+
+            with step("[Action] Select timeline media with (0,0)"):
+                main_page.select_timeline_media(name='0', index=0)
+
+            with step("[Action] Select [Pip Designer] from [Tip Areas] and check the result"):
+                if not tips_area_page.tools.select_PiP_Designer():
+                    assert False, "Pip Designer not selected correctly with media '0'"
+
+            with step("[Action] Screenshot (L.pip_designer.preview)"):
+                preview_0sec = main_page.snapshot(locator=L.pip_designer.preview)
+
+            with step("[Action] Set timecode to ('00_00_03_15') at [Pip Designer]"):
+                pip_designer_page.set_timecode('00_00_03_15')
+
+            with step("[Verify] Check preview is different at 0 sec and 3 sec (similarity<0.7 and similarity>0.4)"):
+                preview_3sec = main_page.snapshot(locator=L.pip_designer.preview)
+
+                if main_page.compare(preview_0sec, preview_3sec, similarity=0.7):
+                    assert False, "Preview similarity should be less than 0.7 between 0 sec and 3 sec!"
+
+                if not main_page.compare(preview_0sec, preview_3sec, similarity=0.4):
+                    assert False, "Preview similarity should be greater than 0.4 between 0 sec and 3 sec!"
+
+            with step("[Action] Click [OK] to leave [Pip Designer]"):
+                pip_designer_page.click_ok()
+
+            with step("[Action] Tap [New Workspace] via hotkey > Handle [No Save] dialog with option ('no')"):
+                main_page.tap_NewWorkspace_hotkey()
+                main_page.handle_no_save_project_dialog(option='no')
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.express_mode
+    @pytest.mark.ai_module
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_pip_designer_func_7_41] Apply [ChromaKey] and re-enter [Pip Designer] to check preview and [Cutout] radio button')
+    @exception_screenshot
+    def test_pip_designer_func_7_41(self):
+        '''
+        1. Clear [AI Module] Files > Clear Cache > Start APP
+        2. Import media from local file (Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC')
+        3. Select media ('IMG_0008.HEIC') by library icon view > right click > Choose ('Insert on Selected Track') in right click menu
+        4. Select [Pip Designer] from [Tip Areas] and check result is True
+        5. Enter [Express] mode in [Pip Designer]
+        6. Enable [Chromakey] in [Pip Designer]
+        7. Wait for downloading AI module
+        8. Click [OK] to leave [Pip Designer]
+        9. Select timeline media ('IMG_0008') > Double click to enter [Pip Designer]
+        10. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L415_cutout.png') matches Ground Truth (Ground_Truth_Folder + 'L415_cutout.png') with similarity=0.94
+        11. Check [Cutout] radio button is enabled by checking main_page.exist(L.pip_designer.chromakey.cutout_button).AXValue == 1
+        '''
+        with step("[Action] Clear [AI Module] Files > Clear Cache > Start APP"):
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.start_app()
+
+        with step("[Action] Import media from local file (Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC')"):
+            media_room_page.import_media_file(Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC')
+
+        with step("[Action] Select media ('IMG_0008.HEIC') by library icon view > right click > Choose ('Insert on Selected Track') in right click menu"):
+            main_page.select_library_icon_view_media('IMG_0008.HEIC')
+            main_page.right_click()
+            main_page.select_right_click_menu('Insert on Selected Track')
+
+        with step("[Action] Select [Pip Designer] from [Tip Areas] and check result is True"):
+            if not tips_area_page.tools.select_PiP_Designer():
+                assert False, "Pip Designer not selected correctly"
+
+        with step("[Action] Enter [Express] mode in [Pip Designer]"):
+            pip_designer_page.switch_mode('Express')
+
+        with step("[Action] Enable [Chromakey] in [Pip Designer]"):
+            pip_designer_page.apply_chromakey(bApply=1)
+
+        with step("[Action] Wait for downloading AI module"):
+            self.check_downloading_AI_module()
+
+        with step("[Action] Click [OK] to leave [Pip Designer]"):
+            pip_designer_page.click_ok()
+
+        # [L415] 3.4 Pip Designer > Auto Cutout > Double click photo > display cutout setting
+        # with uuid("557bad84-ec61-4077-bf7a-bd8da4b70d2c") as case:
+
+        with step("[Action] Select timeline media ('IMG_0008') > Double click to enter [Pip Designer]"):
+            main_page.select_timeline_media(name='IMG_0008')
+            main_page.double_click()
+
+        with step("[Verify] Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L415_cutout.png') matches Ground Truth (Ground_Truth_Folder + 'L415_cutout.png') with similarity=0.94"):
+            preview = main_page.snapshot(locator=L.pip_designer.preview,
+                                        file_name=Auto_Ground_Truth_Folder + 'L415_cutout.png')
+            if not main_page.compare(Ground_Truth_Folder + 'L415_cutout.png', preview, similarity=0.94):
+                assert False, "Preview does not match GT (L415_cutout.png)! Similarity should > 0.94"
+
+        with step("[Verify] Check [Cutout] radio button is enabled by checking main_page.exist(L.pip_designer.chromakey.cutout_button).AXValue == 1"):
+            cutout_button_elem = main_page.exist(L.pip_designer.chromakey.cutout_button)
+            if cutout_button_elem.AXValue != 1:
+                assert False, f"Cutout radio button is not enabled! AXValue is {cutout_button_elem.AXValue}, expected 1"
+
+        assert True
+
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.advanced_mode
+    @pytest.mark.in_out_animation
+    @pytest.mark.animation
+    @pytest.mark.name('[test_pip_designer_func_7_42] Apply [In Animation] template in [Pip Designer] and check preview in [Animation] tab')
+    @exception_screenshot
+    def test_pip_designer_func_7_42(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_41') is run and passed
+        1. Switch to [Advanced] mode in [Pip Designer]
+        2. Switch to [Animation] tab in [Pip Designer]
+        3. Unfold [In Animation] menu in [Pip Designer]
+        4. Check preview (L.pip_designer.properties, file_name=Auto_Ground_Truth_Folder + 'L390_in_animation_templates.png') matches Ground Truth (Ground_Truth_Folder + 'L390_in_animation_templates.png') with similarity=0.95
+        '''
+        dependency_test = "test_pip_designer_func_7_41"
+        self.ensure_dependency(dependency_test)
+
+        # [L390] 3.4 Pip Designer > Set [Animation] > In animation > Check library
+        # with uuid("9e4e9e98-13b0-4aa8-9e9c-aef8dbf4db47") as case:
+
+        with step("[Action] Switch to [Advanced] mode in [Pip Designer]"):
+            pip_designer_page.switch_mode('Advanced')
+
+        with step("[Action] Switch to [Animation] tab in [Pip Designer]"):
+            pip_designer_page.advanced.switch_to_animation()
+
+        with step("[Action] Unfold [In Animation] menu in [Pip Designer]"):
+            pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
+
+        with step("[Verify] Check preview matches GT (L390_in_animation_templates.png)"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.properties,
+                file_name=Auto_Ground_Truth_Folder + 'L390_in_animation_templates.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L390_in_animation_templates.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L390_in_animation_templates.png)! Similarity should > 0.95"
+
+        assert True
+
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.animation
+    @pytest.mark.in_out_animation
+    @pytest.mark.pip_designer
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_pip_designer_func_7_43] Apply [In Animation] Template in [Pip Designer] and Verify Preview')
+    @exception_screenshot
+    def test_pip_designer_func_7_43(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_42') is run and passed
+        1. Set timecode to ('00_00_00_02') in [Pip Designer]
+        2. Select [In Animation] template (4)
+        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L391_apply_stomp_in.png') matches Ground Truth (Ground_Truth_Folder + 'L391_apply_stomp_in.png') with similarity=0.95
+        4. Fold [In Animation] menu in [Pip Designer]
+        '''
+        dependency_test = "test_pip_designer_func_7_42"
+        self.ensure_dependency(dependency_test)
+
+        # [L391] 3.4 Pip Designer > Set [Animation] > In animation > apply new added animation
+        # with uuid("e6ca106d-5040-4e05-99f6-09f331eb4b92") as case:
+
+        with step("[Action] Set timecode to ('00_00_00_02') in [Pip Designer]"):
+            pip_designer_page.set_timecode("00_00_00_02")
+
+        with step("[Action] Select [In Animation] template (4)"):
+            pip_designer_page.in_animation.select_template(4)
+
+        with step("[Verify] Check preview matches GT (L391_apply_stomp_in.png)"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L391_apply_stomp_in.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L391_apply_stomp_in.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L391_apply_stomp_in.png)! Similarity should > 0.95"
+
+        with step("[Action] Fold [In Animation] menu in [Pip Designer]"):
+            pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=0)
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.launch
+    @pytest.mark.pip_designer
+    @pytest.mark.advanced_mode
+    @pytest.mark.in_out_animation
+    @pytest.mark.name('[test_pip_designer_func_7_44] Verify [Out Animation Template] Preview in Pip Designer')
+    @exception_screenshot
+    def test_pip_designer_func_7_44(self):
+        '''
+        1. Start App
+        2. Import video from local file (Test_Material_Folder + 'Mark_Clips/1.mp4')
+        3. Click [Insert] button from [Tip Areas]
+        4. Select [Pip Designer] from [Tip Areas] and check result is True
+        5. Switch to [Advanced] mode in [Pip Designer]
+        6. Unfold [Out Animation] menu in [Pip Designer]
+        7. Drag [Properties Scroll Bar] (0)
+        8. Check preview (L.pip_designer.properties, file_name=Auto_Ground_Truth_Folder + 'L393_out_animation_templates.png') matches Ground Truth (Ground_Truth_Folder + 'L393_out_animation_templates.png') with similarity=0.95
+        '''
+        with step("[Action] Start App"):
+            main_page.start_app()
+
+        with step("[Action] Import video from local file"):
+            media_room_page.import_media_file(Test_Material_Folder + 'Mark_Clips/1.mp4')
+
+        with step("[Action] Click [Insert] button from [Tip Areas]"):
+            tips_area_page.click_TipsArea_btn_insert()
+
+        with step("[Action] Select [Pip Designer] from [Tip Areas] and check result is True"):
+            if not tips_area_page.tools.select_PiP_Designer():
+                assert False, "Pip Designer did not open!"
+
+        with step("[Action] Switch to [Advanced] mode in [Pip Designer]"):
+            pip_designer_page.switch_mode('Advanced')
+            pip_designer_page.advanced.switch_to_animation()
+
+        # [L392] 3.4 Pip Designer > Set [Animation] > Out animation
+        # with uuid("2114bde0-974a-4f03-a51b-558500d261bb") as case:
+
+        with step("[Action] Unfold [Out Animation] menu in [Pip Designer]"):
+            if not pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=1):
+                assert False, "Out Animation menu did not unfold!"
+
+        with step("[Action] Drag [Properties Scroll Bar] (0)"):
+            pip_designer_page.drag_properties_scroll_bar(0)
+
+        # [L393] 3.4 Pip Designer > Set [Animation] > Out animation > Check library
+        # with uuid("29f29f1f-c70d-4a5f-bfbd-1dd65597ffc1") as case:
+
+        with step("[Verify] Check preview matches GT (L393_out_animation_templates.png)"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.properties,
+                file_name=Auto_Ground_Truth_Folder + 'L393_out_animation_templates.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L393_out_animation_templates.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L393_out_animation_templates.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.animation
+    @pytest.mark.in_out_animation
+    @pytest.mark.name('[test_pip_designer_func_7_45] Verify Out Animation Template and Preview in Pip Designer')
+    @exception_screenshot
+    def test_pip_designer_func_7_45(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_44') is run and passed
+        1. Set timecode to ('00_00_30_03) at [Pip Designer]
+        2. Select [Out Animation] template (10)
+        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L394_apply_pan_out.png') matches Ground Truth (Ground_Truth_Folder + 'L394_apply_pan_out.png') with similarity=0.95
+        4. Fold [Out Animation] menu in [Pip Designer]
+        '''
+        dependency_test = "test_pip_designer_func_7_44"
+        self.ensure_dependency(dependency_test)
+
+        # [L394] 3.4 Pip Designer > Set [Animation] > Out animation > apply new added animation
+        # with uuid("50da7ef0-fa45-4676-b3a3-941b142ce4e9") as case:
+
+        with step("[Action] Set timecode to '00_00_30_03' at [Pip Designer]"):
+            pip_designer_page.set_timecode("00_00_30_03")
+
+        with step("[Action] Select [Out Animation] template (10)"):
+            pip_designer_page.in_animation.select_template(10)
+
+        with step("[Verify] Check preview matches GT (L394_apply_pan_out.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L394_apply_pan_out.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L394_apply_pan_out.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L394_apply_pan_out.png)! Similarity should > 0.95"
+
+        with step("[Action] Fold [Out Animation] menu in [Pip Designer]"):
+            pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=0)
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.animation
+    @pytest.mark.loop_animation
+    @pytest.mark.name('[test_pip_designer_func_7_46] Verify [Loop Animation Template] Preview in Pip Designer')
+    @exception_screenshot
+    def test_pip_designer_func_7_46(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_45') is run and passed
+        1. Unfold [Loop Animation] menu and check result is True
+        2. Check preview (L.pip_designer.properties, file_name=Auto_Ground_Truth_Folder + 'L396_loop_animation_templates.png') matches Ground Truth (Ground_Truth_Folder + 'L396_loop_animation_templates.png') with similarity=0.95
+        '''
+        dependency_test = "test_pip_designer_func_7_45"
+        self.ensure_dependency(dependency_test)
+
+        # [L395] 3.4 Pip Designer > Set [Animation] > Loop animation
+        # with uuid("107183f7-e63a-42ff-86c8-3b66ab6e322e") as case:
+
+        with step("[Action] Unfold [Loop Animation] menu and check result is True"):
+            pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=1)
+
+        # [L396] 3.4 Pip Designer > Set [Animation] > Loop animation > Check library
+        # with uuid("c93474c8-c6a3-442d-ba57-5be47eb80ee5") as case:
+        with step("[Verify] Check preview matches GT (L396_loop_animation_templates.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L396_loop_animation_templates.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L396_loop_animation_templates.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L396_loop_animation_templates.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.animation
+    @pytest.mark.loop_animation
+    @pytest.mark.name('[test_pip_designer_func_7_47] Apply [Rotate Loop Animation] Template and Preview in Pip Designer')
+    @exception_screenshot
+    def test_pip_designer_func_7_47(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_46') is run and passed
+        1. Set timecode to ('00_00_20_03') at [Pip Designer]
+        2. Select [Loop Animation] template (6)
+        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L397_apply_rotate_loop.png') matches Ground Truth (Ground_Truth_Folder + 'L397_apply_rotate_loop.png') with similarity=0.95
+        4. Fold [Loop Animation] menu in [Pip Designer]
+        '''
+        dependency_test = "test_pip_designer_func_7_46"
+        self.ensure_dependency(dependency_test)
+
+        # [L397] 3.4 Pip Designer > Set [Animation] > Loop animation > apply new added animation
+        # with uuid("7211df40-b1e2-422b-b598-b7ea9b2dec29") as case:
+
+        with step("[Action] Set timecode to (00_00_20_03) at [Pip Designer]"):
+            pip_designer_page.set_timecode("00_00_20_03")
+
+        with step("[Action] Select [Loop Animation] template (6)"):
+            pip_designer_page.in_animation.select_template(6)
+
+        with step("[Verify] Check preview matches GT (L397_apply_rotate_loop.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L397_apply_rotate_loop.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L397_apply_rotate_loop.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L397_apply_rotate_loop.png)! Similarity should > 0.95"
+
+        with step("[Action] Fold [Loop Animation] menu in [Pip Designer]"):
+            pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=0)
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_designer
+    @pytest.mark.animation
+    @pytest.mark.in_out_animation
+    @pytest.mark
+    @pytest.mark.name('[test_pip_designer_func_7_48] Apply [In Animation]/ [Out Animation]/ [Loop Animation] in [Pip Designer] and check preview')
+    @exception_screenshot
+    def test_pip_designer_func_7_48(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_47') is run and passed
+        1. Unfold [In Animation] menu in [Pip Designer]
+        2. Set timecode to ('00_00_00_03') at [Pip Designer]
+        3. Select [In Animation] template (7)
+        4. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L398_apply_fade_in.png') matches Ground Truth (Ground_Truth_Folder + 'L398_apply_fade_in.png') with similarity=0.95
+        5. Fold [In Animation] menu in [Pip Designer]
+        6. Set timecode to ('00_00_20_03') at [Pip Designer]
+        7. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L399_apply_loop.png') matches Ground Truth (Ground_Truth_Folder + 'L399_apply_loop.png') with similarity=0.95
+        8. Set timecode to ('00_00_30_03') at [Pip Designer]
+        9. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L399_apply_out.png') matches Ground Truth (Ground_Truth_Folder + 'L399_apply_out.png') with similarity=0.95
+        10. Switch to [Express] mode in [Pip Designer]
+        '''
+        dependency_test = "test_pip_designer_func_7_47"
+        self.ensure_dependency(dependency_test)
+
+        # [L398] 3.4 Pip Designer > In + Out + Loop Animation
+        # with uuid("a86e219b-0a1d-4a7f-b519-362bb7e82d87") as case:
+
+        with step("[Action] Unfold [In Animation] menu in [Pip Designer]"):
+            check_in_category = pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
+            if not check_in_category:
+                assert False, "In Animation menu did not unfold!"
+
+        with step("[Action] Set timecode to ('00_00_00_03') at [Pip Designer]"):
+            pip_designer_page.set_timecode("00_00_00_03")
+
+        with step("[Action] Select [In Animation] template (7)"):
+            pip_designer_page.in_animation.select_template(7)
+
+        with step("[Verify] Check preview matches GT (L398_apply_fade_in.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L398_apply_fade_in.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L398_apply_fade_in.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L398_apply_fade_in.png)! Similarity should > 0.95"
+
+        with step("[Action] Fold [In Animation] menu in [Pip Designer]"):
+            pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=0)
+
+        # [L399] 3.4 Pip Designer > In + Out + Loop Animation > select & apply (In + Out + Loop) Animation
+        # with uuid("e9bd16c3-f7f5-4249-89c0-22eaf9082ac8") as case:
+
+        with step("[Action] Set timecode to ('00_00_20_03') at [Pip Designer]"):
+            pip_designer_page.set_timecode("00_00_20_03")
+
+        with step("[Verify] Check preview matches GT (L399_apply_loop.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L399_apply_loop.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L399_apply_loop.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L399_apply_loop.png)! Similarity should > 0.95"
+
+        with step("[Action] Set timecode to ('00_00_30_03') at [Pip Designer]"):
+            pip_designer_page.set_timecode("00_00_30_03")
+
+        with step("[Verify] Check preview matches GT (L399_apply_out.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L399_apply_out.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L399_apply_out.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L399_apply_out.png)! Similarity should > 0.95"
+
+        with step("[Action] Switch to [Express] mode in [Pip Designer]"):
+            pip_designer_page.switch_mode('Express')
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_room
+    @pytest.mark.detail_view
+    @pytest.mark.name('[test_pip_designer_func_7_49] Verify no Detail View icon in selected categories')
+    @exception_screenshot
+    def test_pip_designer_func_7_49(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_32_3') is run and passed
+        1. Enter Room (Pip)(4)
+        2. Select Category ('My Favorites')
+        3. Check [Detail View] icon (L.main.btn_library_details_view) is not shown in [My Favorites] category
+        4. Select Category ('Custom')
+        5. Check [Detail View] icon (L.main.btn_library_details_view) is not shown in [Custom] category
+        6. Select Category ('Downloads')
+        7. Check [Detail View] icon (L.main.btn_library_details_view) is not shown in [Downloads] category
+        '''
+        
+        with step("[Action] Ensure the dependency test 'test_pip_designer_func_32_3' is run and passed"):
+            dependency_test = "test_pip_designer_func_32_3"
+            self.ensure_dependency(dependency_test)
+
+        # [L253] 2.3 Video Overlay Room > Check Custom, My Favorite category > Remove detail view icon
+        # with uuid("95a75c0c-1d8e-41ec-9851-2859f001fd96") as case:
+
+        with step("[Action] Enter Room (Pip)(4)"):
+            main_page.enter_room(4)
+
+        with step("[Action] Select Category ('My Favorites')"):
+            main_page.select_LibraryRoom_category('My Favorites')
+
+        with step("[Verify] Check if [Detail View] icon is not shown in [My Favorites] category"):
+            if main_page.is_exist(L.main.btn_library_details_view):
+                assert False, "Detail View icon should not be visible in 'My Favorites' category"
+
+        with step("[Action] Select Category ('Custom')"):
+            main_page.select_LibraryRoom_category('Custom')
+
+        with step("[Verify] Check if [Detail View] icon is not shown in [Custom] category"):
+            if main_page.is_exist(L.main.btn_library_details_view):
+                assert False, "Detail View icon should not be visible in 'Custom' category"
+
+        with step("[Action] Select Category ('Downloads')"):
+            main_page.select_LibraryRoom_category('Downloads')
+
+        with step("[Verify] Check if [Detail View] icon is not shown in [Downloads] category"):
+            if main_page.is_exist(L.main.btn_library_details_view):
+                assert False, "Detail View icon should not be visible in 'Downloads' category"
+
+        assert True
+
+    @pytest.mark.pip_designer_func
+    @pytest.mark.pip_room
+    @pytest.mark.sort
+    @pytest.mark.content_pack
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_pip_designer_func_7_50] Download 3 [Template] and Sort by [Name]/ [Created Date] in [Pip Room]')
+    @exception_screenshot
+    def test_pip_designer_func_7_50(self):
+        '''
+        0. Ensure the dependency test ('test_pip_designer_func_7_49') is run and passed
+        1. Select Category ('All Content') in Library Room > at_download_list = ['winter', 'tutorial', 'new year', 'shape']
+        2. Search media (at_download_list[x]) > Select 2nd media (L.media_room.library_listview.unit_collection_view_item_second) in library list view > Click [Cancel] button in search library for all contents in at_download_list
+        3. Select Category ('Downloads') in Library Room > Screenshot (locator=L.base.Area.library_icon_view) in [Downloads] category
+        4. Sort by [Name] in [Pip Room]
+        5. Check preview is updated after [Sort by Name] with similarity<0.95
+        6. Sort by [Created Date] in [Pip Room]
+        7. Check preview is updated after [Sort by Created Date] with similarity<0.95
+        8. Sort by [Name] in [Pip Room] to set to default status
+        '''
+        
+        with step("[Action] Ensure the dependency test 'test_pip_designer_func_7_49' is run and passed"):
+            dependency_test = "test_pip_designer_func_7_49"
+            self.ensure_dependency(dependency_test)
+
+        # [L254] 2.3 Effect Room > Check other IAD category > sorting rule
+        # with uuid("3b016c0d-8aab-42de-9a96-d2ab76b8cafb") as case:
+
+        with step("[Action] Select Category ('All Content') in Library Room"):
+            main_page.select_LibraryRoom_category('All Content')
+        
+        at_download_list = ['winter', 'tutorial', 'new year', 'shape']
+
+        for item in at_download_list:
+            with step(f"[Action] Search media '{item}' and select 2nd media, then click [Cancel]"):
+                media_room_page.search_library(item)
+                target = main_page.exist(L.media_room.library_listview.unit_collection_view_item_second)
+                main_page.mouse.click(*target.center)
+                time.sleep(DELAY_TIME * 3)
+                media_room_page.search_library_click_cancel()
+
+        with step("[Action] Select Category ('Downloads') in Library Room"):
+            main_page.select_LibraryRoom_category('Downloads')
+
+        with step("[Action] Screenshot (locator=L.base.Area.library_icon_view) in [Downloads] category"):
+            downloads_snapshot = main_page.snapshot(locator=L.base.Area.library_icon_view)
+
+        with step("[Action] Sort by [Name] in [Pip Room]"):
+            pip_room_page.sort_by_name()
+
+        with step("[Verify] Check preview is updated after [Sort by Name]"):
+            preview_after_sort_name = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            if main_page.compare(downloads_snapshot, preview_after_sort_name, similarity=0.95):
+                assert False, "Preview did not update as expected after sorting by Name! Similarity should < 0.95"
+
+        with step("[Action] Sort by [Created Date] in [Pip Room]"):
+            pip_room_page.sort_by_created_date()
+
+        with step("[Verify] Check preview is updated after [Sort by Created Date]"):
+            preview_after_sort_created_date = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            if main_page.compare(downloads_snapshot, preview_after_sort_created_date, similarity=0.95):
+                assert False, "Preview did not update as expected after sorting by Created Date! Similarity should < 0.95"
+
+        with step("[Action] Sort by [Name] in [Pip Room] to set to default status"):
+            pip_room_page.sort_by_name()
+
+        assert True
 
     @pytest.mark.shape_designer_func
     @pytest.mark.shape_designer
@@ -16371,6 +17499,317 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.launcher_func
+    @pytest.mark.launch
+    @pytest.mark.launcher
+    @pytest.mark.video_denoise
+    @pytest.mark.name('[test_launcher_func_17_18] Verify the import dialog after clicking [Video Denoise] on launcher')
+    @exception_screenshot
+    def test_launcher_func_17_18(self):
+        '''
+        1. Clear Cache > Launch APP
+        2. Hover on [Video Denoise] button (L.base.launcher_window.btn_video_denoise) on launcher
+        3. Click [Show Case Area] (L.base.launcher_window.show_case_video_area)
+        4. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("Video Denoise")
+        5. Press [ESC] key to close [Import Dialog]
+        '''
+        with step('[Action] Clear Cache and Launch APP'):
+            main_page.clear_cache()
+            main_page.launch_app()
+
+        # [L22] 1.3 New Launcher > Showcase > Video Denoise > Single click on banner area
+        # with uuid("c22ae48a-63ec-451e-9b27-25200ad164c3") as case:
+
+        with step('[Action] Hover on [Video Denoise] button on launcher'):
+            main_page.hover_launcher_btn(L.base.launcher_window.btn_video_denoise)
+
+        with step('[Action] Click [Show Case Area] on launcher'):
+            main_page.click(L.base.launcher_window.show_case_video_area)
+
+        with step('[Verify] Check if title of [Import Dialog] is "Video Denoise"'):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != "Video Denoise":
+                assert False, f"Import dialog title does not match expected value! Expected 'Video Denoise', got '{dialog.AXTitle}'"
+
+        with step('[Action] Press [ESC] key to close [Import Dialog]'):
+            main_page.press_esc_key()
+
+        assert True
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.body_effect
+    @pytest.mark.import_media
+    @pytest.mark.name('[test_launcher_func_17_19] Verify [AI Body Effects] import dialog after clicking [Body Effect] button')
+    @exception_screenshot
+    def test_launcher_func_17_19(self):
+        '''
+        0. Ensure the dependency test ('test_launcher_func_17_18') is run and passed
+        1. Check [Body Effect] button (L.base.launcher_window.btn_ai_body_effect) is in Tool area
+        2. Click [Body Effect] button
+        3. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("AI Body Effects")
+        '''
+        dependency_test = "test_launcher_func_17_18"
+        self.ensure_dependency(dependency_test)
+
+        with step('[Verify] Check [Body Effect] button is in Tool area'):
+            if not  main_page.exist(L.base.launcher_window.btn_ai_body_effect):
+                assert False, "[Body Effect] button not found in Tool area"
+
+        with step('[Action] Click [Body Effect] button'):
+            main_page.click(L.base.launcher_window.btn_ai_body_effect)
+
+        with step('[Verify] Check if title of [Import Dialog] is "AI Body Effects"'):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != "AI Body Effects":
+                assert False, f"Import dialog title does not match expected value! Expected 'AI Body Effects', got '{dialog.AXTitle}'"
+
+        assert True
+
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.import_media
+    @pytest.mark.sample_clip
+    @pytest.mark.body_effect
+    @pytest.mark.bubble
+    @pytest.mark.timeline
+    @pytest.mark.play_video
+    @pytest.mark.name('[test_launcher_func_17_20] Verify [Body Effect Bubble] and preview after applying sample clip')
+    @exception_screenshot
+    def test_launcher_func_17_20(self):
+        '''
+        0. Ensure the dependency test ('test_launcher_func_17_19') is run and passed
+        1. Apply [Sample Clip] on [AI Module Import dialog] on Launcher
+        2. Check [Body Effect Bubble] (L.effect_room.bb_body_effect) is shown in 50 seconds
+        3. Click [Stop] in playback window
+        4. Set timecode to ('00_00_04_16') at main page
+        5. Check preview (L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L42_sample_video.png') matches Ground Truth (Ground_Truth_Folder + 'L42_sample_video.png') with similarity=0.95
+        '''
+        dependency_test = "test_launcher_func_17_19"
+        self.ensure_dependency(dependency_test)
+
+        # [L42] 1.3 Tool Area > Body Effect > Select "Sample video" in import dialog
+        # with uuid("16020955-04cc-4730-bf88-60736421369a") as case:
+
+        with step('[Action] Apply [Sample Clip] on [AI Module Import dialog] on Launcher'):
+            main_page.apply_sample_clip_when_open_AI_import_dialog()
+
+        # [L43] 1.3 Tool Area > Body Effect > Bubble when 1st enter
+        # with uuid("13fd74b4-9070-4564-87df-af31698cb457") as case:
+
+        with step('[Verify] Check if [Body Effect Bubble] is shown in 50 seconds'):
+            if not main_page.is_exist(area=L.effect_room.bb_body_effect, sec=50):
+                assert False, "[Body Effect Bubble] did not show within 50 seconds!"
+
+        with step('[Action] Click [Stop] in playback window'):
+            playback_window_page.Edit_Timeline_PreviewOperation('stop')
+
+        with step('[Action] Set timecode to (00_00_04_16) at main page'):
+            main_page.set_timeline_timecode('00_00_04_16', is_verify=True)
+
+        with step('[Verify] Check preview matches GT (L42_sample_video.png) with similarity 0.95'):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L42_sample_video.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L42_sample_video.png', preview_snapshot, similarity=0.95):
+                assert False, "Preview does not match Ground Truth (L42_sample_video.png)! Similarity should > 0.95"
+
+        assert True
+
+
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.audio_denoise
+    @pytest.mark.name('[test_launcher_func_17_21] Verify [Audio Denoise] button and import dialog after clicking')
+    @exception_screenshot
+    def test_launcher_func_17_21(self):
+        '''
+        0. Check dependency test ('test_launcher_func_17_20') is run and passed
+        1. Click [Close] button to back to launcher > Handle [Save Project] dialog with option [No]
+        2. Check [Audio Denoise] button (L.base.launcher_window.btn_audio_denoise) is in Tool area
+        3. Click [Audio Denoise] button
+        4. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("AI Audio Denoise")
+        '''
+        dependency_test = "test_launcher_func_17_20"
+        self.ensure_dependency(dependency_test)
+
+        # [L62] 1.3 Tool Area > AI Audio Denoise > Single click module
+        # with uuid("f727e96c-2665-43ec-942d-016b9da8520a") as case:
+
+        with step('[Action] Click [Close] button to back to launcher and handle [Save Project] dialog with option [No]'):
+            main_page.click_close_then_back_to_launcher()
+            main_page.handle_no_save_project_dialog()
+
+        with step('[Verify] Check if [Audio Denoise] button is in Tool area'):
+            if not main_page.exist(L.base.launcher_window.btn_audio_denoise):
+                assert False, "[Audio Denoise] button is not found in Tool area!"
+
+        with step('[Action] Click [Audio Denoise] button'):
+            main_page.click(L.base.launcher_window.btn_audio_denoise)
+
+        with step('[Verify] Check if title of [Import Dialog] is "AI Audio Denoise"'):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != "AI Audio Denoise":
+                assert False, f"Import dialog title does not match expected value! Expected 'AI Audio Denoise', got '{dialog.AXTitle}'"
+
+        assert True
+
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.audio_denoise
+    @pytest.mark.import_media
+    @pytest.mark.bubble
+    @pytest.mark.name('[test_launcher_func_17_22] Verify [Audio Denoise] Bubble and preview after applying Sample Clip')
+    @exception_screenshot
+    def test_launcher_func_17_22(self):
+        '''
+        0. Ensure the dependency test ('test_launcher_func_17_21') is run and passed
+        1. Apply [Sample Clip] on [AI Module Import dialog] on Launcher
+        2. Check [Audio Denoise Bubble] (L.fix_enhance.fix.audio_denoise.bb_text) is shown in 50 seconds
+        3. Get [Audio Denoise] Checkbox Status and check the result is True
+        4. Check preview (L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L63_sample_video.png') matches GT (Ground_Truth_Folder + 'L63_sample_video.png', current_preview) with similarity=0.95
+        '''
+        dependency_test = "test_launcher_func_17_21"
+        self.ensure_dependency(dependency_test)
+
+        # [L63] 1.3 Tool Area > AI Audio Denoise > Select "Sample video" in import dialog
+        # with uuid("a1d48655-7372-49c8-9d2c-50eb9482eabc") as case:
+        
+        with step("[Action] Apply [Sample Clip] on [AI Module Import dialog] on Launcher"):
+            main_page.apply_sample_clip_when_open_AI_import_dialog()
+
+        # [L64] 1.3 Tool Area > AI Audio Denoise > Bubble when 1st enter
+        # with uuid("5c9968a5-0446-4087-a9a1-dc7be8e19cd2") as case:
+
+        with step("[Verify] Check [Audio Denoise Bubble] is shown in 50 seconds"):
+            # Wait for the bubble to appear and verify its presence
+            time.sleep(50)
+            if not main_page.exist(L.fix_enhance.fix.audio_denoise.bb_text):
+                assert False, "[Audio Denoise Bubble] is not shown!"
+
+        with step("[Verify] Get [Audio Denoise] Checkbox Status and check the result is True"):
+            checkbox_status = fix_enhance_page.fix.get_audio_denoise()
+            if not checkbox_status:
+                assert False, "[Audio Denoise] Checkbox is not checked!"
+
+        with step("[Verify] Check preview matches GT (L63_sample_video.png) with similarity=0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + "L63_sample_video.png"
+            )
+            if not main_page.compare(Ground_Truth_Folder + "L63_sample_video.png", preview_snapshot, similarity=0.95):
+                assert False, "Preview does not match GT (L63_sample_video.png)! Similarity should > 0.95"
+
+        assert True
+
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.video_speed
+    @pytest.mark.name('[test_launcher_func_17_23] Hover on launcher btn [Video Speed] and verify import dialog title')
+    @exception_screenshot
+    def test_launcher_func_17_23(self):
+        '''
+        0. Check dependency test ('test_launcher_func_17_22') is run and passed
+        1. Click [Close] button to back to launcher > Handle [Save Project] dialog with option [No]
+        2. Check [Video Speed] button (L.base.launcher_window.btn_video_speed) is in Tool area
+        3. Click [Video Speed] button
+        4. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("Video Speed")
+        '''
+        dependency_test = "test_launcher_func_17_22"
+        self.ensure_dependency(dependency_test)
+
+        # [L71] 1.3 Tool Area > Video Speed > Single click module
+        # with uuid("cfa51f03-9f74-4161-bf9e-bae9ebc06cdf") as case:
+
+        with step("[Action] Click [Close] button to back to launcher > Handle [Save Project] dialog with option [No]"):
+            main_page.click_close_then_back_to_launcher()
+            main_page.handle_no_save_project_dialog()
+
+        with step("[Verify] Check [Video Speed] button is in Tool area"):
+            if not main_page.exist(L.base.launcher_window.btn_video_speed):
+                assert False, "[Video Speed] button is not in the Tool area!"
+
+        with step("[Action] Click [Video Speed] button"):
+            main_page.click(L.base.launcher_window.btn_video_speed)
+
+        with step("[Verify] Check if title of [Import Dialog] is 'Video Speed'"):
+            dialog = main_page.exist(L.base.launcher_window.import_dialog)
+            if dialog.AXTitle != "Video Speed":
+                assert False, f"Import dialog title mismatch! Expected 'Video Speed', got '{dialog.AXTitle}'"
+
+        assert True
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.video_speed
+    @pytest.mark.import_media
+    @pytest.mark.name('[test_launcher_func_17_24] Import media, enter Video Speed Designer and verify new video length')
+    @exception_screenshot
+    def test_launcher_func_17_24(self):
+        '''
+        0. Ensure the dependency test ('test_launcher_func_17_23') is run and passed
+        1. Click [Import] button on [AI Module Import dialog] on Launcher and import media (Test_Material_Folder + 'fix_enhance_20/shopping_mall.m2ts')
+        2. Check entered [Video Speed Designer] (L.video_speed.main) in 30 secs
+        3. Set [Sppeed Multiplier] value to (4)
+        4. Get [New Video Length] value and check value is ('00:00:04:14')
+        '''
+        dependency_test = "test_launcher_func_17_23"
+        self.ensure_dependency(dependency_test)
+
+        # [L72] 1.3 New Launcher > Tool area > Video Speed > Select custom video in import dialog
+        # with uuid("07f48048-9f6a-4e47-bd62-496a80e5e9a7") as case:
+
+        with step("[Action] Click [Import] button on [AI Module Import dialog] on Launcher and import media"):
+            main_page.click_to_import_media_when_open_AI_import_dialog(Test_Material_Folder + 'fix_enhance_20/shopping_mall.m2ts')
+
+        with step("[Verify] Check entered [Video Speed Designer] in 30 secs"):
+            if not main_page.is_exist(L.video_speed.main, timeout=30):
+                assert False, 'Cannot enter [Video Speed Designer]!'
+
+        with step("[Action] Set [Speed Multiplier] value to (4)"):
+            video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_SetValue(4)
+
+        with step("[Verify] Get [New Video Length] value and check value is ('00:00:04:14')"):
+            new_video_length = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_NewVideoLength_GetValue()
+            if new_video_length != '00:00:04:14':
+                assert False, f"New Video Length mismatch! Expected: '00:00:04:14', Actual: {new_video_length}"
+
+        assert True
+
+
+    @pytest.mark.launcher_func
+    @pytest.mark.launcher
+    @pytest.mark.video_speed
+    @pytest.mark.bubble
+    @pytest.mark.name('[test_launcher_func_17_24] Apply effect in Video Speed Designer and verify bubble')
+    @exception_screenshot
+    def test_launcher_func_17_24(self):
+        '''
+        0. Ensure the dependency test ('test_launcher_func_17_24') is run and passed
+        1. Click [OK] button on [Video Speed Designer] to apply effect
+        2. Check [Video Designer bubble] (L.video_speed.bb_video_speed) is shown
+        '''
+        dependency_test = "test_launcher_func_17_24"
+        self.ensure_dependency(dependency_test)
+
+        # [L73] 1.3 New Launcher > Tool area > Video Speed > BB
+        # with uuid("3c8c8af0-9453-49e6-800f-4f56d0c2a280") as case:
+
+        with step("[Action] Click [OK] button on [Video Speed Designer] to apply effect"):
+            video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
+
+        with step("[Verify] Check [Video Designer bubble] is shown"):
+            if not main_page.exist(L.video_speed.bb_video_speed):
+                assert False, "Video Speed Designer bubble is not shown!"
+
+        assert True
+
+
     @pytest.mark.title_particle_effect_launcher_cross_func
     @pytest.mark.preferences
     @pytest.mark.title_designer
@@ -22520,14 +23959,14 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.launch
     @pytest.mark.essential
     @pytest.mark.launcher
     @pytest.mark.ai_speech_to_text
-    @pytest.mark.name("[test_zzz_func_31_1] Verify [AI Speech to Text] dialog behavior on launcher")
+    @pytest.mark.name("[test_essential_premium_func_31_1] Verify [AI Speech to Text] dialog behavior on launcher")
     @exception_screenshot
-    def test_zzz_func_31_1(self):
+    def test_essential_premium_func_31_1(self):
         """
         1. Clear login account cache > Clear [AI Module] files > Clear cache > launch APP > wait DELAY_TIMES*3
         2. Click [Launch Free version] button on [Ess dialog] and check result is True
@@ -22565,21 +24004,21 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.launcher
     @pytest.mark.ai_speech_to_text
     @pytest.mark.import_media
-    @pytest.mark.name("[test_zzz_func_31_2] Verify [AI Speech to Text] bubble and checkbox on launcher after media import")
+    @pytest.mark.name("[test_essential_premium_func_31_2] Verify [AI Speech to Text] bubble and checkbox on launcher after media import")
     @exception_screenshot
-    def test_zzz_func_31_2(self):
+    def test_essential_premium_func_31_2(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_1') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_1') is run and passed
         1. Click [Import] button on [AI Module Import dialog] on Launcher and import media (Test_Material_Folder + 'Mark_Clips/2.mp4')
         2. Check [AI Speech to Text] bubble is shown after import video by is_exist(L.subtitle_room.library_menu.bb_first_time, timeout=8) and check result is True
         3. Check [AI Speech to Text] checkbox (L.subtitle_room.library_menu.btn_speech_to_text) is exist
         """
-        dependency_test = "test_zzz_func_31_1"
+        dependency_test = "test_essential_premium_func_31_1"
         self.ensure_dependency(dependency_test)
 
         # [L81] 1.3 New Launcher > Tool area > AI Speech to Text > Select custom video in import dialog
@@ -22601,14 +24040,14 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.ai_speech_to_text
-    @pytest.mark.name("[test_zzz_func_31_3] Verify [AI Speech to Text] effect and dialog behavior")
+    @pytest.mark.name("[test_essential_premium_func_31_3] Verify [AI Speech to Text] effect and dialog behavior")
     @exception_screenshot
-    def test_zzz_func_31_3(self):
+    def test_essential_premium_func_31_3(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_2') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_2') is run and passed
         1. Click [Speech To Text] button (L.subtitle_room.library_menu.btn_speech_to_text) to apply effect
         2. Check [Premium] Icon (L.base.try_for_free_dialog.icon_premium) is shown
         3. Check [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_once) is shown
@@ -22616,7 +24055,7 @@ class Test_BFT_365_OS14():
         5. Check [AI Speech to Text] dialog (L.subtitle_room.speech_to_text_window.main_window) is shown
         6. Press [ESC] key to close the dialog
         """
-        dependency_test = "test_zzz_func_31_2"
+        dependency_test = "test_essential_premium_func_31_2"
         self.ensure_dependency(dependency_test)
 
         # [L83] 1.3 New Launcher > Tool area > AI Speech to Text > [Premium feature mechanism: Try Before Buy]: Try to enable the function
@@ -22645,21 +24084,21 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.whats_new
-    @pytest.mark.name("[test_zzz_func_31_4] Verify [What's New] dialog and handle save changes dialog")
+    @pytest.mark.name("[test_essential_premium_func_31_4] Verify [What's New] dialog and handle save changes dialog")
     @exception_screenshot
-    def test_zzz_func_31_4(self):
+    def test_essential_premium_func_31_4(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_3') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_3') is run and passed
         1. Click [What's New] button (L.main.btn_whats_new_update) on top bar
         2. Check [What's New] dialog (L.main.dlg_whats_name_title) is shown
         3. Close the dialog by press [ESC] key
         4. Click [Close] button to back to launcher
         5. Handle [Do you want to save changes] dialog with option [No]
         """
-        dependency_test = "test_zzz_func_31_3"
+        dependency_test = "test_essential_premium_func_31_3"
         self.ensure_dependency(dependency_test)
 
         # [L88] 1.4 Content notification > Click "New Advertising" icon on caption bar
@@ -22683,17 +24122,17 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.launcher
     @pytest.mark.ai_module
     @pytest.mark.import_media
     @pytest.mark.video_denoise
-    @pytest.mark.name("[test_zzz_func_31_5] Verify [Video Denoise] button functionality, sample clip application, download, and Try for Free action")
+    @pytest.mark.name("[test_essential_premium_func_31_5] Verify [Video Denoise] button functionality, sample clip application, download, and Try for Free action")
     @exception_screenshot
-    def test_zzz_func_31_5(self):
+    def test_essential_premium_func_31_5(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_4') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_4') is run and passed
         1. Check if [Video Denoise] button (L.base.launcher_window.btn_video_denoise) is on launcher
         2. Click [Video Denoise] button on launcher
         3. Apply [Sample Clip] on [AI Module Import dialog] on Launcher
@@ -22701,7 +24140,7 @@ class Test_BFT_365_OS14():
         5. Click [Try for Free] button and check result is True
         6. Click [Close] button to back to launcher > Handle [Do you want to save changes] dialog with option [No]
         """
-        dependency_test = "test_zzz_func_31_4"
+        dependency_test = "test_essential_premium_func_31_4"
         self.ensure_dependency(dependency_test)
 
         # [L50] 1.3 New Launcher > Tool area > Video Denoise > [Premium feature mechanism: Try Before Buy]: Try to enable the function
@@ -22733,17 +24172,17 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.launcher
     @pytest.mark.ai_module
     @pytest.mark.import_media
     @pytest.mark.ai_background_remover
-    @pytest.mark.name("[test_zzz_func_31_6] Verify [AI BG Remover] functionality, sample clip application, Try for Free action, download and exit Pip Designer")
+    @pytest.mark.name("[test_essential_premium_func_31_6] Verify [AI BG Remover] functionality, sample clip application, Try for Free action, download and exit Pip Designer")
     @exception_screenshot
-    def test_zzz_func_31_6(self):
+    def test_essential_premium_func_31_6(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_5') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_5') is run and passed
         1. Check if [AI BG Remover] button (L.base.launcher_window.btn_ai_bg_remover) is on launcher
         2. Click [AI BG Remover] button on launcher
         3. Apply [Sample Clip] on [AI Module Import dialog] on Launcher
@@ -22751,7 +24190,7 @@ class Test_BFT_365_OS14():
         5. Download [AI Module] and check result is True
         6. Click [OK] to leave [Pip Designer] (back to timeline)
         """
-        dependency_test = "test_zzz_func_31_5"
+        dependency_test = "test_essential_premium_func_31_5"
         self.ensure_dependency(dependency_test)
 
         # [L60] 1.3 New Launcher > Tool area > AI BG Remover > [Premium feature mechanism: Try Before Buy]: Try to enable the function
@@ -22783,17 +24222,17 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.media_room
     @pytest.mark.background_music
     @pytest.mark.search_library
     @pytest.mark.content_pack
-    @pytest.mark.name("[test_zzz_func_31_7] Verify sound clip selection, timeline drag, Try for Free action and download OK status")
+    @pytest.mark.name("[test_essential_premium_func_31_7] Verify sound clip selection, timeline drag, Try for Free action and download OK status")
     @exception_screenshot
-    def test_zzz_func_31_7(self):
+    def test_essential_premium_func_31_7(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_6') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_6') is run and passed
         1. Enter [Background Music (meta)] Category
         2. Select specific category in meta by name ('Brazilian')
         3. Search library ('Conexão Maior')
@@ -22802,7 +24241,7 @@ class Test_BFT_365_OS14():
         6. Click [Try for Free] button and check result is True
         7. Check [Download OK] button (L.media_room.scroll_area.table_view_text_field_download_ok) is shown
         """
-        dependency_test = "test_zzz_func_31_6"
+        dependency_test = "test_essential_premium_func_31_6"
         self.ensure_dependency(dependency_test)
 
         # [L159] 2.1 Media Room > BGM (Meta) Add to timeline preview > show [Try before buy] dialog
@@ -22836,17 +24275,17 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.media_room
     @pytest.mark.background_music
     @pytest.mark.search_library
     @pytest.mark.content_pack
-    @pytest.mark.name("[test_zzz_func_31_8] Verify sound clip selection, timeline drag and Prenium icon on launcher")
+    @pytest.mark.name("[test_essential_premium_func_31_8] Verify sound clip selection, timeline drag and Prenium icon on launcher")
     @exception_screenshot
-    def test_zzz_func_31_8(self):
+    def test_essential_premium_func_31_8(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_7') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_7') is run and passed
         1. Click [Cancel] button in search library
         2. Select timeline track (2)
         3. Search library ('Electr')
@@ -22854,7 +24293,7 @@ class Test_BFT_365_OS14():
         5. Drag current position media to timeline playhead position (track_no=2)
         6. Check [Prenium] icon (L.base.try_for_free_dialog.icon_premium) is shown
         """
-        dependency_test = "test_zzz_func_31_7"
+        dependency_test = "test_essential_premium_func_31_7"
         self.ensure_dependency(dependency_test)
 
         # [L179] 2.1 Media Room > Insert clips to timeline & preview > show [Try before buy] dialog
@@ -22882,17 +24321,17 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.media_room
     @pytest.mark.background_music
     @pytest.mark.search_library
     @pytest.mark.content_pack
-    @pytest.mark.name("[test_zzz_func_31_9] Verify [Try for Free] action, undo, sound clip selection, timeline drag, search cancel and download OK status")
+    @pytest.mark.name("[test_essential_premium_func_31_9] Verify [Try for Free] action, undo, sound clip selection, timeline drag, search cancel and download OK status")
     @exception_screenshot
-    def test_zzz_func_31_9(self):
+    def test_essential_premium_func_31_9(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_8') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_8') is run and passed
         1. Click [Try for Free] button with (option_dont_show_again=1) > Wait DELAY_TIME*4 for downloading
         2. [Undo] via hotkey
         3. Select specific sound clips in library by name ('Ancestrais') > Wait DELAY_TIME*2 for downloading
@@ -22901,7 +24340,7 @@ class Test_BFT_365_OS14():
         6. Search library ('Ancestrais')
         7. Check [Download OK] button (L.media_room.scroll_area.table_view_text_field_download_ok) is shown
         """
-        dependency_test = "test_zzz_func_31_8"
+        dependency_test = "test_essential_premium_func_31_8"
         self.ensure_dependency(dependency_test)
 
         # [L180] 2.1 Media Room > Insert clips to timeline & preview > Not pop up "tro before buy" dialog
@@ -22933,7 +24372,7 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.launch
     @pytest.mark.effect_room
@@ -22943,7 +24382,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.import_media
     @pytest.mark.timeline
     @exception_screenshot
-    def test_zzz_func_31_10(self):
+    def test_essential_premium_func_31_10(self):
         """
         1. Clear log in > Clear Cache > Launch APP > Launch App
         2. Click [Launch Free Version] button and enter main program by new project
@@ -22994,20 +24433,20 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.effect_room
     @pytest.mark.body_effect
     @pytest.mark.timeline
     @exception_screenshot
-    @pytest.mark.name('[test_zzz_func_31_11] Verify timeline preview matches GT')
-    def test_zzz_func_31_11(self):
+    @pytest.mark.name('[test_essential_premium_func_31_11] Verify timeline preview matches GT')
+    def test_essential_premium_func_31_11(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_10') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_10') is run and passed
         1. Set timecode to ('00_00_29_16') at main page
         2. Check preview (L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L232_timelinepreview.png') matches GT (Ground_Truth_Folder + 'L232_timelinepreview.png') with similarity 0.95
         """
-        dependency_test = "test_zzz_func_31_10"
+        dependency_test = "test_essential_premium_func_31_10"
         self.ensure_dependency(dependency_test)
 
         # [L232] 2.3 Effect Room - Body effect > Continue above case > click [OK] in [Try before buy] dialog
@@ -23027,22 +24466,22 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.bubble
     @pytest.mark.speech_to_text
     @pytest.mark.subtitle_room
-    @pytest.mark.name('[test_zzz_func_31_12] Verify [Speech to Text] button and [Premium] Icon are shown')
+    @pytest.mark.name('[test_essential_premium_func_31_12] Verify [Speech to Text] button and [Premium] Icon are shown')
     @exception_screenshot
-    def test_zzz_func_31_12(self):
+    def test_essential_premium_func_31_12(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_11') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_11') is run and passed
         1. Enter Room (Subtitle) (8)
         2. Check if [Speech to Text] button (L.subtitle_room.library_menu.btn_speech_to_text) is shown
         3. Click [Speech to Text] button (L.subtitle_room.library_menu.btn_speech_to_text)
         4. Check [Premium] Icon (L.base.try_for_free_dialog.icon_premium) is shown
         """
-        dependency_test = "test_zzz_func_31_11"
+        dependency_test = "test_essential_premium_func_31_11"
         self.ensure_dependency(dependency_test)
 
         # [L287] 2.6 Subtitle Room > [Ess.] Auto Transcribe subtitle > should try before buy dialog
@@ -23066,16 +24505,16 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.speech_to_text
     @pytest.mark.subtitle_room
     @pytest.mark.body_effect
-    @pytest.mark.name('[test_zzz_func_31_13] Verify [Try Once] and Speech to Text window functionality')
+    @pytest.mark.name('[test_essential_premium_func_31_13] Verify [Try Once] and Speech to Text window functionality')
     @exception_screenshot
-    def test_zzz_func_31_13(self):
+    def test_essential_premium_func_31_13(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_12') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_12') is run and passed
         1. Click [Try Once] button and check result is True
         2. Check if [Speech to Text] window (L.subtitle_room.speech_to_text_window.main_window, timeout=6) is shown
         3. Click [Create] button on [Speech to Text] window
@@ -23085,7 +24524,7 @@ class Test_BFT_365_OS14():
         7. Click [Effect] button on [Tips Area]
         8. Remove (Body Effect) from [Effect Settings] 
         """
-        dependency_test = "test_zzz_func_31_12"
+        dependency_test = "test_essential_premium_func_31_12"
         self.ensure_dependency(dependency_test)
 
         # [L288] 2.6 Subtitle Room > [Ess.] click "try Once"
@@ -23126,20 +24565,20 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.produce_page
     @pytest.mark.sign_in
-    @pytest.mark.name('[test_zzz_func_31_14] Verify Produce page sign in, produce button, Premium dialog absence and Edit button click')
+    @pytest.mark.name('[test_essential_premium_func_31_14] Verify Produce page sign in, produce button, Premium dialog absence and Edit button click')
     @exception_screenshot
-    def test_zzz_func_31_14(self):
+    def test_essential_premium_func_31_14(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_13') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_13') is run and passed
         1. Sign in to PDR (account='sistarftcn.006@gmail.com', pw='ilovecc680520')
         2. Click [Produce] button
         3. Check [Premium dialog] is not shown by verifying [H264] button (L.produce.local.btn_file_format_avc) is shown
         4. Click [Edit] button on produce page
         """
-        dependency_test = "test_zzz_func_31_13"
+        dependency_test = "test_essential_premium_func_31_13"
         self.ensure_dependency(dependency_test)
 
         with step("[Action] Sign in to PDR (account='sistarftcn.006@gmail.com', pw='ilovecc680520')"):
@@ -23161,23 +24600,23 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.speech_to_text
     @pytest.mark.subtitle_room
     @pytest.mark.bubble
-    @pytest.mark.name('[test_zzz_func_31_15] Verify [Speech to Text] button and [POU] dialog behavior')
+    @pytest.mark.name('[test_essential_premium_func_31_15] Verify [Speech to Text] button and [POU] dialog behavior')
     @exception_screenshot
-    def test_zzz_func_31_15(self):
+    def test_essential_premium_func_31_15(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_14') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_14') is run and passed
         1. Enter Room (Subtitle) (8)
         2. Check [Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT) is shown by is_exist()
         3. Click [Speech to Text] button (L.subtitle_room.library_menu.uppper_btn_STT)
         4. Check [POU] (L.base.pou_dialog.btn_get_premium, timeout=7) pops up
         5. Press [ESC] key to close the dialog
         """
-        dependency_test = "test_zzz_func_31_14"
+        dependency_test = "test_essential_premium_func_31_14"
         self.ensure_dependency(dependency_test)
 
         # [L290] 2.6 Subtitle Room > [Ess.] Auto Transcribe subtitle > should try before buy dialog
@@ -23204,17 +24643,17 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.media_room
     @pytest.mark.background_music
     @pytest.mark.produce_page
     @pytest.mark.premium
-    @pytest.mark.name('[test_zzz_func_31_16] Verify BGM export Premium dialog and remove all BGM')
+    @pytest.mark.name('[test_essential_premium_func_31_16] Verify BGM export Premium dialog and remove all BGM')
     @exception_screenshot
-    def test_zzz_func_31_16(self):
+    def test_essential_premium_func_31_16(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_15') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_15') is run and passed
         1. Enter Room (Media) (0) > Enter [Background Music (meta)] Category
         2. Select specific category in meta by name ('Blue')
         3. Search library for ('Honky Mother')
@@ -23227,7 +24666,7 @@ class Test_BFT_365_OS14():
         10. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
         11. Click [Remove All] button (L.base.pou_dialog.btn_remove_all) to remove BGM then back to timeline
         """
-        dependency_test = "test_zzz_func_31_15"
+        dependency_test = "test_essential_premium_func_31_15"
         self.ensure_dependency(dependency_test)
 
 
@@ -23274,24 +24713,24 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.media_room
     @pytest.mark.video_denoise
     @pytest.mark.fix_enhance
     @pytest.mark.timeline
-    @pytest.mark.name('[test_zzz_func_31_17] Verify Fix Enhance and Video Denoise checkbox and Try for Free dialog')
+    @pytest.mark.name('[test_essential_premium_func_31_17] Verify Fix Enhance and Video Denoise checkbox and Try for Free dialog')
     @exception_screenshot
-    def test_zzz_func_31_17(self):
+    def test_essential_premium_func_31_17(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_16') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_16') is run and passed
         1. Select timeline media with name ('1')
         2. Click [Fix Enhance] button on [Tips Area]
         3. Check [Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise) is shown
         4. Enable [Video Denoise] checkbox
         5. Check of [Try for Free] dialog (L.base.try_for_free_dialog.btn_try_for_free) pops up
         """
-        dependency_test = "test_zzz_func_31_16"
+        dependency_test = "test_essential_premium_func_31_16"
         self.ensure_dependency(dependency_test)
 
         # [L567] 4.3 Fix / Enhance > Fix > [Ess.] Apply [Video Denoise] > Should  show "Try Before Buy"
@@ -23318,22 +24757,22 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.video_denoise
     @pytest.mark.fix_enhance
     @pytest.mark.timeline
-    @pytest.mark.name('[test_zzz_func_31_18] Verify [Video Denoise] checkbox status and absence of [Try for Free] button')
+    @pytest.mark.name('[test_essential_premium_func_31_18] Verify [Video Denoise] checkbox status and absence of [Try for Free] button')
     @exception_screenshot
-    def test_zzz_func_31_18(self):
+    def test_essential_premium_func_31_18(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_17') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_17') is run and passed
         1. Select timeline media with name ('1')
         2. Click [Try For Free] button (L.base.try_for_free_dialog.btn_try_for_free)
         3. Check [Video Denoise] checkbox (L.fix_enhance.fix.checkbox_video_denoise).AXvalue ==1
         4. Check [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is not shown
         """
-        dependency_test = "test_zzz_func_31_17"
+        dependency_test = "test_essential_premium_func_31_17"
         self.ensure_dependency(dependency_test)
 
         # [L568] 4.3 Fix / Enhance > Fix > [Ess.] Apply [Video Denoise] > Click Try for Free
@@ -23357,23 +24796,23 @@ class Test_BFT_365_OS14():
         assert True
 
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.video_denoise
     @pytest.mark.fix_enhance
     @pytest.mark.timeline
     @pytest.mark.produce_page
-    @pytest.mark.name('[test_zzz_func_31_19] Verify Premium for exporting dialog and remove all BGM via Export')
+    @pytest.mark.name('[test_essential_premium_func_31_19] Verify Premium for exporting dialog and remove all BGM via Export')
     @exception_screenshot
-    def test_zzz_func_31_19(self):
+    def test_essential_premium_func_31_19(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_18') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_18') is run and passed
         1. Click [Export] button (L.main.btn_produce)
         2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
         3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
         4. Click [Remove All] button (L.base.pou_dialog.btn_remove_all) to remove BGM then back to timeline
         """
-        dependency_test = "test_zzz_func_31_18"
+        dependency_test = "test_essential_premium_func_31_18"
         self.ensure_dependency(dependency_test)
 
         # [L569] 4.3 Fix / Enhance > Fix > [Ess.] Apply [Video Denoise] > click Export
@@ -23395,23 +24834,23 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.launch
     @pytest.mark.import_media
     @pytest.mark.pip_designer
     @pytest.mark.chromakey
     @pytest.mark.ai_module
-    @pytest.mark.name('[test_zzz_func_31_20] Verify Pip Designer export and AI module download workflow')
+    @pytest.mark.name('[test_essential_premium_func_31_20] Verify Pip Designer export and AI module download workflow')
     @exception_screenshot
-    def test_zzz_func_31_20(self):
+    def test_essential_premium_func_31_20(self):
         """
         1. Clear [AI Module] files > Clear Cache > Launch APP
         2. Click [Launch Free Version] button
         3. If [What's new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close
         4. Import media for local file (Test_Material_Folder + 'Title_Designer_3/background01.jpg')
         5. Select media by library icon view ('background01.jpg') > Right click > Select right click menu ('Insert on Selected Track')
-        6. Select [Pip Designer] from [Tools] and check result is True
+        6. Select [Pip Designer] from [Tip Areas] and check result is True
         7. Click [Express] button (L.pip_designer.express)
         8. Screenshot (L.pip_designer.preview)
         9. Enable [Chromakey]
@@ -23445,10 +24884,10 @@ class Test_BFT_365_OS14():
         # [L416] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
         # with uuid("4d267db6-55ba-43cf-849c-f57a1ee116f4") as case:
 
-        with step("[Action] Select [Pip Designer] from [Tools] and check result is True"):
+        with step("[Action] Select [Pip Designer] from [Tip Areas] and check result is True"):
             result = tips_area_page.tools.select_PiP_Designer()
             if not result:
-                assert False, "Select [Pip Designer] from [Tools] Fail"
+                assert False, "Select [Pip Designer] from [Tip Areas] Fail"
 
         with step("[Action] Click [Express] button (L.pip_designer.express)"):
             main_page.click(L.pip_designer.express)
@@ -23485,22 +24924,22 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.zzz_func
+    @pytest.mark.essential_premium_func
     @pytest.mark.essential
     @pytest.mark.pip_designer
     @pytest.mark.chromakey
     @pytest.mark.ai_module    
-    @pytest.mark.name('[test_zzz_func_31_21] Verify Export button and Premium dialog for exporting')
+    @pytest.mark.name('[test_essential_premium_func_31_21] Verify Export button and Premium dialog for exporting')
     @exception_screenshot
-    def test_zzz_func_31_21(self):
+    def test_essential_premium_func_31_21(self):
         """
-        0. Ensure the dependency test ('test_zzz_func_31_20') is run and passed
+        0. Ensure the dependency test ('test_essential_premium_func_31_20') is run and passed
         1. Click [Export] button (L.main.btn_produce)
         2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
         3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
         4. Click [Not Now] button (L.base.pou_dialog.btn_not_now) to close the dialog
         """
-        dependency_test = "test_zzz_func_31_20"
+        dependency_test = "test_essential_premium_func_31_20"
         self.ensure_dependency(dependency_test)
 
         # [L418] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
@@ -23522,4474 +24961,5585 @@ class Test_BFT_365_OS14():
 
         assert True
 
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_22] Launch APP > Import media > Apply Chromakey in [Pip Designer] > Click [Try for Free] button > Check preview matches GT > Close [Pip Designer]')
+    def test_essential_premium_func_31_22(self):
+        '''
+        1. Clear [AI Module] Files > Clear Cache > Launch APP > Launch Essential build
+        2. If [What\'s new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close
+        3. Import media for local file (Test_Material_Folder + 'BFT_21_Stage1/eight_people.png')
+        4. Select media by library icon view ('eight_people.png') > Right click > Select right click menu ('Insert on Selected Track')
+        5. Select [Pip Designer] from [Tip Areas] and check result is True
+        6. Enter [Express Mode] by click (L.pip_designer.express)
+        7. Enable Chromakey
+        8. Check if [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is shown
+        9. Click [Try for Free] button
+        10. Wait for downloading AI module
+        11. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L420_cutout.png') match Ground Truth (Ground_Truth_Folder + 'L420_cutout.png') with similarity=0.9
+        12. Click [OK] to close [Pip Designer]
+        '''
+        with step('[Action] Clear [AI Module] Files and Cache, Launch APP and Essential Build'):
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.launch_app()
+            self.launch_Essential_build()
 
+        with step('[Action] Close [What\'s new] dialog if shown'):
+            if main_page.exist(L.base.seasonal_bb_window.main):
+                main_page.press_esc_key()
 
+        with step('[Action] Import media file (Test_Material_Folder + "BFT_21_Stage1/eight_people.png")'):
+            media_room_page.import_media_file(Test_Material_Folder + "BFT_21_Stage1/eight_people.png")
 
-    # 3 uuid < Essential test >
-    # @pytest.mark.skip
-    @exception_screenshot
-    def test_8_1_4(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
+        with step('[Action] Select media by library icon view (eight_people.png) and right click'):
+            main_page.select_library_icon_view_media('eight_people.png')
+            main_page.right_click()
 
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
-
-        # launch Essential build to enter timeline mode
-        self.launch_Essential_build()
-
-        if main_page.exist(L.base.seasonal_bb_window.main):
-            # Close seasonal BB dialog (What's new dialog)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
-
-        # Import PNG photo to media room
-        jpg_path = Test_Material_Folder + 'BFT_21_Stage1/eight_people.png'
-        media_room_page.import_media_file(jpg_path)
-        time.sleep(DELAY_TIME * 4)
-
-        # insert to timeline
-        main_page.select_library_icon_view_media('eight_people.png')
-        main_page.right_click()
-        main_page.select_right_click_menu('Insert on Selected Track')
-        time.sleep(DELAY_TIME * 2)
+        with step('[Action] Select right click menu (Insert on Selected Track)'):
+            main_page.select_right_click_menu('Insert on Selected Track')
 
         # [L419] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
-        with uuid("488b0d96-ed37-4200-824c-aadd9a4aabf0") as case:
-            # Click TipsArea > Pip Designer
-            check_status = tips_area_page.tools.select_PiP_Designer()
-            if not check_status:
-                raise Exception
+        # with uuid("488b0d96-ed37-4200-824c-aadd9a4aabf0") as case:
 
-            time.sleep(DELAY_TIME * 3)
-            # Enter Express mode
-            main_page.click(L.pip_designer.express)
-            time.sleep(DELAY_TIME * 2)
+        with step('[Action] Select [Pip Designer] from [Tip Areas] and check result is True'):
+            if not tips_area_page.tools.select_PiP_Designer():
+                assert False, "Pip Designer not selected correctly"
 
-            # init preview
-            before_img = main_page.snapshot(L.pip_designer.preview)
+        with step('[Action] Enter [Express Mode] by clicking (L.pip_designer.express)'):
+            pip_designer_page.switch_mode("Express Mode")
 
-            # Enable AI Background Remover
-            pip_designer_page.apply_chromakey()
-            time.sleep(DELAY_TIME * 2)
+        with step('[Action] Enable Chromakey'):
+            pip_designer_page.apply_chromakey(bApply=1)
 
-            # Verify Step : pop up [Try for Free] dialog
-            target_free_btn = main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free)
+        with step('[Verify] Check if [Try for Free] button is shown'):
+            if not  main_page.exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False,  "Try for Free button not shown"
 
-            # [L420] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
-            with uuid("a289204a-09f9-4f86-8aec-28ab6d5ec49e") as case:
-                # Click [Try for Free]
-                target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-                if target_free_btn:
-                    main_page.mouse.click(*target.center)
-                    time.sleep(DELAY_TIME)
-                else:
-                    raise Exception
+        # [L420] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
+        # with uuid("a289204a-09f9-4f86-8aec-28ab6d5ec49e") as case:
 
-                self.check_downloading_AI_module()
-                time.sleep(DELAY_TIME * 2)
-
-                # apply cutout preview
-                after_img = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L420_cutout.png')
-                check_result = main_page.compare(Ground_Truth_Folder + 'L420_cutout.png', after_img, similarity=0.9)
-
-                case.result = check_result
-            case.result = target_free_btn
-
-            # click [OK] to back to timeline
-            pip_designer_page.click_ok()
-
-
-        # [L421] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
-        with uuid("89801e91-efe4-4ad2-a615-f52f376e2e28") as case:
-            # click [Export]
-            main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
-
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
-
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
-
-            case.result = target_icon and target_btn
-            case.fail_log = f'{target_icon}  {target_btn}'
-
-            # click [Remove all] to remove cutout effect then back to timeline
-            if target_btn:
-                main_page.click(L.base.pou_dialog.btn_remove_all)
-                time.sleep(DELAY_TIME)
-
-    # 3 uuid < Essential test >
-    # @pytest.mark.skip
-    @exception_screenshot
-    def test_8_1_5(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
-
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
-
-        # launch Essential build to enter timeline mode
-        self.launch_Essential_build()
-
-        if main_page.exist(L.base.seasonal_bb_window.main):
-            # Close seasonal BB dialog (What's new dialog)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
-
-        # Import HEIC photo to media room
-        high_resolution_path = Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC'
-        media_room_page.import_media_file(high_resolution_path)
-        time.sleep(DELAY_TIME * 4)
-
-        # insert to timeline
-        main_page.select_library_icon_view_media('IMG_0008.HEIC')
-        main_page.right_click()
-        main_page.select_right_click_menu('Insert on Selected Track')
-        time.sleep(DELAY_TIME * 2)
-
-        # [L422] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
-        with uuid("6bc0f10e-6efa-477a-9fb4-bf70912b8ba6") as case:
-            # Click TipsArea > Pip Designer
-            check_status = tips_area_page.tools.select_PiP_Designer()
-            if not check_status:
-                raise Exception
-
-            time.sleep(DELAY_TIME * 3)
-            # Enter Express mode
-            main_page.click(L.pip_designer.express)
-            time.sleep(DELAY_TIME * 2)
-
-            # init preview
-            before_img = main_page.snapshot(L.pip_designer.preview)
-
-            # Enable AI Background Remover
-            pip_designer_page.apply_chromakey()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step : pop up [Try for Free] dialog
-            target_free_btn = main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free)
-
-            # [L423] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
-            with uuid("204a6bcf-a544-48a9-bffd-6c6d5d3d844b") as case:
-                # Click [Try for Free]
-                target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-                if target_free_btn:
-                    main_page.mouse.click(*target.center)
-                    time.sleep(DELAY_TIME)
-                else:
-                    raise Exception
-
-                self.check_downloading_AI_module()
-                time.sleep(DELAY_TIME * 2)
-
-                # apply cutout preview
-                after_img = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L423_cutout.png')
-                check_result = main_page.compare(Ground_Truth_Folder + 'L423_cutout.png', after_img, similarity=0.94)
-
-                case.result = check_result
-            case.result = target_free_btn
-
-            # click [OK] to back to timeline
-            pip_designer_page.click_ok()
-
-        # [L424] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
-        with uuid("85b7fda5-107b-49e1-8ff1-2c105d987b1f") as case:
-            # click [Export]
-            main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
-
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
-
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
-
-            case.result = target_icon and target_btn
-            case.fail_log = f'{target_icon}  {target_btn}'
-
-    # 3 uuid < Essential test >
-    # @pytest.mark.skip
-    @exception_screenshot
-    def test_8_1_6(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
-
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
-
-        # launch Essential build to enter timeline mode
-        self.launch_Essential_build()
-
-        if main_page.exist(L.base.seasonal_bb_window.main):
-            # Close seasonal BB dialog (What's new dialog)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
-
-        # switch to (4:3) > Import 4:3 video
-        main_page.set_project_aspect_ratio_4_3()
-        media_room_page.import_media_file(Test_Material_Folder + 'BFT_21_Stage1/4_3_testing.mp4')
-        time.sleep(DELAY_TIME)
-        media_room_page.handle_high_definition_dialog()
-        time.sleep(DELAY_TIME * 5)
-        main_page.select_library_icon_view_media('4_3_testing.mp4')
-        main_page.insert_media('4_3_testing.mp4')
-
-        # enter Effect room > Apply body effect
-        main_page.enter_room(3)
-
-        # Enter Body Effect category
-        main_page.select_LibraryRoom_category('Body Effect')
-        time.sleep(DELAY_TIME * 2)
-
-        # search Premium template: Star Shower
-        media_room_page.search_library('Star Shower')
-        time.sleep(DELAY_TIME * 4)
-
-        # drag media to timeline
-        main_page.drag_media_to_timeline_playhead_position('Star Shower')
-        time.sleep(DELAY_TIME * 3)
-
-        # Click [Try for Free]
-        target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-        if target:
+        with step('[Action] Click [Try for Free] button'):
+            target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
             main_page.mouse.click(*target.center)
             time.sleep(DELAY_TIME)
 
-        # wait for download body effect
-        self.check_download_body_effect()
-        time.sleep(DELAY_TIME * 3)
 
-        # can find the [Effect] button in tips area
-        if main_page.is_not_exist(L.tips_area.button.btn_effect_modify):
-            logger('[Verify NG] Not apply body effect normally.')
-            raise Exception
+        with step('[Action] Wait for downloading AI module'):
+            self.check_downloading_AI_module()
 
-        # [L409] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
-        with uuid("1cd72a43-b2c9-4cb6-a517-7ed05349e232") as case:
-            # Click TipsArea > Pip Designer
-            check_status = tips_area_page.tools.select_PiP_Designer()
-            if not check_status:
-                raise Exception
+        with step('[Verify] Check preview matches GT (L420_cutout.png)'):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L420_cutout.png'
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L420_cutout.png',
+                preview,
+                similarity=0.9
+            )
+            if not check_preview:
+                # Similarity should be greater than 0.9 for matching preview
+                assert False, "Preview does not match GT (L420_cutout.png)! Similarity should > 0.9"
 
-            time.sleep(DELAY_TIME * 3)
-            # Enter Express mode
-            main_page.click(L.pip_designer.express)
-            time.sleep(DELAY_TIME * 2)
-
-            # init preview
-            before_img = main_page.snapshot(L.pip_designer.preview)
-
-            # Enable AI Background Remover
-            pip_designer_page.apply_chromakey()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step : pop up [Try for Free] dialog
-            target_free_btn = main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free)
-
-            # [L410] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
-            with uuid("3b82099e-b0af-4337-b7d3-53e5310a47ba") as case:
-                # Click [Try for Free]
-                target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-                if target_free_btn:
-                    main_page.mouse.click(*target.center)
-                    time.sleep(DELAY_TIME)
-                else:
-                    raise Exception
-
-                self.check_downloading_AI_module()
-                time.sleep(DELAY_TIME * 2)
-
-                # apply cutout preview
-                after_img = main_page.snapshot(L.pip_designer.preview)
-                check_no_update = main_page.compare(before_img, after_img, similarity=0.94)
-                case.result = not check_no_update
-
-            case.result = target_free_btn
-
-            # click [OK] to back to timeline
+        with step('[Action] Click [OK] to close [Pip Designer]'):
             pip_designer_page.click_ok()
 
-            # click [Play] then pause
-            playback_window_page.Edit_Timeline_PreviewOperation('Play')
-            check_preview = main_page.Check_PreviewWindow_is_different(main_page.area.preview.main, sec=3)
-            time.sleep(DELAY_TIME*3)
-            main_page.press_space_key()
+        assert True
+
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_23] Verify the handling of the [Premium for exporting] dialog after clicking [Export]')
+    @exception_screenshot
+    def test_essential_premium_func_31_23(self):
+        '''
+        0. Ensure the dependency test ('test_essential_premium_func_31_22') is run and passed
+        1. Click [Export] button (L.main.btn_produce)
+        2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        4. Click [Remove all] to remove cutout effect then back to timeline
+        '''
+        dependency_test = "test_essential_premium_func_31_22"
+        self.ensure_dependency(dependency_test)
+
+        # [L421] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
+        # with uuid("89801e91-efe4-4ad2-a615-f52f376e2e28") as case:
+
+        with step('[Action] Click [Export] button'):
+            main_page.click(L.main.btn_produce)
+
+        with step('[Verify] Check [Premium for exporting] dialog pops up'):
+            premium_dialog = main_page.exist(L.base.try_for_free_dialog.icon_premium)
+            if not premium_dialog:
+                assert False, "[Premium for exporting] dialog did not pop up!"
+
+        with step('[Verify] Check [Now Now] button is shown on [Premium for exporting] dialog'):
+            assert main_page.exist(L.base.pou_dialog.btn_not_now), "[Now Now] button is not shown on dialog"
+
+        with step('[Action] Click [Remove all] to remove cutout effect then back to timeline'):
+            main_page.click(L.base.pou_dialog.btn_remove_all)
+
+        assert True
+
+
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_24] Launch APP > Import media (HEIC) > Apply Chromakey in [Pip Designer] > Click [Try for Free] button > Check preview matches GT > Close [Pip Designer]')
+    def test_essential_premium_func_31_24(self):
+        '''
+        1. Clear [AI Module] Files > Clear Cache > Launch APP > Launch Essential build
+        2. If [What\'s new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close
+        3. Import media for local file (Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC')
+        4. Select media by library icon view ('IMG_0008.HEIC') > Right click > Select right click menu ('Insert on Selected Track')
+        5. Select [Pip Designer] from [Tip Areas] and check result is True
+        6. Enter [Express Mode] by click (L.pip_designer.express)
+        7. Enable Chromakey
+        8. Check if [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is shown
+        9. Click [Try for Free] button
+        10. Wait for downloading AI module
+        11. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L423_cutout.png') match Ground Truth (Ground_Truth_Folder + 'L423_cutout.png') with similarity=0.94
+        12. Click [OK] to close [Pip Designer]
+        '''
+        with step('[Action] Clear [AI Module] Files and Cache, Launch APP and Essential Build'):
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.launch_app()
+            self.launch_Essential_build()
+
+        with step('[Action] Close [What\'s new] dialog if shown'):
+            if main_page.exist(L.base.seasonal_bb_window.main):
+                main_page.press_esc_key()
+
+        with step('[Action] Import media file (Test_Material_Folder + "BFT_21_Stage1/IMG_0008.HEIC")'):
+            media_room_page.import_media_file(Test_Material_Folder + "BFT_21_Stage1/IMG_0008.HEIC")
+
+        with step('[Action] Select media by library icon view (IMG_0008.HEIC) and right click'):
+            main_page.select_library_icon_view_media('IMG_0008.HEIC')
+            main_page.right_click()
+
+        with step('[Action] Select right click menu (Insert on Selected Track)'):
+            main_page.select_right_click_menu('Insert on Selected Track')
+
+        # [L422] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
+        # with uuid("6bc0f10e-6efa-477a-9fb4-bf70912b8ba6") as case:
+
+        with step('[Action] Select [Pip Designer] from [Tip Areas] and check result is True'):
+            if not tips_area_page.tools.select_PiP_Designer():
+                assert False, "Pip Designer not selected correctly"
+
+        with step('[Action] Enter [Express Mode] by clicking (L.pip_designer.express)'):
+            pip_designer_page.switch_mode("Express Mode")
+
+        with step('[Action] Enable Chromakey'):
+            pip_designer_page.apply_chromakey(bApply=1)
+
+        with step('[Verify] Check if [Try for Free] button is shown'):
+            if not  main_page.exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "Try for Free button not shown"
+
+        # [L423] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
+        # with uuid("204a6bcf-a544-48a9-bffd-6c6d5d3d844b") as case:
+
+        with step('[Action] Click [Try for Free] button'):
+            target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
+            main_page.mouse.click(*target.center)
+            time.sleep(DELAY_TIME)
+
+        with step('[Action] Wait for downloading AI module'):
+            self.check_downloading_AI_module()
+
+        with step('[Verify] Check preview matches GT (L423_cutout.png)'):
+            preview = main_page.snapshot(
+                locator=L.pip_designer.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L423_cutout.png'
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L423_cutout.png',
+                preview,
+                similarity=0.94
+            )
             if not check_preview:
-                logger('[Verify Step] Check preview is no update')
-                raise Exception
+                # Similarity should be greater than 0.94 for matching preview
+                assert False, "Preview does not match GT (L423_cutout.png)! Similarity should > 0.94"
+
+        with step('[Action] Click [OK] to close [Pip Designer]'):
+            pip_designer_page.click_ok()
+
+        assert True
+
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_25] Verify the handling of the [Premium for exporting] dialog after clicking [Export]')
+    @exception_screenshot
+    def test_essential_premium_func_31_25(self):
+        '''
+        0. Ensure the dependency test ('test_essential_premium_func_31_24') is run and passed
+        1. Click [Export] button (L.main.btn_produce)
+        2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        4. Click [Remove all] to remove cutout effect then back to timeline
+        '''
+        dependency_test = "test_essential_premium_func_31_24"
+        self.ensure_dependency(dependency_test)
+
+        # [L424] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
+        # with uuid("85b7fda5-107b-49e1-8ff1-2c105d987b1f") as case:
+
+        with step('[Action] Click [Export] button'):
+            main_page.click(L.main.btn_produce)
+
+        with step('[Verify] Check [Premium for exporting] dialog pops up'):
+            premium_dialog = main_page.exist(L.base.try_for_free_dialog.icon_premium)
+            if not premium_dialog:
+                assert False, "[Premium for exporting] dialog did not pop up!"
+
+        with step('[Verify] Check [Now Now] button is shown on [Premium for exporting] dialog'):
+            assert main_page.exist(L.base.pou_dialog.btn_not_now), "[Now Now] button is not shown on dialog"
+
+        with step('[Action] Click [Remove all] to remove cutout effect then back to timeline'):
+            main_page.click(L.base.pou_dialog.btn_remove_all)
+
+        assert True
+
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.effect_room
+    @pytest.mark.body_effect
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_26] Apply Body Effect and Cutout Effect in [Pip Designer] and check [Premium] related functions')
+    @exception_screenshot
+    def test_essential_premium_func_31_26(self):
+        '''
+        1. Clear [AI Module] Files > Clear Cache > Launch APP > Launch Essential build
+        2. If [What\'s new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close
+        3. Set [Project Aspect Ratio] as (4:3)
+        4. Import media for local file (Test_Material_Folder + \'BFT_21_Stage1/4_3_testing.mp4\') > Handle high definition dialog
+        5. Select media (\'4_3_testing.mp4\') by library icon view > Insert media (\'4_3_testing.mp4\') to timeline
+        6. Enter Room (Effect) > Select category (Body Effect) > Search library (\'Star Shower\') > Drag media to timeline playhead position
+        7. Check if [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is shown
+        8. Click [Try for Free] button
+        9. Wait until download [Body Effect] complete
+        10. Check [Effect] button (L.tips_area.button.btn_effect_modify) is exist after applying body effect
+        11. Select [Pip Designer] from [Tip Areas] and check result is True
+        12. Enter [Express Mode] by click (L.pip_designer.express) > Screenshot (L.pip_designer.preview)
+        13. Enable Chromakey
+        14. Check if [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is shown
+        15. Click [Try for Free] button
+        16. Wait for downloading AI module
+        17. Check preview is updated after applying cutout effect (similarity<0.95)
+        18. Click [OK] to close [Pip Designer]
+        19. Click [Play] in playback window
+        20. Check if the preview window is different when playing(main_page.area.preview.main, sec=3)
+        21. Press [Space] key to pause the preview
+        '''
+        with step('[Action] Clear [AI Module] Files and Cache, Launch APP, and Launch Essential Build'):
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.launch_app()
+            self.launch_Essential_build()
+
+        with step('[Action] Close [What\'s new] dialog if shown'):
+            if main_page.exist(L.base.seasonal_bb_window.main):
+                main_page.press_esc_key()
+
+        with step('[Action] Set Project Aspect Ratio to 4:3'):
+            main_page.set_project_aspect_ratio_4_3()
+
+        with step('[Action] Import media file (Test_Material_Folder + "BFT_21_Stage1/4_3_testing.mp4")'):
+            media_path = Test_Material_Folder + "BFT_21_Stage1/4_3_testing.mp4"
+            media_room_page.import_media_file(media_path)
+            media_room_page.handle_high_definition_dialog()
+
+        with step('[Action] Select media (4_3_testing.mp4) by library icon view and insert to timeline'):
+            main_page.select_library_icon_view_media('4_3_testing.mp4')
+            main_page.insert_media('4_3_testing.mp4')
+
+        with step('[Action] Enter Room (Effect) and select category (Body Effect)'):
+            main_page.enter_room(3)
+            main_page.select_LibraryRoom_category('Body Effect')
+
+        with step('[Action] Search library for "Star Shower" and drag media to timeline'):
+            media_room_page.search_library('Star Shower')
+            time.sleep(DELAY_TIME * 2)  # Wait for search to complete
+            main_page.drag_media_to_timeline_playhead_position("Star Shower")
+
+        with step('[Verify] Check if [Try for Free] button is shown'):
+            if not main_page.exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "[Try for Free] button not shown"
+
+        with step('[Action] Click [Try for Free] button'):
+            target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
+            if target:
+                main_page.mouse.click(*target.center)
+                time.sleep(DELAY_TIME)
+
+        with step('[Action] Wait for downloading [Body Effect]'):
+            self.check_download_body_effect()
+
+        with step('[Verify] Check [Effect] button existence after applying body effect'):
+            if not main_page.exist(L.tips_area.button.btn_effect_modify):
+                assert False, "[Effect] button does not exist after applying effect"
+        
+        # [L409] 3.4 Pip Designer > Auto cutout > [Ess.] show try before buy dialog
+        # with uuid("1cd72a43-b2c9-4cb6-a517-7ed05349e232") as case:
+
+        with step('[Action] Select [Pip Designer] from [Tip Areas] and check result is True'):
+            if not tips_area_page.tools.select_PiP_Designer():
+                assert False, "Pip Designer not selected correctly"
+
+        with step('[Action] Enter [Express Mode] and take a screenshot of the preview'):
+            pip_designer_page.switch_mode("Express Mode")
+            preview_before_cutout = main_page.snapshot(locator=L.pip_designer.preview)
+
+        with step('[Action] Enable Chromakey'):
+            pip_designer_page.apply_chromakey(bApply=1)
+
+        with step('[Verify] Check if [Try for Free] button is shown'):
+            if not main_page.exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "[Try for Free] button not shown"
+
+        # [L410] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
+        # with uuid("3b82099e-b0af-4337-b7d3-53e5310a47ba") as case:
+
+        with step('[Action] Click [Try for Free] button'):
+            target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
+            main_page.mouse.click(*target.center)
+            time.sleep(DELAY_TIME)
+
+        with step('[Action] Wait for downloading AI module'):
+            self.check_downloading_AI_module()
+
+        with step('[Verify] Check preview is updated after applying cutout effect'):
+            preview_after_cutout = main_page.snapshot(locator=L.pip_designer.preview)
+            if not main_page.compare(preview_before_cutout, preview_after_cutout, similarity=0.95):
+                assert False, "Preview did not update as expected after applying cutout effect! Similarity should < 0.95"
+
+        with step('[Action] Click [OK] to close [Pip Designer]'):
+            pip_designer_page.click_ok()
+
+        with step('[Action] Click [Play] in playback window'):
+            playback_window_page.Edit_Timeline_PreviewOperation('Play')
+
+        with step('[Verify] Check if preview window is different when playing'):
+            if not main_page.Check_PreviewWindow_is_different(area=main_page.area.preview.main, sec=3):
+                assert False, "Preview window is not different when playing"
+
+        with step('[Action] Press [Space] key to pause the preview'):
+            main_page.press_space_key()
+
+        assert True
+
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.effect_room
+    @pytest.mark.body_effect
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_27] Verify the handling of the [Premium for exporting] dialog after clicking [Export] with applied body effect and auto cutout')
+    @exception_screenshot
+    def test_essential_premium_func_31_27(self):
+        '''
+        0. Ensure the dependency test ('test_essential_premium_func_31_26') is run and passed
+        1. Click [Export] button (L.main.btn_produce)
+        2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        4. Click [Not Now] button to leave
+        '''
+        dependency_test = "test_essential_premium_func_31_26"
+        self.ensure_dependency(dependency_test)
 
         # [L411] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
-        with uuid("7bbcbe2e-e502-4c0b-94cd-628c9a8d59ae") as case:
-            # click [Export]
+        # with uuid("7bbcbe2e-e502-4c0b-94cd-628c9a8d59ae") as case:
+
+        with step('[Action] Click [Export] button'):
             main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step('[Verify] Check [Premium for exporting] dialog pops up'):
+            premium_dialog = main_page.exist(L.base.try_for_free_dialog.icon_premium)
+            if not premium_dialog:
+                assert False, "[Premium for exporting] dialog did not pop up!"
 
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
+        with step('[Verify] Check [Now Now] button is shown on [Premium for exporting] dialog'):
+            assert main_page.exist(L.base.pou_dialog.btn_not_now), "[Now Now] button is not shown on dialog"
 
-            case.result = target_icon and target_btn
+        with step('[Action] Click [Not Now] button to leave'):
+            main_page.click(L.base.pou_dialog.btn_not_now)
+
+        assert True
 
 
-            # click [Not Now]
-            if target_btn:
-                main_page.click(L.base.pou_dialog.btn_not_now)
-                time.sleep(DELAY_TIME)
-
-    # 3 uuid < Essential test >
-    # @pytest.mark.skip
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.fix_enhance
+    @pytest.mark.lightening_adjustment
+    @pytest.mark.extreme_backlight
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_28] Apply Lighting Adjustment and Cutout Effect in [Pip Designer] and check [Premium] related functions')
     @exception_screenshot
-    def test_8_1_7(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
+    def test_essential_premium_func_31_25(self):
+        '''
+        1. Clear [AI Module] Files > Clear Cache > Launch APP > Launch Essential build
+        2. If [What\'s new] dialog (L.base.seasonal_bb_window.main) is shown > Press [ESC] key to close
+        3. Import media for local file (Test_Material_Folder + 'Produce_Local/4978895.mov') > Handle high definition dialog
+        4. Select media ('4978895.mov') by library icon view > Insert media ('4978895.mov') to timeline
+        5. Click [Fix Enhance] button on [Tips Area]
+        6. Enable [Lighting Adjustment] > Enable [Extreme Backlight] > Set value in [Fix Enhance] to (90)
+        7. Get value in [Fix Enhance] > Check value is (90)
+        8. Select [Pip Designer] from [Tip Areas] and check result is True
+        9. Enter [Express Mode] by click (L.pip_designer.express) > Screenshot (L.pip_designer.preview)
+        10. Enable Chromakey
+        11. Check if [Try for Free] button (L.base.try_for_free_dialog.btn_try_for_free) is shown
+        12. Click [Try for Free] button
+        13. Wait for downloading AI module
+        14. Check preview is not updated after applying cutout effect (similarity>0.8)
+        15. Click [OK] to close [Pip Designer]
+        '''
+        with step('[Action] Clear [AI Module] Files and Cache, Launch APP, and Launch Essential Build'):
+            main_page.clear_AI_module()
+            main_page.clear_cache()
+            main_page.start_app()
+            self.launch_Essential_build()
 
-        # launch PDR
-        logger('Launch PDR')
-        main_page.launch_app()
-        time.sleep(DELAY_TIME * 8)
+        with step('[Action] Close [What\'s new] dialog if shown'):
+            if main_page.exist(L.base.seasonal_bb_window.main):
+                main_page.press_esc_key()
 
-        # launch Essential build to enter timeline mode
-        self.launch_Essential_build()
+        with step('[Action] Import media (4978895.mov) from local file'):
+            media_path = Test_Material_Folder + 'Produce_Local/4978895.mov'
+            media_room_page.import_media_file(media_path)
+            media_room_page.handle_high_definition_dialog()
 
-        if main_page.exist(L.base.seasonal_bb_window.main):
-            # Close seasonal BB dialog (What's new dialog)
-            main_page.press_esc_key()
-            time.sleep(DELAY_TIME * 2)
+        with step('[Action] Select media (4978895.mov) by library icon view and insert to timeline'):
+            main_page.select_library_icon_view_media('4978895.mov')
+            main_page.insert_media()
 
-        #import mov video
-        media_room_page.import_media_file(Test_Material_Folder + 'Produce_Local/4978895.mov')
-        time.sleep(DELAY_TIME)
-        media_room_page.handle_high_definition_dialog()
-        time.sleep(DELAY_TIME * 5)
-        main_page.select_library_icon_view_media('4978895.mov')
-        main_page.insert_media('4978895.mov')
+        with step('[Action] Click [Fix Enhance] button on [Tips Area]'):
+            main_page.tips_area_click_fix_enhance()
 
-        # Enter (Fix / Enhance]
-        main_page.tips_area_click_fix_enhance()
+        with step('[Action] Enable [Lighting Adjustment] > Enable [Extreme Backlight] > Set value to 90 in [Fix Enhance]'):
+            fix_enhance_page.fix.enable_lighting_adjustment(value=True)
+            fix_enhance_page.fix.lighting_adjustment.enable_extreme_backlight(True)
+            fix_enhance_page.fix.lighting_adjustment.extreme_backlight.set_value(90)
 
-        # Enable (Lighting Adjustment)
-        fix_enhance_page.fix.enable_lighting_adjustment()
-        time.sleep(DELAY_TIME * 2)
-
-        # Enable (Extreme backlight)
-        fix_enhance_page.fix.lighting_adjustment.enable_extreme_backlight(True)
-        time.sleep(DELAY_TIME * 2)
-
-        # Set value = 90
-        fix_enhance_page.fix.lighting_adjustment.extreme_backlight.set_value(90)
-        time.sleep(DELAY_TIME * 2)
-
-        current_value = fix_enhance_page.fix.lighting_adjustment.extreme_backlight.get_value()
-
-        if current_value != '90':
-            logger(f'[Verify NG] Apply Light adjustment, check value does not set to 90, is {current_value}')
-            raise Exception
+        with step('[Verify] Check value in [Fix Enhance] is 90'):
+            current_value = fix_enhance_page.fix.lighting_adjustment.extreme_backlight.get_value()
+            if current_value != '90':
+                assert False, f"Lighting adjustment value is not 90! Expected: 90; Actual: {current_value}"
 
         # [L412] 3.4 Pip Designer > apply Auto cutout > [Ess.] show try before buy dialog
-        with uuid("fcd45b9b-7f84-484b-8f31-c32eb9803b86") as case:
-            # Click TipsArea > Pip Designer
-            check_status = tips_area_page.tools.select_PiP_Designer()
-            if not check_status:
-                raise Exception
+        # with uuid("fcd45b9b-7f84-484b-8f31-c32eb9803b86") as case:
 
-            time.sleep(DELAY_TIME * 3)
-            # Enter Express mode
-            main_page.click(L.pip_designer.express)
-            time.sleep(DELAY_TIME * 2)
+        with step('[Action] Select [Pip Designer] from [Tip Areas] and check result is True'):
+            if not tips_area_page.tools.select_PiP_Designer():
+                assert False, "Pip Designer not selected correctly"
 
-            # init preview
-            before_img = main_page.snapshot(L.pip_designer.preview)
+        with step('[Action] Enter [Express Mode] and take a screenshot of the preview'):
+            pip_designer_page.switch_mode("Express Mode")
+            preview_before_cutout = main_page.snapshot(locator=L.pip_designer.preview)
 
-            # Enable AI Background Remover
-            pip_designer_page.apply_chromakey()
-            time.sleep(DELAY_TIME * 2)
+        with step('[Action] Enable Chromakey'):
+            pip_designer_page.apply_chromakey(bApply=1)
 
-            # Verify Step : pop up [Try for Free] dialog
-            target_free_btn = main_page.is_exist(L.base.try_for_free_dialog.btn_try_for_free)
+        with step('[Verify] Check if [Try for Free] button is shown'):
+            if not main_page.exist(L.base.try_for_free_dialog.btn_try_for_free):
+                assert False, "[Try for Free] button not shown"
 
-            # [L413] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
-            with uuid("b7e1a152-dee5-488d-8564-2cbe7cda1385") as case:
-                # Click [Try for Free]
-                target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
-                if target_free_btn:
-                    main_page.mouse.click(*target.center)
-                    time.sleep(DELAY_TIME)
-                else:
-                    raise Exception
+        # [L413] 3.4 Pip Designer > Auto cutout > [Ess.] click "Try for Free"
+        # with uuid("b7e1a152-dee5-488d-8564-2cbe7cda1385") as case:
 
-                self.check_downloading_AI_module()
-                time.sleep(DELAY_TIME * 2)
+        with step('[Action] Click [Try for Free] button'):
+            target = main_page.exist(L.base.try_for_free_dialog.btn_try_for_free)
+            main_page.mouse.click(*target.center)
+            time.sleep(DELAY_TIME)
 
-                # apply cutout preview
-                after_img = main_page.snapshot(L.pip_designer.preview)
-                check_no_update = main_page.compare(before_img, after_img, similarity=0.8)
-                case.result = not check_no_update
+        with step('[Action] Wait for downloading AI module'):
+            self.check_downloading_AI_module()
 
-            case.result = target_free_btn
+        with step('[Verify] Check preview is updated after applying cutout effect'):
+            preview_after_cutout = main_page.snapshot(locator=L.pip_designer.preview)
+            if main_page.compare(preview_before_cutout, preview_after_cutout, similarity=0.8):
+                #
+                assert False, "Preview updated as unexpected after applying cutout effect! Similarity should > 0.8"
 
-            # click [OK] to back to timeline
+        with step('[Action] Click [OK] to close [Pip Designer]'):
             pip_designer_page.click_ok()
 
+        assert True
+
+    @pytest.mark.essential_premium_func
+    @pytest.mark.essential
+    @pytest.mark.fix_enhance
+    @pytest.mark.lightening_adjustment
+    @pytest.mark.extreme_backlight
+    @pytest.mark.pip_designer
+    @pytest.mark.chromakey
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_essential_premium_func_31_29] Verify the handling of the [Premium for exporting] dialog after clicking [Export] with applied body effect and auto cutout')
+    @exception_screenshot
+    def test_essential_premium_func_31_29(self):
+        '''
+        0. Ensure the dependency test ('test_essential_premium_func_31_28') is run and passed
+        1. Click [Export] button (L.main.btn_produce)
+        2. Check [Premium for exporting] dialog (L.base.try_for_free_dialog.icon_premium) pops up
+        3. Check [Now Now] button (L.base.pou_dialog.btn_not_now) is shown on [Premium for exporting] dialog
+        4. Click [Not Now] button to leave
+        '''
+        dependency_test = "test_essential_premium_func_31_28"
+        self.ensure_dependency(dependency_test)
+
         # [L414] 3.4 Pip Designer > Auto cutout > [Ess.] Click [Export]
-        with uuid("48d05346-ea4e-4dc8-851e-efb8bc390f4a") as case:
-            # click [Export]
+        # with uuid("48d05346-ea4e-4dc8-851e-efb8bc390f4a") as case:
+
+        with step('[Action] Click [Export] button'):
             main_page.click(L.main.btn_produce)
-            time.sleep(DELAY_TIME * 2)
 
-            # verify 1: Can find Premium icon on [Premium dialog for exporting]
-            target_icon = main_page.is_exist(L.base.try_for_free_dialog.icon_premium)
+        with step('[Verify] Check [Premium for exporting] dialog pops up'):
+            premium_dialog = main_page.exist(L.base.try_for_free_dialog.icon_premium)
+            if not premium_dialog:
+                assert False, "[Premium for exporting] dialog did not pop up!"
 
-            # verify 2: Can find [Not Now]] on [Premium dialog for exporting]
-            target_btn = main_page.is_exist(L.base.pou_dialog.btn_not_now)
+        with step('[Verify] Check [Now Now] button is shown on [Premium for exporting] dialog'):
+            assert main_page.exist(L.base.pou_dialog.btn_not_now), "[Now Now] button is not shown on dialog"
 
-            case.result = target_icon and target_btn
+        with step('[Action] Click [Not Now] button to leave'):
+            main_page.click(L.base.pou_dialog.btn_not_now)
 
-            # click [Not Now]
-            if target_btn:
-                main_page.click(L.base.pou_dialog.btn_not_now)
-                time.sleep(DELAY_TIME)
+        assert True
 
-    #  < From Essential build to sign in 365 account >
-    # @pytest.mark.skip
+    @pytest.mark.essential_premium_func
+    @pytest.mark.sign
+    @pytest.mark.essential
+    @pytest.mark.name('[test_essential_premium_func_31_30] Sign in 365 account')
     @exception_screenshot
-    def test_8_1_8(self):
-        # sign in 365 then enter timeline mode
-        # account is only for OS 14
-        self.sign_in_365_again()
+    def test_essential_premium_func_31_30(self):
+        '''
+        1. Sign in 365 account
+        '''
+        with step('[Action] Sign in 365 account'):
+            self.sign_in_365_again()
 
-    # 10 uuid
-    # @pytest.mark.skip
+        assert True
+
+
+    @pytest.mark.effect_room_func
+    @pytest.mark.launch
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.search_libary
+    @pytest.mark.sort
+    @pytest.mark.my_favorites
+    @pytest.mark.name('[test_effect_room_func_32_1] Add 3 [Template] to [My Favorites] and Sort by [Name] in [Effect Room]')
     @exception_screenshot
-    def test_9_1_1(self):
-        # clear cache
-        main_page.clear_cache()
-
-        # CEIP > No, thanks
-        main_page.click_CEIP_dialog()
-        # enter launcher
-        main_page.launch_app()
-        time.sleep(DELAY_TIME*3)
-
-        # [L22] 1.3 New Launcher > Showcase > Video Denoise > Single click on banner area
-        with uuid("c22ae48a-63ec-451e-9b27-25200ad164c3") as case:
-            # Hover Tool area (Video Denoise)
-            target = main_page.exist(L.base.launcher_window.btn_video_denoise)
-            main_page.mouse.move(*target.center)
-
-            # click in (show case area)
-            main_page.click(L.base.launcher_window.show_case_video_area)
-            time.sleep(DELAY_TIME * 2)
-
-            # verify step:
-            import_object = main_page.exist(L.base.launcher_window.import_dialog)
-            if import_object.AXTitle == 'Video Denoise':
-                case.result = True
-            else:
-                case.result = False
-                logger(import_object.AXTitle)
-
-        # Press [ESC] to close import dialog
-        main_page.press_esc_key()
-
-        # [L41] 1.3 Tool Area > Body Effect > Single click module
-        with uuid("e8610b6f-8117-451c-9b19-1402be131f6b") as case:
-            # verify step: Find the button (Body Effect) in Tool area
-            if main_page.is_not_exist(L.base.launcher_window.btn_ai_body_effect, timeout=6):
-                case.result = False
-                case.fail_log = 'CANNOT find btn'
-            else:
-                main_page.click(L.base.launcher_window.btn_ai_body_effect)
-                time.sleep(DELAY_TIME * 2)
-
-            # verify step:
-            target = main_page.exist(L.base.launcher_window.import_dialog, timeout=9)
-            if target.AXTitle == 'AI Body Effects':
-                case.result = True
-            else:
-                case.result = False
-                case.fail_log = target.AXValue
-
-        # [L42] 1.3 Tool Area > Body Effect > Select "Sample video" in import dialog
-        with uuid("16020955-04cc-4730-bf88-60736421369a") as case:
-            # Select sample video to enter Pip designer w/ apply Video Denoise
-            select_sample = main_page.apply_sample_clip_when_open_AI_import_dialog()
-            time.sleep(DELAY_TIME * 5)
-
-            for x in range(50):
-                target_bb = main_page.is_exist(L.effect_room.bb_body_effect, timeout=2)
-                if target_bb:
-                    break
-                else:
-                    time.sleep(DELAY_TIME)
-
-            # [L43] 1.3 Tool Area > Body Effect > Bubble when 1st enter
-            with uuid("13fd74b4-9070-4564-87df-af31698cb457") as case:
-                case.result = target_bb
-
-            # click [Stop]
-            playback_window_page.Edit_Timeline_PreviewOperation('STOP')
-            time.sleep(DELAY_TIME)
-
-            # set timecode
-            main_page.set_timeline_timecode('00_00_04_16')
-            time.sleep(DELAY_TIME * 2)
-
-            # verify step: check timeline preview
-            current_preview = main_page.snapshot(L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L42_sample_video.png')
-            time.sleep(DELAY_TIME * 2)
-            check_preview = main_page.compare(Ground_Truth_Folder + 'L42_sample_video.png', current_preview)
-            case.result = select_sample and check_preview
-
-        # [L62] 1.3 Tool Area > AI Audio Denoise > Single click module
-        with uuid("f727e96c-2665-43ec-942d-016b9da8520a") as case:
-            # close PDR then back to launcher
-            main_page.click_close_then_back_to_launcher()
-            time.sleep(DELAY_TIME * 2)
-
-            # click [No] when pop up "save project" dialog
-            main_page.handle_no_save_project_dialog()
-
-            # verify step: Find the button (AI Audio Denoise) in Tool area
-            if main_page.is_not_exist(L.base.launcher_window.btn_audio_denoise, timeout=6):
-                case.result = False
-                case.fail_log = 'CANNOT find btn'
-            else:
-                main_page.click(L.base.launcher_window.btn_audio_denoise)
-                time.sleep(DELAY_TIME * 2)
-
-            # verify step:
-            target = main_page.exist(L.base.launcher_window.import_dialog, timeout=9)
-            if target.AXTitle == 'AI Audio Denoise':
-                case.result = True
-            else:
-                case.result = False
-                case.fail_log = target.AXValue
-
-        # [L63] 1.3 Tool Area > AI Audio Denoise > Select "Sample video" in import dialog
-        with uuid("a1d48655-7372-49c8-9d2c-50eb9482eabc") as case:
-            # Select sample video to enter Pip designer w/ apply Video Denoise
-            select_sample = main_page.apply_sample_clip_when_open_AI_import_dialog()
-            time.sleep(DELAY_TIME * 5)
-
-            for x in range(50):
-                target_bb = main_page.is_exist(L.fix_enhance.fix.audio_denoise.bb_text, timeout=2)
-                if target_bb:
-                    break
-                else:
-                    time.sleep(DELAY_TIME)
-
-            # [L64] 1.3 Tool Area > AI Audio Denoise > Bubble when 1st enter
-            with uuid("5c9968a5-0446-4087-a9a1-dc7be8e19cd2") as case:
-                case.result = target_bb
-
-            # check checkbox of (Audio Denoise)
-            current_value = fix_enhance_page.fix.get_audio_denoise()
-            logger(current_value)
-
-            # verify step: check timeline preview
-            current_preview = main_page.snapshot(L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L63_sample_video.png')
-            time.sleep(DELAY_TIME * 2)
-            check_preview = main_page.compare(Ground_Truth_Folder + 'L63_sample_video.png', current_preview)
-            case.result = select_sample and current_value and check_preview
-
-        # [L71] 1.3 Tool Area > Video Speed > Single click module
-        with uuid("cfa51f03-9f74-4161-bf9e-bae9ebc06cdf") as case:
-            # close PDR then back to launcher
-            main_page.click_close_then_back_to_launcher()
-            time.sleep(DELAY_TIME * 2)
-
-            # click [No] when pop up "save project" dialog
-            main_page.handle_no_save_project_dialog()
-
-            # verify step: Find the button (Video Speed) in Tool area
-            if main_page.is_not_exist(L.base.launcher_window.btn_video_speed, timeout=6):
-                case.result = False
-                case.fail_log = 'CANNOT find btn'
-            else:
-                main_page.click(L.base.launcher_window.btn_video_speed)
-                time.sleep(DELAY_TIME * 2)
-
-            # verify step:
-            target = main_page.exist(L.base.launcher_window.import_dialog, timeout=9)
-            if target.AXTitle == 'Video Speed':
-                case.result = True
-            else:
-                case.result = False
-                case.fail_log = target.AXValue
-
-        # [L72] 1.3 New Launcher > Tool area > Video Speed > Select custom video in import dialog
-        with uuid("07f48048-9f6a-4e47-bd62-496a80e5e9a7") as case:
-            # Import video path
-            video_path = Test_Material_Folder + 'fix_enhance_20/shopping_mall.m2ts'
-            time.sleep(DELAY_TIME * 3)
-
-            # click center in import dialog
-            import_custom_result = main_page.click_to_import_media_when_open_AI_import_dialog(video_path)
-            time.sleep(DELAY_TIME * 6)
-
-            # verify step: enter  Video Speed designer
-            for x in range(30):
-                target_object = main_page.is_exist(L.video_speed.main)
-                if target_object:
-                    time.sleep(DELAY_TIME * 5)
-                    break
-                else:
-                    time.sleep(DELAY_TIME)
-            if not target_object:
-                logger("[Verify NG] CANNOT enter video speed designer now")
-                raise Exception
-
-            # set speed multipler
-            video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_SetValue(4)
-            time.sleep(DELAY_TIME)
-
-            # get New duration
-            get_timecode = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_NewVideoLength_GetValue()
-            if get_timecode == '00:00:04:14':
-                verify_video_speed = True
-            else:
-                verify_video_speed = False
-                logger(get_timecode)
-
-            case.result = import_custom_result and verify_video_speed
-
-        # [L73] 1.3 New Launcher > Tool area > Video Speed > BB
-        with uuid("3c8c8af0-9453-49e6-800f-4f56d0c2a280") as case:
-            # click [OK] to apply video speed
-            video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
-            time.sleep(DELAY_TIME)
-
-            # verify step: can find the BB
-            target_bb = main_page.is_exist(L.tips_area.button.tools.bb_video_speed, timeout=6)
-
-            case.result = target_bb
-
-    # 7 uuid
-    # @pytest.mark.skip
-    @exception_screenshot
-    def test_9_1_2(self):
-        # launch APP
-        main_page.clear_cache()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # enter Video Intro Room > My Favorites category
-        intro_video_page.enter_intro_video_room()
-        time.sleep(DELAY_TIME * 6)
-        intro_video_page.enter_my_favorites()
-
-        # select 1st template
-        intro_video_page.select_intro_template_method_2(1)
-
-        # Double click to enter designer
-        main_page.double_click()
-        time.sleep(DELAY_TIME * 3)
-
-        for x in range(20):
-            target_obj = main_page.is_exist(L.intro_video_room.intro_video_designer.main_window, timeout=2)
-            if target_obj:
-                break
-            else:
-                time.sleep(DELAY_TIME)
-
-        # [L311] 3.1 Video Intro Designer > Edit > Flip
-        with uuid("a24fa4d4-41c5-4de6-98c1-7a2912d599a4") as case:
-            # Remove yellow MGT and Color board
-            for x in range(2):
-                intro_video_page.click_preview_center()
-                intro_video_page.motion_graphics.click_remove_button()
-                time.sleep(2)
-
-            # clip Flip : Horizontally + Vertically
-            intro_video_page.click_flip(option=1)
-            time.sleep(DELAY_TIME)
-            intro_video_page.click_flip(option=2)
-            time.sleep(DELAY_TIME)
-
-            current_image = intro_video_page.snapshot(locator=L.intro_video_room.intro_video_designer.preview_area,
-                                                      file_name=Auto_Ground_Truth_Folder + 'L311_flip.png')
-            check_result = main_page.compare(Ground_Truth_Folder + 'L311_flip.png', current_image)
-            case.result = check_result
-
-        # click [Close] w/o save template
-        intro_video_page.click_btn_close()
-        time.sleep(DELAY_TIME)
-        intro_video_page.handle_warning_save_change_before_leaving('No')
-        time.sleep(DELAY_TIME)
-
-        # [L192] 2.2 Intro Video Room > New category / New icon
-        with uuid("d26cdbfa-4dec-4d94-81d1-30c26066c3a8") as case:
-            # enter New category
-            can_find_category = intro_video_page.enter_season_theme_category('New')
-
-            # find New category then get target object
-            target_object = effect_room_page.find_specific_tag_return_tag('New')
-
-            x, y = target_object.AXPosition
-            w, h = target_object.AXSize
-
-            new_x = x + 13
-            new_y = y
-            new_w = h + 10
-            new_h = h
-            img_hot_icon = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L192_new_icon.png', w=new_w, x=new_x, y=new_y, h=new_h)
-            check_icon_preview = main_page.compare(Ground_Truth_Folder + 'L192_new_icon.png', img_hot_icon, similarity=0.9)
-            case.result = can_find_category and check_icon_preview
-
-        # [L354] 3.2 Title Room (General title) > Advanced mode > render order > show "Render Method" in object Setting
-        with uuid("e8030cc4-82a8-439c-ac9a-0bcd3d49c522") as case:
-            # enter Title room
-            main_page.click(L.main.room_entry.btn_title_room)
-            time.sleep(DELAY_TIME * 3)
-
-            # Select (Default title) to enter title designer
-            main_page.select_library_icon_view_media('Default')
-
-            main_page.double_click()
-            time.sleep(DELAY_TIME * 3)
-
-            # switch to Advanced mode
-            title_designer_page.switch_mode(2)
-
-            # unfold (Object Settings)
-            title_designer_page.unfold_object_object_setting_tab()
-
-            # drag scroll bar to end
-            title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME * 2)
-
-            # can find the (Render order) title
-            case.result = main_page.is_exist(L.title_designer.object_setting.text_render_method)
-
-        # [L355] 3.2 Title Room (General title) > Advanced mode > render order > Default value
-        with uuid("7758cbe9-d24a-4d6c-a8e6-04e83e83807c") as case:
-            result = title_designer_page.get_object_setting_render_method()
-            logger(result)
-            if result == 'Entire Title':
-                case.result = True
-            else:
-                case.result = False
-
-        # [L356] 3.2 Title Room (General title) > Advanced mode > render order > Can select "Entire Title" / "Each Charater"
-        with uuid("b64c71ab-fe02-491f-b07e-cf3da4e442d1") as case:
-            # Set (render method) to Each Character
-            title_designer_page.set_object_setting_render_method(2)
-
-            result = title_designer_page.get_object_setting_render_method()
-            if result == 'Each Character':
-                set_character = True
-            else:
-                set_character = False
-
-            # Set (render method) to Entire Title
-            title_designer_page.set_object_setting_render_method(1)
-
-            result = title_designer_page.get_object_setting_render_method()
-            if result == 'Entire Title':
-                set_entire = True
-            else:
-                set_entire = False
-            case.result = set_character and set_entire
-
-        # drag scroll bar to end
-        title_designer_page.drag_object_vertical_slider(0.37)
-        time.sleep(DELAY_TIME * 2)
-
-        # unfold (Object Settings)
-        title_designer_page.unfold_object_object_setting_tab(0)
-
-        # click [cancel] w/o saving title
-        title_designer_page.click_cancel(1)
-
-        # [L358] 3.2 Title Room (General title) > Advanced mode > WER regression (VDE235420-0025)
-        with uuid("d4132047-105f-4ebf-a861-0206ad6dd8f6") as case:
-            # Select (Default title) to enter title designer
-            main_page.select_library_icon_view_media('Default')
-
-            # Open Title designer in (Advanced) mode
-            main_page.double_click()
-            time.sleep(DELAY_TIME * 3)
-
-            # Apply character preset 3
-            title_designer_page.apply_character_presets(2)
-            time.sleep(DELAY_TIME * 2)
-
-            # Fold (character preset)
-            title_designer_page.unfold_object_character_presets_tab(0)
-
-            # Enable Backdrop
-            title_designer_page.backdrop.set_unfold_tab()
-            time.sleep(DELAY_TIME)
-            title_designer_page.backdrop.set_checkbox(bApply=1)
-            time.sleep(DELAY_TIME * 2)
-
-            # Set fill type : 2 Color Gradient
-            title_designer_page.backdrop.set_fill_type(2)
-            time.sleep(DELAY_TIME * 2)
-
-            title_designer_page.backdrop.apply_gradient_begin('33BE9A')
-            time.sleep(DELAY_TIME * 2)
-            title_designer_page.backdrop.apply_gradient_end('C14E88')
-            time.sleep(DELAY_TIME * 2)
-
-            img_begin = main_page.snapshot(L.title_designer.backdrop.btn_begin_with, file_name=Auto_Ground_Truth_Folder + 'L358_begin_color.png')
-            check_backdrop_begin = main_page.compare(Ground_Truth_Folder + 'L358_begin_color.png', img_begin)
-
-            img_end = main_page.snapshot(L.title_designer.backdrop.btn_end_with, file_name=Auto_Ground_Truth_Folder + 'L358_end_color.png')
-            check_backdrop_end = main_page.compare(Ground_Truth_Folder + 'L358_end_color.png', img_end)
-            case.result = check_backdrop_begin and check_backdrop_end
-
-        # Fold Backdrop menu
-        title_designer_page.backdrop.set_unfold_tab(0)
-        time.sleep(DELAY_TIME)
-
-        # [L357] 3.2 Title Room (General title) > Advanced mode > render order > Default is "Each character" when previous template is applied
-        with uuid("e8701bd9-89ab-416d-b587-74cd1ec92c5e") as case:
-            # unfold (Object Settings)
-            title_designer_page.unfold_object_object_setting_tab()
-
-            # drag scroll bar to end
-            title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME * 2)
-
-            # can find the (Render order) title
-            if main_page.is_not_exist(L.title_designer.object_setting.text_render_method):
-                logger('[Verify NG] CANNOT find locator text_render_method')
-                raise Exception
-
-            # apply render metod to (Each character)
-            title_designer_page.set_object_setting_render_method(2)
-
-            result = title_designer_page.get_object_setting_render_method()
-            if result == 'Each Character':
-                set_character = True
-            else:
-                set_character = False
-
-            # click [Save As]
-            title_designer_page.save_as_name('test_9_1_2', click_ok=1)
-
-            # Close title designer
-            title_designer_page.click_ok()
-            time.sleep(DELAY_TIME * 2)
-
-            # Select (Custom title: test_9_1_2) to enter title designer
-            main_page.select_library_icon_view_media('test_9_1_2')
-
-            # Open Title designer in (Advanced) mode
-            main_page.double_click()
-            time.sleep(DELAY_TIME * 3)
-
-            # drag scroll bar to end to find (Object Setting) > Render method
-            title_designer_page.drag_object_vertical_slider(1)
-            time.sleep(DELAY_TIME * 2)
-
-            result = title_designer_page.get_object_setting_render_method()
-            if result == 'Each Character':
-                open_result = True
-            else:
-                open_result = False
-
-            case.result = set_character and open_result
-
-            title_designer_page.click_ok()
-
-    @exception_screenshot
-    def easy_cutout(self):
-        # Bug regression (VDE235413-0028)
-        # Insert Sport 01.jpg
-        main_page.select_library_icon_view_media('Sport 02.jpg')
-        time.sleep(DELAY_TIME * 2)
-        media_room_page.library_clip_context_menu_insert_on_selected_track()
-
-        # Click TipsArea > Pip Designer
-        check_status = tips_area_page.tools.select_PiP_Designer()
-        if not check_status:
-            raise Exception
-
-        # Switch to Advanced mode
-        pip_designer_page.switch_mode('Advanced')
-        time.sleep(DELAY_TIME * 2)
-
-        # Switch (Motion) tab
-        pip_designer_page.advanced.switch_to_motion()
-
-        # Unfold path
-        pip_designer_page.advanced.unfold_path_menu(set_unfold=1)
-
-        # Apply one path
-        pip_designer_page.path.select_template(4)
-
-        # Switch (Animation) tab
-        pip_designer_page.advanced.switch_to_animation()
-
-        # Unfold (In Animation) then apply one (In Animation)
-        pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
-
-        # Apply one animation
-        pip_designer_page.in_animation.select_template(7)
-
-        # Switch (Properties) tab
-        pip_designer_page.advanced.switch_to_properties()
-
-        # Apply cutout
-        pip_designer_page.apply_chromakey()
-        time.sleep(DELAY_TIME * 2)
-
-        # Get cutout status after Enable (Auto cutout)
-        self.check_downloading_AI_module()
-        time.sleep(DELAY_TIME * 3)
-
-        # Click [OK]
-        pip_designer_page.click_ok()
-        time.sleep(DELAY_TIME * 2)
-
-        # Select clip # 1 of track 1 to Enter Pip Designer again
-        timeline_operation_page.select_timeline_media(0,0)
-        time.sleep(DELAY_TIME * 2)
-
-        # Click TipsArea > Pip Designer
-        check_status = tips_area_page.tools.select_PiP_Designer()
-        if not check_status:
-            raise Exception
-        time.sleep(DELAY_TIME * 3)
-
-        # Check cutout preview
-        preview_0sec = main_page.snapshot(L.pip_designer.preview)
-
-
-        # seek time code to (00:00:03:15)
-        pip_designer_page.set_timecode('00_00_03_15')
-        time.sleep(DELAY_TIME * 2)
-        preview_new = main_page.snapshot(L.pip_designer.preview)
-        effect_result_same = not main_page.compare(preview_0sec, preview_new, similarity=0.7)
-        effect_result_diff = main_page.compare(preview_0sec, preview_new, similarity=0.4)
-        check_cutout_result = effect_result_same and effect_result_diff
-        if not check_cutout_result:
-            logger('Verify preview no update after apply cutout then seek other timecode')
-            raise Exception
-
-        # Click [OK]
-        pip_designer_page.click_ok()
-        time.sleep(DELAY_TIME * 2)
-
-        return check_cutout_result
-
-    # 1 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_9_1_3(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # [L426] 3.4 Auto Cutout > WER regression (VDE235413-0028)
-        with uuid("dc3024bf-ea9e-4c5a-9a05-f507cc8a3718") as case:
-            cutout_loop = 5
-            for x in range(cutout_loop):
-                logger('----')
-                logger(x)
-                cutout_result = self.easy_cutout()
-
-                # new workspace
-                main_page.tap_NewWorkspace_hotkey()
-                main_page.handle_no_save_project_dialog('no')
-                logger(cutout_result)
-                logger('----')
-            case.result = cutout_result
-
-    # 3 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_9_1_4(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.clear_cache()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Import HEIC photo to media room
-        high_resolution_path = Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC'
-        media_room_page.import_media_file(high_resolution_path)
-        time.sleep(DELAY_TIME * 4)
-
-        # insert to timeline
-        main_page.select_library_icon_view_media('IMG_0008.HEIC')
-        main_page.right_click()
-        main_page.select_right_click_menu('Insert on Selected Track')
-        time.sleep(DELAY_TIME * 2)
-
-        # Click TipsArea > Pip Designer
-        check_status = tips_area_page.tools.select_PiP_Designer()
-        if not check_status:
-            raise Exception
-
-        time.sleep(DELAY_TIME * 3)
-        # Enter Express mode
-        main_page.click(L.pip_designer.express)
-        time.sleep(DELAY_TIME * 2)
-
-        # Enable AI Background Remover > Auto cutout
-        pip_designer_page.apply_chromakey()
-        time.sleep(DELAY_TIME * 2)
-
-        self.check_downloading_AI_module()
-        time.sleep(DELAY_TIME * 2)
-
-        # click [OK] to back to timeline
-        pip_designer_page.click_ok()
-
-        # [L415] 3.4 Pip Designer > Auto Cutout > Double click photo > display cutout setting
-        with uuid("557bad84-ec61-4077-bf7a-bd8da4b70d2c") as case:
-            # select timeline meida
-            main_page.select_timeline_media('IMG_0008')
-            time.sleep(DELAY_TIME)
-
-            # double click to enter pip designer
-            main_page.double_click()
-            time.sleep(DELAY_TIME * 2)
-
-            # check preview
-            after_img = main_page.snapshot(L.pip_designer.preview,
-                                           file_name=Auto_Ground_Truth_Folder + 'L415_cutout.png')
-            check_result = main_page.compare(Ground_Truth_Folder + 'L423_cutout.png', after_img, similarity=0.94)
-
-            # check cutout radio button value
-            value = main_page.exist(L.pip_designer.chromakey.cutout_button).AXValue
-
-            case.result = check_result and value
-
-        # [L390] 3.4 Pip Designer > Set [Animation] > In animation > Check library
-        with uuid("9e4e9e98-13b0-4aa8-9e9c-aef8dbf4db47") as case:
-            # switch to advanced mode
-            pip_designer_page.switch_mode('Advanced')
-
-            # switch to (Animation)
-            pip_designer_page.advanced.switch_to_animation()
-
-            # Unfold (In Animation)
-            pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
-            time.sleep(DELAY_TIME * 2)
-
-            in_animation_template = main_page.snapshot(L.pip_designer.properties, file_name=Auto_Ground_Truth_Folder + 'L390_in_animation_templates.png')
-            case.result = main_page.compare(Ground_Truth_Folder + 'L390_in_animation_templates.png', in_animation_template)
-
-        # [L391] 3.4 Pip Designer > Set [Animation] > In animation > apply new added animation
-        with uuid("e6ca106d-5040-4e05-99f6-09f331eb4b92") as case:
-            # set timecode
-            pip_designer_page.set_timecode('00_00_00_02')
-
-            # Apply one animation: Stomp In
-            pip_designer_page.in_animation.select_template(4)
-            time.sleep(DELAY_TIME * 4)
-
-            check_animation = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L391_apply_stomp_in.png')
-            case.result = main_page.compare(Ground_Truth_Folder + 'L391_apply_stomp_in.png', check_animation)
-
-        # Fold (In Animation)
-        pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=0)
-        time.sleep(DELAY_TIME * 2)
-
-    # 8 uuid
-    # @pytest.mark.skip
-    @exception_screenshot
-    def test_9_1_5(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Import video to media room
-        video_path = Test_Material_Folder + 'Mark_Clips/1.mp4'
-        media_room_page.import_media_file(video_path)
-        time.sleep(DELAY_TIME * 4)
-
-        # insert to timeline
-        tips_area_page.click_TipsArea_btn_insert()
-        time.sleep(DELAY_TIME * 2)
-
-        # Click TipsArea > Enter Pip Designer
-        check_status = tips_area_page.tools.select_PiP_Designer()
-        if not check_status:
-            raise Exception
-        time.sleep(DELAY_TIME * 3)
-
-        # Switch advanced mode
-        pip_designer_page.switch_mode('Advanced')
-
-        # switch to (Animation)
-        pip_designer_page.advanced.switch_to_animation()
-
-
-
-        # [L392] 3.4 Pip Designer > Set [Animation] > Out animation
-        with uuid("2114bde0-974a-4f03-a51b-558500d261bb") as case:
-            # Unfold (Out Animation)
-            check_result = pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=1)
-
-            # scroll up
-            pip_designer_page.drag_properties_scroll_bar(0)
-            time.sleep(DELAY_TIME * 2)
-            # [L393] 3.4 Pip Designer > Set [Animation] > Out animation > Check library
-            with uuid("29f29f1f-c70d-4a5f-bfbd-1dd65597ffc1") as case:
-                out_animation_template = main_page.snapshot(L.pip_designer.properties, file_name=Auto_Ground_Truth_Folder + 'L393_out_animation_templates.png')
-                case.result = main_page.compare(Ground_Truth_Folder + 'L393_out_animation_templates.png', out_animation_template)
-
-            # Unfold (Out Animation)
-            case.result = check_result
-            time.sleep(DELAY_TIME * 2)
-
-        # [L394] 3.4 Pip Designer > Set [Animation] > Out animation > apply new added animation
-        with uuid("50da7ef0-fa45-4676-b3a3-941b142ce4e9") as case:
-            # set timecode
-            pip_designer_page.set_timecode('00_00_30_03')
-
-            # Apply one animation: Pan Left & Out
-            pip_designer_page.in_animation.select_template(10)
-            time.sleep(DELAY_TIME * 4)
-
-            check_animation = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L394_apply_pan_out.png')
-            case.result = main_page.compare(Ground_Truth_Folder + 'L394_apply_pan_out.png', check_animation)
-
-        # Fold (Out Animation)
-        check_result = pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=0)
-
-        # [L395] 3.4 Pip Designer > Set [Animation] > Loop animation
-        with uuid("107183f7-e63a-42ff-86c8-3b66ab6e322e") as case:
-            # Unfold (Loop Animation)
-            check_result = pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=1)
-
-            # [L396] 3.4 Pip Designer > Set [Animation] > Loop animation > Check library
-            with uuid("c93474c8-c6a3-442d-ba57-5be47eb80ee5") as case:
-                out_animation_template = main_page.snapshot(L.pip_designer.properties, file_name=Auto_Ground_Truth_Folder + 'L396_loop_animation_templates.png')
-                case.result = main_page.compare(Ground_Truth_Folder + 'L396_loop_animation_templates.png', out_animation_template)
-
-            # Unfold (Out Animation)
-            case.result = check_result
-            time.sleep(DELAY_TIME * 2)
-
-        # [L397] 3.4 Pip Designer > Set [Animation] > Loop animation > apply new added animation
-        with uuid("7211df40-b1e2-422b-b598-b7ea9b2dec29") as case:
-            # set timecode
-            pip_designer_page.set_timecode('00_00_20_03')
-
-            # Apply Loop animation: Pan Left & Out
-            pip_designer_page.in_animation.select_template(6)
-            time.sleep(DELAY_TIME * 4)
-
-            check_animation = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L397_apply_rotate_loop.png')
-            case.result = main_page.compare(Ground_Truth_Folder + 'L397_apply_rotate_loop.png', check_animation)
-
-        # Fold (Loop Animation)
-        pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=0)
-
-        # [L398] 3.4 Pip Designer > In + Out + Loop Animation
-        with uuid("a86e219b-0a1d-4a7f-b519-362bb7e82d87") as case:
-            # Unfold (In Animation)
-            check_in_category = pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=1)
-
-            # set timecode
-            pip_designer_page.set_timecode('00_00_00_03')
-
-            # Apply one animation: Fade In
-            pip_designer_page.in_animation.select_template(7)
-            time.sleep(DELAY_TIME * 4)
-
-            check_in_animation = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L398_apply_fade_in.png')
-            check_in_result = main_page.compare(Ground_Truth_Folder + 'L398_apply_fade_in.png', check_in_animation)
-
-            # Fold (In Animation)
-            pip_designer_page.advanced.unfold_in_animation_menu(set_unfold=0)
-            time.sleep(DELAY_TIME * 2)
-
-            # Unfold (Loop Animation)
-            check_loop_category = pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=1)
-            time.sleep(DELAY_TIME * 2)
-            # Fold (Loop Animation)
-            pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=0)
-            time.sleep(DELAY_TIME * 2)
-
-            # Unfold (Out Animation)
-            check_out_category = pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=1)
-            time.sleep(DELAY_TIME * 2)
-            # Fold (Out Animation)
-            pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=0)
-            time.sleep(DELAY_TIME)
-
-            # [L399] 3.4 Pip Designer > In + Out + Loop Animation > select & apply (In + Out + Loop) Animation
-            with uuid("e9bd16c3-f7f5-4249-89c0-22eaf9082ac8") as case:
-                # set timecode
-                pip_designer_page.set_timecode('00_00_20_03')
-                time.sleep(DELAY_TIME * 2)
-
-                check_loop_animation = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L399_apply_loop.png')
-                check_loop_result = main_page.compare(Ground_Truth_Folder + 'L399_apply_loop.png', check_loop_animation)
-
-                # set timecode
-                pip_designer_page.set_timecode('00_00_30_03')
-                time.sleep(DELAY_TIME * 2)
-
-                check_out_animation = main_page.snapshot(L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L399_apply_out.png')
-                check_out_result = main_page.compare(Ground_Truth_Folder + 'L399_apply_out.png', check_out_animation)
-
-                case.result = check_in_result and check_loop_result and check_out_result
-
-            case.result = check_in_category and check_loop_category and check_out_category
-
-        # Switch basic mode
-        pip_designer_page.switch_mode('Express')
-
-    # 5 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_9_1_6(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # enter Effect room
-        main_page.enter_room(3)
-
+    def test_effect_room_func_32_1(self):
+        '''
+        1. Start App
+        2. Enter Room (Effect)(3)
+        3. Select Category ('Style Effect') in Library Room > my_favorites_list = ['Solarize', 'Halftone', 'Chinese Painting']
+        4. Search library ('chinese') > Select media (my_favorites_list[2]) > right click > Choose ('Add to', 'My Favorites') in right click menu
+        5. Click [Cancel] button in search library
+        6. Search library ('Halftone') > Select media (my_favorites_list[1]) > right click > Choose ('Add to', 'My Favorites') in right click menu
+        7. Click [Cancel] button in search library
+        8. Search library ('Solarize') > Select media (my_favorites_list[0]) > right click > Choose ('Add to', 'My Favorites') in right click menu
+        9. Click [Cancel] button in search library
+        10. Select Category ('My Favorites') in Library Room > Screenshot (locator=main_page.area.library_icon_view)
+        11. Sort by [Name] in [Library Menu]
+        12. Check preview is updated after sorted by [Name] with similarity<0.95 and similarity>0.6
+        13. Sort by [Name] in [Library Menu] to set to default status
+        14. Select media (my_favorites_list[0]) > right click > Choose ('Remove from My Favorites') in right click menu
+        15. Select media (my_favorites_list[1]) > right click > Choose ('Remove from My Favorites') in right click menu
+        16. Select media (my_favorites_list[2]) > right click > Choose ('Remove from My Favorites') in right click menu       
+        '''
         my_favorites_list = ['Solarize', 'Halftone', 'Chinese Painting']
+        
+        with step("[Action] Start App"):
+            main_page.start_app()
 
-        # Enter (Style Effect) category
-        main_page.select_LibraryRoom_category('Style Effect')
-        time.sleep(DELAY_TIME * 2)
+        with step("[Action] Enter Room (Effect)(3)"):
+            main_page.enter_room(3)
 
-        # Add build-in effect to (My Favorites)
-        # search library: chinese
-        media_room_page.search_library('chinese')
-        time.sleep(DELAY_TIME * 4)
+        with step("[Action] Select Category ('Style Effect') in Library Room"):
+            main_page.select_LibraryRoom_category('Style Effect')
 
-        main_page.select_library_icon_view_media(my_favorites_list[2])
+        with step("[Action] Search library ('chinese') and add media to My Favorites"):
+            media_room_page.search_library('chinese')
+            main_page.select_library_icon_view_media(my_favorites_list[2])
+            main_page.right_click()
+            main_page.select_right_click_menu('Add to', 'My Favorites')
+            media_room_page.search_library_click_cancel()
 
-        # Add 1st effect to "My Favorites"...
-        time.sleep(1)
-        main_page.right_click()
-        time.sleep(1)
-        main_page.select_right_click_menu('Add to', 'My Favorites')
+        with step("[Action] Search library ('Halftone') and add media to My Favorites"):
+            media_room_page.search_library('Halftone')
+            main_page.select_library_icon_view_media(my_favorites_list[1])
+            main_page.right_click()
+            main_page.select_right_click_menu('Add to', 'My Favorites')
+            media_room_page.search_library_click_cancel()
 
-        # click [x] to cancel search
-        media_room_page.search_library_click_cancel()
-        time.sleep(DELAY_TIME * 2)
+        with step("[Action] Search library ('Solarize') and add media to My Favorites"):
+            media_room_page.search_library('Solarize')
+            main_page.select_library_icon_view_media(my_favorites_list[0])
+            main_page.right_click()
+            main_page.select_right_click_menu('Add to', 'My Favorites')
 
-        # search library: Halftone
-        media_room_page.search_library('Halftone')
-        time.sleep(DELAY_TIME * 4)
-
-        main_page.select_library_icon_view_media(my_favorites_list[1])
-
-        # Add 2nd to "My Favorites"...
-        time.sleep(1)
-        main_page.right_click()
-        time.sleep(1)
-        main_page.select_right_click_menu('Add to', 'My Favorites')
-
-        # click [x] to cancel search
-        media_room_page.search_library_click_cancel()
-        time.sleep(DELAY_TIME * 2)
-
-        # search library: Solarize
-        media_room_page.search_library('Solarize')
-        time.sleep(DELAY_TIME * 4)
-
-        main_page.select_library_icon_view_media(my_favorites_list[0])
-
-        # Add 3rd to "My Favorites"...
-        time.sleep(1)
-        main_page.right_click()
-        time.sleep(1)
-        main_page.select_right_click_menu('Add to', 'My Favorites')
-
-        # Enter (My Favorites) category
-        main_page.select_LibraryRoom_category('My Favorites')
+        with step("[Action] Select Category ('My Favorites') in Library Room"):
+            main_page.select_LibraryRoom_category('My Favorites')
 
         # [L248] 2.3 Effect Room > My Favorites sorting rule
-        with uuid("aeca8061-63b1-4d65-9feb-5854c7cdbc08") as case:
-            # snapshot current library icon
-            default_naming_library = main_page.snapshot(locator=main_page.area.library_icon_view)
-            logger(default_naming_library)
-            time.sleep(DELAY_TIME)
+        # with uuid("aeca8061-63b1-4d65-9feb-5854c7cdbc08") as case:
 
-            # sorting by Naming
+        with step("[Action] Screenshot of library icon view"):
+            library_snapshot = main_page.snapshot(locator=main_page.area.library_icon_view)
+
+        with step("[Action] Sort by [Name] in [Library Menu]"):
             media_room_page.library_menu_sort_by_name()
-            time.sleep(DELAY_TIME * 2)
 
-            # snapshot current library icon
-            sort_by_library = main_page.snapshot(locator=main_page.area.library_icon_view)
-            logger(sort_by_library)
-            time.sleep(DELAY_TIME)
+        with step("[Verify] Check preview is updated after sorted by [Name]"):
+            preview_snapshot = main_page.snapshot(locator=main_page.area.library_icon_view)
+            if main_page.compare(library_snapshot, preview_snapshot, similarity=0.95):
+                assert False, "Preview did not update as expected! Similarity should < 0.95"
+            if not main_page.compare(library_snapshot, preview_snapshot, similarity=0.6):
+                assert False, "Preview did not update correctly! Similarity should > 0.6"
 
-            library_update = not main_page.compare(default_naming_library, sort_by_library)
-            library_no_update = main_page.compare(default_naming_library, sort_by_library, similarity=0.6)
-            case.result= library_update and library_no_update
-
-            # sorting by Naming (Set to default status)
+        with step("[Action] Sort by [Name] in [Library Menu] to set to default status"):
             media_room_page.library_menu_sort_by_name()
-            time.sleep(DELAY_TIME * 2)
 
-        # remove all effect in (My Favorites)
-        for x in range(3):
-            main_page.select_library_icon_view_media(my_favorites_list[x])
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Remove 'Solarize' from My Favorites"):
+            main_page.select_library_icon_view_media(my_favorites_list[0])
             main_page.right_click()
-            time.sleep(1)
             main_page.select_right_click_menu('Remove from My Favorites')
 
+        with step("[Action] Remove 'Halftone' from My Favorites"):
+            main_page.select_library_icon_view_media(my_favorites_list[1])
+            main_page.right_click()
+            main_page.select_right_click_menu('Remove from My Favorites')
+
+        with step("[Action] Remove 'Chinese Painting' from My Favorites"):
+            main_page.select_library_icon_view_media(my_favorites_list[2])
+            main_page.right_click()
+            main_page.select_right_click_menu('Remove from My Favorites')
+
+        assert True
+
+    @pytest.mark.effect_room_func
+    @pytest.mark.effect_room
+    @pytest.mark.content_pack
+    @pytest.mark.name('[test_effect_room_func_32_2] Verify preview update after dragging scroll bar in Effect Room')
+    @exception_screenshot
+    def test_effect_room_func_32_2(self):
+        '''
+        0. Ensure the dependency test ('test_effect_room_func_32_1') is run and passed
+        1. Select Category ('Blending Effect') > Screenshot (locator=L.base.Area.library_icon_view)
+        2. Drag [Scroll Bar] to (0.4) in [Effect Room]
+        3. Check preview is updated after drag [Scroll Bar] to (0.4) with similarity<0.95
+        4. Drag [Scroll Bar] to (1) in [Effect Room]
+        5. Drag [Scroll Bar] to (0.963) in [Effect Room]
+        6. Check preview is updated after drag [Scroll Bar] to (0.963) with similarity<0.95
+        '''
+        
+        with step("[Action] Ensure the dependency test 'test_effect_room_func_32_1' is run and passed"):
+            dependency_test = "test_effect_room_func_32_1"
+            self.ensure_dependency(dependency_test)
+
         # [L250] 2.3 Effect Room > Check other IAD category > sorting rule
-        with uuid("1420b07d-7dc0-49ec-aa60-7a8cd5798eb3") as case:
-            # Enter (My Favorites) category
+        # with uuid("1420b07d-7dc0-49ec-aa60-7a8cd5798eb3") as case:
+
+        with step("[Action] Select Category ('Blending Effect') and capture screenshot"):
             main_page.select_LibraryRoom_category('Blending Effect')
-            time.sleep(DELAY_TIME * 2)
-            # snapshot current library icon
-            scroll_0_library = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            initial_preview = main_page.snapshot(locator=L.base.Area.library_icon_view)
 
+        with step("[Action] Drag [Scroll Bar] to (0.4) in [Effect Room]"):
             effect_room_page.drag_EffectRoom_Scroll_Bar(0.4)
-            time.sleep(DELAY_TIME * 2)
-            scroll_4_library = main_page.snapshot(locator=L.base.Area.library_icon_view)
 
+        with step("[Verify] Check preview is updated after drag [Scroll Bar] to (0.4)"):
+            updated_preview_0_4 = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            if main_page.compare(initial_preview, updated_preview_0_4, similarity=0.95):
+                assert False, "Preview did not update as expected after dragging scroll bar to 0.4! Similarity should < 0.95"
+
+        with step("[Action] Drag [Scroll Bar] to (1) in [Effect Room]"):
             effect_room_page.drag_EffectRoom_Scroll_Bar(1)
-            time.sleep(DELAY_TIME * 2)
 
+        with step("[Action] Drag [Scroll Bar] to (0.963) in [Effect Room]"):
             effect_room_page.drag_EffectRoom_Scroll_Bar(0.963)
-            time.sleep(DELAY_TIME * 2)
-            scroll_925_library = main_page.snapshot(locator=L.base.Area.library_icon_view)
 
-            check_library_update_1 = not main_page.compare(scroll_0_library, scroll_4_library)
-            check_library_update_2 = not main_page.compare(scroll_925_library, scroll_4_library)
+        with step("[Verify] Check preview is updated after drag [Scroll Bar] to (0.963)"):
+            updated_preview_0_963 = main_page.snapshot(locator=L.base.Area.library_icon_view)
+            if main_page.compare(updated_preview_0_4, updated_preview_0_963, similarity=0.95):
+                assert False, "Preview did not update as expected after dragging scroll bar to 0.963! Similarity should < 0.95"
 
-            case.result = check_library_update_1 and check_library_update_2
+        assert True
+
+
+    @pytest.mark.effect_room_func
+    @pytest.mark.effect_room
+    @pytest.mark.search_library
+    @pytest.mark.name('[test_effect_room_func_32_3] Verify no results found for special characters search in [Effect Room]')
+    @exception_screenshot
+    def test_effect_room_func_32_3(self):
+        '''
+        0. Ensure the dependency test ('test_effect_room_func_32_2') is run and passed
+        1. Search library ('@#$%^')
+        2. Check [No results] string (L.media_room.txt_no_search_result) is shown with AXValue='No results for "@#$%^"'
+        '''
+        
+        dependency_test = "test_effect_room_func_32_2"
+        self.ensure_dependency(dependency_test)
 
         # [L252] 2.3 Effect Room > Search @#$%^
-        with uuid("6965de5e-78c3-4d89-8eba-4aa8d2977004") as case:
-            # search library: @#$%^
+        # with uuid("6965de5e-78c3-4d89-8eba-4aa8d2977004") as case:
+
+        with step("[Action] Search library with special characters '@#$%^'"):
             media_room_page.search_library('@#$%^')
-            time.sleep(DELAY_TIME * 4)
 
-            result_text = main_page.exist(L.media_room.txt_no_search_result)
-            if result_text.AXValue == 'No results for "@#$%^"':
-                case.result = True
-            else:
-                case.result = False
-                case.fail_log = result_text.AXValue
-                logger(result_text.AXValue)
+        with step("[Verify] Check if 'No results' text is displayed with correct AXValue"):
+            result_text =  main_page.exist(L.media_room.txt_no_search_result):
+            if result_text.AXValue != 'No results for "@#$%^"':
+                assert False, f"AXValue is incorrect! Expected 'No results for \"@#$%^\"', but got '{ax_value}'"
 
-        # [L253] 2.3 Video Overlay Room > Check Custom, My Favorite category > Remove detail view icon
-        with uuid("95a75c0c-1d8e-41ec-9851-2859f001fd96") as case:
-            # Enter Pip Room
-            main_page.enter_room(4)
-            time.sleep(DELAY_TIME * 3)
+        assert True
 
-            # verify_detail_view: No exist detail view icon
-            check_detail_view_1 = True
-            check_detail_view_2 = True
-            check_detail_view_3 = True
-
-            # Check My Favorites / Downloaded count = 0
-            main_page.select_LibraryRoom_category('My Favorites')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view_1 = False
-
-            main_page.select_LibraryRoom_category('Custom')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view_2 = False
-
-            main_page.select_LibraryRoom_category('Downloads')
-            time.sleep(DELAY_TIME * 2)
-            if main_page.is_exist(L.main.btn_library_details_view):
-                check_detail_view_3 = False
-
-            case.result = check_detail_view_1 and check_detail_view_2 and check_detail_view_3
-
-        # [L254] 2.3 Effect Room > Check other IAD category > sorting rule
-        with uuid("3b016c0d-8aab-42de-9a96-d2ab76b8cafb") as case:
-            # Enter (All Content) category
-            main_page.select_LibraryRoom_category('All Content')
-            time.sleep(DELAY_TIME * 2)
-
-            # [2025/01/08] Old sitckers ['fright hat', 'computer', 'Paper Plane'] are removed, change stickers
-            at_download_list = ['winter', 'tutorial', 'new year', 'shape']
-
-            for x in range(len(at_download_list)):
-                media_room_page.search_library(at_download_list[x])
-                time.sleep(DELAY_TIME * 4)
-
-                # click 2nd template (Download 2nd IAD sticker)
-                target = main_page.exist(L.media_room.library_listview.unit_collection_view_item_second)
-                main_page.mouse.click(*target.center)
-                time.sleep(DELAY_TIME * 3)
-
-                # click [x] to cancel search
-                media_room_page.search_library_click_cancel()
-                time.sleep(DELAY_TIME * 2)
-                
-            main_page.select_LibraryRoom_category('Downloads')
-            time.sleep(DELAY_TIME * 2)
-
-            # snapshot current library icon
-            default_name_library = main_page.snapshot(locator=L.base.Area.library_icon_view)
-
-            # sort by name
-            pip_room_page.sort_by_name()
-            time.sleep(DELAY_TIME * 2)
-            sort_by_name_again_library = main_page.snapshot(locator=L.base.Area.library_icon_view)
-
-
-            # sort by create date
-            pip_room_page.sort_by_created_date()
-            time.sleep(DELAY_TIME * 2)
-            sort_by_create_date_library = main_page.snapshot(locator=L.base.Area.library_icon_view)
-
-            check_library_update_1 = not main_page.compare(default_name_library, sort_by_name_again_library)
-            check_library_update_2 = not main_page.compare(default_name_library, sort_by_create_date_library)
-
-            case.result = check_library_update_1 and check_library_update_2
-        pip_room_page.sort_by_name()
-        time.sleep(DELAY_TIME * 2)
-
-    # 9 uuid
-    # @pytest.mark.skip
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.import_media
+    @pytest.mark.precut
+    @pytest.mark.single_trim
+    @pytest.mark.name('[test_tip_areas_func_33_1] Check able to enter [Precut] Window with [Single Trim] button')
     @exception_screenshot
-    def test_10_1_22(self):
-        # launch APP
-        main_page.clear_cache()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_tip_areas_func_33_1(self):
+        '''
+        1. Clear Cache > Start App
+        2. Import media from local (Test_Material_Folder + 'Produce_Local/Produce_G182.mp4')
+        3. Select media (Produce_G182.mp4) > Click [Precut...] from right click menu
+        4. Check [Single Trim] button (L.precut.single_trim) is shown in [Precut] window
+        5. Close [Precut] Window and check result is True
+        '''
+        
+        with step("[Action] Clear Cache and Start App"):
+            main_page.clear_cache()
+            main_page.start_app()
 
-        # Import Image to library
-        media_room_page.import_media_file(Test_Material_Folder + 'Produce_Local/Produce_G182.mp4')
-        time.sleep(DELAY_TIME * 1.5)
+        with step("[Action] Import media from local (Test_Material_Folder + 'Produce_Local/Produce_G182.mp4')"):
+            media_room_page.import_media_file(Test_Material_Folder + "Produce_Local/Produce_G182.mp4")
 
         # [L280] 4.1 Basic > Trim > Entry (from Precut)
-        with uuid("f700865e-864a-4a3f-8823-8ba456586b94") as case:
-            main_page.select_library_icon_view_media('Produce_G182.mp4')
-            time.sleep(DELAY_TIME)
-            media_room_page.library_clip_context_menu_precut()
-            if not precut_page.exist(L.precut.single_trim):
-                check_precut = False
-            else:
-                check_precut = True
+        # with uuid("f700865e-864a-4a3f-8823-8ba456586b94") as case:
 
+        with step("[Action] Select media (Produce_G182.mp4) and click [Precut...] from right click menu"):
+            media_room_page.select_library_icon_view_media("Produce_G182.mp4")
+            media_room_page.library_clip_context_menu_precut()
+
+        with step("[Verify] Check [Single Trim] button is shown in [Precut] window"):
+            if not main_page.is_exist(L.precut.single_trim):
+                assert False, "Single Trim button is not shown in [Precut] window!"
+
+        with step("[Action] Close [Precut] Window and check result is True"):
             leave_result = precut_page.close_precut_window()
-            time.sleep(DELAY_TIME)
-            case.result = check_precut and leave_result
+            if leave_result != True:
+                assert False, "Failed to close Precut window or incorrect result!"
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.precut
+    @pytest.mark.single_trim
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_2] Apply [Mark In] and [Mark Out] in [Precut] Window with [Single Trim]')
+    @exception_screenshot
+    def test_tip_areas_func_33_2(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_1') is run and passed
+        1. Select media (Produce_G182.mp4) > Click [Precut...] from right click menu
+        2. Set timecode to ('00_00_00_21') at [Precut] Window
+        3. Set [Single Trim Mark In] at [Precut] Window
+        4. Set timecode to ('00_00_06_05') at [Precut] Window
+        5. Set [Single Trim Mark Out] at [Precut] Window
+        6. Get [Single Trim] Duration at [Precut] Window > Check duration is ('00_00_05:14')
+        7. Click [OK] button in [Precut] Window
+        8. Set timeline timecode to ('00_00_16_12') at [Main Window]
+        9. Get timecode from slidebar from [Playback Window] > Check timecode is ('00_00_06:05')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_1"
+        self.ensure_dependency(dependency_test)
 
         # [L282] 4.1 Basic > Trim type > Single Trim
-        with uuid("4a4476a8-9b44-4a22-b607-638c18431bd2") as case:
-            main_page.select_library_icon_view_media('Produce_G182.mp4')
-            time.sleep(DELAY_TIME)
+        # with uuid("4a4476a8-9b44-4a22-b607-638c18431bd2") as case:
+
+        with step("[Action] Select media (Produce_G182.mp4) and click [Precut...] from right click menu"):
+            media_room_page.select_library_icon_view_media("Produce_G182.mp4")
             media_room_page.library_clip_context_menu_precut()
-            time.sleep(DELAY_TIME)
 
-            # Set timecode > Click Mark in
-            precut_page.set_precut_timecode('00_00_00_21')
-            time.sleep(DELAY_TIME)
+        with step("[Action] Set timecode to '00_00_00_21' at [Precut] Window"):
+            precut_page.set_precut_timecode("00_00_00_21")
+
+        with step("[Action] Set [Single Trim Mark In] at [Precut] Window"):
             precut_page.tap_single_trim_mark_in()
-            time.sleep(DELAY_TIME)
 
-            # Set timecode > Click Mark out
-            precut_page.set_precut_timecode('00_00_06_05')
-            time.sleep(DELAY_TIME)
+        with step("[Action] Set timecode to '00_00_06_05' at [Precut] Window"):
+            precut_page.set_precut_timecode("00_00_06_05")
+
+        with step("[Action] Set [Single Trim Mark Out] at [Precut] Window"):
             precut_page.tap_single_trim_mark_out()
-            time.sleep(DELAY_TIME)
 
-            # Verify Step
-            # Check Duration
-            current_duration = precut_page.get_precut_single_trim_duration()
+        with step("[Action] Get [Single Trim] Duration at [Precut] Window and check duration is '00:00:05:14'"):
+            trim_duration = precut_page.get_precut_single_trim_duration()
+            if trim_duration != "00:00:05:14":
+                assert False, f"Trim duration mismatch! Expected: 00:00:05:14, Got: {trim_duration}"
 
-            if current_duration == '00:00:05:14':
-                single_trim = True
-            else:
-                single_trim = False
-            logger(single_trim)
-
+        with step("[Action] Click [OK] button in [Precut] Window"):
             precut_page.click_ok()
 
-            # Set timeline timecode
-            main_page.set_timeline_timecode('00_00_16_12')
+        with step("[Action] Set timeline timecode to '00_00_16_12' at [Main Window]"):
+            main_page.set_timeline_timecode("00_00_16_12")
 
-            # Verify Step: Check timeline timecode
-            current_timecode = playback_window_page.get_timecode_slidebar()
-            if current_timecode == '00:00:06:05':
-                back_media_result = True
-            else:
-                back_media_result = False
-            case.result = single_trim and back_media_result
+        with step("[Action] Get timecode from slidebar from [Playback Window] and check timecode is '00_00_06_05'"):
+            playback_timecode = playback_window_page.get_timecode_slidebar()
+            if playback_timecode != "00_00_06_05":
+                assert False, f"Playback timecode mismatch! Expected: 00_00_06_05, Got: {playback_timecode}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.precut
+    @pytest.mark.import_media
+    @pytest.mark.single_trim
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_3] Check Default [Single Trim] duration in [Precut] Window with type (Video)')
+    @exception_screenshot
+    def test_tip_areas_func_33_3(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_2') is run and passed
+        1. Select media ('Precut 0001') > Click [Insert] button from [Tip Areas]
+        2. Click [Trim] button in [Tips Area] with type ('video')
+        3. Get [Single Trim] duration in [Precut] window
+        4. Check duration is ('00:00:05:14')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_2"
+        self.ensure_dependency(dependency_test)
 
         # [L281] 4.1 Basic > Entry > Tips area > Trim
-        with uuid("bfe1147f-d5fc-46e4-a105-243696f4b7a6") as case:
-            # Insert to timeline
-            main_page.select_library_icon_view_media('Precut 0001')
+        # with uuid("bfe1147f-d5fc-46e4-a105-243696f4b7a6") as case:
 
+        with step("[Action] Select media ('Precut 0001') and click [Insert] button from [Tip Areas]"):
+            media_room_page.select_library_icon_view_media("Precut 0001")
             main_page.tips_area_insert_media_to_selected_track()
-            time.sleep(DELAY_TIME)
 
-            # Click Trim button on tips area > Open Trim
-            tips_area_page.click_TipsArea_btn_Trim('video')
-            time.sleep(DELAY_TIME)
+        with step("[Action] Click [Trim] button in [Tips Area] with type ('video')"):
+            tips_area_page.click_TipsArea_btn_Trim(type='video')
 
-            # Verify Step
-            # Check Duration
-            current_duration = precut_page.get_precut_single_trim_duration()
+        with step("[Action] Get [Single Trim] duration in [Precut] window"):
+            trim_duration = precut_page.get_precut_single_trim_duration()
 
-            if current_duration == '00:00:05:14':
-                case.result = True
-            else:
-                case.result = False
+        with step("[Verify] Check duration is ('00:00:05:14')"):
+            if trim_duration != '00:00:05:14':
+                assert False, f"Trim duration mismatch! Expected: '00:00:05:14', Got: {trim_duration}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.precut
+    @pytest.mark.multi_trim
+    @pytest.mark.mark_in
+    @pytest.mark.mark_out
+    @pytest.mark.name('[test_tip_areas_func_33_4] Verify [Multi Trim] Mode and preview after Multi Trim [Mark In/Out]')
+    @exception_screenshot
+    def test_tip_areas_func_33_4(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_3') is run and passed
+        1. Switch [Trim Mode] in [Precut Window] with type ('Multi')
+        2. Click [Remove] Button in [Multi Trim] Window
+        3. Set timecode to ('00_00_01_14') at [Precut] Window
+        4. Set [Multi Trim Mark In]
+        5. Set timecode to ('00_00_04_09') at [Precut] Window
+        6. Set [Multi Trim Mark Out]
+        7. Set timecode to ('00_00_06_18') at [Precut] Window
+        8. Set [Multi Trim Mark In]
+        9. Set timecode to ('00_00_08_25') at [Precut] Window
+        10. Set [Multi Trim Mark Out]
+        11. Check preview (locator=L.precut.main_window, file_name=Auto_Ground_Truth_Folder + 'L283.png') matches Ground Truth (Ground_Truth_Folder + 'L283.png') with similarity=0.95
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_3"
+        self.ensure_dependency(dependency_test)
 
         # [L283] 4.1 Basic > Tips type > Multi Trim
-        with uuid("a7560fe1-5c8f-450c-9455-ddcfabf65d76") as case:
-            # Switch to Multi trim
+        # with uuid("a7560fe1-5c8f-450c-9455-ddcfabf65d76") as case:
+
+        with step("[Action] Switch [Trim Mode] in [Precut Window] with type ('Multi')"):
             precut_page.edit_precut_switch_trim_mode('Multi')
 
-            # Remove (Single Trim) result
+        with step("[Action] Click [Remove] Button in [Multi Trim] Window"):
             precut_page.tap_multi_trim_remove()
 
-            # First trim
-            # Set timecode > Click (Multi) Mark in
+        with step("[Action] Set timecode to ('00_00_01_14') at [Precut] Window"):
             precut_page.set_precut_timecode('00_00_01_14')
-            time.sleep(DELAY_TIME)
+
+        with step("[Action] Set [Multi Trim Mark In]"):
             precut_page.tap_multi_trim_mark_in()
 
+        with step("[Action] Set timecode to ('00_00_04_09') at [Precut] Window"):
             precut_page.set_precut_timecode('00_00_04_09')
-            time.sleep(DELAY_TIME)
+
+        with step("[Action] Set [Multi Trim Mark Out]"):
             precut_page.tap_multi_trim_mark_out()
 
-            # Second trim
-            # Set timecode > Click (Multi) Mark in
+        with step("[Action] Set timecode to ('00_00_06_18') at [Precut] Window"):
             precut_page.set_precut_timecode('00_00_06_18')
-            time.sleep(DELAY_TIME)
+
+        with step("[Action] Set [Multi Trim Mark In]"):
             precut_page.tap_multi_trim_mark_in()
 
+        with step("[Action] Set timecode to ('00_00_08_25') at [Precut] Window"):
             precut_page.set_precut_timecode('00_00_08_25')
-            time.sleep(DELAY_TIME)
+
+        with step("[Action] Set [Multi Trim Mark Out]"):
             precut_page.tap_multi_trim_mark_out()
 
-            # Verify Step:
-            time.sleep(DELAY_TIME * 2)
-            current_image = precut_page.snapshot(locator=L.precut.main_window,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L283.png')
+        with step("[Verify] Check preview matches GT (L283.png)"):
+            preview = main_page.snapshot(
+                locator=L.precut.main_window,
+                file_name=Auto_Ground_Truth_Folder + 'L283.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L283.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L283.png)! Similarity should > 0.95"
 
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L283.png', current_image)
-            # logger(check_thumbnail)
-            case.result = check_result
+        assert True
+
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.precut
+    @pytest.mark.preview
+    @pytest.mark.play_video
+    @pytest.mark.muti_trim
+    @pytest.mark.name('[test_tip_areas_func_33_5] Verify preview after trimming in [Mutil Trim] and playback')
+    @exception_screenshot
+    def test_tip_areas_func_33_5(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_4') is run and passed
+        1. Click [OK] button to leave [Precut] window
+        2. Select timeline track (1)
+        3. Check preview ((locator=L.base.Area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L284.png') matches Ground Truth (Ground_Truth_Folder + 'L284.png') with similarity=0.85
+        4. Click [Stop] button in [Playback Window]
+        5. Click [Play] button in [Playback Window]
+        6. Check preview is updated when playing video (area=L.base.Area.preview.main, sec=2)
+        7. Click [Stop] button in [Playback Window] to back to default status
+        8. Click [Up One Level] button in media content
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_4"
+        self.ensure_dependency(dependency_test)
 
         # [L284] 4.1 Basic > Trim > Preview trimmed clip in timeline
-        with uuid("1e8b6a66-bbb6-4408-9618-5e8cb2c9ded5") as case:
-            # Close (Trim window)
+        # with uuid("1e8b6a66-bbb6-4408-9618-5e8cb2c9ded5") as case:
+
+        with step("[Action] Click [OK] button to leave [Precut] window"):
             precut_page.click_ok()
-            time.sleep(DELAY_TIME * 2)
 
+        with step("[Action] Select timeline track (1)"):
             main_page.timeline_select_track(1)
-            time.sleep(DELAY_TIME)
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.main,
-                                              file_name=Auto_Ground_Truth_Folder + 'L284.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L284.png', current_preview)
 
-            # Click Stop
-            playback_window_page.Edit_Timeline_PreviewOperation('STOP')
-            time.sleep(DELAY_TIME)
-            playback_window_page.Edit_Timeline_PreviewOperation('Play')
-            play_preview = main_page.Check_PreviewWindow_is_different(area=L.base.Area.preview.main, sec=2)
+        with step("[Verify] Check preview matches GT (L284.png) with similarity=0.85"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.main,
+                file_name=Auto_Ground_Truth_Folder + 'L284.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L284.png', preview, similarity=0.85):
+                # Similarity should be greater than 0.85 for matching preview
+                assert False, "Preview does not match GT (L284.png)! Similarity should > 0.85"
+
+        with step("[Action] Click [Stop] button in [Playback Window]"):
             playback_window_page.Edit_Timeline_PreviewOperation('Stop')
 
-            case.result = check_result and play_preview
+        with step("[Action] Click [Play] button in [Playback Window]"):
+            playback_window_page.Edit_Timeline_PreviewOperation('Play')
 
-        # Click [Up one level]
-        media_room_page.media_content_click_up_one_level()
+        with step("[Verify] Check preview is updated when playing video"):
+            preview_updated = main_page.Check_PreviewWindow_is_different(area=L.base.Area.preview.main, sec=2)
+            if not preview_updated:
+                # Similarity should be > expected threshold
+                assert False, "Preview is not updated when playing video in 2 secs!"
+
+        with step("[Action] Click [Stop] button in [Playback Window] to back to default status"):
+            playback_window_page.Edit_Timeline_PreviewOperation('Stop')
+
+        with step("[Action] Click [Up One Level] button in media content"):
+            media_room_page.media_content_click_up_one_level()
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.timeline
+    @pytest.mark.timecode
+    @pytest.mark.split
+    @pytest.mark.sync_by_audio
+    @pytest.mark.blending_mode
+    @pytest.mark.name('[test_tip_areas_func_33_6] Split > Sync Audio > Blending Mode > Check Preview')
+    @exception_screenshot
+    def test_tip_areas_func_33_6(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_5') is run and passed
+        1. Select timeline track (1)
+        2. Set timecode to ('00_00_05_02') at [Main Window]
+        3. Insert video to timeline (Skateboard 01.mp4) > Insert media to selected track
+        4. Set timecode to ('00_00_05_00') at [Main Window]
+        5. Enter [Split] via hotkey
+        6. Select multiple clips on timeline (media1_track_index=0, media1_clip_index=2, media2_track_index=0, media2_clip_index=3)
+        7. Click [Sync by Audio] button in [Tips Area]
+        8. Select a clip on timeline (track_index=4, clip_index=0)
+        9. Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to ('Difference')
+        10. Click [OK] button to leave [Blending Mode]
+        11. Set timecode to ('00_00_03_16') at [Main Window]
+        12. Select timeline track (1)
+        13. Insert media to timeline (Landscape 01.jpg) > Insert media to selected track
+        14. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L288.png') matches Ground Truth (Ground_Truth_Folder + 'L288.png') with similarity=0.85
+        15. Undo 6 times
+        '''
+        dependency_test = "test_tip_areas_func_33_5"
+        self.ensure_dependency(dependency_test)
 
         # [L288] 4.1 Basic > Sync by audio
-        with uuid("d460d39c-c631-4eb4-8e8f-4700ae1edabc") as case:
+        # with uuid("d460d39c-c631-4eb4-8e8f-4700ae1edabc") as case:
+
+        with step("[Action] Select timeline track (1)"):
             main_page.timeline_select_track(1)
 
-            # Set timeline timecode to drag CTI to end
+        with step("[Action] Set timecode to ('00_00_05_02') at [Main Window]"):
             main_page.set_timeline_timecode('00_00_05_02')
-            time.sleep(DELAY_TIME)
 
-            # Insert video to timeline
+        with step("[Action] Insert video to timeline ('Skateboard 01.mp4') > Insert media to selected track"):
             main_page.select_library_icon_view_media('Skateboard 01.mp4')
             main_page.tips_area_insert_media_to_selected_track()
-            time.sleep(DELAY_TIME)
 
-            # Set timeline timecode
+
+        with step("[Action] Set timecode to ('00_00_05_00') at [Main Window]"):
             main_page.set_timeline_timecode('00_00_05_00')
 
-            # Click Split hotkey > to separate clip
+        with step("[Action] Enter [Split] via hotkey"):
             main_page.tap_Split_hotkey()
-            time.sleep(DELAY_TIME)
 
-            # Multi-select
+        with step("[Action] Select multiple clips on timeline (media1_track_index=0, media1_clip_index=2, media2_track_index=0, media2_clip_index=3)"):
             timeline_operation_page.select_multiple_timeline_media(media1_track_index=0, media1_clip_index=2, media2_track_index=0, media2_clip_index=3)
-            time.sleep(DELAY_TIME)
-
-            # Click Sync by Audio
+        
+        with step("[Action] Click [Sync by Audio] button in [Tips Area]"):
             tips_area_page.click_sync_by_audio()
 
-            # Select track 3 clip > Apply blending mode
+        with step("[Action] Select a clip on timeline (track_index=4, clip_index=0)"):
             timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
+
+        with step("[Action] Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to ('Difference')"):
             tips_area_page.tools.select_Blending_Mode()
-            time.sleep(DELAY_TIME * 2)
             blending_mode_page.set_blending_mode('Difference')
 
-            # click [OK] to apply and exit Blending mode dialogue
+        with step("[Action] Click [OK] button to leave [Blending Mode]"):
             blending_mode_page.click_ok()
-            time.sleep(DELAY_TIME)
 
-            # Set timeline timecode
+        with step("[Action] Set timecode to ('00_00_03_16') at [Main Window]"):
             main_page.set_timeline_timecode('00_00_03_16')
-            time.sleep(DELAY_TIME * 3)
 
-            # select track 1
+        with step("[Action] Select timeline track (1)"):
             main_page.timeline_select_track(1)
 
-            # Insert Landscape 01.jpg to track1
+        with step("[Action] Insert media to timeline ('Landscape 01.jpg') > Insert media to selected track"):
             main_page.select_library_icon_view_media('Landscape 01.jpg')
             main_page.tips_area_insert_media_to_selected_track()
-            time.sleep(DELAY_TIME)
 
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                              file_name=Auto_Ground_Truth_Folder + 'L288.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L288.png', current_preview, similarity=0.85)
+        with step("[Verify] Check preview matches Ground Truth (L288.png) with similarity=0.85"):
+            preview = main_page.snapshot(locator=main_page.area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L288.png')
+            if not main_page.compare(Ground_Truth_Folder + 'L288.png', preview, similarity=0.85):
+                assert False, "Preview does not match Ground Truth (L288.png)! Similarity should > 0.85"
 
-            case.result = check_result
+        with step("[Action] Undo 6 times"):
+            for _ in range(6):
+                main_page.click_undo()
+                time.sleep(DELAY_TIME * 0.5)
 
-        # Modify case for v22.0.5622 RD already fix the bug of (Sync by audio) ---->
-        ## Jamie 2023/08/24 modify ##
-        for x in range(6):
-            main_page.click_undo()
-            time.sleep(DELAY_TIME*0.5)
+        assert True
 
-        # select track 3
-        main_page.timeline_select_track(3)
-
-        # Insert video to timeline
-        main_page.select_library_icon_view_media('Skateboard 01.mp4')
-        main_page.tips_area_insert_media_to_selected_track()
-        time.sleep(DELAY_TIME)
-
-        # Set timeline timecode
-        main_page.set_timeline_timecode('00_00_05_00')
-
-        # Click Split hotkey > to separate clip
-        main_page.tap_Split_hotkey()
-        time.sleep(DELAY_TIME)
-
-        # Select track 3 1st clip
-        main_page.select_timeline_media('Skateboard 01')
-
-        # Right click men > Cut > Cut and Fill gap
-        main_page.right_click()
-        time.sleep(DELAY_TIME)
-        main_page.select_right_click_menu('Cut', 'Cut and Fill Gap')
-
-        # select track 2
-        main_page.timeline_select_track(2)
-
-        # Set timeline timecode
-        main_page.set_timeline_timecode('00_00_06_00')
-
-        # select track 2
-        main_page.timeline_select_track(2)
-
-        # Right click men > Paste
-        main_page.right_click()
-        time.sleep(DELAY_TIME)
-        main_page.select_right_click_menu('Paste')
-        time.sleep(DELAY_TIME)
-
-        # Select track 3, 1st clip
-        timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
-
-        tips_area_page.tools.select_Blending_Mode()
-        time.sleep(DELAY_TIME * 2)
-        blending_mode_page.set_blending_mode('Difference')
-
-        # click [OK] to apply and exit Blending mode dialogue
-        blending_mode_page.click_ok()
-        time.sleep(DELAY_TIME)
-
-        # Set timeline timecode
-        main_page.set_timeline_timecode('00_00_03_16')
-        time.sleep(DELAY_TIME * 3)
-        # Modify case for v22.0.5622 RD already fix the bug of (Sync by audio) <----
-
-        # [L285] 4.1 Basic > Crop > Open [Crop Image] window
-        with uuid("40626f6d-c346-4962-98bc-f72027dbfbee") as case:
-            # select track 1
-            main_page.timeline_select_track(1)
-
-            # Insert Landscape 01.jpg to track1
-            main_page.select_library_icon_view_media('Landscape 01.jpg')
-            main_page.tips_area_insert_media_to_selected_track()
-            time.sleep(DELAY_TIME)
-
-            # Click [Crop the selected image]
-            tips_area_page.click_TipsArea_btn_Crop_Image()
-
-            #crop_image_page
-            crop_window = main_page.exist(L.crop_image.crop_window)
-            if crop_window:
-                case.result = True
-            else:
-                case.result = False
-
-        # [L286] 4.1 Basic > Crop > Set crop area
-        with uuid("cdfdf12d-cbe7-46bd-80d1-044f5afa6ec7") as case:
-            # [L287] 4.1 Basic > Crop > Preview image in timeline
-            with uuid("3bf42f48-6698-4d77-b7ee-4935bff07938") as case:
-                crop_image_page.aspect_ratio.set_4_3()
-                time.sleep(DELAY_TIME)
-                crop_image_page.click_ok()
-
-                # Set timeline timecode
-                main_page.set_timeline_timecode('00_00_04_00')
-                time.sleep(DELAY_TIME * 2)
-
-                four_sec_preview = main_page.snapshot(locator=L.base.Area.preview.main,
-                                                      file_name=Auto_Ground_Truth_Folder + 'L286.png')
-
-                check_result = precut_page.compare(Ground_Truth_Folder + 'L286.png', four_sec_preview, similarity=0.9)
-                case.result = check_result
-            case.result = check_result
-
-            # Set timeline timecode
-            main_page.timeline_select_track(2)
-            main_page.set_timeline_timecode('00_00_13_18')
-            time.sleep(DELAY_TIME * 3)
-
-            # Save project:
-            main_page.top_menu_bar_file_save_project_as()
-            main_page.handle_save_file_dialog(name='test_case_1_1_22',
-                                              folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-
-    # 11 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.timeline
+    @pytest.mark.timecode
+    @pytest.mark.split
+    @pytest.mark.copy_paste
+    @pytest.mark.blending_mode
+    @pytest.mark.crop_image
+    @pytest.mark.name('[test_tip_areas_func_33_7] Insert media, apply blending mode, crop image, and verify')
     @exception_screenshot
-    def test_10_1_23(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Open project: test_case_1_1_22
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_22.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-
-        # Insert Food.jpg
-        main_page.select_library_icon_view_media('Food.jpg')
-        time.sleep(DELAY_TIME * 2)
-        media_room_page.library_clip_context_menu_insert_on_selected_track()
-
-        # [L290] 4.2 > Tools > Pan & Zoom (image) > [Pan & Zoom] page > UI switch to Pan & Zoom
-        with uuid("a7c4224f-cdd0-4eae-af6c-6d8c138e1469") as case:
-            # Select track 1 : Photo clip Landscape 01 (0)
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=2)
-            time.sleep(DELAY_TIME)
-
-            # Click Tools > [Pan & Zoom page] then close
-            tips_area_page.tools.select_Pan_Zoom()
-            time.sleep(DELAY_TIME * 2)
-            case.result = pan_zoom_page.is_enter_pan_zoom()
-            pan_zoom_page.click_close()
-
-        # [L291] 4.2 > Tools > Pan & Zoom (image) > [Pan & Zoom] page > Select style
-        with uuid("f7470554-59f0-46e2-bf7d-e25c83ac7a54") as case:
-            main_page.set_timeline_timecode('00_00_03_05')
-            time.sleep(DELAY_TIME *2)
-
-            # Enter Pan & Zoom
-            tips_area_page.tools.select_Pan_Zoom()
-            time.sleep(DELAY_TIME * 2)
-
-            # Select style: 3rd style
-            pan_zoom_page.apply_motion_style(3)
-
-            main_page.set_timeline_timecode('00_00_04_20')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.main,
-                                              file_name=Auto_Ground_Truth_Folder + 'L291.png')
-            time.sleep(DELAY_TIME * 2)
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L291.png', current_preview, similarity=0.9)
-
-            case.result = check_result
-
-        pan_zoom_page.click_close()
-        time.sleep(DELAY_TIME * 2)
-
-        # [L292] 4.2 > Tools > Pan & Zoom (image) > [Pan & Zoom] page > Apply to all
-        with uuid("01b7c7c1-017d-4915-a6a0-f0b224a967d3") as case:
-            # Apply (Right down to Left up)
-            # Select track 1 : Photo clip Food.jpg
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=3)
-            time.sleep(DELAY_TIME)
-
-            tips_area_page.tools.select_Pan_Zoom()
-            pan_zoom_page.apply_motion_style(11)
-            time.sleep(DELAY_TIME * 2)
-
-            # Apply to all
-            pan_zoom_page.click_apply_to_all()
-            time.sleep(DELAY_TIME * 2)
-            pan_zoom_page.click_close()
-
-            # Verify Step:
-            # Select track 1 : Photo clip Landscape 01 (0)
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=2)
-            time.sleep(DELAY_TIME)
-
-            tips_area_page.tools.select_Pan_Zoom()
-            main_page.set_timeline_timecode('00_00_04_20')
-            time.sleep(DELAY_TIME * 2)
-            apply_all_preview = main_page.snapshot(locator=L.base.Area.preview.main)
-            # [2025-01-09] Change to should be the same as GT
-            case.result = main_page.compare(Ground_Truth_Folder + 'L291.png', apply_all_preview, similarity=0.9)
-
-        # [L293] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Adjust position / scale / Rotate
-        with uuid("e0c915bc-66a2-4b11-bda4-206127c3dcc6") as case:
-            pan_zoom_page.click_motion_designer()
-            time.sleep(DELAY_TIME * 2)
-            default_aspect_ratio = pan_zoom_page.magic_motion_designer.get_current_aspect_ratio()
-
-            # [2025/01/08] Change to 16:9
-            if default_aspect_ratio == '16:9':
-                default_aspect_ratio_value = True
-            else:
-                default_aspect_ratio_value = False
-
-            # Apply aspect ratio to 16:9
-            pan_zoom_page.magic_motion_designer.set_aspect_ratio_16_9('ok')
-            time.sleep(DELAY_TIME * 2)
-
-            # Set rotate = 90
-            pan_zoom_page.magic_motion_designer.drag_preview_object_rotate_clockwise(radius=210)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            current_degree_value = pan_zoom_page.magic_motion_designer.rotation.get_value()
-
-            if current_degree_value == '90':
-                rotate_result = True
-            else:
-                rotate_result = False
-                logger(current_degree_value)
-
-            logger(f'{default_aspect_ratio=}, Result: {default_aspect_ratio_value=}')
-            logger(f'{current_degree_value=}, Result: {rotate_result=}')
-
-            case.result = default_aspect_ratio_value and rotate_result
-
-        # [L295] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Adjust position / scale / Rotate
-        with uuid("ca4cf4fe-ee2f-4312-8416-59574bcebd88") as case:
-            # Set (Magic Motion Designer) timecode
-            pan_zoom_page.magic_motion_designer.set_timecode('00_00_02_08')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.pan_zoom.magic_motion_designer.preview_area,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L295.png')
-
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L295.png', current_preview)
-            case.result = check_result
-
-        # [L296] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Apply (check timeline preview)
-        with uuid("fcb0b21f-bc5f-45cb-b23d-5f8bdce523ad") as case:
-            # Set rotation to 120 degree
-            pan_zoom_page.magic_motion_designer.rotation.set_value(120)
-            time.sleep(DELAY_TIME)
-            pan_zoom_page.magic_motion_designer.click_ok()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.main,
-                                              file_name=Auto_Ground_Truth_Folder + 'L296.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L296.png', current_preview)
-
-            case.result = check_result
-
-        # [L294] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Reset
-        with uuid("ca1defd1-293c-4f10-b65b-cc9d6dfe1ff4") as case:
-            pan_zoom_page.click_motion_designer()
-            time.sleep(DELAY_TIME * 2)
-
-            # Click reset
-            pan_zoom_page.magic_motion_designer.click_reset()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.pan_zoom.magic_motion_designer.preview_area,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L294.png')
-
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L294.png', current_preview)
-            case.result = check_result
-
-        # Click undo then click OK to close (Magic Motion Designer)
-        pan_zoom_page.magic_motion_designer.click_undo()
-        time.sleep(DELAY_TIME)
-        pan_zoom_page.magic_motion_designer.click_ok()
-        time.sleep(DELAY_TIME)
-
-        # Close [Pan & Zoom] page
-        pan_zoom_page.click_close()
-
-        # [L297] 4.2 > Tools > Crop / Zoom / Pan > Adjust position / scale / rotation
-        with uuid("1425e2a8-b34c-44ef-8e5e-70c36b51eed8") as case:
-            # Select track 1 : 1st Precut001
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
-            time.sleep(DELAY_TIME)
-
-            # Enter (Crop / Zoom / Pan)
-            tips_area_page.tools.select_CropZoomPan()
-            check_result = crop_zoom_pan_page.is_enter_crop_zoom_pan()
-            if not check_result:
-                logger('Not enter crop/zoom/pan now.')
-                raise Exception
-
-            # Set aspect ratio = 1:1
-            crop_zoom_pan_page.set_AspectRatio_1_1()
-
-            # Set position x =0.627
-            crop_zoom_pan_page.set_position_x('0.627')
-
-            # Scale w = 0.44
-            crop_zoom_pan_page.set_scale_width('0.45')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            # Check setting update
-            current_preview = main_page.snapshot(locator=L.crop_zoom_pan.window,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L297.png')
-
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L297.png', current_preview)
-            case.result = check_result
-
-        # [L299] 4.2 > Tools > Crop / Zoom / Pan > Preview
-        with uuid("6dcb0c75-2424-4716-9a68-059d53834b8f") as case:
-            # Set timecode (00;00;01;24)
-            crop_zoom_pan_page.set_timecode('00_00_01_24')
-            time.sleep(DELAY_TIME*2)
-
-            # Verify Step
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.crop_zoom_pan.preview,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L299.png')
-
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L299.png', current_preview)
-            case.result = check_result
-
-        # [L300] 4.2 > Tools > Crop / Zoom / Pan > Apply (Check timeline preview after apply)
-        with uuid("6ef237b8-e614-4a71-a1da-8f764d159680") as case:
-            crop_zoom_pan_page.click_ok()
-            time.sleep(DELAY_TIME * 2)
-
-            main_page.set_timeline_timecode('00_00_01_15')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.main,
-                                              file_name=Auto_Ground_Truth_Folder + 'L300.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L300.png', current_preview)
-
-            case.result = check_result
-
-        # [L298] 4.2 > Tools > Crop / Zoom / Pan > Reset
-        with uuid("d4ea74c3-f6d6-4e49-be46-c0b9d452c447") as case:
-            # Enter (Crop / Zoom / Pan)
-            tips_area_page.tools.select_CropZoomPan()
-            time.sleep(DELAY_TIME)
-
-            # click [Reset] button
-            crop_zoom_pan_page.click_reset()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step
-            check_aspect_ratio = crop_zoom_pan_page.get_current_AspectRatio()
-            logger(check_aspect_ratio)
-            if check_aspect_ratio == '16:9':
-                check_aspect_ratio_result = True
-            else:
-                check_aspect_ratio_result = False
-
-            current_scale_width = crop_zoom_pan_page.get_scale_width()
-            logger(current_scale_width)
-            if current_scale_width == '1.000':
-                check_scale_width_result = True
-            else:
-                check_scale_width_result = False
-
-            case.result = check_aspect_ratio_result and check_scale_width_result
-            crop_zoom_pan_page.click_ok()
-            time.sleep(DELAY_TIME * 2)
-
-            # Save project:
-            main_page.top_menu_bar_file_save_project_as()
-            main_page.handle_save_file_dialog(name='test_case_1_1_23',
-                                              folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-
-    # 6 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_24(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Open project: test_case_1_1_23
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_23.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-
-        # click timeline track2
-        main_page.timeline_select_track(2)
-
-        # Set timeline timecode
-        main_page.set_timeline_timecode('00_00_11_00')
-        time.sleep(DELAY_TIME * 2)
-
-        # Import video to library
-        media_room_page.import_media_file(Test_Material_Folder + 'Produce_Local/4978895.mov')
-        time.sleep(DELAY_TIME * 1.5)
-        media_room_page.handle_high_definition_dialog()
-
-        # Insert to timeline
-        main_page.tips_area_insert_media_to_selected_track()
-
-        # [L304] 4.2 Tools > Video Speed > Entire Clip > Adjust from new video duration
-        with uuid("5beaaacf-885e-4d34-8e20-402e9404f46b") as case:
-            # Enter (Video Speed)
-            tips_area_page.tools.select_VideoSpeed()
-            time.sleep(DELAY_TIME)
-
-            # Get (default) duration
-            current_new_duration = video_speed_page.Edit_VideoSpeed_EntireClip_NewVideoDuration_GetValue()
-            logger(current_new_duration)
-
-            if current_new_duration == '00:00:17:26':
-                default_new_duration = True
-            else:
-                default_new_duration = False
-
-            # Set new duration = '00;00;10;26'
-            video_speed_page.Edit_VideoSpeed_EntireClip_NewVideoDuration_SetValue('00_00_10_26')
-            time.sleep(DELAY_TIME * 2)
-
-            # Get (current) duration
-            check_new_duration = video_speed_page.Edit_VideoSpeed_EntireClip_NewVideoDuration_GetValue()
-            logger(check_new_duration)
-
-            if check_new_duration == '00:00:10:26':
-                apply_new_duration = True
-            else:
-                apply_new_duration = False
-
-            case.result = default_new_duration and apply_new_duration
-
-        # [L305] 4.2 Tools > Video Speed > Entire Clip > Adjust Speed multiplier
-        with uuid("875648d7-cadc-497d-869a-1f8c5a2f2409") as case:
-            # Check current multiplier
-            check_multiplier = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue()
-            logger(check_multiplier)
-
-            if check_multiplier == '1.644':
-                current_multiplier = True
-            else:
-                current_multiplier = False
-
-            # Set multiplier = 0.85
-            video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_DragSlider(42.45)
-            time.sleep(DELAY_TIME)
-            video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_ArrowButton('Up')
-            time.sleep(DELAY_TIME * 2)
-
-            # Check current multiplier
-            check_multiplier = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue()
-            logger(check_multiplier)
-
-            if check_multiplier == '0.850':
-                set_multiplier = True
-            else:
-                set_multiplier = False
-
-            case.result = current_multiplier and set_multiplier
-
-        # [L306] 4.2 Tools > Video Speed > Selected Range > Create a time shift
-        with uuid("48ded325-7c78-4c8a-be87-0959e9b0c833") as case:
-            # Switch to (Selected Range)
-            video_speed_page.Edit_VideoSpeedDesigner_SelectTab('selected range')
-
-            # Pop up warning message: (... Do you want to continue?)
-            # Click [OK] button
-            main_page.exist_click(L.main.confirm_dialog.btn_ok, timeout=10)
-
-            # Click [Time Shift]
-            check_result = video_speed_page.VideoSpeedDesigner_SelectRange_Click_Upper_CreateTimeShift_btn()
-            logger(check_result)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            # Check button is disable
-            elem_btn = main_page.exist(L.video_speed.time_shift_1)
-            if elem_btn.AXEnabled == False:
-                verify_step = True
-            else:
-                verify_step = False
-            logger(verify_step)
-
-            case.result = check_result and verify_step
-
-        # [L307] 4.2 Tools > Video Speed > Selected Range > Adjust speed (1.5x)
-        with uuid("2de16d6c-ea92-4c32-9557-4f972f23f720") as case:
-            # Get (default) multiplier
-            current_multiplier = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_GetValue()
-            logger(current_multiplier)
-
-            if current_multiplier == '1.000':
-                default_multiplier = True
-            else:
-                default_multiplier = False
-
-            # Set speed to 1.5 for 1st (Time shift)
-            video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_SetValue(1.500)
-
-            # Verify step:
-
-            # Get (current) multiplier
-            current_multiplier = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_GetValue()
-            logger(current_multiplier)
-
-            if current_multiplier == '1.500':
-                apply_multiplier = True
-            else:
-                apply_multiplier = False
-
-            # Get (current) duration
-            current_duration = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_VideoLength_GetValue()
-            logger(current_duration)
-
-            if current_duration == '00:00:01:15':
-                check_duration = True
-            else:
-                check_duration = False
-
-            case.result = default_multiplier and apply_multiplier and check_duration
-
-        # [L308] 4.2 Tools > Video Speed > Reset
-        with uuid("c79b1222-f933-4738-8062-39bf61d9e93c") as case:
-            # Click [Reset]
-            video_speed_page.Edit_VideoSpeedDesigner_ClickReset()
-            time.sleep(DELAY_TIME * 1.5)
-
-            # Get (current) duration
-            current_duration = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_VideoLength_GetValue()
-            logger(current_duration)
-
-            if current_duration == '00:00:00:00':
-                case.result = True
-            else:
-                case.result = False
-
-        # [L309] 4.2 Tools > Video Speed > Preview
-        with uuid("53aadaee-c816-446f-af87-a878ba5c8d0c") as case:
-            # Under [Selected Range] > Seek to timecode (12 sec)
-            video_speed_page.set_VideoSpeedDesigner_timecode('00_00_12_00')
-
-            # Click [Time Shift]
-            check_result = video_speed_page.VideoSpeedDesigner_SelectRange_Click_Upper_CreateTimeShift_btn()
-            logger(check_result)
-            time.sleep(DELAY_TIME * 2)
-
-            # Set multiplier = 10
-            video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_SetValue(10)
-            time.sleep(DELAY_TIME)
-
-            # Set timecode to 13:16
-            video_speed_page.set_VideoSpeedDesigner_timecode('00_00_13_16')
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            current_preview = main_page.snapshot(locator=L.video_speed.main,
-                                              file_name=Auto_Ground_Truth_Folder + 'L309.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L309.png', current_preview)
-
-            case.result = check_result
-
-        # Click [OK] to save change
-        video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
-
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_24',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-
-    # 8 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_25(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Open project: test_case_1_1_24
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_24.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-
-        # Select timeline track2
-        main_page.timeline_select_track(2)
-
-        # Move timecode to 0s
-        main_page.set_timeline_timecode('00_00_00_00')
-        time.sleep(DELAY_TIME * 2)
-
-        # Insert Food.jpg to track2
-        main_page.select_library_icon_view_media('Food.jpg')
-        main_page.tips_area_insert_media_to_selected_track()
-        time.sleep(DELAY_TIME * 2)
-
-        # Initial_preview
-
-        no_blending_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-
-        # [L319] 4.2 Tools > Blending Mode > Image
-        with uuid("76b12400-6632-4a70-88b6-e1787e0f2e10") as case:
-            # First time: Click [Tools] > Blending Mode
-            tips_area_page.tools.select_Blending_Mode()
-            time.sleep(DELAY_TIME * 2)
-            blending_mode_page.set_blending_mode('Overlay')
-            # click [OK] to apply and exit Blending mode dialogue
-            blending_mode_page.click_ok()
-            time.sleep(DELAY_TIME)
-            overlay_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-
-            # Second time: Click [Tools] > Blending Mode -----------
-            tips_area_page.tools.select_Blending_Mode()
-            time.sleep(DELAY_TIME * 2)
-            blending_mode_page.set_blending_mode('Screen')
-            # click [OK] to apply and exit Blending mode dialogue
-            blending_mode_page.click_ok()
-            time.sleep(DELAY_TIME*2)
-            screen_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-
-            # Preview should be updated (Not the same)
-            verify_overlay_result = main_page.compare(no_blending_preview, overlay_preview)
-            verify_screen_result = main_page.compare(overlay_preview, screen_preview, similarity=0.98)
-
-            case.result = (not verify_overlay_result) and (not verify_screen_result)
-
-        # [L318] 4.2 Tools > Blending Mode > Video
-        with uuid("5bc6914b-b112-40e7-ad78-69df9425fb16") as case:
-            # Select track3, first clip
-            timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
-
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_03_00')
-            time.sleep(DELAY_TIME * 2)
-            difference_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-
-            # First : Enter Blending Mode
-            tips_area_page.tools.select_Blending_Mode()
-            time.sleep(DELAY_TIME * 2)
-            blending_mode_page.set_blending_mode('Normal')
-            blending_mode_page.click_ok()
-            time.sleep(DELAY_TIME)
-            normal_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-
-            # Second : Enter Blending Mode -----
-            tips_area_page.tools.select_Blending_Mode()
-            time.sleep(DELAY_TIME * 2)
-            blending_mode_page.set_blending_mode('Multiply')
-            blending_mode_page.click_ok()
-            time.sleep(DELAY_TIME)
-            multiply_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-
-            # Preview should be updated (Not the same)
-            verify_normal_result = main_page.compare(difference_preview, normal_preview)
-            verify_multiply_result = main_page.compare(normal_preview, multiply_preview)
-
-            case.result = (not verify_normal_result) and (not verify_multiply_result)
-
-        # [L310] 4.2 Tools > Video / Audio in Reverse > Tick
-        with uuid("bf0eaa18-6d18-4853-aab6-71b55d267007") as case:
-            # Apply (Video / Audio in Reverse)
-            tips_area_page.tools.select_Video_in_Reverse(skip=1)
-            time.sleep(DELAY_TIME * 2)
-            reverse_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L310.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L310.png', reverse_preview)
-
-            case.result = check_result
-
-        # [L311] 4.2 Tools > Video / Audio in Reverse > UnTick
-        with uuid("2aa40a98-c103-4394-8c49-0ab946b8a96b") as case:
-            # Apply (Video / Audio in Reverse)
-            tips_area_page.tools.select_Video_in_Reverse(skip=1)
-            time.sleep(DELAY_TIME * 2)
-            no_reverse_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            check_result = precut_page.compare(no_reverse_preview, multiply_preview)
-
-            case.result = check_result
-
-        # [L322] 4.2 Tools > Audio Editor > Set Channel
-        with uuid("3d06fc81-911c-4ac8-85a7-79111d7f7cb5") as case:
-            # Click [Audio Editor]
-            tips_area_page.tools.select_Audio_Editor()
-            time.sleep(DELAY_TIME * 5)
-            default_two_channel_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
-            logger(default_two_channel_preview)
-
-            # Click [Edit Single Channel]
-            audio_editing_page.audio_editor.switch_single_channel('yes')
-            time.sleep(DELAY_TIME * 3)
-            switch_single_channel_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
-            logger(switch_single_channel_preview)
-
-            # Can switch to single
-            check_no_update = main_page.compare(default_two_channel_preview, switch_single_channel_preview)
-            logger(check_no_update)
-            case.result = not check_no_update
-
-        # [L321] 4.2 Tools > Audio Editor > Apply each adjustment function
-        with uuid("902dbff1-18ec-4175-b29e-a41c53183ccc") as case:
-            # Open (Special Effect) Phone > Apply
-            check_result = audio_editing_page.audio_editor.open_special_effect_phone()
-            logger(check_result)
-
-            # Click [Apply] on Effect:Phone
-            check_result = audio_editing_page.audio_editor.apply_phone_effect()
-            logger(check_result)
-
-            apply_phone_effect_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
-
-            # Verify step: waveform no update
-            check_no_update = main_page.compare(apply_phone_effect_preview, switch_single_channel_preview, similarity=0.99)
-            logger(check_no_update)
-            case.result = not check_no_update
-
-        # [L323] 4.2 Tools > Audio Editor > Check Preview
-        with uuid("cafca61b-b8cf-4517-8996-17744a054d46") as case:
-            default_timecode = audio_editing_page.audio_editor.get_current_timecode()
-            logger(default_timecode)
-
-            # Click [Space] to preview
-            main_page.press_space_key()
-
-            # Delay 1s
-            time.sleep(DELAY_TIME * 2)
-
-            # Click [Space] to Pause preview
-            main_page.press_space_key()
-
-            current_timecode = audio_editing_page.audio_editor.get_current_timecode()
-            logger(current_timecode)
-
-            # Verify Step:
-            if default_timecode != current_timecode:
-                case.result = True
-            else:
-                case.result = False
-
-        # [L325] 4.2 Tools > Audio Editor > Apply (Result is correct in timeline after apply)
-        with uuid("d3e2bba3-2613-439c-bdab-f2a5ff15071d") as case:
-            # Click [OK] then apply (Audio Editor) then back to timeline
-            check_ok_button = audio_editing_page.audio_editor.click_ok()
-
-            apply_phone_effect_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            check_preview_update = main_page.compare(no_reverse_preview, apply_phone_effect_preview)
-            case.result = check_preview_update and check_ok_button
-
-        # Click timeline track 1
-        main_page.timeline_select_track(1)
-
-        # Click Stop
-        playback_window_page.Edit_Timeline_PreviewOperation('Stop')
-
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_25',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-        time.sleep(DELAY_TIME*3)
-
-    # 3 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_26(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Insert sample audio (Mahoroba.mp3) to timeline
-        main_page.select_library_icon_view_media('Mahoroba.mp3')
-        time.sleep(DELAY_TIME * 2)
-        media_room_page.library_clip_context_menu_insert_on_selected_track()
-
-        # [L301] 4.2 Tools > Audio Smart Fit for Duration > Remix audio
-        with uuid("fa162ec0-f523-404a-bc6b-f51cd7250a4f") as case:
-            # Click Tools > (Smart Fit for Duration)
-            click_button_result = tips_area_page.tools.select_smart_fit_duration()
-            logger(click_button_result)
-
-            # Switch to Original
-            audio_editing_page.smart_fit.click_org_option()
-            check_custom_value = audio_editing_page.smart_fit.get_custom_option_value()
-
-            if check_custom_value == 0:
-                untick_value = True
-            else:
-                untick_value = False
-                logger(untick_value)
-
-            # Snapshot for verify step
-            original_waveform_preview = main_page.snapshot(locator=L.audio_editing.smart_fit.waveform_area)
-            time.sleep(DELAY_TIME * 2)
-
-            # Click radio button of [Custom Duration]
-            audio_editing_page.smart_fit.click_custom_option()
-
-            # Set custom new duration
-            audio_editing_page.smart_fit.set_custom_new_duration('00_01_03_00')
-            time.sleep(DELAY_TIME * 2)
-            custom_waveform_preview = main_page.snapshot(locator=L.audio_editing.smart_fit.waveform_area)
-            time.sleep(DELAY_TIME * 2)
-
-            check_no_update = main_page.compare(original_waveform_preview, custom_waveform_preview)
-            logger(check_no_update)
-
-            case.result = (not check_no_update) and untick_value
-
-        # [L302] 4.2 Tools > Audio Smart Fit for Duration > Preview
-        with uuid("7d60615e-c270-4b9c-b30c-d3cc5f8fde31") as case:
-            # Get current timecode
-            default_timecode = audio_editing_page.smart_fit.get_current_timecode()
-            logger(default_timecode)
-
-            if default_timecode == '00:00:00:00':
-                default_status = True
-            else:
-                default_status = False
-                logger(default_timecode)
-
-            # Click space to play preview
-            main_page.press_space_key()
-
-            time.sleep(DELAY_TIME *5)
-            # Click space to pause preview
-            main_page.press_space_key()
-
-            # Get current timecode
-            after_play_timecode = audio_editing_page.smart_fit.get_current_timecode()
-            logger(after_play_timecode)
-
-            if after_play_timecode != default_timecode:
-                check_play = True
-            else:
-                check_play = False
-                logger(check_play)
-
-            case.result = check_play and default_status
-
-        # [L303] 4.2 Tools > Audio Smart Fit for Duration > Apply result to timeline clip correctly
-        with uuid("c655ce1a-0489-429b-a860-f06b764a254e") as case:
-            result = audio_editing_page.smart_fit.click_ok()
-            logger(result)
-
-            # Verify Step:
-            # Set timecode
-            main_page.set_timeline_timecode('00_99_99_00')
-            time.sleep(DELAY_TIME * 5)
-
-            current_timecode = playback_window_page.get_timecode_slidebar()
-            if current_timecode == '00:01:03:00':
-                check_apply = True
-            else:
-                check_apply = False
-                logger(current_timecode)
-
-            case.result = result and check_apply
-
-        # Remove the generate (Remix file)
-        main_page.clear_remix_file('Mahoroba_remix.wav')
-
-    # 9 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_27(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Open project: test_case_1_1_25
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_25.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-
-        # [L327] 4.3 Fix / Enhance > Enter [Fix / Enhance] page with each clip
-        with uuid("d0a1e193-d13f-4e18-9ac8-e04924cfd021") as case:
-            # Select track1, first clip
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
-
-            # Enter (Fix / Enhance]
-            main_page.tips_area_click_fix_enhance()
-
-            # Verify step:
-            case.result = fix_enhance_page.is_in_fix_enhance()
-
-        # [L329] 4.3 Fix / Enhance > Fix > Apply [Lighting Adjustment]
-        with uuid("8f26c266-40d9-4a72-9403-a9c90974cad1") as case:
-            # Enable (Lighting Adjustment)
-            fix_enhance_page.fix.enable_lighting_adjustment()
-            time.sleep(DELAY_TIME * 2)
-
-            # Enable (Extreme backlight)
-            fix_enhance_page.fix.lighting_adjustment.enable_extreme_backlight(True)
-            time.sleep(DELAY_TIME * 2)
-            # Set value = 75
-            fix_enhance_page.fix.lighting_adjustment.extreme_backlight.set_value(75)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            check_checkbox = fix_enhance_page.fix.lighting_adjustment.get_extreme_backlight()
-
-            current_value = fix_enhance_page.fix.lighting_adjustment.extreme_backlight.get_value()
-
-            if current_value == '75':
-                apply_value = True
-            else:
-                apply_value = False
-                logger(current_value)
-
-            case.result = check_checkbox and apply_value
-            logger(check_checkbox)
-            logger(apply_value)
-
-        # [L330] 4.3 Fix / Enhance > Fix > Apply [White Balance]
-        with uuid("307558b2-3c13-4520-9004-003730df8f4c") as case:
-            # Enable (White Balance)
-            fix_enhance_page.fix.enable_white_balance(True)
-
-            # Set (Color temperature) value = 90
-            fix_enhance_page.fix.white_balance.color_temperature.set_value(90)
-            time.sleep(DELAY_TIME)
-
-            # Verify Step:
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L330.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L330.png', current_preview)
-
-            case.result = check_result
-
-        # [L342] 4.3 Fix / Enhance > Compare in split preview
-        with uuid("67ccfb1a-5549-4d28-8fed-20757654c48d") as case:
-            # Enable (Compare in split preview)
-            fix_enhance_page.set_check_compare_in_split_preview(1)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L342.png')
-            check_compare_mode = precut_page.compare(Ground_Truth_Folder + 'L342.png', current_preview)
-
-            # Disable (Compare in split preview)
-            fix_enhance_page.set_check_compare_in_split_preview(0)
-            time.sleep(DELAY_TIME * 2)
-            no_compare_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            check_no_compare_mode = precut_page.compare(Ground_Truth_Folder + 'L330.png', no_compare_preview)
-
-            case.result = check_compare_mode and check_no_compare_mode
-
-        # [L336] 4.3 Fix / Enhance > Enhance > Apply [Color Adjustment]
-        with uuid("3eaa9f75-2ff7-4f74-9d67-49badebcaa8b") as case:
-            # Select track2, 3rd clip:4978895
-            timeline_operation_page.select_timeline_media(track_index=2, clip_index=2)
-
-            # Enable (Color Adjustment)
-            fix_enhance_page.enhance.switch_to_color_adjustment()
-
-            # Apply Exposure = 182, Hue = 36
-            fix_enhance_page.enhance.color_adjustment.exposure.set_value(182)
-            fix_enhance_page.enhance.color_adjustment.hue.set_value(36)
-            time.sleep(DELAY_TIME*2)
-
-            # Verify Step:
-            check_exposure = fix_enhance_page.enhance.color_adjustment.exposure.get_value()
-            if check_exposure == '182':
-                apply_exposure = True
-            else:
-                apply_exposure = False
-
-            check_hue = fix_enhance_page.enhance.color_adjustment.hue.get_value()
-            if check_hue == '36':
-                apply_hue = True
-            else:
-                apply_hue = False
-
-            case.result = apply_exposure and apply_hue
-
-        # [L339] 4.3 Fix / Enhance > Enhance > Apply [Split Toning]
-        with uuid("3dedd39f-8afd-4a17-89cc-dfa0e6da72ec") as case:
-            # Enable (Split Toning)
-            fix_enhance_page.enhance.enable_split_toning()
-
-            # Apply Balance = 53
-            fix_enhance_page.enhance.split_toning.balance.set_value(53)
-
-            # Apply Shadow : Hue = 291, Saturation = 89
-            fix_enhance_page.enhance.split_toning.shadow.hue.set_value(291)
-            fix_enhance_page.enhance.split_toning.shadow.saturation.set_value(89)
-            time.sleep(DELAY_TIME*2)
-
-            # Verify Step:
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L339.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L339.png', current_preview)
-
-            case.result = check_result
-
-        # [L328] 4.3 Fix / Enhance > Enter [Fix / Enhance] w/ Image clip
-        with uuid("c91a00e7-fe55-412a-892b-15d281d69304") as case:
-            # Close x  to leave (Fix/Enhance) page
-            fix_enhance_page.click_close()
-
-            # Select timeline track3
+    def test_tip_areas_func_33_7(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_6') is run and passed
+        1. Select timeline track (3)
+        2. Insert video to timeline (Skateboard 01.mp4) > Insert media to selected track
+        3. Set timecode to ('00_00_05_00') at [Main Window]
+        4. Enter [Split] via hotkey
+        5. Select a clip ('Skateboard 01') on timeline
+        6. Right click > Select ('Cut', 'Cut and Fill Gap') on right click menu
+        7. Set timecode to ('00_00_06_00') at [Main Window]
+        8. Select timeline track (2) > Right Click > Select ('Paste') on right click menu
+        9. Select a clip on timeline (track_index=4, clip_index=0)
+        10. Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to ('Difference')
+        11. Click [OK] button to leave [Blending Mode]
+        12. Set timecode to ('00_00_03_16') at [Main Window] > Select timeline track (1)
+        13. Select media ('Landscape 01.jpg') > Insert media to selected track
+        14. Select [Crop Image] button on [Tip Areas]
+        15. Check [Crop The Selected Image] window (L.crop_image.crop_window) is shown
+        '''
+        dependency_test = "test_tip_areas_func_33_6"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Select timeline track (3)"):
             main_page.timeline_select_track(3)
 
-            # Insert Sport 01 to track3
-            main_page.select_library_icon_view_media('Sport 01.jpg')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Insert video to timeline ('Skateboard 01.mp4') > Insert media to selected track"):
+            main_page.select_library_icon_view_media('Skateboard 01.mp4')
+            main_page.tips_area_insert_media_to_selected_track()
+
+        with step("[Action] Set timecode to ('00_00_05_00') at [Main Window]"):
+            main_page.set_timeline_timecode('00_00_05_00')
+
+        with step("[Action] Enter [Split] via hotkey"):
+            main_page.tap_Split_hotkey()
+
+        with step("[Action] Select a clip ('Skateboard 01') on timeline"):
+            main_page.select_timeline_media('Skateboard 01')
+
+        with step("[Action] Right click > Select ('Cut', 'Cut and Fill Gap') on right click menu"):
+            main_page.right_click()
+            main_page.select_right_click_menu('Cut', 'Cut and Fill Gap')
+
+        with step("[Action] Set timecode to ('00_00_06_00') at [Main Window]"):
+            main_page.set_timeline_timecode('00_00_06_00')
+
+        with step("[Action] Select timeline track (2) > Right Click > Select ('Paste') on right click menu"):
+            main_page.timeline_select_track(2)
+            main_page.right_click()
+            main_page.select_right_click_menu("Paste")
+
+        with step("[Action] Select a clip on timeline (track_index=4, clip_index=0)"):
+            timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
+
+        with step("[Action] Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to ('Difference')"):
+            tips_area_page.tools.select_Blending_Mode()
+            blending_mode_page.set_blending_mode('Difference')
+
+        with step("[Action] Click [OK] button to leave [Blending Mode]"):
+            main_page.select_right_click_menu("OK")
+
+        with step("[Action] Set timecode to ('00_00_03_16') at [Main Window] > Select timeline track (1)"):
+            main_page.set_timeline_timecode('00_00_03_16')
+            main_page.timeline_select_track(1)
+
+        # [L285] 4.1 Basic > Crop > Open [Crop Image] window
+        # with uuid("40626f6d-c346-4962-98bc-f72027dbfbee") as case:
+
+        with step("[Action] Select media ('Landscape 01.jpg') > Insert media to selected track"):
+            main_page.select_library_icon_view_media('Landscape 01.jpg')
+            main_page.tips_area_insert_media_to_selected_track()
+
+        with step("[Action] Select [Crop Image] button on [Tip Areas]"):
+            tips_area_page.click_TipsArea_btn_Crop_Image()
+
+        with step("[Verify] Check [Crop The Selected Image] window (L.crop_image.crop_window) is shown"):
+            if not main_page.exist(L.crop_image.crop_window):
+                assert False, "Crop Image window is not shown!"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.crop_image
+    @pytest.mark.timecode
+    @pytest.mark.save_project
+    @pytest.mark.name('[test_tip_areas_func_33_8] Crop Image and Verify Preview, Save Project')
+    def test_tip_areas_func_33_8(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_7') is run and passed
+        1. Set [Crop Aspect Ratio] to (4:3)
+        2. Click [OK] button to leave [Crop Image] window
+        3. Set timeline timecode to ('00_00_04_00') at main page
+        4. Check preview (locator=L.base.Area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L286.png') matches Ground Truth (Ground_Truth_Folder + 'L286.png') with similarity=0.9
+        5. Select timeline track (2) > Set timecode to ('00_00_13_18') at main page
+        6. Save project as ('test_tip_areas_func_33_8') in (Test_Material_Folder + 'BFT_21_Stage1/')
+        '''
+        dependency_test = "test_tip_areas_func_33_7"
+        self.ensure_dependency(dependency_test)
+
+        # [L286] 4.1 Basic > Crop > Set crop area
+        # with uuid("cdfdf12d-cbe7-46bd-80d1-044f5afa6ec7") as case:
+            # [L287] 4.1 Basic > Crop > Preview image in timeline
+            # with uuid("3bf42f48-6698-4d77-b7ee-4935bff07938") as case:
+
+        with step("[Action] Set [Crop Aspect Ratio] to (4:3)") :
+            crop_image_page.set_aspect_ratio("4:3")
+        
+        with step("[Action] Click [OK] button to leave [Crop Image] window"):
+            crop_image_page.click_ok()
+        
+        with step("[Action] Set timeline timecode to ('00_00_04_00') at main page"):
+            main_page.set_timeline_timecode("00_00_04_00", is_verify=True)
+        
+        with step("[Verify] Screenshot preview and compare with Ground Truth (L286.png)"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.main, 
+                file_name=Auto_Ground_Truth_Folder + 'L286.png'
+            )
+            if not main_page.compare(
+                Ground_Truth_Folder + 'L286.png', preview, similarity=0.9):
+                # Similarity should be greater than 0.9 for a matching preview
+                assert False, "Preview does not match Ground Truth (L286.png)! Similarity should > 0.9"
+        
+        with step("[Action] Select timeline track (2) > Set timecode to ('00_00_13_18') at main page"):
+            main_page.timeline_select_track(2)
+            main_page.set_timeline_timecode("00_00_13_18", is_verify=True)
+
+        with step("[Action] Save project as ('test_tip_areas_func_33_8') in (Test_Material_Folder + 'BFT_21_Stage1/')"):
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(
+                name='test_tip_areas_func_33_8', 
+                folder_path=Test_Material_Folder + 'BFT_21_Stage1/'
+            )
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.insert_media
+    @pytest.mark.pan_zoom
+    @pytest.mark.name('[test_tip_areas_func_33_9] Open Packed Project, Insert Media, Pan Zoom and Close')
+    def test_tip_areas_func_33_9(self):
+        '''
+        1. Start App
+        2. Open packed project ('Packed_Project/test_tip_areas_func_33_9_from_test_tip_areas_func_33_8.pdk', 'Extracted_Folder/test_tip_areas_func_33_9')
+        3. Select media ('Food.jpg') from library icon view > Insert clip in library to selected track
+        4. Select timeline media ('Food.jpg') > Select timeline track (0), clip index (2)
+        5. Click [Pan Zoom] button in [Tips Area]
+        6. Check if [Pan Zoom] window is shown
+        7. Click [Close] button to leave [Pan Zoom] window
+        '''
+        
+        with step("[Action] Start App"):
+            main_page.start_app()
+
+        with step("[Action] Open packed project ('Packed_Project/test_tip_areas_func_33_9_from_test_tip_areas_func_33_8.pdk', 'Extracted_Folder/test_tip_areas_func_33_9')"):
+            self.open_packed_project(
+                'Packed_Project/test_tip_areas_func_33_9_from_test_tip_areas_func_33_8.pdk', 
+                'Extracted_Folder/test_tip_areas_func_33_9'
+            )
+
+        with step("[Action] Select media ('Food.jpg') from library icon view > Insert clip in library to selected track"):
+            main_page.select_library_icon_view_media('Food.jpg')
+            main_page.library_clip_context_menu_insert_on_selected_track()
+
+        # [L290] 4.2 > Tools > Pan & Zoom (image) > [Pan & Zoom] page > UI switch to Pan & Zoom
+        # with uuid("a7c4224f-cdd0-4eae-af6c-6d8c138e1469") as case:
+
+        with step("[Action] Select timeline media ('Food.jpg') > Select timeline track (0), clip index (2)"):
+            main_page.select_timeline_media(track_index=0, clip_index=2)
+
+        with step("[Action] Click [Pan Zoom] button in [Tips Area]"):
+            tips_area_page.tools.select_Pan_Zoom()
+
+        with step("[Verify] Check if [Pan Zoom] window is shown"):
+            if not pan_zoom_page.is_enter_pan_zoom():
+                assert False, "Pan Zoom window is not shown!"
+
+        with step("[Action] Click [Close] button to leave [Pan Zoom] window"):
+            pan_zoom_page.click_close()
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.pan_zoom
+    @pytest.mark.motion_style
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_10] Apply Motion Style, Set Timecode, and Verify Preview')
+    def test_tip_areas_func_33_10(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_9') is run and passed
+        1. Set timeline timecode to ('00_00_03_05') at main page
+        2. Click [Pan Zoom] button in [Tips Area]
+        3. Apply [Motion Style] by index (3)
+        4. Set timeline timecode to ('00_00_04_20') at main page
+        5. Check preview (locator=L.base.Area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L291.png') matches Ground Truth (Ground_Truth_Folder + 'L291.png') with similarity=0.9
+        6. Click [Close] button to leave [Pan Zoom] window
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_9"
+        self.ensure_dependency(dependency_test)
+
+        # [L291] 4.2 > Tools > Pan & Zoom (image) > [Pan & Zoom] page > Select style
+        # with uuid("f7470554-59f0-46e2-bf7d-e25c83ac7a54") as case:
+
+        with step("[Action] Set timeline timecode to ('00_00_03_05') at main page"):
+            main_page.set_timeline_timecode("00_00_03_05", is_verify=True)
+
+        with step("[Action] Click [Pan Zoom] button in [Tips Area]"):
+            tips_area_page.tools.select_Pan_Zoom()
+
+        with step("[Action] Apply [Motion Style] by index (3)"):
+            pan_zoom_page.apply_motion_style(3)
+
+        with step("[Action] Set timeline timecode to ('00_00_04_20') at main page"):
+            main_page.set_timeline_timecode("00_00_04_20", is_verify=True)
+
+        with step("[Verify] Check preview matches GT (L291.png) with similarity 0.9"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.main, 
+                file_name=Auto_Ground_Truth_Folder + 'L291.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L291.png', preview, similarity=0.9):
+                # Similarity should be greater than 0.9 for a matching preview
+                assert False, "Preview does not match GT (L291.png)! Similarity should > 0.9"
+
+        with step("[Action] Click [Close] button to leave [Pan Zoom] window"):
+            pan_zoom_page.click_close()
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.pan_zoom
+    @pytest.mark.motion_style
+    @pytest.mark.name('[test_tip_areas_func_33_11] Apply [Motion Style] in [Pan Zoom] window and Verify Preview')
+    def test_tip_areas_func_33_11(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_10') is run and passed
+        1. Select a clip on timeline(track_index=0, clip_index=3)
+        2. Select [Pan Zoom] button in [Tips Area]
+        3. Apply [Motion Style] by index (11)
+        4. Click [Apply to All] button in [Pan Zoom] window
+        5. Click [Close] button to leave [Pan Zoom] window
+        6. Select a clip on timeline(track_index=0, clip_index=2)
+        7. Select [Pan Zoom] button in [Tips Area]
+        8. Set timeline timecode to ('00_00_04_20') at main page
+        9. Check preview (locator=L.base.Area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L291.png') matches Ground Truth (Ground_Truth_Folder + 'L291.png') with similarity=0.9
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_10"
+        self.ensure_dependency(dependency_test)
+
+        # [L292] 4.2 > Tools > Pan & Zoom (image) > [Pan & Zoom] page > Apply to all
+        # with uuid("01b7c7c1-017d-4915-a6a0-f0b224a967d3") as case:
+
+        with step("[Action] Select a clip on timeline(track_index=0, clip_index=3)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=3)
+
+        with step("[Action] Select [Pan Zoom] button in [Tips Area]"):
+            tips_area_page.tools.select_Pan_Zoom()
+
+        with step("[Action] Apply [Motion Style] by index (11)"):
+            pan_zoom_page.apply_motion_style(11)
+
+        with step("[Action] Click [Apply to All] button in [Pan Zoom] window"):
+            pan_zoom_page.click_apply_to_all()
+
+        with step("[Action] Click [Close] button to leave [Pan Zoom] window"):
+            pan_zoom_page.click_close()
+
+        with step("[Action] Select a clip on timeline(track_index=0, clip_index=2)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=2)
+
+        with step("[Action] Select [Pan Zoom] button in [Tips Area]"):
+            tips_area_page.tools.select_Pan_Zoom()
+
+        with step("[Action] Set timeline timecode to ('00_00_04_20') at main page"):
+            main_page.set_timeline_timecode("00_00_04_20", is_verify=True)
+
+        with step("[Verify] Check preview matches GT (L291.png) with similarity 0.9"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.main, 
+                file_name=Auto_Ground_Truth_Folder + 'L291.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L291.png', preview, similarity=0.9):
+                # Similarity should be greater than 0.9 for a matching preview
+                assert False, "Preview does not match GT (L291.png)! Similarity should > 0.9"
+
+        assert True
+    
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.motion_designer
+    @pytest.mark.pan_zoom
+    @pytest.mark.name('[test_tip_areas_func_33_12] Set [Aspect Ratio] and [Rotate] in [Motion Designer] and check value')
+    def test_tip_areas_func_33_12(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_11') is run and passed
+        1. Click [Motion Designer] button
+        2. Get [Aspect Ratio] value in [Motion Designer]
+        3. Check [Aspect Ratio] is ('16:9')
+        4. Set [Aspect Ratio] 16:9
+        5. Drag preview object to rotate clockwise with degree (210)
+        6. Get [Value] in [Motion Designer] and check is ('90')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_11"
+        self.ensure_dependency(dependency_test)
+
+        # [L293] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Adjust position / scale / Rotate
+        # with uuid("e0c915bc-66a2-4b11-bda4-206127c3dcc6") as case:
+
+        with step("[Action] Click [Motion Designer] button"):
+            pan_zoom_page.click_motion_designer()
+
+        with step("[Action] Get [Aspect Ratio] value in [Motion Designer]"):
+            aspect_ratio = pan_zoom_page.magic_motion_designer.get_current_aspect_ratio()
+
+        with step("[Verify] Check [Aspect Ratio] is ('16:9')"):
+            if aspect_ratio != '16:9':
+                assert False, f"Aspect Ratio is incorrect! Expected: '16:9', Got: {aspect_ratio}"
+
+        with step("[Action] Set [Aspect Ratio] to 16:9"):
+             pan_zoom_page.magic_motion_designer.set_aspect_ratio_16_9('ok')
+
+        with step("[Action] Drag preview object to rotate clockwise with degree (210)"):
+            pan_zoom_page.magic_motion_designer.drag_preview_object_rotate_clockwise(radius=210)
+
+        with step("[Action] Get [Value] in [Motion Designer] and check is ('90')"):
+            current_degree_value = pan_zoom_page.magic_motion_designer.rotation.get_value()
+            if current_degree_value != '90':
+                assert False, f"Rotation value is incorrect! Expected: '90', Got: {current_degree_value}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.pan_zoom
+    @pytest.mark.motion_designer
+    @pytest.mark.name('[test_tip_areas_func_33_13] Check previes as GT for test_tip_areas_func_33_12')
+    def test_tip_areas_func_33_13(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_12') is run and passed
+        1. Set [Timecode] to ('00_00_02_08') in [Motion Designer]
+        2. Check preview (locator=L.pan_zoom.magic_motion_designer.preview_area, file_name=Auto_Ground_Truth_Folder + 'L295.png') matches Ground Truth (Ground_Truth_Folder + 'L295.png') with similarity=0.95
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_12"
+        self.ensure_dependency(dependency_test)
+
+        # [L295] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Adjust position / scale / Rotate
+        # with uuid("ca4cf4fe-ee2f-4312-8416-59574bcebd88") as case:
+
+        with step("[Action] Set [Timecode] to ('00_00_02_08') in [Motion Designer]"):
+            pan_zoom_page.magic_motion_designer.set_timecode('00_00_02_08')
+
+        with step("[Verify] Check preview matches GT (L295.png) with similarity 0.95"):
+            preview = main_page.snapshot(
+                locator=L.pan_zoom.magic_motion_designer.preview_area,
+                file_name=Auto_Ground_Truth_Folder + 'L295.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L295.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match Ground Truth (L295.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.pan_zoom
+    @pytest.mark.motion_designer
+    @pytest.mark.rotation
+    @pytest.mark.name('[test_tip_areas_func_33_14] Set [Rotation] in [Magic Motion Designer] and Verify Preview')
+    def test_tip_areas_func_33_14(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_13') is run and passed
+        1. Set Rotation value to (120) in [Magic Motion Designer]
+        2. Click [OK] button to close [Motion Designer]
+        3. Check preview (locator=L.base.Area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L296.png') matches Ground Truth (Ground_Truth_Folder + 'L296.png') with similarity=0.95
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_13"
+        self.ensure_dependency(dependency_test)
+
+        # [L296] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Apply (check timeline preview)
+        # with uuid("fcb0b21f-bc5f-45cb-b23d-5f8bdce523ad") as case:
+
+        with step("[Action] Set Rotation value to (120) in [Magic Motion Designer]"):
+            pan_zoom_page.magic_motion_designer.rotation.set_value(120)
+
+        with step("[Action] Click [OK] button to close [Motion Designer]"):
+            pan_zoom_page.magic_motion_designer.click_ok()
+
+        with step("[Verify] Check preview matches GT (L296.png) with similarity 0.95"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.main,
+                file_name=Auto_Ground_Truth_Folder + 'L296.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L296.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match Ground Truth (L296.png)! Similarity should > 0.95"
+
+        assert True
+    
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.pan_zoom
+    @pytest.mark.motion_designer
+    @pytest.mark.name('[test_tip_areas_func_33_15] Reset [Motion Designer] and Verify Preview')
+    def test_tip_areas_func_33_15(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_14') is run and passed
+        1. Click [Motion Designer] button
+        2. Click [Reset] button in [Motion Designer]
+        3. Check preview (locator=L.pan_zoom.magic_motion_designer.preview_area, file_name=Auto_Ground_Truth_Folder + 'L294.png') matches Ground Truth (Ground_Truth_Folder + 'L294.png') with similarity=0.95
+        4. Click [Undo] button in [Motion Designer]
+        5. Click [OK] button to close [Motion Designer]
+        6. Click [OK] button to leave [Pan Zoom] window
+        '''
+        # [L294] 4.2 > Tools > Pan & Zoom (image) > Magic Motion Designer > Reset
+        # with uuid("ca1defd1-293c-4f10-b65b-cc9d6dfe1ff4") as case:
+
+        dependency_test = "test_tip_areas_func_33_14"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Click [Motion Designer] button"):
+            pan_zoom_page.click_motion_designer()
+
+        with step("[Action] Click [Reset] button in [Motion Designer]"):
+            pan_zoom_page.magic_motion_designer.click_reset()
+
+        with step("[Verify] Check preview matches GT (L294.png) with similarity 0.95"):
+            preview = main_page.snapshot(
+                locator=L.pan_zoom.magic_motion_designer.preview_area,
+                file_name=Auto_Ground_Truth_Folder + 'L294.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L294.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match Ground Truth (L294.png)! Similarity should > 0.95"
+
+        with step("[Action] Click [Undo] button in [Motion Designer]"):
+            pan_zoom_page.magic_motion_designer.click_undo()
+
+        with step("[Action] Click [OK] button to close [Motion Designer]"):
+            pan_zoom_page.magic_motion_designer.click_ok()
+
+        with step("[Action] Click [OK] button to leave [Pan Zoom] window"):
+            pan_zoom_page.click_close()
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.crop_zoom_pan
+    @pytest.mark.position
+    @pytest.mark.scale
+    @pytest.mark.name('[test_tip_areas_func_33_16] Verify Crop Zoom Pan with Aspect Ratio and Position X update')
+    @exception_screenshot
+    def test_tip_areas_func_33_16(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_15') is run and passed
+        1. Select a clip on timeline (track_index=0, clip_index=0)
+        2. Select [Crop/Zoom/Pan] from [Tip Areas]
+        3. Check if [Crop Zoom Pan] Window is shown
+        4. Set [Aspect Ratio] to (1:1) > Screenshot (locator=L.crop_zoom_pan.window)
+        5. Set [Position X] to (0.627) > Check preview is updated after set [Position X] with similarity<0.99
+        6. Set [Scale Width] to (0.45) > Check preview is updated after set [Scale Width] with similarity<0.99
+        7. Check preview (locator=L.crop_zoom_pan.window, file_name=Auto_Ground_Truth_Folder + 'L297.png') matches Ground Truth (Ground_Truth_Folder + 'L297.png') with similarity=0.95
+        '''
+        dependency_test = "test_tip_areas_func_33_15"
+        self.ensure_dependency(dependency_test)
+
+        # [L297] 4.2 > Tools > Crop / Zoom / Pan > Adjust position / scale / rotation
+        # with uuid("1425e2a8-b34c-44ef-8e5e-70c36b51eed8") as case:
+
+        with step("[Action] Select a clip on timeline (track_index=0, clip_index=0)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
+
+        with step("[Action] Select [Crop/Zoom/Pan] from [Tip Areas]"):
+            tips_area_page.tools.select_CropZoomPan()
+
+        with step("[Verify] Check if [Crop Zoom Pan] Window is shown"):
+            if not crop_zoom_pan_page.is_enter_crop_zoom_pan():
+                assert False, "Crop Zoom Pan window is not shown!"
+
+        with step("[Action] Set [Aspect Ratio] to (1:1)"):
+            crop_zoom_pan_page.set_AspectRatio_1_1()
+            crop_zoom_pan_page.snapshot(locator=L.crop_zoom_pan.window)
+
+        with step("[Action] Set [Position X] to (0.627)"):
+            crop_zoom_pan_page.set_position_x('0.627')
+            preview_position_x = main_page.snapshot(locator=L.crop_zoom_pan.window)
+            if main_page.compare(preview_position_x, similarity=0.99):
+                assert False, "Preview did not update correctly after setting Position X! Similarity should < 0.99"
+
+        with step("[Action] Set [Scale Width] to (0.45)"):
+            crop_zoom_pan_page.set_scale_width(0.45)
+            preview_scale_width = main_page.snapshot(locator=L.crop_zoom_pan.window)
+            if main_page.compare(preview_scale_width, similarity=0.99):
+                assert False, "Preview did not update correctly after setting Scale Width! Similarity should < 0.99"
+
+        with step("[Verify] Check preview matches GT (L297.png) with similarity=0.95"):
+            final_preview = main_page.snapshot(locator=L.crop_zoom_pan.window, file_name=Auto_Ground_Truth_Folder + 'L297.png')
+            if not main_page.compare(Ground_Truth_Folder + 'L297.png', final_preview, similarity=0.95):
+                assert False, "Preview does not match Ground Truth (L297.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.crop_zoom_pan
+    @pytest.mark.position
+    @pytest.mark.scale
+    @pytest.mark.name('[test_tip_areas_func_33_17] Check preview as GT for test_tip_areas_func_33_16')
+    @exception_screenshot
+    def test_tip_areas_func_33_17(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_16') is run and passed
+        1. Set [Timecode] to ('00_00_01_24') in [Crop Zoom Pan] window
+        2. Check preview (locator=L.crop_zoom_pan.preview, file_name=Auto_Ground_Truth_Folder + 'L299.png') matches Ground Truth (Ground_Truth_Folder + 'L299.png') with similarity=0.95
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_16"
+        self.ensure_dependency(dependency_test)
+
+        # [L299] 4.2 > Tools > Crop / Zoom / Pan > Preview
+        # with uuid("6dcb0c75-2424-4716-9a68-059d53834b8f") as case:
+
+        with step("[Action] Set [Timecode] to ('00_00_01_24') in [Crop Zoom Pan] window"):
+            crop_zoom_pan_page.set_timecode("00_00_01_24")
+
+        with step("[Verify] Check preview matches GT (L299.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.crop_zoom_pan.preview,
+                file_name=Auto_Ground_Truth_Folder + 'L299.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L299.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L299.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.crop_zoom_pan
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_18] Check preview as GT for test_tip_areas_func_33_16 at [Main Window]')
+    @exception_screenshot
+    def test_tip_areas_func_33_18(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_17') is run and passed
+        1. Click [OK] Button to leave [Crop Zoom Pan] window
+        2. Set [Timecode] to ('00_00_01_15') in [Main Window]
+        3. Check preview (locator=L.base.Area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L300.png') matches Ground Truth (Ground_Truth_Folder + 'L300.png') with similarity=0.95
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_17"
+        self.ensure_dependency(dependency_test)
+
+        # [L300] 4.2 > Tools > Crop / Zoom / Pan > Apply (Check timeline preview after apply)
+        # with uuid("6ef237b8-e614-4a71-a1da-8f764d159680") as case:
+
+        with step("[Action] Click [OK] Button to leave [Crop Zoom Pan] window"):
+            crop_zoom_pan_page.click_ok()
+
+        with step("[Action] Set [Timecode] to ('00_00_01_15') in [Main Window]"):
+            main_page.set_timeline_timecode("00_00_01_15")
+
+        with step("[Verify] Check preview matches GT (L300.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.main,
+                file_name=Auto_Ground_Truth_Folder + 'L300.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L300.png', preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L300.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.crop_zoom_pan
+    @pytest.mark.reset
+    @pytest.mark.save_project
+    @pytest.mark.name('[test_tip_areas_func_33_19] Reset in [Crop Zoom Pan] > Check Default [Aspect Ratio]/ [Scale Width] > Save Project')
+    @exception_screenshot
+    def test_tip_areas_func_33_19(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_18') is run and passed
+        1. Click [Crop/Zoom/Pan] from [Tip Areas]
+        2. Click [Reset] button in [Crop Zoom Pan] window
+        3. Get [Aspect Ratio] value in [Crop Zoom Pan] window and check is ('16:9')
+        4. Get [Scale Width] value in [Crop Zoom Pan] window and check is ('1.000')
+        5. Click [OK] button to leave [Crop Zoom Pan] window
+        6. Save project as ('test_tip_areas_func_33_18') in (Test_Material_Folder + 'BFT_21_Stage1/')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_18"
+        self.ensure_dependency(dependency_test)
+
+        # [L298] 4.2 > Tools > Crop / Zoom / Pan > Reset
+        # with uuid("d4ea74c3-f6d6-4e49-be46-c0b9d452c447") as case:
+
+        with step("[Action] Click [Crop/Zoom/Pan] from [Tip Areas]"):
+            tips_area_page.tools.select_CropZoomPan()
+
+        with step("[Action] Click [Reset] button in [Crop Zoom Pan] window"):
+            crop_zoom_pan_page.click_reset()
+
+        with step("[Verify] Get [Aspect Ratio] value in [Crop Zoom Pan] window and check is ('16:9')"):
+            aspect_ratio = crop_zoom_pan_page.get_current_AspectRatio()
+            if aspect_ratio != '16:9':
+                assert False, f"Aspect Ratio is incorrect! Expected: '16:9', Got: {aspect_ratio}"
+
+        with step("[Verify] Get [Scale Width] value in [Crop Zoom Pan] window and check is ('1.000')"):
+            scale_width = crop_zoom_pan_page.get_scale_width()
+            if scale_width != '1.000':
+                assert False, f"Scale Width is incorrect! Expected: '1.000', Got: {scale_width}"
+
+        with step("[Action] Click [OK] button to leave [Crop Zoom Pan] window"):
+            crop_zoom_pan_page.click_ok()
+
+        with step("[Action] Save project as 'test_tip_areas_func_33_18' in (Test_Material_Folder + 'BFT_21_Stage1/')"):
+            main_page.handle_save_file_dialog(name="test_tip_areas_func_33_19", folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.import_media
+    @pytest.mark.video_speed
+    @pytest.mark.duration
+    @pytest.mark.name('[test_tip_areas_func_33_20] Verify packed project and video speed changes')
+    @exception_screenshot
+    def test_tip_areas_func_33_20(self):
+        '''
+        1. Start APP
+        2. Open packed project ('Packed_Project/test_tip_areas_func_33_19_from_test_tip_areas_func_33_18.pdk', 'Extracted_Folder/test_tip_areas_func_33_19')
+        3. Select timeline track (2) > Set timecode to ('00_00_11_00') at main page
+        4. Import media from local (Test_Material_Folder + 'Produce_Local/4978895.mov') > Handle high definition dialog
+        5. Insert media to selected track
+        6. Select [Video Speed] from [Tip Areas]
+        7. Get [New Video Duration] value for [Entire Clip] > Check the default value is ('00:00:17:26')
+        8. Set [New Video Duration] value for [Entire Clip] to ('00_00_10_26')
+        9. Get [New Video Duration] value for [Entire Clip] > Check the default value is ('00:00_10_26')
+        '''
+
+        with step("[Action] Start APP"):
+            main_page.start_app()
+
+        with step("[Action] Open packed project ('Packed_Project/test_tip_areas_func_33_19_from_test_tip_areas_func_33_18.pdk', 'Extracted_Folder/test_tip_areas_func_33_19')"):
+            self.open_packed_project('Packed_Project/test_tip_areas_func_33_19_from_test_tip_areas_func_33_18.pdk', 'Extracted_Folder/test_tip_areas_func_33_19')
+
+        with step("[Action] Select timeline track (2) > Set timecode to ('00_00_11_00') at main page"):
+            main_page.timeline_select_track(2)
+            main_page.set_timeline_timecode('00_00_11_00')
+
+        with step("[Action] Import media from local (Test_Material_Folder + 'Produce_Local/4978895.mov') > Handle high definition dialog"):
+            media_room_page.import_media_file(Test_Material_Folder + 'Produce_Local/4978895.mov')
+            media_room_page.handle_high_definition_dialog(option='no')
+
+        with step("[Action] Insert media to selected track"):
+            main_page.tips_area_insert_media_to_selected_track()
+
+        # [L304] 4.2 Tools > Video Speed > Entire Clip > Adjust from new video duration
+        # with uuid("5beaaacf-885e-4d34-8e20-402e9404f46b") as case:
+
+        with step("[Action] Select [Video Speed] from [Tip Areas]"):
+            tips_area_page.tools.select_VideoSpeed()
+
+        with step("[Verify] Get [New Video Duration] value for [Entire Clip] > Check the default value is ('00:00:17:26')"):
+            new_video_duration = video_speed_page.Edit_VideoSpeed_EntireClip_NewVideoDuration_GetValue()
+            if new_video_duration != '00:00:17:26':
+                assert False, f"Expected video duration '00:00:17:26', but got {new_video_duration}"
+
+        with step("[Action] Set [New Video Duration] value for [Entire Clip] to ('00_00_10_26')"):
+            video_speed_page.Edit_VideoSpeed_EntireClip_NewVideoDuration_SetValue('00_00_10_26')
+
+        with step("[Verify] Get [New Video Duration] value for [Entire Clip] > Check the default value is ('00:00:10:26')"):
+            new_video_duration = video_speed_page.Edit_VideoSpeed_EntireClip_NewVideoDuration_GetValue()
+            if new_video_duration != '00:00:10:26':
+                assert False, f"Expected video duration '00:00:10:26', but got {new_video_duration}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_speed
+    @pytest.mark.speed_multiplier
+    @pytest.mark.name('[test_tip_areas_func_33_21] Apply [Speed Multiplier] in [Video Speed] window and Verify Preview')
+    @exception_screenshot
+    def test_tip_areas_func_33_21(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_19') is run and passed
+        1. Get [Speed Multiplier] value for [Entire Clip] > Check the default value is ('1.644')
+        2. Set [Speed Multiplier] for [Entire Clip] by dragging the slider to (42.45)
+        3. Set [Speed Multiplier] for [Entire Clip] by clicking the arrow button ('Up')
+        4. Get [Speed Multiplier] value for [Entire Clip] > Check the default value is ('0.850')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_19"
+        self.ensure_dependency(dependency_test)
+
+        # [L305] 4.2 Tools > Video Speed > Entire Clip > Adjust Speed multiplier
+        # with uuid("875648d7-cadc-497d-869a-1f8c5a2f2409") as case:
+
+        with step("[Action] Get [Speed Multiplier] value for [Entire Clip] > Check the default value is ('1.644')"):
+            speed_multiplier = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue()
+            if speed_multiplier != '1.644':
+                assert False, f"Expected Speed Multiplier '1.644', but got {speed_multiplier}"
+
+        with step("[Action] Set [Speed Multiplier] for [Entire Clip] by dragging the slider to (42.45)"):
+            video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_DragSlider(42.45)
+
+        with step("[Action] Set [Speed Multiplier] for [Entire Clip] by clicking the arrow button ('Up')"):
+            video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_ArrowButton('Up')
+
+        with step("[Verify] Get [Speed Multiplier] value for [Entire Clip] > Check the default value is ('0.850')"):
+            speed_multiplier = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue()
+            if speed_multiplier != '0.850':
+                assert False, f"Expected Speed Multiplier '0.850', but got {speed_multiplier}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_speed
+    @pytest.mark.time_shift
+    @pytest.mark.name('[test_tip_areas_func_33_22] Set [Create Time Shift] to Upper and check status in [Video Speed Designer]')
+    @exception_screenshot
+    def test_tip_areas_func_33_22(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_21') is run and passed
+        1. Select Tab ('selected range') in [Video Speed Designer]
+        2. Click [OK] button if [Do you want to continue?] dialog is shown
+        3. Click [Create Time Shift] button to upper and check the result is True
+        4. Check [Time Shift Upper] button (L.video_speed.time_shift_1) is disabled (Not exist)
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_21"
+        self.ensure_dependency(dependency_test)
+
+        # [L306] 4.2 Tools > Video Speed > Selected Range > Create a time shift
+        # with uuid("48ded325-7c78-4c8a-be87-0959e9b0c833") as case:
+
+        with step("[Action] Select Tab ('selected range') in [Video Speed Designer]"):
+            video_speed_page.Edit_VideoSpeedDesigner_SelectTab('selected range')
+
+        with step("[Action] Click [OK] button if [Do you want to continue?] dialog is shown"):
+            main_page.exist_click(L.main.confirm_dialog.btn_ok, timeout=10)
+
+        with step("[Action] Click [Create Time Shift] button to upper and check the result is True"):
+            result = video_speed_page.VideoSpeedDesigner_SelectRange_Click_Upper_CreateTimeShift_btn()
+            if not result:
+                assert False, "Time shift upper button did not work as expected!"
+
+        with step("[Verify] Check [Time Shift Upper] button (L.video_speed.time_shift_1) is disabled (Not exist)"):
+            elem_btn = main_page.exist(L.video_speed.time_shift_1)
+            if elem_btn.AXEnabled != False:
+                assert False, "Time Shift Upper button is still enabled or exists when it should not."
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_speed
+    @pytest.mark.speed_multiplier
+    @pytest.mark.video_length
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_23] Set and verify [Speed Multiplier] and [Video Length] for Selected Range in [Video Speed Designer]')
+    @exception_screenshot
+    def test_tip_areas_func_33_23(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_22') is run and passed
+        1. Get [Speed Multiplier] value for [Selected Range] > Check the default value is ('1.000')
+        2. Set [Speed Multiplier] value for [Selected Range] to (1.500) > Check the value is ('1.500')
+        3. Get [Video Length] value for [Select Range] > Check the default value is ('00:00:01:15')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_22"
+        self.ensure_dependency(dependency_test)
+
+        # [L307] 4.2 Tools > Video Speed > Selected Range > Adjust speed (1.5x)
+        # with uuid("2de16d6c-ea92-4c32-9557-4f972f23f720") as case:
+        
+        with step('[Action] Get [Speed Multiplier] value for [Selected Range]'):
+            speed_multiplier = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_GetValue()
+        
+        with step('[Verify] Check the default value is (1.000)'):
+            if speed_multiplier != '1.000':
+                assert False, f"Speed Multiplier for selected range is not as expected! Expected: 1.000, Got: {speed_multiplier}"
+
+        with step('[Action] Set [Speed Multiplier] value for [Selected Range] to (1.500)'):
+            video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_SetValue(1.500)
+
+        with step('[Verify] Check the value is (1.500)'):
+            updated_speed_multiplier = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_GetValue()
+            if updated_speed_multiplier != '1.500':
+                assert False, f"Speed Multiplier for selected range is not as expected! Expected: 1.500, Got: {updated_speed_multiplier}"
+
+        with step('[Action] Get [Video Length] value for [Selected Range]'):
+            video_length = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_VideoLength_GetValue()
+
+        with step('[Verify] Check the default value is (00:00:01:15)'):
+            if video_length != '00:00:01:15':
+                assert False, f"Video Length for selected range is not as expected! Expected: 00:00:01:15, Got: {video_length}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_speed
+    @pytest.mark.reset
+    @pytest.mark.video_length
+    @pytest.mark.name('[test_tip_areas_func_33_24] Reset and check [Video Length] for Selected Range in [Video Speed Designer]')
+    @exception_screenshot
+    def test_tip_areas_func_33_24(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_23') is run and passed
+        1. Click [Reset] button in [Video Speed Designer]
+        2. Get [Video Length] value for [Select Range] > Check the default value is ('00:00:00:00')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_23"
+        self.ensure_dependency(dependency_test)
+
+        # [L308] 4.2 Tools > Video Speed > Reset
+        # with uuid("c79b1222-f933-4738-8062-39bf61d9e93c") as case:
+
+        with step('[Action] Click [Reset] button in [Video Speed Designer]'):
+            video_speed_page.Edit_VideoSpeedDesigner_ClickReset()
+
+        with step('[Action] Get [Video Length] value for [Select Range]'):
+            video_length = video_speed_page.Edit_VideoSpeedDesigner_SelectRange_VideoLength_GetValue()
+
+        with step('[Verify] Check the default value is (00:00:00:00)'):
+            if video_length != '00:00:00:00':
+                assert False, f"Video Length for selected range is not as expected! Expected: 00:00:00:00, Got: {video_length}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_speed
+    @pytest.mark.timecode
+    @pytest.mark.time_shift
+    @pytest.mark.speed_multiplier
+    @pytest.mark.save_project
+    @pytest.mark.name('[test_tip_areas_func_33_25] Set [Time Shift] to upper > [Speed Mutiplier] to (10) > Check preview and Save project')
+    @exception_screenshot
+    def test_tip_areas_func_33_25(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_24') is run and passed
+        1. Set [Timecode] to ('00_00_12_00') in [Video Speed Designer]
+        2. Click [Create Time Shift] button to upper
+        3. Set [Speed Multiplier] value for [Selected Range] to (10)
+        4. Set [Timecode] to ('00_00_13_16') in [Video Speed Designer]
+        5. Check preview (locator=L.video_speed.main, file_name=Auto_Ground_Truth_Folder + 'L309.png') matches Ground Truth (Ground_Truth_Folder + 'L309.png') with similarity=0.95
+        6. Click [OK] button to leave [Video Speed Designer] window
+        7. Save project as ('test_tip_areas_func_33_23') in (Test_Material_Folder + 'BFT_21_Stage1/')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_24"
+        self.ensure_dependency(dependency_test)
+
+        # [L309] 4.2 Tools > Video Speed > Preview
+        # with uuid("53aadaee-c816-446f-af87-a878ba5c8d0c") as case:
+
+        with step('[Action] Set [Timecode] to (00_00_12_00) in [Video Speed Designer]'):
+            video_speed_page.set_VideoSpeedDesigner_timecode('00_00_12_00')
+
+        with step('[Action] Click [Create Time Shift] button to upper'):
+            if not video_speed_page.VideoSpeedDesigner_SelectRange_Click_Upper_CreateTimeShift_btn():
+                assert False, "Time shift upper button did not work as expected!"
+
+        with step('[Action] Set [Speed Multiplier] value for [Selected Range] to (10)'):
+            video_speed_page.Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_SetValue(10)
+
+        with step('[Action] Set [Timecode] to (00_00_13_16) in [Video Speed Designer]'):
+            video_speed_page.set_VideoSpeedDesigner_timecode('00_00_13_16')
+
+        with step('[Verify] Check preview (locator=L.video_speed.main, file_name=Auto_Ground_Truth_Folder + \'L309.png\') matches Ground Truth (Ground_Truth_Folder + \'L309.png\') with similarity=0.95'):
+            preview = main_page.snapshot(
+                locator=L.video_speed.main,
+                file_name=Auto_Ground_Truth_Folder + 'L309.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L309.png', preview, similarity=0.95):
+                assert False, "Preview does not match GT (L309.png)! Similarity should > 0.95"
+
+        with step('[Action] Click [OK] button to leave [Video Speed Designer] window'):
+            video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
+
+        with step('[Action] Save project as (test_tip_areas_func_33_23) in (Test_Material_Folder + \'BFT_21_Stage1/\')'):
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(
+                name='test_tip_areas_func_33_23', 
+                folder_path=Test_Material_Folder + 'BFT_21_Stage1/'
+            )
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.blending_mode
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.name('[test_tip_areas_func_33_26] Set [Blending Mode] and Check Preview Updates')
+    @exception_screenshot
+    def test_tip_areas_func_33_26(self):
+        '''
+        1. Start App
+        2. Open packed project ('Packed_Project/test_tip_areas_func_33_25_from_test_tip_areas_func_33_24.pdk', 'Extracted_Folder/test_tip_areas_func_33_25')
+        3. Select timeline track (2) > Set timecode to ('00_00_00_00') at main page
+        4. Select media ('Food.jpg') from [Library] Icon View > Insert media to selected track
+        5. Screenshot (locator=L.base.Area.preview.only_mtk_view)
+        6. Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to ('Overlay')
+        7. Click [OK] button to leave [Blending Mode] window
+        8. Check preview is updated with similarity<0.95
+        9. Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to ('Screen')
+        10. Click [OK] button to leave [Blending Mode] window
+        11. Check preview is updated with similarity<0.98
+        '''
+        
+        with step('[Action] Start App'):
+            main_page.start_app()
+
+        with step("[Action] Open packed project ('Packed_Project/test_tip_areas_func_33_25_from_test_tip_areas_func_33_24.pdk', 'Extracted_Folder/test_tip_areas_func_33_25')"):
+            self.open_packed_project('Packed_Project/test_tip_areas_func_33_25_from_test_tip_areas_func_33_24.pdk', 'Extracted_Folder/test_tip_areas_func_33_25')
+
+        with step('[Action] Select timeline track (2) > Set timecode to (00_00_00_00) at main page'):
+            main_page.timeline_select_track(2)
+            main_page.set_timeline_timecode('00_00_00_00')
+
+        with step('[Action] Select media (\'Food.jpg\') from [Library] Icon View > Insert media to selected track'):
+            main_page.select_library_icon_view_media('Food.jpg')
+            main_page.tips_area_insert_media_to_selected_track()
+
+        with step('[Action] Screenshot (locator=L.base.Area.preview.only_mtk_view)'):
+            preview_0 = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+
+        # [L319] 4.2 Tools > Blending Mode > Image
+        # with uuid("76b12400-6632-4a70-88b6-e1787e0f2e10") as case:
+
+        with step('[Action] Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to (Overlay)'):
+            tips_area_page.tools.select_Blending_Mode()
+            blending_mode_page.set_blending_mode('Overlay')
+
+        with step('[Action] Click [OK] button to leave [Blending Mode] window'):
+            blending_mode_page.click_ok()
+
+        with step('[Verify] Check preview is updated with similarity<0.95'):
+            preview_overlay = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(preview_0, preview_overlay, similarity=0.95):
+                assert False, "Preview did not update after setting Blending Mode to Overlay! Similarity should < 0.95"
+
+        with step('[Action] Select [Blending Mode] from [Tip Areas] > Set [Blending Mode] value to (Screen)'):
+            tips_area_page.tools.select_Blending_Mode()
+            blending_mode_page.set_blending_mode('Screen')
+
+        with step('[Action] Click [OK] button to leave [Blending Mode] window'):
+            blending_mode_page.click_ok()
+
+        with step('[Verify] Check preview is updated with similarity<0.98'):
+            preview_screen = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(preview_overlay, preview_screen, similarity=0.98):
+                assert False, "Preview did not update after setting Blending Mode to Screen! Similarity should < 0.98"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.timecode
+    @pytest.mark.blending_mode
+    @pytest.mark.name('[test_tip_areas_func_33_27] Verify [Blending Mode] changes and preview updates')
+    @exception_screenshot
+    def test_tip_areas_func_33_27(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_26') is run and passed
+        1. Select timeline media (track_index=4, clip_index=0)
+        2. Set timecode to ('00_00_03_00') at main page > Screenshot (locator=L.base.Area.preview.only_mtk_view)
+        3. Select [Blending Mode] from [Tools] > Set [Blending Mode] value to ('Normal')
+        4. Click [OK] button to leave [Blending Mode] window
+        5. Check preview is updated with similarity<0.95
+        6. Select [Blending Mode] from [Tools] > Set [Blending Mode] value to ('Multiply') > Screenshot (locator=L.base.Area.preview.only_mtk_view) as self.multiply_preview
+        7. Click [OK] button to leave [Blending Mode] window
+        8. Check preview is updated with similarity<0.95
+        '''
+
+        with step('[Action] Ensure the dependency test ("test_tip_areas_func_33_26") is run and passed'):
+            dependency_test = 'test_tip_areas_func_33_26'
+            self.ensure_dependency(dependency_test)
+
+        # [L318] 4.2 Tools > Blending Mode > Video
+        # with uuid("5bc6914b-b112-40e7-ad78-69df9425fb16") as case:
+
+        with step('[Action] Select timeline media (track_index=4, clip_index=0)'):
+            timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
+
+        with step('[Action] Set timecode to (00_00_03_00) at main page > Screenshot (locator=L.base.Area.preview.only_mtk_view)'):
+            main_page.set_timeline_timecode('00_00_03_00', is_verify=True)
+            initial_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+
+        with step('[Action] Select [Blending Mode] from [Tools] > Set [Blending Mode] value to (Normal)'):
+            tips_area_page.tools.select_Blending_Mode()
+            blending_mode_page.set_blending_mode('Normal')
+
+        with step('[Action] Click [OK] button to leave [Blending Mode] window'):
+            blending_mode_page.click_ok()
+
+        with step('[Verify] Check preview is updated with similarity<0.95'):
+            preview_normal = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(initial_preview, preview_normal, similarity=0.95):
+                assert False, "Preview did not update after setting Blending Mode to Normal! Similarity should < 0.95"
+
+        with step('[Action] Select [Blending Mode] from [Tools] > Set [Blending Mode] value to (Multiply)'):
+            tips_area_page.tools.select_Blending_Mode()
+            main_page.set_blending_mode('Multiply')
+
+        with step('[Action] Screenshot (locator=L.base.Area.preview.only_mtk_view) as self.multiply_preview'):
+            self.multiply_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+
+        with step('[Action] Click [OK] button to leave [Blending Mode] window'):
+            blending_mode_page.click_ok()
+
+        with step('[Verify] Check preview is updated with similarity<0.95'):
+            preview_multiply = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(self.multiply_preview, preview_multiply, similarity=0.95):
+                assert False, "Preview did not update after setting Blending Mode to Multiply! Similarity should < 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_in_reverse
+    @pytest.mark.name('[test_tip_areas_func_33_28] Verify [Video in Reverse] effect and preview update')
+    @exception_screenshot
+    def test_tip_areas_func_33_28(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_27') is run and passed
+        1. Select [Video in Reverse] from [Tip Areas]
+        2. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L310.png') matches Ground Truth (Ground_Truth_Folder + 'L310.png') with similarity=0.95
+        '''
+        
+        with step('[Action] Ensure the dependency test ("test_tip_areas_func_33_27") is run and passed'):
+            dependency_test = 'test_tip_areas_func_33_27'
+            self.ensure_dependency(dependency_test)
+
+        # [L310] 4.2 Tools > Video / Audio in Reverse > Tick
+        # with uuid("bf0eaa18-6d18-4853-aab6-71b55d267007") as case:
+
+        with step('[Action] Select [Video in Reverse] from [Tip Areas]'):
+            tips_area_page.tools.select_Video_in_Reverse(skip=1)
+
+        with step('[Verify] Check preview matches GT (L310.png) with similarity=0.95'):
+            preview_snapshot = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, 
+                                                file_name=Auto_Ground_Truth_Folder + 'L310.png')
+            if not main_page.compare(Ground_Truth_Folder + 'L310.png', preview_snapshot, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match Ground Truth (L310.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_in_reverse
+    @pytest.mark.name('[test_tip_areas_func_33_29] Verify [Video in Reverse] effect and preview update')
+    @exception_screenshot
+    def test_tip_areas_func_33_29(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_28') is run and passed
+        1. Screenshot (locator=L.base.Area.preview.only_mtk_view)
+        2. Select [Video in Reverse] from [Tip Areas] with (skip=1) > Screenshot (locator=L.base.Area.preview.only_mtk_view) as self.no_reverse_preview
+        3. Check preview is updated with similarity<0.95
+        4. Check preview is the same as self.multiply_preview with similarity>0.95
+        '''
+        
+        with step('[Action] Ensure the dependency test ("test_tip_areas_func_33_28") is run and passed'):
+            dependency_test = 'test_tip_areas_func_33_28'
+            self.ensure_dependency(dependency_test)
+
+        # [L311] 4.2 Tools > Video / Audio in Reverse > UnTick
+        # with uuid("2aa40a98-c103-4394-8c49-0ab946b8a96b") as case:
+
+        with step('[Action] Screenshot initial preview'):
+            initial_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+
+        with step('[Action] Select [Video in Reverse] from [Tip Areas] with (skip=1)'):
+            tips_area_page.tools.select_Video_in_Reverse(skip=1)
+            self.no_reverse_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+
+        with step('[Verify] Check preview is updated with similarity<0.95'):
+            if main_page.compare(initial_preview, self.no_reverse_preview, similarity=0.95):
+                # Similarity should be less than 0.95 for an updated preview
+                assert False, "Preview did not update after applying [Video in Reverse]! Similarity should < 0.95"
+
+        with step('[Verify] Check preview is the same as self.multiply_preview with similarity>0.95'):
+            if not main_page.compare(self.no_reverse_preview, self.multiply_preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match multiply preview! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.audio_editor
+    @pytest.mark.single_channel
+    @pytest.mark.name('[test_tip_areas_func_33_30] Enable [Single Channel] in [Audio Editor] and Verify Preview Update')
+    @exception_screenshot
+    def test_tip_areas_func_33_30(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_29') is run and passed
+        1. Select [Audio Editor] from [Tip Areas]
+        2. Screenshot (locator=L.audio_editing.editor_window.preview_only_two_channel)
+        3. Switch to [Single Channel] mode in [Audio Editor] window
+        4. Check preview is updated with similarity<0.95
+        '''
+        dependency_test = 'test_tip_areas_func_33_29'
+        self.ensure_dependency(dependency_test)
+
+        # [L322] 4.2 Tools > Audio Editor > Set Channel
+        # with uuid("3d06fc81-911c-4ac8-85a7-79111d7f7cb5") as case:
+
+        with step('[Action] Select [Audio Editor] from [Tip Areas]'):
+            tips_area_page.tools.select_Audio_Editor()
+
+        with step('[Action] Screenshot current preview in [Audio Editor]'):
+            initial_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
+
+        with step('[Action] Switch to [Single Channel] mode in [Audio Editor] window'):
+            audio_editing_page.audio_editor.switch_single_channel(single_mode='yes')
+
+        with step('[Verify] Check if preview is updated after switching to Single Channel mode'):
+            updated_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
+            if main_page.compare(initial_preview, updated_preview, similarity=0.95):
+                # Similarity should be less than 0.95 for updated preview
+                assert False, "Preview did not update after switching to Single Channel mode! Similarity should < 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.audio_editor
+    @pytest.mark.effect_phone
+    @pytest.mark.name('[test_tip_areas_func_33_31] Apply [Effect Phone] in [Audio Editor] and Verify Preview Update')
+    @exception_screenshot
+    def test_tip_areas_func_33_31(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_30') is run and passed
+        1. Open [Effect Phone] window in [Audio Editor] > Screenshot (locator=L.audio_editing.editor_window.preview_only_two_channel)
+        2. Apply [Effect Phone] in [Audio Editor]
+        3. Check preview is updated with similarity<0.95
+        '''
+        
+        with step('[Action] Ensure the dependency test ("test_tip_areas_func_33_30") is run and passed'):
+            dependency_test = 'test_tip_areas_func_33_30'
+            self.ensure_dependency(dependency_test)
+
+        # [L321] 4.2 Tools > Audio Editor > Apply each adjustment function
+        # with uuid("902dbff1-18ec-4175-b29e-a41c53183ccc") as case:
+
+        with step('[Action] Open [Effect Phone] window in [Audio Editor]'):
+            audio_editing_page.audio_editor.open_special_effect_phone()
+
+        with step('[Action] Screenshot current preview in [Audio Editor]'):
+            initial_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
+
+        with step('[Action] Apply [Effect Phone] in [Audio Editor]'):
+            audio_editing_page.audio_editor.apply_phone_effect()
+
+        with step('[Verify] Check preview is updated after applying Effect Phone'):
+            updated_preview = main_page.snapshot(locator=L.audio_editing.editor_window.preview_only_two_channel)
+            if main_page.compare(initial_preview, updated_preview, similarity=0.95):
+                # Similarity should be less than 0.95 for updated preview
+                assert False, "Preview did not update after applying Effect Phone! Similarity should < 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.audio_editor
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_32] Check able to play video in [Audio Editor] and timecode is updated')
+    @exception_screenshot
+    def test_tip_areas_func_33_32(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_31') is run and passed
+        1. Get [Timecode] in [Audio Editor] window
+        2. Press [Space] key to play > Wait for (DELAY_TIME*2) > Press [Space] key to pause
+        3. Get [Timecode] in [Audio Editor] window
+        4. Check timecode is updated (not the same as original)
+        '''
+        
+        with step('[Action] Ensure the dependency test ("test_tip_areas_func_33_31") is run and passed'):
+            dependency_test = 'test_tip_areas_func_33_31'
+            self.ensure_dependency(dependency_test)
+        
+        # [L323] 4.2 Tools > Audio Editor > Check Preview
+        # with uuid("cafca61b-b8cf-4517-8996-17744a054d46") as case:
+
+        with step('[Action] Get [Timecode] in [Audio Editor] window'):
+            initial_timecode = audio_editing_page.audio_editor.get_current_timecode()
+        
+        with step('[Action] Press [Space] key to play, wait for DELAY_TIME*2, and press [Space] key to pause'):
+            main_page.press_space_key()  # Play
+            time.sleep(DELAY_TIME * 2)   # Wait for DELAY_TIME*2
+            main_page.press_space_key()  # Pause
+        
+        with step('[Action] Get [Timecode] in [Audio Editor] window after play and pause'):
+            updated_timecode = audio_editing_page.audio_editor.get_current_timecode()
+        
+        with step('[Verify] Check timecode is updated'):
+            if initial_timecode == updated_timecode:
+                assert False, f"Timecode did not update! Initial timecode: {initial_timecode}, Updated timecode: {updated_timecode}"
+        
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.audio_editor
+    @pytest.mark.timeline
+    @pytest.mark.save_project
+    @pytest.mark.name('[test_tip_areas_func_33_33] Check preview as GT from test_tip_areas_func_33_32 and save project')
+    @exception_screenshot
+    def test_tip_areas_func_33_33(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_32') is run and passed
+        1. Click [OK] button to leave [Audio Editor] and check result is True
+        2. Check preview is the same as self.no_reverse_preview with similarity>0.95
+        3. Select track (1) > Click [Stop] button at [PlayBack Window]
+        4. Save the project as ('test_tip_areas_func_33_33') in (Test_Material_Folder + 'BFT_21_Stage1/')
+        '''
+        
+        dependency_test = 'test_tip_areas_func_33_32'
+        self.ensure_dependency(dependency_test)
+
+        # [L325] 4.2 Tools > Audio Editor > Apply (Result is correct in timeline after apply)
+        # with uuid("d3e2bba3-2613-439c-bdab-f2a5ff15071d") as case:
+
+        with step('[Action] Click [OK] button to leave [Audio Editor] and check result is True'):
+            audio_editing_page.audio_editor.click_ok()
+
+        with step('[Verify] Check preview is the same as self.no_reverse_preview with similarity>0.95'):
+            if not main_page.compare(self.no_reverse_preview, main_page.snapshot(locator=L.base.Area.preview.only_mtk_view), similarity=0.95):
+                assert False, "Preview does not match expected preview after leaving Audio Editor!"
+
+        with step('[Action] Select track (1) > Click [Stop] button at [PlayBack Window]'):
+            main_page.timeline_select_track(1)
+            playback_window_page.Edit_Timeline_PreviewOperation('stop')
+
+        with step('[Action] Save the project as \'test_tip_areas_func_33_33\''):
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name='test_tip_areas_func_33_33', folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.smart_fit_for_duration
+    @pytest.mark.custom_duration
+    @pytest.mark.name('[test_tip_areas_func_33_34] Set [Custom Duration] in [Smart Fit for Duration] and Check Preview Update')
+    @exception_screenshot
+    def test_tip_areas_func_33_34(self):
+        '''
+        1. Start App
+        2. Select media ('Mahoroba.mp3') by library icon view > Insert clip in library to selected track
+        3. Select [Smart Fit for Duration] from [Tip Areas]
+        4. Click [Original Duration] option in [Smart Fit] window
+        5. Get [Custom Duration] option value in [Smart Fit] window > Check the value is (0)
+        6. Screenshot (locator=L.audio_editing.smart_fit.waveform_area)
+        7. Click [Custom Duration] option in [Smart Fit] window
+        8. Set [Custom Duration] in [Smart Fit] window to ('00_01_03_00')
+        9. Check preview is updated with similarity<0.95
+        '''
+        
+        with step('[Action] Start App'):
+            main_page.start_app()
+
+        with step("[Action] Select media ('Mahoroba.mp3') by library icon view and insert to selected track"):
+            main_page.select_library_icon_view_media("Mahoroba.mp3")
             media_room_page.library_clip_context_menu_insert_on_selected_track()
 
-            # Enter (Fix / Enhance]
+        # [L301] 4.2 Tools > Audio Smart Fit for Duration > Remix audio
+        # with uuid("fa162ec0-f523-404a-bc6b-f51cd7250a4f") as case:
+
+        with step('[Action] Select [Smart Fit for Duration] from [Tip Areas]'):
+            if not tips_area_page.tools.select_smart_fit_duration():
+                assert False, "Failed to select Smart Fit for Duration from Tip Areas!"
+
+        with step('[Action] Click [Original Duration] option in [Smart Fit] window'):
+            audio_editing_page.smart_fit.click_org_option()
+
+        with step('[Verify] Get [Custom Duration] option value in [Smart Fit] window and check the value is (0)'):
+            custom_duration_value = audio_editing_page.smart_fit.get_custom_option_value()
+            if custom_duration_value != "0":
+                assert False, f"Expected Custom Duration value to be 0, but got {custom_duration_value}"
+
+        with step('[Action] Screenshot (locator=L.audio_editing.smart_fit.waveform_area)'):
+            before_preview = main_page.snapshot(locator=L.audio_editing.smart_fit.waveform_area)
+
+        with step('[Action] Click [Custom Duration] option in [Smart Fit] window'):
+            audio_editing_page.smart_fit.click_custom_option()
+
+        with step('[Action] Set [Custom Duration] in [Smart Fit] window to (00_01_03_00)'):
+            audio_editing_page.smart_fit.set_custom_new_duration("00_01_03_00")
+
+        with step('[Verify] Check preview is updated with similarity<0.95'):
+            after_preview = main_page.snapshot(locator=L.audio_editing.smart_fit.waveform_area)
+            if main_page.compare(after_preview, before_preview, similarity=0.95):
+                assert False, "Preview did not update as expected after setting custom duration! Similarity should < 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.timecpde
+    @pytest.mark.smart_fit_for_duration
+    @pytest.mark.name('[test_tip_areas_func_33_35] Check able to play in [Smart Fit] window and timecode is updated')
+    @exception_screenshot
+    def test_tip_areas_func_33_35(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_34') is run and passed
+        1. Get [Timecode] in [Smart Fit] window > Check timecode is ('00:00:00:00')
+        2. Click [Space] key to play in [Smart Fit] window > Wait for (DELAY_TIME*5) > Click [Space] key to pause
+        3. Get [Timecode] in [Smart Fit] window > Check timecode is updated (not the same as original)
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_34"
+        self.ensure_dependency(dependency_test)
+
+        # [L302] 4.2 Tools > Audio Smart Fit for Duration > Preview
+        # with uuid("7d60615e-c270-4b9c-b30c-d3cc5f8fde31") as case:
+
+        with step("[Action] Get [Timecode] in [Smart Fit] window and check timecode is ('00:00:00:00')"):
+            initial_timecode = audio_editing_page.smart_fit.get_current_timecode()
+            if initial_timecode != "00:00:00:00":
+                assert False, f"Expected timecode '00:00:00:00', but got {initial_timecode}"
+
+        with step("[Action] Click [Space] key to play in [Smart Fit] window > Wait for (DELAY_TIME*5) > Click [Space] key to pause"):
+            main_page.press_space_key()
+            time.sleep(DELAY_TIME * 5)
+            main_page.press_space_key()
+
+        with step("[Verify] Get [Timecode] in [Smart Fit] window and check timecode is updated"):
+            updated_timecode = audio_editing_page.smart_fit.get_current_timecode()
+            if updated_timecode == initial_timecode:
+                assert False, f"Timecode did not update as expected! Initial: {initial_timecode}, Updated: {updated_timecode}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.smart_fit_for_duration
+    @pytest.mark.timecpde
+    @pytest.mark.name('[test_tip_areas_func_33_36] Check Video Length is correct after leave [Smart Fit] window')
+    @exception_screenshot
+    def test_tip_areas_func_33_36(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_35') is run and passed
+        1. Click [OK] button to leave [Smart Fit] window > Check result is True
+        2. Set [Timecode] to ('00_99_99_00') in [Main Page]
+        3. Get [Timecode] in [PlayBack Window] > Check timecode is ('00:01:03:00')
+        4. Clear [Remix] file via terminal command
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_35"
+        self.ensure_dependency(dependency_test)
+
+        # [L303] 4.2 Tools > Audio Smart Fit for Duration > Apply result to timeline clip correctly
+        # with uuid("c655ce1a-0489-429b-a860-f06b764a254e") as case:
+
+        with step("[Action] Click [OK] button to leave [Smart Fit] window and check result is True"):
+            result = audio_editing_page.smart_fit.click_ok()
+            if not result:
+                assert False, "Failed to leave [Smart Fit] window properly!"
+
+        with step("[Action] Set [Timecode] to ('00_99_99_00') in [Main Page]"):
+            main_page.set_timeline_timecode("00_99_99_00", is_verify=True)
+
+        with step("[Verify] Get [Timecode] in [PlayBack Window] and check timecode is ('00:01:03:00')"):
+            timecode = playback_window_page.get_timecode_slidebar()
+            if timecode != "00:01:03:00":
+                assert False, f"Expected timecode '00:01:03:00', but got {timecode}"
+
+        with step("[Action] Clear [Remix] file via terminal command"):
+            main_page.clear_remix_file('Mahoroba_remix.wav')
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.name('[test_tip_areas_func_33_37] Open [Fix Enhance] window via [Tips Area] and Check [Fix Enhance] Window is Opened')
+    @exception_screenshot
+    def test_tip_areas_func_33_37(self):
+        '''
+        1. Start App
+        2. Open packed project ('Packed_Project/test_tip_areas_func_33_37_from_test_tip_areas_func_33_33.pdk', 'Extracted_Folder/test_tip_areas_func_33_37')
+        3. Select timeline media (track_index=0, clip_index=0)
+        4. Click [Fix Enhance] button on [Tips Area]
+        5. Check if [Fix Enhance] Window is Opened
+        '''
+        
+        with step("[Action] Start App"):
+            main_page.start_app()
+        
+        with step("[Action] Open packed project ('Packed_Project/test_tip_areas_func_33_37_from_test_tip_areas_func_33_33.pdk', 'Extracted_Folder/test_tip_areas_func_33_37')"):
+            self.open_packed_project('Packed_Project/test_tip_areas_func_33_37_from_test_tip_areas_func_33_33.pdk',
+                                    'Extracted_Folder/test_tip_areas_func_33_37')
+
+        # [L327] 4.3 Fix / Enhance > Enter [Fix / Enhance] page with each clip
+        # with uuid("d0a1e193-d13f-4e18-9ac8-e04924cfd021") as case:
+
+        with step("[Action] Select timeline media (track_index=0, clip_index=0)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
+
+        with step("[Action] Click [Fix Enhance] button on [Tips Area]"):
             main_page.tips_area_click_fix_enhance()
 
-            # Verify step:
-            case.result = fix_enhance_page.is_in_fix_enhance()
+        with step("[Verify] Check if [Fix Enhance] Window is Opened"):
+            if not fix_enhance_page.is_in_fix_enhance():
+                assert False, "Fix Enhance window is not opened!"
+        
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.lighting_adjustment
+    @pytest.mark.extreme_backlight
+    @pytest.mark.name('[test_tip_areas_func_33_38] Set [Extreme Backlight] in [Fix Enhance] and Verify Checkbox Status and Value')
+    @exception_screenshot
+    def test_tip_areas_func_33_38(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_37') is run and passed
+        1. Enable [Lighting Adjustment] in [Fix Enhance] window
+        2. Enable [Extreme Backlight] in [Lighting Adjustment]
+        3. Set [Extreme Backlight] value in [Fix Enhance] to (75)
+        4. Get [Extreme Backlight] Checkbox Status in [Lighting Adjustment] and check the status is True
+        5. Get [Extreme Backlight] value in [Fix Enhance] and check the value is ('75')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_37"
+        self.ensure_dependency(dependency_test)
+
+        # [L329] 4.3 Fix / Enhance > Fix > Apply [Lighting Adjustment]
+        # with uuid("8f26c266-40d9-4a72-9403-a9c90974cad1") as case:
+
+        with step("[Action] Enable [Lighting Adjustment] in [Fix Enhance] window"):
+            fix_enhance_page.fix.enable_lighting_adjustment(value=True)
+
+        with step("[Action] Enable [Extreme Backlight] in [Lighting Adjustment]"):
+            fix_enhance_page.fix.lighting_adjustment.enable_extreme_backlight(value=True)
+
+        with step("[Action] Set [Extreme Backlight] value in [Fix Enhance] to (75)"):
+            fix_enhance_page.fix.lighting_adjustment.extreme_backlight.set_value(75)
+
+        with step("[Verify] Get [Extreme Backlight] Checkbox Status in [Lighting Adjustment] and check the status is True"):
+            extreme_backlight_status = fix_enhance_page.fix.lighting_adjustment.get_extreme_backlight()
+            if not extreme_backlight_status:
+                assert False, "Extreme Backlight checkbox is not enabled!"
+
+        with step("[Verify] Get [Extreme Backlight] value in [Fix Enhance] and check the value is ('75')"):
+            extreme_backlight_value = fix_enhance_page.fix.lighting_adjustment.extreme_backlight.get_value()
+            if extreme_backlight_value != '75':
+                assert False, f"Expected Extreme Backlight value to be '75', but got {extreme_backlight_value}"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.white_balance
+    @pytest.mark.color_temperature
+    @pytest.mark.name('[test_tip_areas_func_33_39] Enable [White Balance] > Set [Color Temperature] in [Fix Enhance] > Verify Preview Update')
+    @exception_screenshot
+    def test_tip_areas_func_33_39(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_38') is run and passed
+        1. Enable [White Balance] in [Fix Enhance] window
+        2. Set [Color Temperature] value in [Fix Enhance] to (90)
+        3. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L330.png') matches Ground Truth (Ground_Truth_Folder + 'L330.png') with similarity=0.95
+        '''
+
+        dependency_test = "test_tip_areas_func_33_38"
+        self.ensure_dependency(dependency_test)
+
+        # [L330] 4.3 Fix / Enhance > Fix > Apply [White Balance]
+        # with uuid("307558b2-3c13-4520-9004-003730df8f4c") as case:
+
+        with step("[Action] Enable [White Balance] in [Fix Enhance] window"):
+            fix_enhance_page.fix.enable_white_balance(value=True)
+
+        with step("[Action] Set [Color Temperature] value in [Fix Enhance] to (90)"):
+            fix_enhance_page.fix.white_balance.color_temperature.set_value(90)
+
+        with step("[Verify] Check preview matches GT (L330.png) with similarity 0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L330.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L330.png', preview_snapshot, similarity=0.95):
+                assert False, "Preview does not match Ground Truth (L330.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.compare_in_split_preview
+    @pytest.mark.name('[test_tip_areas_func_33_40] Enable/Disable [Compare in Split Preview] in [Fix Enhance] and Verify Preview')
+    @exception_screenshot
+    def test_tip_areas_func_33_40(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_39') is run and passed
+        1. Enable [Compare in Split Preview] Checkbox (1)
+        2. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L342.png') matches Ground Truth (Ground_Truth_Folder + 'L342.png') with similarity=0.95
+        3. Disable [Compare in Split Preview] Checkbox (0)
+        4. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L330.png') matches Ground Truth (Ground_Truth_Folder + 'L330.png') with similarity=0.95
+        '''
+
+        dependency_test = "test_tip_areas_func_33_39"
+        self.ensure_dependency(dependency_test)
+
+        # [L342] 4.3 Fix / Enhance > Compare in split preview
+        # with uuid("67ccfb1a-5549-4d28-8fed-20757654c48d") as case:
+
+        with step("[Action] Enable [Compare in Split Preview] Checkbox (1)"):
+            fix_enhance_page.set_check_compare_in_split_preview(value=1)
+
+        with step("[Verify] Check preview matches GT (L342.png) with similarity 0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L342.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L342.png', preview_snapshot, similarity=0.95):
+                assert False, "Preview does not match Ground Truth (L342.png)! Similarity should > 0.95"
+
+        with step("[Action] Disable [Compare in Split Preview] Checkbox (0)"):
+            fix_enhance_page.set_check_compare_in_split_preview(value=0)
+
+        with step("[Verify] Check preview matches GT (L330.png) with similarity 0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L330.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L330.png', preview_snapshot, similarity=0.95):
+                assert False, "Preview does not match Ground Truth (L330.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.color_adjustment
+    @pytest.mark.exposure
+    @pytest.mark.hue
+    @pytest.mark.name('[test_tip_areas_func_33_41] Set [Color Adjustment] - [Expose]/[Hue] in [Fix Enhance] and Verify Value')
+    @exception_screenshot
+    def test_tip_areas_func_33_41(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_40') is run and passed
+        1. Select Timeline media (track_index=2, clip_index=2)
+        2. Enable [Color Adjustment] Tab in [Fix Enhance] window
+        3. Set [Color Adjustment][Exposure] value to (182)
+        4. Get [Color Adjustment][Exposure] value in [Fix Enhance] and check the value is ('182')
+        5. Set [Color Adjustment][Hue] value to (36)
+        6. Get [Color Adjustment][Hue] value in [Fix Enhance] and check the value is ('36')
+        '''
+
+        dependency_test = "test_tip_areas_func_33_40"
+        self.ensure_dependency(dependency_test)
+
+        # [L336] 4.3 Fix / Enhance > Enhance > Apply [Color Adjustment]
+        # with uuid("3eaa9f75-2ff7-4f74-9d67-49badebcaa8b") as case:
+
+        with step("[Action] Select Timeline media (track_index=2, clip_index=2)") :
+            timeline_operation_page.select_timeline_media(track_index=2, clip_index=2)
+
+        with step("[Action] Enable [Color Adjustment] Tab in [Fix Enhance] window"):
+            fix_enhance_page.enhance.switch_to_color_adjustment()
+
+        with step("[Action] Set [Color Adjustment][Exposure] value to (182)"):
+            fix_enhance_page.enhance.color_adjustment.exposure.set_value(182)
+
+        with step("[Verify] Get [Color Adjustment][Exposure] value in [Fix Enhance] and check the value is ('182')"):
+            exposure_value = fix_enhance_page.enhance.color_adjustment.exposure.get_value()
+            if exposure_value != '182':
+                assert False, f"Expected Exposure value '182', got '{exposure_value}'"
+
+        with step("[Action] Set [Color Adjustment][Hue] value to (36)"):
+            fix_enhance_page.enhance.color_adjustment.hue.set_value(36)
+
+        with step("[Verify] Get [Color Adjustment][Hue] value in [Fix Enhance] and check the value is ('36')"):
+            hue_value = fix_enhance_page.enhance.color_adjustment.hue.get_value()
+            if hue_value != '36':
+                assert False, f"Expected Hue value '36', got '{hue_value}'"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.split_toning
+    @pytest.mark.balance
+    @pytest.mark.shadow
+    @pytest.mark.hue
+    @pytest.mark.saturation
+    @pytest.mark.name('[test_tip_areas_func_33_42] Enable [Split Toning] > Apply [Balance]/ [Shadow] and check preview')
+    @exception_screenshot
+    def test_tip_areas_func_33_42(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_41') is run and passed
+        1. Enable [Split Toning] in [Fix Enhance] window
+        2. Set [Split Toning][Balance] value to (53)
+        3. Set [Split Toning][Sahdow][Hue] value to (291)
+        4. Set [Split Toning][Sahdow][Saturation] value to (89)
+        5. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L339.png') matches Ground Truth (Ground_Truth_Folder + 'L339.png') with similarity=0.95
+        '''
+
+        dependency_test = "test_tip_areas_func_33_41"
+        self.ensure_dependency(dependency_test)
+
+        # [L339] 4.3 Fix / Enhance > Enhance > Apply [Split Toning]
+        # with uuid("3dedd39f-8afd-4a17-89cc-dfa0e6da72ec") as case:
+
+        with step("[Action] Enable [Split Toning] in [Fix Enhance] window"):
+            fix_enhance_page.enhance.enable_split_toning(value=True)
+
+        with step("[Action] Set [Split Toning][Balance] value to (53)"):
+            fix_enhance_page.enhance.split_toning.balance.set_value(53)
+
+        with step("[Action] Set [Split Toning][Shadow][Hue] value to (291)"):
+            fix_enhance_page.enhance.split_toning.shadow.hue.set_value(291)
+
+        with step("[Action] Set [Split Toning][Shadow][Saturation] value to (89)"):
+            fix_enhance_page.enhance.split_toning.shadow.saturation.set_value(89)
+
+        with step("[Verify] Check preview matches GT (L339.png) with similarity 0.95"):
+            preview_snapshot = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + 'L339.png'
+            )
+            if not main_page.compare(Ground_Truth_Folder + 'L339.png', preview_snapshot, similarity=0.95):
+                assert False, "Preview does not match GT (L339.png)! Similarity should > 0.95"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.timeline
+    @pytest.mark.fix_enhacne
+    @pytest.mark.name('[test_tip_areas_func_33_43] Leave [Fix Enhacne] > Choose another media > Re-enter [Fix Enhacne]')
+    @exception_screenshot
+    def test_tip_areas_func_33_43(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_42') is run and passed
+        1. Click [Close] to leave [Fix Enhance] window
+        2. Select timeline track (3)
+        3. Select media ('Sport 01.jpg') by library icon view > Insert clip in library to selected track
+        4. Click [Fix Enhance] button on [Tips Area]
+        5. Check if [Fix Enhance] Window is Opened
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_42"
+        self.ensure_dependency(dependency_test)
+
+        # [L328] 4.3 Fix / Enhance > Enter [Fix / Enhance] w/ Image clip
+        # with uuid("c91a00e7-fe55-412a-892b-15d281d69304") as case:
+
+        with step("[Action] Click [Close] to leave [Fix Enhance] window"):
+            fix_enhance_page.click_close()
+
+        with step("[Action] Select timeline track (3)"):
+            main_page.timeline_select_track(3)
+
+        with step("[Action] Select media ('Sport 01.jpg') by library icon view and insert clip in library to selected track"):
+            main_page.select_library_icon_view_media('Sport 01.jpg')
+            media_room_page.library_clip_context_menu_insert_on_selected_track()
+
+        with step("[Action] Click [Fix Enhance] button on [Tips Area]"):
+            main_page.tips_area_click_fix_enhance()
+
+        with step("[Verify] Check if [Fix Enhance] window is opened"):
+            if not fix_enhance_page.is_in_fix_enhance():
+                assert False, "[Fix Enhance] Window is not opened"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.lens_correction
+    @pytest.mark.fisheyes
+    @pytest.mark.name('[test_tip_areas_func_33_44] Set [Lens Correction] - [Marker Type]/ [Fisheye] in [Fix Enhance] and Verify Value')
+    @exception_screenshot
+    def test_tip_areas_func_33_44(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_43') is run and passed
+        1. Enable [Lens Correction] Tab in [Fix Enhance] window
+        2. Set [Marker Type] in [Lens Correction] Window to ('Garmin')
+        3. Get [Lens Correction] value in [Fix Enhance] and check the value is ('Garmin')
+        4. Set [Lens Correction][Fisheye] value to (75)
+        5. Get [Lens Correction][Fisheye] value in [Fix Enhance] and check the value is ('75')
+        '''
+        
+        dependency_test = "test_tip_areas_func_33_43"
+        self.ensure_dependency(dependency_test)
 
         # [L332] 4.3 Fix / Enhance > Fix > Apply Lens Correction
-        with uuid("79967191-3497-482f-8767-6ab238b50b79") as case:
+        # with uuid("79967191-3497-482f-8767-6ab238b50b79") as case:
+
+        with step("[Action] Enable [Lens Correction] Tab in [Fix Enhance] window"):
             fix_enhance_page.fix.switch_to_lens_correction()
 
-            # Select marker type : Garmin
+        with step("[Action] Set [Marker Type] in [Lens Correction] Window to ('Garmin')"):
             fix_enhance_page.fix.lens_correction.select_marker_type('Garmin')
-            time.sleep(DELAY_TIME)
 
-            # Set fish eye distortion
+        with step("[Verify] Check [Lens Correction] value in [Fix Enhance] is ('Garmin')"):
+            marker_type = fix_enhance_page.fix.lens_correction.get_marker_type()
+            if marker_type != 'Garmin':
+                assert False, f"Expected Marker Type 'Garmin', but got {marker_type}"
+
+        with step("[Action] Set [Lens Correction][Fisheye] value to (75)"):
             fix_enhance_page.fix.lens_correction.fisheye_distortion.set_value(75)
 
-            # Verify step:
-            get_marker_type = fix_enhance_page.fix.lens_correction.get_marker_type()
-            logger(get_marker_type)
+        with step("[Verify] Check [Lens Correction][Fisheye] value in [Fix Enhance] is ('75')"):
+            fisheye_value = fix_enhance_page.fix.lens_correction.fisheye_distortion.get_value()
+            if fisheye_value != 75:
+                assert False, f"Expected Fisheye value '75', but got {fisheye_value}"
 
-            if get_marker_type == 'Garmin':
-                check_type = True
-            else:
-                check_type = False
+        assert True
 
-            get_current_value = fix_enhance_page.fix.lens_correction.fisheye_distortion.get_value()
-            if get_current_value == '75':
-                apply_value = True
-            else:
-                apply_value = False
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.hdr_effect
+    @pytest.mark.glow
+    @pytest.mark.name("[test_tip_areas_func_33_45] Apply [HDR Effect] - [Glow] in [Fix Enhance] and Verify Preview")
+    @exception_screenshot
+    def test_tip_areas_func_33_45(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_44') is run and passed
+        1. Enable/ Disable [HDR Effect] Tab in [Fix Enhance] window > ScreenShot (locator=L.base.Area.preview.only_mtk_view)
+        2. Set [HDR Effect][Glow][Strength] value to (89) > Check preview is updated with similarity<0.99
+        3. Set [HDR Effect][Glow][Radius] value to (31) by dragging the slider > Check preview is updated with similarity<0.99
+        4. Set [HDR Effect][Glow][Balance] value to (-17) > Check preview is updated with similarity<0.99
+        5. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L340.png') matches Ground Truth (Ground_Truth_Folder + 'L340.png') with similarity=0.95
+        6. Save the project as ('test_tip_areas_func_33_44') in (Test_Material_Folder + 'BFT_21_Stage1/')
+        '''
 
-            case.result = check_type and apply_value
+        self.ensure_dependency("test_tip_areas_func_33_44")
 
         # [L340] 4.3 Fix / Enhance > Enhance > Apply HDR Effect
-        with uuid("4bd05dc1-8871-4893-a6e2-ac9933173ca3") as case:
+        # with uuid("4bd05dc1-8871-4893-a6e2-ac9933173ca3") as case:
+
+        with step("[Action] Enable/ Disable [HDR Effect] Tab in [Fix Enhance] window > ScreenShot (locator=L.base.Area.preview.only_mtk_view)"):
             fix_enhance_page.enhance.switch_to_hdr_effect()
+            hdr_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
 
-            # Set Glow : Strength = 89 / Radius = 31 / Balance = -17
+        with step("[Action] Set [HDR Effect][Glow][Strength] value to (89) > Check preview is updated with similarity<0.99"):
             fix_enhance_page.enhance.hdr_effect.glow.strength.set_value(89)
+            preview_strength = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            # Similarity should be less than 0.99 for updated preview
+            if main_page.compare(hdr_preview, preview_strength, similarity=0.99):
+                assert False, "Preview similarity should < 0.99 after setting [HDR Effect][Glow][Strength] value to (89)"
 
+        with step("[Action] Set [HDR Effect][Glow][Radius] value to (31) by dragging the slider > Check preview is updated with similarity<0.99"):
             fix_enhance_page.enhance.hdr_effect.glow.radius.adjust_slider(31)
+            preview_radius = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            # Similarity should be less than 0.99 for updated preview
+            if main_page.compare(preview_strength, preview_radius, similarity=0.99):
+                assert False, "Preview similarity should < 0.99 after setting [HDR Effect][Glow][Radius] value to (31)"
+
+        with step("[Action] Set [HDR Effect][Glow][Balance] value to (-17) > Check preview is updated with similarity<0.99"):
             fix_enhance_page.enhance.hdr_effect.glow.balance.set_value(-17)
-            time.sleep(DELAY_TIME * 3)
+            preview_balance = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            # Similarity should be less than 0.99 for updated preview
+            if main_page.compare(preview_radius, preview_balance, similarity=0.99):
+                assert False, "Preview similarity should < 0.99 after setting [HDR Effect][Glow][Balance] value to (-17)"
 
-            # Verify Step:
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L340.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L340.png', current_preview)
+        with step("[Verify] Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L340.png') matches Ground Truth (Ground_Truth_Folder + 'L340.png') with similarity=0.95"):
+            preview_final = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + "L340.png")
+            if not main_page.compare(Ground_Truth_Folder + "L340.png", preview_final, similarity=0.95):
+                # Similarity should be greater than 0.95 for a matching preview
+                assert False, "Preview does not match Ground Truth (L340.png)! Similarity should > 0.95"
 
-            case.result = check_result
+        with step("[Action] Save the project as ('test_tip_areas_func_33_44') in (Test_Material_Folder + 'BFT_21_Stage1/')"):
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name="test_tip_areas_func_33_44", folder_path=Test_Material_Folder + "BFT_21_Stage1/")
 
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_27',
-                                          folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-        time.sleep(DELAY_TIME*3)
+        assert True
 
-    # 2 uuid (Color Match locator wait for RD hardcode)
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.timeline
+    @pytest.mark.fix_enhance
+    @pytest.mark.hdr_effect
+    @pytest.mark.edge
+    @pytest.mark.color_match
+    @pytest.mark.name("[test_tip_areas_func_33_46] Enable [Color Match] with 2 medias in [Fix Enhance] and Verify Preview")
     @exception_screenshot
-    def test_10_1_28(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Insert (Sport 02.jpg) & (Travel 01.jpg) to track1
-        main_page.select_library_icon_view_media('Sport 02.jpg')
-        time.sleep(DELAY_TIME * 2)
-        media_room_page.library_clip_context_menu_insert_on_selected_track()
-
-        main_page.select_library_icon_view_media('Travel 01.jpg')
-        time.sleep(DELAY_TIME * 2)
-        #tips_area_page.click_TipsArea_btn_insert(2)
-        self.temp_for_os_14_insert_function(2)
-
-        # [L346] 4.3 Fix / Enhance > Apply to All
-        # 2023/08/01: Due to v22.0.5528 Fix / Enhance remove the button of [Apply to All]
-        # Select timeline clip: (Travel 01.jpg) then enter (Fix / Enhance]
-        main_page.tips_area_click_fix_enhance()
-
-        # Enable HDR
-        fix_enhance_page.enhance.enable_hdr_effect()
-
-        # Select timeline clip: (Sport 02.jpg) > Set HDR (Edge.Strength = 65)
-        timeline_operation_page.select_timeline_media(track_index=0, clip_index=1)
-        time.sleep(DELAY_TIME)
-
-        fix_enhance_page.enhance.hdr_effect.edge.strength.set_value(65)
-        time.sleep(DELAY_TIME)
-
-        # [L338] 4.3 Fix / Enhance > Enhance > Color Match
-        with uuid("63d5644b-8272-4693-a015-75f8da7f239d") as case:
-            # Select timeline clip: Travel 01.jpg  then enter Color Match
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
-            time.sleep(DELAY_TIME)
-            fix_enhance_page.enhance.switch_to_color_match()
-
-            # Click [Color Match]
-            fix_enhance_page.enhance.color_match.click_color_match_button()
-
-            # Verify Step:
-            default_status = fix_enhance_page.enhance.color_match.get_match_color_status()
-            if default_status == False:
-                check_status = True
-            else:
-                check_status = False
-                logger(check_status)
-
-            # Select reference clip: (Sport 02.jpg)
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=1)
-            time.sleep(DELAY_TIME)
-
-            # Click [Match Color]
-            fix_enhance_page.enhance.color_match.click_match_color()
-
-            # Check setting update
-            current_setting = main_page.snapshot(locator=L.fix_enhance.enhance.color_match.setting_scroll_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L338.png')
-            check_setting_update = precut_page.compare(Ground_Truth_Folder + 'L338.png', current_setting)
-
-            case.result = check_status and check_setting_update
-
-        # [L343] 4.3 Fix / Enhance > Preview is correct
-        with uuid("00fdc131-d451-496f-8629-31b76be21d67") as case:
-
-            # Click [x] to apply change
-            check_apply = fix_enhance_page.enhance.color_match.click_close('Yes')
-            logger(check_apply)
-
-            # Check preview update
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L343.png')
-            check_preview_update = precut_page.compare(Ground_Truth_Folder + 'L343.png', current_preview)
-            case.result = check_preview_update
-
-    # 8 uuid
-    # Handle motion tracker
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_29(self):
-        # clear AI module
-        main_page.clear_AI_module()
-
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Insert sample video
-        main_page.select_library_icon_view_media('Skateboard 03.mp4')
-        time.sleep(DELAY_TIME * 2)
-        media_room_page.library_clip_context_menu_insert_on_selected_track()
-
-        # Click TipsArea [Tools] button
-        main_page.click(L.tips_area.button.btn_Tools)
-
-        # Select (Video Speed)
-        main_page.select_right_click_menu('Motion Tracker')
-
-        # Check download AI module
-        self.check_downloading_AI_module()
-
-        # If find the tracker 2, removing the tracker 2
-        motion_tracker_page.remove_tracker2()
-
-        # [L312] 4.2 Tools > Motion Tracker > Object Tracking
-        with uuid("c7d17581-dfea-4f5f-9765-82eb268dd5c7") as case:
-            check_open_status = motion_tracker_page.is_in_motion_tracker()
-
-            check_track = motion_tracker_page.click_object_track()
-
-            case.result = check_open_status and check_track
-
-        # [L313] 4.2 Tools > Motion Tracker > Add Text Object
-        with uuid("b89b4237-429d-4d95-a76d-a1a769785e4d") as case:
-            motion_tracker_page.add_title_button()
-            motion_tracker_page.edit_title('ぱざだたタ../*')
-            motion_tracker_page.change_title_color('CE2E47')
-            time.sleep(DELAY_TIME)
-
-            # Check preview
-            current_preview = main_page.snapshot(locator=L.motion_tracker.main_window,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L313.png')
-            check_preview_update = precut_page.compare(Ground_Truth_Folder + 'L313.png', current_preview)
-            case.result = check_preview_update
-
-        # [L314] 4.2 Tools > Motion Tracker > Add Pip Object
-        with uuid("8a5522c5-6f2f-4e71-9d0b-d7d7f575bc48") as case:
-            motion_tracker_page.add_pip_button()
-            motion_tracker_page.import_from_hard_drive(Test_Material_Folder + 'Video_Audio_In_Reverse/Sample.png')
-
-            # Check preview
-            current_preview = main_page.snapshot(locator=L.motion_tracker.main_window,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L314.png')
-            check_preview_update = precut_page.compare(Ground_Truth_Folder + 'L314.png', current_preview)
-            case.result = check_preview_update
-
-        # [L316] 4.2 Tools > Motion Tracker > Preview
-        with uuid("682f463a-bed9-4eec-a15b-9ad4b7752814") as case:
-            motion_tracker_page.set_timecode('00_00_06_14')
-            time.sleep(DELAY_TIME*2)
-
-            # Check preview
-            current_preview = main_page.snapshot(locator=L.motion_tracker.main_window,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L316.png')
-            check_preview_update = precut_page.compare(Ground_Truth_Folder + 'L316.png', current_preview, similarity=0.97)
-            case.result = check_preview_update
-
-
-        # [L315] 4.2 Tools > Motion Tracker > Add Effect
-        with uuid("41dce21f-2418-43eb-a16c-0d4be7b0d8de") as case:
-            # Add a tracker (Tracker 2)
-            motion_tracker_page.add_a_tracker()
-            time.sleep(DELAY_TIME)
-
-            # Click [Track] of Tracker 2 > Add Effect button
-            check_track = motion_tracker_page.click_object_track()
-            motion_tracker_page.add_effect_button()
-
-            motion_tracker_page.set_timecode('00_00_08_01')
-            time.sleep(DELAY_TIME*3)
-
-            # Check preview
-            current_preview = main_page.snapshot(locator=L.motion_tracker.main_window,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L315.png')
-            check_preview_update = precut_page.compare(Ground_Truth_Folder + 'L315.png', current_preview, similarity=0.97)
-            case.result = check_preview_update
-
-        # [L317] 4.2 Tools > Motion Tracker > Apply and return to timeline
-        with uuid("24111d09-bf67-427b-91d4-2f529e1e5d19") as case:
-            check_result = motion_tracker_page.click_ok()
-            time.sleep(DELAY_TIME * 2)
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_03_00')
-            time.sleep(DELAY_TIME * 2)
-
-            # Check preview update
-            current_3s_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-                                                 file_name=Auto_Ground_Truth_Folder + 'L317.png')
-            check_preview_update = precut_page.compare(Ground_Truth_Folder + 'L317.png', current_3s_preview)
-            case.result = check_preview_update and check_result
-
-        # [L348] 4.4 Keyframe > Fix Enhance > Lighting Adjustment (Degree)
-        with uuid("959992a2-b8fc-4f65-afda-3f5a0dedc886") as case:
-            # Select track 2 first clip (Sample.png)
-            timeline_operation_page.select_timeline_media(track_index=2, clip_index=0)
-            time.sleep(DELAY_TIME)
-
-            # Click [Keyframe] on tips area
-            tips_area_page.click_keyframe()
-
-            # Unfold (Fix / Enhance)
-            keyframe_room_page.fix_enhance.unfold_tab()
-
-            # Get Lighting Adjustment (degree)
-            current_degree = keyframe_room_page.fix_enhance.lighting_adjustment.degree.get_value()
-            logger(current_degree)
-
-            if current_degree == '50':
-                default_value = True
-            else:
-                default_value = False
-
-            # Set 1st keyframe of (00;00;03;00)
-            keyframe_room_page.fix_enhance.lighting_adjustment.degree.set_value(70)
-
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_07_10')
-            time.sleep(DELAY_TIME * 2)
-
-            # Set 2nd keyframe of (00;00;07;00)
-            keyframe_room_page.fix_enhance.lighting_adjustment.degree.set_value(30)
-
-            # Verify Step:
-            # Get Lighting Adjustment (degree) on (00;00;07;00)
-            current_degree = keyframe_room_page.fix_enhance.lighting_adjustment.degree.get_value()
-            logger(current_degree)
-
-            if current_degree == '30':
-                second_apply = True
-            else:
-                second_apply = False
-
-            # Click previous keyframe button
-            keyframe_room_page.fix_enhance.lighting_adjustment.degree.previous_keyframe()
-            time.sleep(DELAY_TIME)
-
-            # Get Lighting Adjustment (degree) on (00;00;07;00)
-            current_degree = keyframe_room_page.fix_enhance.lighting_adjustment.degree.get_value()
-            logger(current_degree)
-
-            if current_degree == '70':
-                first_apply = True
-            else:
-                first_apply = False
-
-            case.result = default_value and second_apply and first_apply
-
-        # [L353] 4.4 Keyframe > Fix Enhance > White Balance
-        with uuid("11f4e9ff-f7f1-4776-9424-9709cdeb7cb1") as case:
-            # Set 1st keyframe of (00;00;03;00)
-            keyframe_room_page.fix_enhance.white_balance.color_temperature.set_value(97)
-            keyframe_room_page.fix_enhance.white_balance.tint.set_value(95)
-            time.sleep(DELAY_TIME * 2)
-
-            # Get White Balance (Color temperature)
-            current_temperature = keyframe_room_page.fix_enhance.white_balance.color_temperature.get_value()
-            logger(current_temperature)
-
-            if current_temperature == '97':
-                set_temp = True
-            else:
-                set_temp = False
-
-            # Get White Balance (Tint)
-            current_tint = keyframe_room_page.fix_enhance.white_balance.tint.get_value()
-            logger(current_tint)
-
-            if current_tint == '95':
-                set_tint = True
-            else:
-                set_tint = False
-
-            case.result = set_temp and set_tint
-
-    # 9 uuid
-    #@pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_30(self):
-        # launch APP
-        main_page.clear_AI_module()
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # enter Title room
-        main_page.enter_room(1)
-        time.sleep(DELAY_TIME * 3)
-
-        # Search library content
-        media_room_page.search_library('Default')
-        time.sleep(DELAY_TIME * 2)
-
-        main_page.select_library_icon_view_media('Default')
-        main_page.double_click()
-        time.sleep(DELAY_TIME * 3)
-
-        # [L138] 3.2 Title Designer (general template) > Set in [Object] > Font Face with Gradient Color
-        with uuid("2112849e-965c-4704-a202-08ebf2b35550") as case:
-
-            initial_title_preview = main_page.snapshot(locator=L.title_designer.area.view_title)
-
-            # Font Face > (Fill Type) set Gradient Color
-            title_designer_page.apply_font_face_fill_type_to_gradient()
-
-            # Gradient style set Corner
-            title_designer_page.apply_font_face_gradient_style(3)
-            time.sleep(DELAY_TIME)
-            title_designer_page.drag_object_vertical_slider(0.64)
-
-            # Set 4 gradient color
-            title_designer_page.apply_font_face_4_color(left_top_hex='FFCE24', right_top_hex='34FFFF',
-                                                        left_bottom_hex='6E0913', right_bottom_hex='AD1BBD')
-
-            # Verify Step:
-            title_gradient_group = main_page.snapshot(locator=L.title_designer.font_face.four_color_gradient_group,
-                                                    file_name=Auto_Ground_Truth_Folder + 'L138.png')
-            check_gradient_group_update = precut_page.compare(Ground_Truth_Folder + 'L138.png', title_gradient_group)
-
-            title_apply_gradient = main_page.snapshot(locator=L.title_designer.area.view_title)
-            check_title_no_update = main_page.compare(initial_title_preview, title_apply_gradient)
-            case.result = check_gradient_group_update and (not check_title_no_update)
-
-            # Click [Canel] without save update
-            title_designer_page.click_cancel(1)
-
-        # [L335] 4.3 Fix/ Enhance > Fix > Wind Removal
-        with uuid("6a3438b6-dbec-4838-9228-d6c1b6775bdc") as case:
-            # enter media room
-            main_page.enter_room(0)
-            time.sleep(DELAY_TIME * 3)
-
-            # Insert audio (Speaking Out.mp3) to timeline
-            main_page.select_library_icon_view_media('Speaking Out.mp3')
-            time.sleep(DELAY_TIME * 2)
+    def test_tip_areas_func_33_46(self):
+        '''
+        1. Start App
+        2. Select media ('Sport 02.jpg') by library icon view > Insert clip in library to selected track
+        3. Select media ('Travel 01.jpg') by library icon view > Insert media to timeline by self.temp_for_os_14_insert_function(2)
+        4. Click [Fix Enhance] button on [Tips Area]
+        5. Enable [HDR Effect] Tab in [Fix Enhance] window
+        6. Select timeline media (track_index=0, clip_index=1) which is (Sport 02.jpg)
+        7. Set [HDR Effect][Edge][Strength] value to (65)
+        8. Select timeline media (track_index=0, clip_index=0) which is (Travel 01.jpg)
+        9. Enable [Color Match] Tab > Click [Color Match] button in [Fix Enhance] window
+        10. Get [Match Color] button Status and check the status is False
+        11. Select timeline media (track_index=0, clip_index=1) which is (Sport 02.jpg)
+        12. Click [Color Match] button in [Fix Enhance] window
+        13. Check preview (locator=L.fix_enhance.enhance.color_match.setting_scroll_view, file_name=Auto_Ground_Truth_Folder + 'L338.png') matches Ground Truth (Ground_Truth_Folder + 'L338.png') with similarity=0.95
+        '''
+        with step("[Action] Start App"):
+            produce_page.click_start()
+
+        with step("[Action] Select media ('Sport 02.jpg') by library icon view > Insert clip in library to selected track"):
+            main_page.select_library_icon_view_media('Sport 02.jpg')
             media_room_page.library_clip_context_menu_insert_on_selected_track()
 
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_14_00')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Select media ('Travel 01.jpg') by library icon view > Insert media to timeline by self.temp_for_os_14_insert_function(2)"):
+            main_page.select_library_icon_view_media('Travel 01.jpg')
+            self.temp_for_os_14_insert_function(2)
 
-            # Click [Split] (trim Speaking Out.mp3 to 14 sec)
+        with step("[Action] Click [Fix Enhance] button on [Tips Area]"):
+            main_page.tips_area_click_fix_enhance()
+
+        with step("[Action] Enable [HDR Effect] Tab in [Fix Enhance] window"):
+            fix_enhance_page.enhance.enable_hdr_effect()
+
+        with step("[Action] Select timeline media (track_index=0, clip_index=1) which is (Sport 02.jpg)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=1)
+
+        # [L338] 4.3 Fix / Enhance > Enhance > Color Match
+        # with uuid("63d5644b-8272-4693-a015-75f8da7f239d") as case:
+        with step("[Action] Set [HDR Effect][Edge][Strength] value to (65)"):
+            fix_enhance_page.enhance.hdr_effect.edge.strength.set_value(65)
+
+        with step("[Action] Select timeline media (track_index=0, clip_index=0) which is (Travel 01.jpg)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
+
+        with step("[Action] Enable [Color Match] Tab > Click [Color Match] button in [Fix Enhance] window"):
+            fix_enhance_page.enhance.switch_to_color_match()
+            fix_enhance_page.enhance.color_match.click_color_match_button()
+
+        with step("[Action] Get [Match Color] button Status and check the status is False"):
+            status = fix_enhance_page.enhance.color_match.get_match_color_status()
+            if status != False:
+                assert False, "Match Color button status is not False! Expected: False"
+
+        with step("[Action] Select timeline media (track_index=0, clip_index=1) which is (Sport 02.jpg)"):
+            timeline_operation_page.select_timeline_media(track_index=0, clip_index=1)
+
+        with step("[Action] Click [Color Match] button in [Fix Enhance] window"):
+            fix_enhance_page.enhance.color_match.click_match_color()
+
+        with step("[Verify] Check preview (locator=L.fix_enhance.enhance.color_match.setting_scroll_view, file_name=Auto_Ground_Truth_Folder + 'L338.png') matches Ground Truth (Ground_Truth_Folder + 'L338.png') with similarity=0.95"):
+            preview = main_page.snapshot(locator=L.fix_enhance.enhance.color_match.setting_scroll_view, file_name=Auto_Ground_Truth_Folder + "L338.png")
+            if not main_page.compare(Ground_Truth_Folder + "L338.png", preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L338.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.color_match
+    @pytest.mark.name("[test_tip_areas_func_33_47] Leave [Color Match] with applied effect (in test_tip_areas_func_33_46) and check preview as GT")
+    @exception_screenshot
+    def test_tip_areas_func_33_47(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_46') is run and passed
+        1. Click [Close] Button to leave [Color Match] with option ('Yes')
+        2. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L343.png') matches GT (Ground_Truth_Folder + 'L343.png') with similarity=0.95
+        '''
+        dependency_test = "test_tip_areas_func_33_46"
+        self.ensure_dependency(dependency_test)
+
+        # [L343] 4.3 Fix / Enhance > Preview is correct
+        # with uuid("00fdc131-d451-496f-8629-31b76be21d67") as case:
+
+        with step("[Action] Click [Close] Button to leave [Color Match] with option ('Yes')"):
+            check_apply = fix_enhance_page.enhance.color_match.click_close('Yes')
+            if not check_apply:
+                assert False, "Failed to close Color Match window"
+
+        with step("[Verify] Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L343.png') matches GT (Ground_Truth_Folder + 'L343.png') with similarity=0.95"):
+            preview_snapshot = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + "L343.png")
+            if not main_page.compare(Ground_Truth_Folder + "L343.png", preview_snapshot, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L343.png)! Similarity should > 0.95"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_area
+    @pytest.mark.launch
+    @pytest.mark.motion_tracker
+    @pytest.mark.ai_module
+    @pytest.mark.object_track
+    @pytest.mark.name("[test_tip_areas_func_33_48] Open [Motion Tracker] from [Tips Area] > Remove Tracker 2 > Click [Object Track] button and Verify Result")
+    @exception_screenshot
+    def test_tip_areas_func_33_48(self):
+        '''
+        1. Clear [AI Module] Files > Start APP
+        2. Select media ('Skateboard 03.mp4') by library icon view > Insert clip in library to selected track
+        3. Enter [Motion Tracker] from [Tips Area]
+        4. Wait for AI Module Downloading
+        5. Remove Tracker 2 in [Motion Tracker]
+        6. Check if [Motion Tracker] window is opened
+        7. Click [Object Track] button in [Motion Tracker] and check result is True
+        '''
+        with step("[Action] Clear [AI Module] Files > Start APP"):
+            main_page.clear_AI_module()
+            main_page.start_app()
+
+        with step("[Action] Select media ('Skateboard 03.mp4') by library icon view > Insert clip in library to selected track"):
+            main_page.select_library_icon_view_media('Skateboard 03.mp4')
+            media_room_page.library_clip_context_menu_insert_on_selected_track()
+
+        with step("[Action] Enter [Motion Tracker] from [Tips Area]"):
+            main_page.click(L.tips_area.button.btn_Tools)
+            main_page.select_right_click_menu('Motion Tracker')
+
+        with step("[Action] Wait for AI Module Downloading"):
+            self.check_downloading_AI_module()
+
+        with step("[Action] Remove Tracker 2 in [Motion Tracker]"):
+            motion_tracker_page.remove_tracker2()
+
+        # [L312] 4.2 Tools > Motion Tracker > Object Tracking
+        # with uuid("c7d17581-dfea-4f5f-9765-82eb268dd5c7") as case:
+
+        with step("[Verify] Check if [Motion Tracker] window is opened"):
+            if not motion_tracker_page.is_in_motion_tracker():
+                assert False, "[Motion Tracker] window is not opened"
+
+        with step("[Action] Click [Object Track] button in [Motion Tracker] and check result is True"):
+            result = motion_tracker_page.click_object_track(delay_time=10)
+            if not result:
+                assert False, "[Object Track] button did not return True"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.motion_tracker
+    @pytest.mark.title
+    @pytest.mark.name("[test_tip_areas_func_33_49] Edit [Title]/ [Title Color] in [Motion Tracker] and check preview")
+    @exception_screenshot
+    def test_tip_areas_func_33_49(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_48') is run and passed
+        1. Click [Add Title] button in [Motion Tracker] > ScreenShot (locator=L.motion_tracker.main_window)
+        2. Edit [Title] to ('ぱざだたタ../*') in [Motion Tracker] > Check preview is updated with similarity<0.99
+        3. Change [Title Color] to ('CE2E47') in [Motion Tracker] > Check preview is updated with similarity<0.99
+        4. Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L313.png') matches GT (Ground_Truth_Folder + 'L313.png') with similarity=0.95
+        '''
+        dependency_test = "test_tip_areas_func_33_48"
+        self.ensure_dependency(dependency_test)
+
+        # [L313] 4.2 Tools > Motion Tracker > Add Text Object
+        # with uuid("b89b4237-429d-4d95-a76d-a1a769785e4d") as case:
+
+        with step("[Action] Click [Add Title] button in [Motion Tracker] > ScreenShot (locator=L.motion_tracker.main_window)"):
+            motion_tracker.add_title_button()
+            initial_preview = main_page.snapshot(locator=L.motion_tracker.main_window)
+
+        with step("[Action] Edit [Title] to ('ぱざだたタ../*') in [Motion Tracker] > Check preview is updated with similarity<0.99"):
+            motion_tracker_page.edit_title('ぱざだたタ../*')
+            preview_after_edit = main_page.snapshot(locator=L.motion_tracker.main_window)
+            if main_page.compare(initial_preview, preview_after_edit, similarity=0.99):
+                # Similarity should be less than 0.99 for an updated preview
+                assert False, "Preview did not update after editing title! Similarity should < 0.99"
+
+        with step("[Action] Change [Title Color] to ('CE2E47') in [Motion Tracker] > Check preview is updated with similarity<0.99"):
+            motion_tracker_page.change_title_color("CE2E47")
+            preview_after_color = main_page.snapshot(locator=L.motion_tracker.main_window)
+            if main_page.compare(preview_after_edit, preview_after_color, similarity=0.99):
+                # Similarity should be less than 0.99 for an updated preview
+                assert False, "Preview did not update after changing title color! Similarity should < 0.99"
+
+        with step("[Verify] Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L313.png') matches GT (Ground_Truth_Folder + 'L313.png') with similarity=0.95"):
+            final_preview = main_page.snapshot(locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + "L313.png")
+            if not main_page.compare(Ground_Truth_Folder + "L313.png", final_preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for a matching preview
+                assert False, "Preview does not match GT (L313.png)! Similarity should > 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.motion_tracker
+    @pytest.mark.pip_object
+    @pytest.mark.import_media
+    @pytest.mark.name("[test_tip_areas_func_33_50] Import media from [Hard Drive] in [Motion Tracker] and verify preview")
+    @exception_screenshot
+    def test_tip_areas_func_33_50(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_49') is run and passed
+        1. Click [Add Pip] button in [Motion Tracker]
+        2. Import media (Test_Material_Folder + 'Video_Audio_In_Reverse/Sample.png') from [Hard Drive] in [Motion Tracker]
+        3. Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L314.png') matches GT (Ground_Truth_Folder + 'L314.png') with similarity=0.95
+        '''
+        dependency_test = "test_tip_areas_func_33_49"
+        self.ensure_dependency(dependency_test)
+        
+        # [L314] 4.2 Tools > Motion Tracker > Add Pip Object
+        # with uuid("8a5522c5-6f2f-4e71-9d0b-d7d7f575bc48") as case:
+
+        with step("[Action] Click [Add Pip] button in [Motion Tracker]"):
+            motion_tracker_page.add_pip_button()
+        
+        with step("[Action] Import media (Test_Material_Folder + 'Video_Audio_In_Reverse/Sample.png') from [Hard Drive] in [Motion Tracker]"):
+            motion_tracker_page.import_from_hard_drive(Test_Material_Folder + "Video_Audio_In_Reverse/Sample.png")
+        
+        with step("[Verify] Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L314.png') matches GT (Ground_Truth_Folder + 'L314.png') with similarity=0.95"):
+            preview = main_page.snapshot(locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + "L314.png")
+            if not main_page.compare(Ground_Truth_Folder + "L314.png", preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for matching preview
+                assert False, "Preview does not match GT (L314.png)! Similarity should > 0.95"
+        
+        assert True
+            
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.timecode
+    @pytest.mark.name("[test_tip_areas_func_33_51] Check preview as GT for test_tip_areas_func_33_50")
+    @exception_screenshot
+    def test_tip_areas_func_33_51(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_50') is run and passed
+        1. Set timecode to ('00_00_06_14') in [Motion Tracker]
+        2. Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L316.png') matches Ground Truth (Ground_Truth_Folder + 'L316.png') with similarity=0.97
+        '''
+        dependency_test = "test_tip_areas_func_33_50"
+        self.ensure_dependency(dependency_test)
+
+        # [L316] 4.2 Tools > Motion Tracker > Preview
+        # with uuid("682f463a-bed9-4eec-a15b-9ad4b7752814") as case:
+
+        with step("[Action] Set timecode to ('00_00_06_14') in [Motion Tracker]"):
+            motion_tracker_page.set_timecode("00_00_06_14")
+        
+        with step("[Verify] Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L316.png') matches Ground Truth (Ground_Truth_Folder + 'L316.png') with similarity=0.97"):
+            preview = main_page.snapshot(locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + "L316.png")
+            if not main_page.compare(Ground_Truth_Folder + "L316.png", preview, similarity=0.97):
+                # Similarity should be greater than 0.97 for matching preview
+                assert False, "Preview does not match GT (L316.png)! Similarity should > 0.97"
+        
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.motion_tracker
+    @pytest.mark.object_track
+    @pytest.mark.add_effect
+    @pytest.mark.name("[test_tip_areas_func_33_52] Apply [Object Track] and [Add Effect] in [Motion Tracker] and Verify Preview")
+    @exception_screenshot
+    def test_tip_areas_func_33_52(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_51') is run and passed
+        1. Click [Add A Tracker] button in [Motion Tracker]
+        2. Click [Object Track] button in [Motion Tracker]
+        3. Click [Add Effect] button in [Motion Tracker]
+        4. Set timecode to ('00_00_08_01') in [Motion Tracker]
+        5. Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L315.png') matches Ground Truth (Ground_Truth_Folder + 'L315.png') with similarity=0.97
+        '''
+        dependency_test = "test_tip_areas_func_33_51"
+        self.ensure_dependency(dependency_test)
+
+        # [L315] 4.2 Tools > Motion Tracker > Add Effect
+        # with uuid("41dce21f-2418-43eb-a16c-0d4be7b0d8de") as case:
+
+        with step("[Action] Click [Add A Tracker] button in [Motion Tracker]"):
+            motion_tracker_page.add_a_tracker()
+
+        with step("[Action] Click [Object Track] button in [Motion Tracker]"):
+            motion_tracker_page.click_object_track(delay_time=10)
+
+        with step("[Action] Click [Add Effect] button in [Motion Tracker]"):
+            motion_tracker_page.add_effect_button()
+
+        with step("[Action] Set timecode to ('00_00_08_01') in [Motion Tracker]"):
+            motion_tracker_page.set_timecode("00_00_08_01")
+
+        with step("[Verify] Check preview (locator=L.motion_tracker.main_window, file_name=Auto_Ground_Truth_Folder + 'L315.png') matches Ground Truth (Ground_Truth_Folder + 'L315.png') with similarity=0.97"):
+            preview = main_page.snapshot(
+                locator=L.motion_tracker.main_window,
+                file_name=Auto_Ground_Truth_Folder + "L315.png"
+            )
+            if not main_page.compare(Ground_Truth_Folder + "L315.png", preview, similarity=0.97):
+                # Similarity should be greater than 0.97 for a matching preview
+                assert False, "Preview does not match GT (L315.png)! Similarity should > 0.97"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.motion_tracker
+    @pytest.mark.name("[test_tip_areas_func_33_53] Check preview as GT for test_tip_areas_func_33_52 in main window")
+    @exception_screenshot
+    def test_tip_areas_func_33_53(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_52') is run and passed
+        1. Click [OK] to close [Motion Tracker]
+        2. Set timecode to ('00_00_03_00') at main page
+        3. Check preview (locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L317.png') matches GT (file_name=Ground_Truth_Folder + 'L317.png') with similarity=0.95
+        '''
+        dependency_test = "test_tip_areas_func_33_52"
+        self.ensure_dependency(dependency_test)
+        
+        # [L317] 4.2 Tools > Motion Tracker > Apply and return to timeline
+        # with uuid("24111d09-bf67-427b-91d4-2f529e1e5d19") as case:
+
+        with step("[Action] Click [OK] to close [Motion Tracker]"):
+            check_result = motion_tracker_page.click_ok()
+        
+        with step("[Action] Set timecode to ('00_00_03_00') at main page"):
+            main_page.set_timeline_timecode("00_00_03_00", is_verify=True)
+        
+        with step("[Verify] Check preview matches GT (file_name=Ground_Truth_Folder + 'L317.png') with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.base.Area.preview.only_mtk_view,
+                file_name=Auto_Ground_Truth_Folder + "L317.png"
+            )
+            if not main_page.compare(Ground_Truth_Folder + "L317.png", preview, similarity=0.95):
+                # Similarity should be greater than 0.95 for a matching preview
+                assert False, "Preview does not match GT (L317.png)! Similarity should > 0.95"
+        
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.fix_enhance
+    @pytest.mark.lighting_adjustment
+    @pytest.mark.degree
+    @pytest.mark.name("[test_tip_areas_func_33_54] Set [Fix Enhance][Lighting Adjustment][Degree] in 2 [KeyFrame] and switch to check value kept")
+    @exception_screenshot
+    def test_tip_areas_func_33_54(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_53') is run and passed
+        1. Select a clip on timeline (track_index=2, clip_index=0)
+        2. Click [KeyFrame] button from [Tip Areas]
+        3. Unfold tab [Fix_Enhance] in [KeyFrame] window
+        4. Get Value [Fix_Enhance][Lighting_Adjustment][Degree] and check result is ('50')
+        5. Set Value [Fix_Enhance][Lighting_Adjustment][Degree] to (70)
+        6. Set timecode to ('00_00_07_10') at main page
+        7. Set Value [Fix_Enhance][Lighting_Adjustment][Degree] to (30)
+        8. Get Value [Fix_Enhance][Lighting_Adjustment][Degree] and check result is ('30')
+        9. Click [Previous Keyframe] for [Fix_Enhance][Lighting_Adjustment][Degree] in [KeyFrame] window
+        10. Get Value [Fix_Enhance][Lighting_Adjustment][Degree] and check result is ('70')
+        '''
+        dependency_test = "test_tip_areas_func_33_53"
+        self.ensure_dependency(dependency_test)
+        
+        # [L348] 4.4 Keyframe > Fix Enhance > Lighting Adjustment (Degree)
+        # with uuid("959992a2-b8fc-4f65-afda-3f5a0dedc886") as case:
+
+        with step("[Action] Select a clip on timeline (track_index=2, clip_index=0)"):
+            timeline_operation_page.select_timeline_media(track_index=2, clip_index=0)
+        
+        with step("[Action] Click [KeyFrame] button from [Tip Areas]"):
+            tips_area_page.click_keyframe()
+        
+        with step("[Action] Unfold tab [Fix_Enhance] in [KeyFrame] window"):
+            keyframe_room_page.fix_enhance.unfold_tab()
+        
+        with step("[Verify] Get Value [Fix_Enhance][Lighting_Adjustment][Degree] and check result is ('50')"):
+            degree_value = keyframe_room_page.fix_enhance.lighting_adjustment.degree.get_value()
+            if degree_value != "50":
+                # Expected value should be '50'
+                assert False, f"Expected [Fix_Enhance][Lighting_Adjustment][Degree] to be '50', but got '{degree_value}'"
+        
+        with step("[Action] Set Value [Fix_Enhance][Lighting_Adjustment][Degree] to (70)"):
+            keyframe_room_page.fix_enhance.lighting_adjustment.degree.set_value(70)
+        
+        with step("[Action] Set timecode to ('00_00_07_10') at main page"):
+            main_page.set_timeline_timecode("00_00_07_10", is_verify=True)
+        
+        with step("[Action] Set Value [Fix_Enhance][Lighting_Adjustment][Degree] to (30)"):
+            keyframe_room_page.fix_enhance.lighting_adjustment.degree.set_value(30)
+
+        
+        with step("[Verify] Get Value [Fix_Enhance][Lighting_Adjustment][Degree] and check result is ('30')"):
+            degree_value = keyframe_room_page.fix_enhance.lighting_adjustment.degree.get_value()
+            if degree_value != "30":
+                # Expected value should be '30'
+                assert False, f"Expected [Fix_Enhance][Lighting_Adjustment][Degree] to be '30', but got '{degree_value}'"
+        
+        with step("[Action] Click [Previous Keyframe] for [Fix_Enhance][Lighting_Adjustment][Degree] in [KeyFrame] window"):
+            keyframe_room_page.fix_enhance.lighting_adjustment.degree.previous_keyframe()
+        
+        with step("[Verify] Get Value [Fix_Enhance][Lighting_Adjustment][Degree] and check result is ('70')"):
+            degree_value = keyframe_room_page.fix_enhance.lighting_adjustment.degree.get_value()
+            if degree_value != "70":
+                # Expected value should be '70'
+                assert False, f"Expected [Fix_Enhance][Lighting_Adjustment][Degree] to be '70', but got '{degree_value}'"
+        
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.fix_enhance
+    @pytest.mark.white_balance
+    @pytest.mark.color_temperature
+    @pytest.mark.tint
+    @pytest.mark.name("[test_tip_areas_func_33_55] Apply [White Balance] with [Color Temperature] and [Tint] in [KeyFrame] - [Fix Enhance] and Verify Result")
+    @exception_screenshot
+    def test_tip_areas_func_33_55(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_54') is run and passed
+        1. Set Value [Fix Enhance][White Balance][Color Temperature] to (97)
+        2. Get Value [Fix Enhance][White Balance][Color Temperature] and check result is ('97')
+        3. Set Value [Fix Enhance][White Balance][Tint] to (95)
+        4. Get Value [Fix Enhance][White Balance][Tint] and check result is ('95')
+        '''
+        dependency_test = "test_tip_areas_func_33_54"
+        self.ensure_dependency(dependency_test)
+        
+        
+        # [L353] 4.4 Keyframe > Fix Enhance > White Balance
+        # with uuid("11f4e9ff-f7f1-4776-9424-9709cdeb7cb1") as case:
+
+        with step("[Action] Set Value [Fix Enhance][White Balance][Color Temperature] to (97)"):
+            keyframe_room_page.fix_enhance.white_balance.color_temperature.set_value(97)
+        
+        with step("[Verify] Get Value [Fix Enhance][White Balance][Color Temperature] and check result is ('97')"):
+            current_temperature = keyframe_room_page.fix_enhance.white_balance.color_temperature.get_value()
+            if current_temperature != "97":
+                # Expected white balance color temperature should be '97'
+                assert False, f"Expected white balance color temperature to be '97', but got '{current_temperature}'"
+        
+        with step("[Action] Set Value [Fix Enhance][White Balance][Tint] to (95)"):
+            keyframe_room_page.fix_enhance.white_balance.tint.set_value(95)
+        
+        with step("[Verify] Get Value [Fix Enhance][White Balance][Tint] and check result is ('95')"):
+            current_tint = keyframe_room_page.fix_enhance.white_balance.tint.get_value()
+            if current_tint != "95":
+                # Expected white balance tint should be '95'
+                assert False, f"Expected white balance tint to be '95', but got '{current_tint}'"
+        
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.launch
+    @pytest.mark.title_room
+    @pytest.mark.title_designer
+    @pytest.mark.font_face
+    @pytest.mark.gradient
+    @pytest.mark.name("[test_tip_areas_func_33_56] Set 4 colors in [Font Face] with [Gradient] in [Title Designer] and Verify Result")
+    @exception_screenshot
+    def test_tip_areas_func_33_56(self):
+        '''
+        1. Clear [AI Module] files > Start App
+        2. Enter Room (Title)(1)
+        3. Search Library ('Default') > Select media by library icon view > Double click media
+        4. Screenshot (locator=L.title_designer.area.view_title)
+        5. Apply [Font Face Fill Type] to [Gradient] > Apply [Font Face Gradient Style] with style (3)
+        6. Drag Vertical Slider in [Title Designer] to (0.64)
+        7. Set [Font Face] with 4 Color (left_top_hex='FFCE24', right_top_hex='34FFFF', left_bottom_hex='6E0913', right_bottom_hex='AD1BBD')
+        8. Check preview is updated with similarity<0.95
+        9. Check preview (locator=L.title_designer.font_face.four_color_gradient_group, file_name=Auto_Ground_Truth_Folder + 'L138.png') match GT (file_name=Ground_Truth_Folder + 'L138.png') with similarity=0.95
+        '''
+        with step("[Action] Clear [AI Module] files and start App"):
+            main_page.clear_AI_module()
+            main_page.start_app()
+
+        with step("[Action] Enter Room (Title)(1)"):
+            main_page.enter_room(1)
+
+        with step("[Action] Search Library ('Default') > Select media by library icon view > Double click media"):
+            main_page.search_library('Default')
+            main_page.select_library_icon_view_media('Default')
+            main_page.double_click()
+
+        # [L138] 3.2 Title Designer (general template) > Set in [Object] > Font Face with Gradient Color
+        # with uuid("2112849e-965c-4704-a202-08ebf2b35550") as case:
+
+        with step("[Action] Screenshot (locator=L.title_designer.area.view_title)"):
+            initial_preview = main_page.snapshot(locator=L.title_designer.area.view_title)
+
+        with step("[Action] Apply [Font Face Fill Type] to [Gradient] and apply [Font Face Gradient Style] with style (3)"):
+            title_designer_page.apply_font_face_fill_type_to_gradient()
+            title_designer_page.apply_font_face_gradient_style(style=3)
+
+        with step("[Action] Drag Vertical Slider in [Title Designer] to (0.64)"):
+            title_designer_page.drag_object_vertical_slider(0.64)
+
+        with step("[Action] Set [Font Face] with 4 Color (left_top_hex='FFCE24', right_top_hex='34FFFF', left_bottom_hex='6E0913', right_bottom_hex='AD1BBD')"):
+            title_designer_page.apply_font_face_4_color(
+                left_top_hex='FFCE24',
+                right_top_hex='34FFFF',
+                left_bottom_hex='6E0913',
+                right_bottom_hex='AD1BBD'
+            )
+
+        with step("[Verify] Check preview is updated with similarity < 0.95"):
+            updated_preview = main_page.snapshot(locator=L.title_designer.area.view_title)
+            if main_page.compare(initial_preview, updated_preview, similarity=0.95):
+                assert False, "Preview did not update as expected! Similarity should < 0.95"
+
+        with step("[Verify] Check preview matches Ground Truth (L138.png) with similarity=0.95"):
+            preview = main_page.snapshot(
+                locator=L.title_designer.font_face.four_color_gradient_group,
+                file_name=Auto_Ground_Truth_Folder + 'L138.png'
+            )
+            check_preview = main_page.compare(
+                Ground_Truth_Folder + 'L138.png',
+                preview,
+                similarity=0.95
+            )
+            if not check_preview:
+                # Similarity should be greater than 0.95 for a matching preview
+                assert False, "Preview does not match GT (L138.png)! Similarity should > 0.95"
+
+        with step('[Action] Click [Cancel] without save update'):
+            title_designer_page.click_cancel(1)
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.media_room
+    @pytest.mark.timeline
+    @pytest.mark.timecode
+    @pytest.mark.split
+    @pytest.mark.fix_enhance
+    @pytest.mark.ai_module
+    @pytest.mark.wind_removal
+    @pytest.mark.name("[test_tip_areas_func_33_57] Apply [Wind Removal] in [Fix Enhance] and Verify Result")
+    @exception_screenshot
+    def test_tip_areas_func_33_57(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_56') is run and passed
+        1. Enter Room (Media)(0)
+        2. Select media ('Speaking Out.mp3') by library icon view > Insert clip in library to selected track
+        3. Set timecode to ('00_00_14_00') at main page
+        4. Click [Split] button in [Tips Area]
+        5. Select timeline media (track_index=1, clip_index=1) > Press [Backspace] key to remove it
+        6. Select timeline media (track_index=1, clip_index=0)
+        7. Click [Fix/Enhance] button in [Tips Area] > Enable [Wind Removal] Tab
+        8. Wait for AI Module Downloading
+        9. Click [Apply] Button in [Wind Removal] Window
+        10. Check if [Wind Removal] Window (L.fix_enhance.fix.wind_removal.main_window) is closed
+        '''
+        dependency_test = "test_tip_areas_func_33_56"
+        self.ensure_dependency(dependency_test)
+
+        # [L335] 4.3 Fix/ Enhance > Fix > Wind Removal
+        # with uuid("6a3438b6-dbec-4838-9228-d6c1b6775bdc") as case:
+
+        with step("[Action] Enter Room (Media)(0)"):
+            main_page.enter_room(0)
+
+        with step("[Action] Select media ('Speaking Out.mp3') by library icon view > Insert clip in library to selected track"):
+            main_page.select_library_icon_view_media('Speaking Out.mp3')
+            media_room_page.library_clip_context_menu_insert_on_selected_track()
+
+        with step("[Action] Set timecode to ('00_00_14_00') at main page"):
+            main_page.set_timeline_timecode('00_00_14_00', is_verify=True)
+
+        with step("[Action] Click [Split] button in [Tips Area]"):
             main_page.tips_area_click_split()
 
-            # Select timeline track 1 : Second clip then remove it
-            timeline_operation_page.select_timeline_media(track_index=1, clip_index=1)
-            time.sleep(DELAY_TIME)
+        with step("[Action] Select timeline media (track_index=1, clip_index=1) > Press [Backspace] key to remove it"):
+            main_page.select_timeline_media(track_index=1, clip_index=1)
             main_page.press_backspace_key()
 
-            timeline_operation_page.select_timeline_media(track_index=1, clip_index=0)
-            time.sleep(DELAY_TIME)
+        with step("[Action] Select timeline media (track_index=1, clip_index=0)"):
+            main_page.select_timeline_media(track_index=1, clip_index=0)
 
-            # Enter (Fix/Enhance) > Wind Removal
+        with step("[Action] Click [Fix/Enhance] button in [Tips Area] > Enable [Wind Removal] Tab"):
             main_page.tips_area_click_fix_enhance()
             fix_enhance_page.fix.switch_to_wind_removal()
-            time.sleep(DELAY_TIME)
-
-            # Click [Wind Removal]
             fix_enhance_page.fix.click_wind_removal()
 
-            # Check download AI module
+        with step("[Action] Wait for AI Module Downloading"):
             self.check_downloading_AI_module()
-            logger('9492')
 
-            # Click [Apply]
-            check_result = fix_enhance_page.fix.click_wind_removal_apply()
+        with step("[Action] Click [Apply] Button in [Wind Removal] Window"):
+            fix_enhance_page.fix.click_wind_removal_apply(delay_time=10)
 
-            # Verify step:
-            if main_page.exist(L.fix_enhance.fix.wind_removal.main_window):
-                verify_result = False
-            else:
-                verify_result = True
-            case.result = check_result and verify_result
+        with step("[Verify] Check if [Wind Removal] Window is closed"):
+            # if main_page.exist(L.fix_enhance.fix.wind_removal.main_window):
+            if fix_enhance_page.is_in_fix_enhance():
+                assert False, "[Wind Removal] Window did not close as expected"
 
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.audio_denoise
+    @pytest.mark.play_video
+    @pytest.mark.name("[test_tip_areas_func_33_58] Adjust [Audio Denoise] in [Fix Enhance] and Verify Result")
+    @exception_screenshot
+    def test_tip_areas_func_33_58(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_57') is run and passed
+        1. Click [Fix Enhance] button in [Tips Area] > Enable [Audio Denoise] Tab
+        2. Get [Noise Type] in [Audio Denoise] Window > Check result is ('Stationary noise')
+        3. Adjust slider in [Fix Enhance][Audio Denoise] to (77)
+        4. Click [Play] in [Timeline Preview] > Wait for 5 sec > Click [Stop]
+        5. Click [Minus] Button in [Fix Enhance][Audio Denoise] with (2)
+        6. Get value in [Fix Enhance][Audio Denoise] > Check result is ('75')
+        '''
 
         # [L334] 4.3 Fix/ Enhance > Fix > Apply [Audio Denoise]
-        with uuid("d49033f8-19c7-4ec1-b89e-a71d2f4f7171") as case:
-            # Enter (Fix/Enhance) > Audio Denoise
+        # with uuid("d49033f8-19c7-4ec1-b89e-a71d2f4f7171") as case:
+        dependency_test = "test_tip_areas_func_33_57"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Click [Fix Enhance] button in [Tips Area] > Enable [Audio Denoise] Tab"):
             main_page.tips_area_click_fix_enhance()
             fix_enhance_page.fix.switch_to_audio_denoise()
-            time.sleep(DELAY_TIME)
 
-            # Get (Noise type)
-            get_type = fix_enhance_page.fix.audio_denoise.get_noise_type()
-            if get_type == 'Stationary noise':
-                get_type_result = True
-            else:
-                get_type_result = False
+        with step("[Verify] Get [Noise Type] in [Audio Denoise] Window > Check result is ('Stationary noise')"):
+            noise_type = fix_enhance_page.fix.audio_denoise.get_noise_type()
+            if noise_type != "Stationary noise":
+                assert False, f"Expected noise type 'Stationary noise', but got '{noise_type}'"
 
-            # Set Degree to 77
+        with step("[Action] Adjust slider in [Fix Enhance][Audio Denoise] to (77)"):
             fix_enhance_page.fix.audio_denoise.degree.adjust_slider(77)
 
-            # Play timeline preview
-            playback_window_page.Edit_Timeline_PreviewOperation('Play')
+        with step("[Action] Click [Play] in [Timeline Preview] > Wait for 5 sec > Click [Stop]"):
+            playback_window_page.Edit_Timeline_PreviewOperation("Play")
             time.sleep(DELAY_TIME * 5)
-            playback_window_page.Edit_Timeline_PreviewOperation('STOP')
+            playback_window_page.Edit_Timeline_PreviewOperation("Stop")
 
-            # Set Degree to 75
+        with step("[Action] Click [Minus] Button in [Fix Enhance][Audio Denoise] with (2)"):
             fix_enhance_page.fix.audio_denoise.degree.click_minus(2)
-            time.sleep(DELAY_TIME * 2)
 
-            # Get (Noise type)
-            get_type = fix_enhance_page.fix.audio_denoise.degree.get_value()
-            if get_type == '75':
-                set_degree_result = True
-            else:
-                set_degree_result = False
+        with step("[Verify] Get value in [Fix Enhance][Audio Denoise] > Check result is ('75')"):
+            current_value = fix_enhance_page.fix.audio_denoise.degree.get_value()
+            if current_value != "75":
+                assert False, f"Expected value '75', but got '{current_value}'"
 
-            case.result = get_type_result and set_degree_result
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.produce_page
+    @pytest.mark.produce
+    @pytest.mark.name("[test_tip_areas_func_33_59] Produce the media with ('audio') format and ('aiff') extension")
+    @exception_screenshot
+    def test_tip_areas_func_33_59(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_58') is run and passed
+        1. Click [Produce] button in [Main Page] > Check [Produce] page show
+        2. Select file format to ('audio')
+        3. Select [File Extension] to ('aiff')
+        4. Get [Produced Filename] and save as self.aiff_produced_filename
+        5. Click [Start Produce] button (L.produce.btn_start_produce)
+        6. Click [Back to Edit] button
+        7. Check able to Select media with the exported name by library icon view
+        8. Move the exported clip in library to trash can
+        '''
+
+        dependency_test = "test_tip_areas_func_33_58"
+        self.ensure_dependency(dependency_test)
 
         # [L405] 5.1 Produce 2D > Audio File > Select [Format] > AIFF
-        with uuid("8e24c00f-eae2-4daa-beff-d638a97d974b") as case:
-            main_page.click_produce()
-            produce_page.check_enter_produce_page()
+        # with uuid("8e24c00f-eae2-4daa-beff-d638a97d974b") as case:
 
-            # File Format: Audio file
+        with step("[Action] Click [Produce] button in [Main Page] > Check [Produce] page show"):
+            main_page.click_produce()
+            if not produce_page.check_enter_produce_page():
+                assert False, "[Produce] page did not open!"
+
+        with step("[Action] Select file format to ('audio')"):
             produce_page.local.select_file_format('audio')
 
-            # Select file extension: AIFF
+        with step("[Action] Select [File Extension] to ('aiff')"):
             produce_page.local.select_file_extension('aiff')
 
-            # Get produced file name
-            explore_aiff_file = produce_page.get_produced_filename()
-            logger(explore_aiff_file)
+        with step("[Action] Get [Produced Filename] and save as self.aiff_produced_filename"):
+            self.aiff_produced_filename = produce_page.get_produced_filename()
 
-            # Start : produce
-            produce_page.click(L.produce.btn_start_produce)
-            time.sleep(DELAY_TIME * 5)
+        with step("[Action] Click [Start Produce] button (L.produce.btn_start_produce)"):
+            produce_page.click_start()
 
-            # Back to Edit
+        with step("[Action] Click [Back to Edit] button"):
             produce_page.click_back_to_edit()
 
-            # Verify step:
-            check_explore_file = main_page.select_library_icon_view_media(explore_aiff_file)
-            logger(check_explore_file)
+        with step("[Verify] Check able to Select media with the exported name by library icon view"):
+            if not main_page.select_library_icon_view_media(self.aiff_produced_filename):
+                assert False, f"Unable to select media with the exported name '{self.aiff_produced_filename}' by library icon view"
 
-            # Remove the produced file
-            if check_explore_file:
-                main_page.select_library_icon_view_media(explore_aiff_file)
-                media_room_page.library_clip_context_menu_move_to_trash_can()
+        with step("[Action] Move the exported clip in library to trash can"):
+            media_room_page.library_clip_context_menu_move_to_trash_can()
 
-            case.result = check_explore_file
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.produce_page
+    @pytest.mark.produce
+    @pytest.mark.name("[test_tip_areas_func_33_60] Produce the media with ('audio') format and ('m4a') extension")
+    @exception_screenshot
+    def test_tip_areas_func_33_60(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_59') is run and passed
+        1. Click [Produce] button in [Main Page] > Check [Produce] page show
+        2. Select file format to ('audio')
+        3. Select [File Extension] to ('m4a')
+        4. Get [Produced Filename]
+        5. Click [Start Produce] button (L.produce.btn_start_produce)
+        6. Click [Back to Edit] button (4)
+        7. Check able to Select media with the exported name by library icon view
+        8. Move the exported clip in library to trash can
+        9. Check filename is not as self.aiff_produced_filename
+        '''
+        dependency_test = "test_tip_areas_func_33_59"
+        self.ensure_dependency(dependency_test)
 
         # [L403] 5.1 Produce 2D > Audio File > Select [Format] > M4A
-        with uuid("6133a8dd-e9d3-487a-9558-793d06463611") as case:
-            main_page.click_produce()
-            produce_page.check_enter_produce_page()
+        # with uuid("6133a8dd-e9d3-487a-9558-793d06463611") as case:
 
-            # File Format: Audio file
+        with step("[Action] Click [Produce] button in [Main Page] > Check [Produce] page show"):
+            main_page.click_produce()
+            if not produce_page.check_enter_produce_page():
+                assert False, "[Produce] page did not open!"
+
+        with step("[Action] Select file format to ('audio')"):
             produce_page.local.select_file_format('audio')
 
-            # Select file extension: M4A
+        with step("[Action] Select [File Extension] to ('m4a')"):
             produce_page.local.select_file_extension('m4a')
 
-            # Get produced file name
-            explore_m4a_file = produce_page.get_produced_filename()
-            logger(explore_m4a_file)
+        with step("[Action] Get [Produced Filename]"):
+            produced_filename = produce_page.get_produced_filename()
 
-            # Start : produce
-            produce_page.click(L.produce.btn_start_produce)
-            time.sleep(DELAY_TIME * 5)
+        with step("[Action] Click [Start Produce] button (L.produce.btn_start_produce)"):
+            produce_page.click_start()
 
-            # Back to Edit
+        with step("[Action] Click [Back to Edit] button (4)"):
             produce_page.click_back_to_edit(4)
 
-            # Verify step:
-            check_explore_file = main_page.select_library_icon_view_media(explore_m4a_file)
-            logger(check_explore_file)
+        with step("[Verify] Check able to Select media with the exported name by library icon view"):
+            if not main_page.select_library_icon_view_media(produced_filename):
+                assert False, f"Unable to select media with the exported name '{produced_filename}' by library icon view"
 
-            # Remove the produced file
-            if check_explore_file:
-                main_page.select_library_icon_view_media(explore_m4a_file)
-                media_room_page.library_clip_context_menu_move_to_trash_can()
+        with step("[Action] Move the exported clip in library to trash can"):
+            media_room_page.library_clip_context_menu_move_to_trash_can()
 
-            # Produce file name should be updated
-            if explore_m4a_file != explore_aiff_file:
-                set_file_extenstion = True
-            else:
-                set_file_extenstion = False
+        with step("[Verify] Check filename is not as self.aiff_produced_filename"):
+            if produced_filename == self.aiff_produced_filename:
+                assert False, f"Filename should not match {self.aiff_produced_filename}! Current filename: {produced_filename}"
 
-            case.result = check_explore_file and set_file_extenstion
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.produce_page
+    @pytest.mark.produce
+    @pytest.mark.name("[test_tip_areas_func_33_61] Produce the media with ('audio') format and ('wmv') extension and Upload to CyberLink Cloud")
+    @exception_screenshot
+    def test_tip_areas_func_33_61(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_60') is run and passed
+        1. Click [Produce] button in [Main Page] > Check [Produce] page show
+        2. Select file format to ('audio')
+        3. Select [File Extension] to ('wav')
+        4. Get [Produced Filename] and save as self.wav_produced_filename
+        5. Enable [Upload Copy to CyberLink Cloud]
+        6. Check [Upload Copy to CyberLink Cloud] is visible > Check result is True
+        7. Click [Start Produce] button (L.produce.btn_start_produce)
+        8. Wait until [Upload to Cloud] button disappears
+        9. Click [Back to Edit] button (L.produce.btn_back_to_edit_after_upload_cl)
+        10. Check able to Select media with the exported name by library icon view
+        '''
+        dependency_test = "test_tip_areas_func_33_60"
+        self.ensure_dependency(dependency_test)
 
         # [L404] 5.1 Produce 2D > Audio File > Select [Format] > WAV
-        with uuid("ebb092ce-34bc-4958-9c53-c76c464b2277") as case:
+        # with uuid("ebb092ce-34bc-4958-9c53-c76c464b2277") as case:
 
+        with step("[Action] Click [Produce] button in [Main Page] > Check [Produce] page show"):
             main_page.click_produce()
-            produce_page.check_enter_produce_page()
+            if not produce_page.check_enter_produce_page():
+                assert False, "[Produce] page did not open!"
 
-            # File Format: Audio file
+        with step("[Action] Select file format to ('audio')"):
             produce_page.local.select_file_format('audio')
 
-            # Select file extension: WAV
+        with step("[Action] Select [File Extension] to ('wav')"):
             produce_page.local.select_file_extension('wav')
 
-            # Get produced file name
-            explore_wav_file = produce_page.get_produced_filename()
-            logger(explore_wav_file)
+        with step("[Action] Get [Produced Filename] and save as self.wav_produced_filename"):
+            self.wav_produced_filename = produce_page.get_produced_filename()
 
-            # [L406] 5.1 Produce 2D > Audio File > Upload a copy to cloud
-            with uuid("9590c2e7-831c-4cae-b19c-80fa62bb4411") as case:
+        # [L406] 5.1 Produce 2D > Audio File > Upload a copy to cloud
+        # with uuid("9590c2e7-831c-4cae-b19c-80fa62bb4411") as case:
 
-                produce_page.local.set_check_upload_copy_to_cyberlink_cloud(is_check=1)
-                time.sleep(DELAY_TIME * 2)
-                current_upload_checkbox = produce_page.local.check_visible_upload_copy_to_cyberlink_cloud()
-                logger(current_upload_checkbox)
-                case.result = current_upload_checkbox
+        with step("[Action] Enable [Upload Copy to CyberLink Cloud]"):
+            produce_page.local.set_check_upload_copy_to_cyberlink_cloud(is_check=1)
 
-                time.sleep(DELAY_TIME * 2)
+        with step("[Verify] Check [Upload Copy to CyberLink Cloud] is visible > Check result is True"):
+            is_visible = produce_page.local.check_visible_upload_copy_to_cyberlink_cloud()
+            if not is_visible:
+                assert False, "[Upload Copy to CyberLink Cloud] is not visible!"
 
-            # Start : produce
-            produce_page.click(L.produce.btn_start_produce)
-            time.sleep(DELAY_TIME * 5)
+        with step("[Action] Click [Start Produce] button (L.produce.btn_start_produce)"):
+            produce_page.click_start()
 
-            # wait for video upload to cloud
-            for x in range(60):
-                back_btn = main_page.exist(L.produce.btn_back_to_edit_after_upload_cl)
-                if back_btn:
+        with step("[Action] Wait until [Upload to Cloud] button disappears"):
+            for _ in range(60):
+                if main_page.exist(L.produce.btn_back_to_edit_after_upload_cl):
                     break
                 else:
                     time.sleep(DELAY_TIME)
 
-            # Back to Edit
-            produce_page.click(L.produce.btn_back_to_edit_after_upload_cl)
-            time.sleep(DELAY_TIME * 5)
+        with step("[Action] Click [Back to Edit] button (L.produce.btn_back_to_edit_after_upload_cl)"):
+            main_page.click(L.produce.btn_back_to_edit_after_upload_cl)
 
-            # Verify step:
-            check_explore_file = main_page.select_library_icon_view_media(explore_wav_file)
-            logger(check_explore_file)
+        with step("[Verify] Check able to Select media with the exported name by library icon view"):
+            if not main_page.select_library_icon_view_media(self.wav_produced_filename):
+                assert False, f"Unable to select media with the exported name '{self.wav_produced_filename}' by library icon view"
 
-            time.sleep(DELAY_TIME * 6)
+        assert True
 
-            # Insert the produce audio to timeline
-            # tips_area_page.click_TipsArea_btn_insert(1)
-            # Tips Area > select "Insert"
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.produce_page
+    @pytest.mark.audio_mixing_room
+    @pytest.mark.play_video
+    @pytest.mark.name("[test_tip_areas_func_33_62] Play the produced media in [Audio Mixing] Room and Move the exported clip in library to trash can")
+    @exception_screenshot
+    def test_tip_areas_func_33_62(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_61') is run and passed
+        1. Insert the media to timeline via self.temp_for_os_14_insert_function(2)
+        2. Enter Room (Audio Mixing)(6)
+        3. Click [Play] button and check preview is playing (area=L.audio_mixing_room.audio_mixing_track, sec=2)
+        4. Click [Stop] button
+        5. Enter Room (Media)(0)
+        6. Select media (self.wav_produced_filename) by library icon view > Move the exported clip in library to trash can
+        '''
+        dependency_test = "test_tip_areas_func_33_61"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Insert the media to timeline via self.temp_for_os_14_insert_function(2)"):
             self.temp_for_os_14_insert_function(2)
 
-            # Verify Step:
-            # Enter Audio Mixing Room
+        with step("[Action] Enter Room (Audio Mixing)(6)"):
             main_page.enter_room(6)
-            time.sleep(DELAY_TIME * 3)
 
-            # Play timeline preview
+        with step("[Action] Click [Play] button and check preview is playing (area=L.audio_mixing_room.audio_mixing_track, sec=2)"):
             playback_window_page.Edit_Timeline_PreviewOperation('Play')
-            check_waveform_update = main_page.Check_PreviewWindow_is_different(area=L.audio_mixing_room.audio_mixing_track, sec=2)
+            main_page.Check_PreviewWindow_is_different(area=L.audio_mixing_room.audio_mixing_track, sec=2)
 
-            time.sleep(DELAY_TIME)
+        with step("[Action] Click [Stop] button"):
             playback_window_page.Edit_Timeline_PreviewOperation('STOP')
 
-            # Remove the produced file
-            # Back to media room
+        with step("[Action] Enter Room (Media)(0)"):
             main_page.enter_room(0)
-            time.sleep(DELAY_TIME *3)
-            if check_explore_file:
-                main_page.select_library_icon_view_media(explore_wav_file)
-                media_room_page.library_clip_context_menu_move_to_trash_can()
 
-            case.result = check_waveform_update and check_explore_file
-            logger(case.result)
-            time.sleep(DELAY_TIME * 3)
-            # Verify step2: Remove the upload audio
-            # Click Import media > (Download media from Cyberlink cloud)
+        with step("[Action] Select media (self.wav_produced_filename) by library icon view"):
+            main_page.select_library_icon_view_media(self.wav_produced_filename)
+
+        with step("[Action] Move the exported clip in library to trash can"):
+            media_room_page.library_clip_context_menu_move_to_trash_can()
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.cyberlink_cloud
+    @pytest.mark.content_pack
+    @pytest.mark.import_media_from_cloud
+    @pytest.mark.name("[test_tip_areas_func_33_63] Delete the produced media from [CyberLink Cloud]")
+    @exception_screenshot
+    def test_tip_areas_func_33_63(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_62') is run and passed
+        1. Import media from [CyberLink Cloud]
+        2. Switch to [Music] page > Select content in folder level (folder_index=0, click_times=2)
+        3. Input text ('Produce') in search library in [Import Download Media From CL]
+        4. Tap Select/Deselect All button
+        5. Check [Delete] button (L.import_downloaded_media_from_cl.delete_btn) is enabled by .AXEnabled > Tap [Remove] button
+        6. Press [ECS] key 3 times to close [Download From CL] window
+        '''
+        dependency_test = "test_tip_areas_func_33_62"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Import media from [CyberLink Cloud]"):
             media_room_page.import_media_from_cyberlink_cloud()
-            time.sleep(DELAY_TIME * 3)
 
-            # Switch to music page
+        with step("[Action] Switch to [Music] page and select content in folder level (folder_index=0, click_times=2)"):
             import_media_from_cloud_page.switch_to_music_page()
-            time.sleep(DELAY_TIME * 2)
-
-            # Double click to enter PowerDirector folder
             import_media_from_cloud_page.select_content_in_folder_level(folder_index=0, click_times=2)
 
-            # Search explore_file
-            import_media_from_cloud_page.input_text_in_seacrh_library('Produce')
-            time.sleep(DELAY_TIME)
+        with step("[Action] Input text ('Produce') in search library in [Import Download Media From CL]"):
+            import_media_from_cloud_page.input_text_in_seacrh_library("Produce")
 
-            # Tick 'Select all'
+        with step("[Action] Tap Select/Deselect All button"):
             import_media_from_cloud_page.tap_select_deselect_all_btn()
 
-            # Check remove button
-            if main_page.exist(L.import_downloaded_media_from_cl.delete_btn).AXEnabled:
-                # Remove audio
-                import_media_from_cloud_page.tap_remove_btn()
-                time.sleep(DELAY_TIME)
+        with step("[Verify] Check if [Delete] button is enabled and tap [Remove] button"):
+            delete_btn_enabled = main_page.exist(L.import_downloaded_media_from_cl.delete_btn).AXEnabled
+            if delete_btn_enabled != True:
+                assert False, "[Delete] button is not enabled as expected"
+            import_media_from_cloud_page.tap_remove_btn()
 
-            # Close (Download window)
-            for x in range(3):
+        with step("[Action] Press [ECS] key 3 times to close [Download From CL] window"):
+            for _ in range(3):
                 main_page.press_esc_key()
                 time.sleep(DELAY_TIME*0.5)
 
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.volume
+    @pytest.mark.name('[test_tip_areas_func_33_64] Apply [Volume] in [KeyFrame] and Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_64(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_63') is run and passed
+        1. Select timeline media (track_index=1, clip_index=0) > Click [Keyframe] button in [Tips Area]
+        2. Unfold [Volume] Tab > Get [Volume] value > Check default result is ('0.0')
+        3. Set [Volume] Value to (9.1) > Get [Volume] value > Check applied result is ('9.1')
+        '''
+        dependency_test = "test_tip_areas_func_33_63"
+        self.ensure_dependency(dependency_test)
+        
         # [L361] 4.4 Keyframe > Volume
-        with uuid("8f39828c-1845-45a5-bb5f-aaac50c1397e") as case:
+        # with uuid("8f39828c-1845-45a5-bb5f-aaac50c1397e") as case:
+
+        with step("[Action] Select timeline media (track_index=1, clip_index=0) > Click [Keyframe] button in [Tips Area]"):
             timeline_operation_page.select_timeline_media(track_index=1, clip_index=0)
-
-            # Click [Keyframe] on tips area
             tips_area_page.click_keyframe()
-
-            # Unfold Volume
+        
+        with step("[Verify] Unfold [Volume] Tab > Get [Volume] value > Check default result is ('0.0')"):
             keyframe_room_page.volume.unfold_tab()
 
             default_value = keyframe_room_page.volume.get_value()
-            if default_value == '0.0':
-                check_default = True
-            else:
-                check_default = False
-                logger(check_default)
-
+            if default_value != '0.0':
+                assert False, f"Expected default volume value to be '0.0', but got '{default_value}'"
+        
+        with step("[Action] Set [Volume] Value to (9.1) > Get [Volume] value > Check applied result is ('9.1')"):
             keyframe_room_page.volume.set_value(9.1)
-            time.sleep(DELAY_TIME)
-            current_value = keyframe_room_page.volume.get_value()
-            if current_value == '9.1':
-                applied_default = True
-            else:
-                applied_default = False
-                logger(applied_default)
+            applied_volume = keyframe_room_page.volume.get_value()
+            if default_value != '9.1':
+                assert False, f"Expected default volume value to be '9.1', but got '{applied_volume}'"
+        
+        assert True
 
-            case.result = check_default and applied_default
-
-        # [L350] 4.4 Keyframe > Fix/ Enhance > Fix > Adjust [Audio Denoise]
-        with uuid("ebc3f1ce-4552-4e7d-9e9e-54fe152f66dd") as case:
-            # Unfold (Fix / Enhance)
-            keyframe_room_page.fix_enhance.unfold_tab()
-
-            # Audio Denoise > Get current (Degree)
-            current_value = keyframe_room_page.fix_enhance.audio_denoise.degree.get_value()
-
-            if current_value == '75':
-                check_value = True
-            else:
-                check_value = False
-                logger(current_value)
-
-            # Adjust Degree = 84
-            keyframe_room_page.fix_enhance.audio_denoise.degree.click_stepper_up(9)
-            time.sleep(DELAY_TIME)
-
-            # Audio Denoise > Get current (Degree)
-            current_value = keyframe_room_page.fix_enhance.audio_denoise.degree.get_value()
-
-            if current_value == '84':
-                edit_value = True
-            else:
-                edit_value = False
-                logger(current_value)
-
-            case.result = check_value and edit_value
-
-    # 12 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.keyframe
+    @pytest.mark.audio_denoise
+    @pytest.mark.name('[test_tip_areas_func_33_65] Adjust [Audio Denoise] in [Keyframe] and Verify Result')
     @exception_screenshot
-    def test_10_1_31(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_tip_areas_func_33_65(self):
+        '''
+        0. Ensure the dependency test ('test_tip_areas_func_33_64') is run and passed
+        1. Unfold [Fix Enhance] tab in [Keyframe] page
+        2. Get Value [Fix Enhance][Audio Denoise][Degree] > Check default result is ('75')
+        3. Click [Stepper Up] button 9 times > Get Value [Fix Enhance][Audio Denoise][Degree] > Check applied result is ('84')
+        '''
+        dependency_test = "test_tip_areas_func_33_64"
+        self.ensure_dependency(dependency_test)
+        
+        # [L350] 4.4 Keyframe > Fix/ Enhance > Fix > Adjust [Audio Denoise]
+        # with uuid("ebc3f1ce-4552-4e7d-9e9e-54fe152f66dd") as case:
 
-        # Open project: test_case_1_1_27
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_27.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-        time.sleep(DELAY_TIME * 5)
-        # Disable track 1 and track 3 (Only Enable track2)
-        timeline_operation_page.edit_specific_video_track_set_enable(track_index=2, option=1)
+        with step("[Action] Unfold [Fix Enhance] tab in [Keyframe] page"):
+            keyframe_room_page.fix_enhance.unfold_tab(value=1)
+        
+        with step("[Verify] Get Value [Fix Enhance][Audio Denoise][Degree] > Check default result is ('75')"):
+            default_degree = keyframe_room_page.fix_enhance.audio_denoise.degree.get_value()
+            if default_degree != '75':
+                assert False, f"Expected default degree value to be '75', but got '{default_degree}'"
+        
+        with step("[Action] Click [Stepper Up] button 9 times > Get Value [Fix Enhance][Audio Denoise][Degree] > Check applied result is ('84')"):
+            keyframe_room_page.fix_enhance.audio_denoise.degree.click_stepper_up(times=9, index_node=-1)
+            applied_degree = keyframe_room_page.fix_enhance.audio_denoise.degree.get_value()
+            assert False, f"Expected applied degree value to be '84', but got '{applied_degree}'"
+        
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.keyframe
+    @pytest.mark.timeline
+    @pytest.mark.name('[test_tip_areas_func_33_66] Open Project > Enable Track > Select Timeline Media > Enter [Keyframe] Page')
+    @exception_screenshot
+    def test_tip_areas_func_33_66(self):
+        """
+        1. Start App
+        2. Open Packed Project ('Packed_Project/test_tip_areas_func_33_66_from_test_tip_areas_func_33_45.pdk', 'Extracted_Folder/test_tip_areas_func_33_66')
+        3. Set Track (track_index=2, option=1) Enable
+        4. Select timeline media (track_index=2, clip_index=2)
+        5. Enter [Keyframe] page from [Tip Area] and check result
+        """
+        with step("[Action] Start App"):
+            main_page.start_app()
+
+        with step("[Action] Open Packed Project ('Packed_Project/test_tip_areas_func_33_66_from_test_tip_areas_func_33_45.pdk', 'Extracted_Folder/test_tip_areas_func_33_66')"):
+            self.open_packed_project('Packed_Project/test_tip_areas_func_33_66_from_test_tip_areas_func_33_45.pdk', 'Extracted_Folder/test_tip_areas_func_33_66')
+
+        with step("[Action] Set Track (track_index=2, option=1) Enable"):
+            timeline_operation_page.edit_specific_video_track_set_enable(track_index=2, option=1)
 
         # [L345] 4.3 Fix/Enhance > Keyframe
-        with uuid("ad0364e2-5628-480a-9e2f-46c9c9b8abb8") as case:
-            # Select track2 3rd clip
+        # with uuid("ad0364e2-5628-480a-9e2f-46c9c9b8abb8") as case:
+
+        with step("[Action] Select timeline media (track_index=2, clip_index=2)"):
             timeline_operation_page.select_timeline_media(track_index=2, clip_index=2)
 
-            # Click [Keyframe] on tips area button
-            case.result = tips_area_page.click_keyframe()
+        with step("[Verify] Enter [Keyframe] page from [Tip Area] and check result"):
+            result = tips_area_page.click_keyframe()
+            if not result:
+                assert False, "Unable to enter [Keyframe] page from [Tip Area]"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.split_toning
+    @pytest.mark.shadow
+    @pytest.mark.hue
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_67] Add [Split Toning][Shadow][Hue] Keyframe in [Fix Enhance] and Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_67(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_66') is run and passed
+        1. Unfold [Fix Enhance] tab in [Keyframe] page
+        2. Drag scroll bar to (0.77)
+        3. Add [Keyframe] for [Fix Enhance][Split Toning][Shadow][Hue]
+        4. Set timecode to ('00_00_02_00')
+        5. Set [Fix Enhance][Split Toning][Shadow][Hue] value to (0) by slider
+        6. Click [Previous Keyframe] button for [Fix Enhance][Split Toning][Shadow][Hue]
+        7. Get Value [Fix Enhance][Split Toning][Shadow][Hue] > Check applied result is ('0')
+        8. Click [Next Keyframe] button for [Fix Enhance][Split Toning][Shadow][Hue]
+        9. Get Value [Fix Enhance][Split Toning][Shadow][Hue] > Check applied result is ('0')
+        10. Get timecode from playback window > Check applied result is ('00:00:02:00')
+        """
+        dependency_test = "test_tip_areas_func_33_66"
+        self.ensure_dependency(dependency_test)
 
         # [L354] 4.4 Keyframe > Fix / Enhance > Adjust [Split Toning]
-        with uuid("b855bdd0-ea10-44a5-bd08-77b13747d9f5") as case:
-            # Unfold Fix/ Enhance
-            keyframe_room_page.fix_enhance.unfold_tab()
-            time.sleep(DELAY_TIME * 3)
-            keyframe_room_page.drag_scroll_bar(0.77)
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("b855bdd0-ea10-44a5-bd08-77b13747d9f5") as case:
 
-            # Add keyframe of (Shadow Hue) on 00:00:00:00
+        with step("[Action] Unfold [Fix Enhance] tab in [Keyframe] page"):
+            keyframe_room_page.fix_enhance.unfold_tab()
+
+        with step("[Action] Drag scroll bar to (0.77)"):
+            keyframe_room_page.drag_scroll_bar(0.77)
+
+        with step("[Action] Add [Keyframe] for [Fix Enhance][Split Toning][Shadow][Hue]"):
             keyframe_room_page.fix_enhance.split_toning.shadow_hue.add_remove_keyframe()
 
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_02_00')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Set timecode to ('00_00_02_00')"):
+            main_page.set_timeline_timecode('00_00_02_00', is_verify=True)
 
-            # Add second keyframe of (Shadow Hue) on 00:00:02:00 with set value = 0
+        with step("[Action] Set [Fix Enhance][Split Toning][Shadow][Hue] value to (0) by slider"):
             keyframe_room_page.fix_enhance.split_toning.shadow_hue.set_slider(0)
-            time.sleep(DELAY_TIME)
 
-            # Click previous keyframe then click next keyframe
+        with step("[Action] Click [Previous Keyframe] button for [Fix Enhance][Split Toning][Shadow][Hue]"):
             keyframe_room_page.fix_enhance.split_toning.shadow_hue.previous_keyframe()
-            time.sleep(DELAY_TIME * 2)
-            keyframe_room_page.fix_enhance.split_toning.shadow_hue.next_keyframe()
-            time.sleep(DELAY_TIME * 2)
 
-            # Get timeline timecode
-            current_timecode = playback_window_page.get_timecode_slidebar()
-            if current_timecode == '00:00:02:00':
-                check_apply = True
-            else:
-                check_apply = False
-                logger(current_timecode)
-
-            # Verify value
+        with step("[Verify] Get Value [Fix Enhance][Split Toning][Shadow][Hue] > Check applied result is ('0')"):
             current_value = keyframe_room_page.fix_enhance.split_toning.shadow_hue.get_value()
-            if current_value == '0':
-                applied_value = True
-            else:
-                applied_value = False
-                logger(current_value)
+            if current_value != '0':
+                # Similarity check not applicable; expected value should equal '0'
+                assert False, f"Value for [Fix Enhance][Split Toning][Shadow][Hue] is incorrect! Expected '0', got '{current_value}'"
 
-            case.result = check_apply and applied_value
+        with step("[Action] Click [Next Keyframe] button for [Fix Enhance][Split Toning][Shadow][Hue]"):
+            keyframe_room_page.fix_enhance.split_toning.shadow_hue.next_keyframe()
+
+        with step("[Verify] Get Value [Fix Enhance][Split Toning][Shadow][Hue] > Check applied result is ('0')"):
+            next_value = keyframe_room_page.fix_enhance.split_toning.shadow_hue.get_value()
+            if next_value != '0':
+                # Similarity check not applicable; expected value should equal '0'
+                assert False, f"Value for [Fix Enhance][Split Toning][Shadow][Hue] is incorrect! Expected '0', got '{current_value}'"
+
+        with step("[Verify] Get timecode from playback window > Check applied result is ('00:00:02:00')"):
+            current_timecode = playback_window_page.get_timecode()
+            if current_timecode != "00:00:02:00":
+                assert False, f"Timecode is incorrect! Expected '00:00:02:00', got '{current_timecode}'"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.split_toning
+    @pytest.mark.fix_enhance
+    @pytest.mark.name('[test_tip_areas_func_33_68] Reset and check [Split Toning] values back to default')
+    @exception_screenshot
+    def test_tip_areas_func_33_68(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_66') is run and passed
+        1. Click [Previous Keyframe] button for [Fix Enhance][Split Toning][Shadow][Hue]
+        2. Click [Fix Enhance] tab in [Keyframe] page
+        3. Enable [Split Toning] Tab
+        4. Click [Reset] Button in [Fix Enhance] page
+        5. Check if  [Do you wnat to continue?] dialog (L.base.confirm_dialog.main_window) is shown
+        6. Click [Yes] button (L.base.confirm_dialog.btn_yes) in [Do you wnat to continue?] dialog 
+        7. Get [Fix Enhance][Split Toning][Balance] value > Check result is ('0')
+        8. Get [Fix Enhance][Split Toning][Hue] value > Check result is ('0')
+        9. Get [Fix Enhance][Split Toning][Saturation] value > Check result is ('0')
+        """
+        dependency_test = "test_tip_areas_func_33_66"
+        self.ensure_dependency(dependency_test)
 
         # [L344] 4.3 Fix / Enhance > Reset
-        with uuid("702cd916-959f-4504-9384-3ff7442915aa") as case:
-            # Click previous keyframe (Switch to 0s)
+        # with uuid("702cd916-959f-4504-9384-3ff7442915aa") as case:
+
+        with step("[Action] Click [Previous Keyframe] button for [Fix Enhance][Split Toning][Shadow][Hue]"):
             keyframe_room_page.fix_enhance.split_toning.shadow_hue.previous_keyframe()
 
-            # Enter Fix / Enhance page
+        with step("[Action] Click [Fix Enhance] tab in [Keyframe] page"):
             tips_area_page.click_fix_enhance()
-            time.sleep(DELAY_TIME)
 
-            # Switch to (Split toning)
+        with step("[Action] Enable [Split Toning] Tab"):
             fix_enhance_page.enhance.switch_to_split_toning()
-            time.sleep(DELAY_TIME)
 
-            # Click [Reset] button
+        with step("[Action] Click [Reset] Button in [Fix Enhance] page"):
             fix_enhance_page.click_reset()
 
-            # check warning message: Thus operation resets all the keyframes in this effect.
-            # Do you want to continue? Option: (Yes/ No)
-            check_warning = main_page.is_exist(L.base.confirm_dialog.main_window)
-            if not check_warning:
-                case.result = False
-            else:
-                # click yes
-                main_page.click(L.base.confirm_dialog.btn_yes)
+        with step("[Verify] Check if [Do you wnat to continue?] dialog (L.base.confirm_dialog.main_window) is shown"):
+            dialog = main_page.is_exist(L.base.confirm_dialog.main_window)
+            if not dialog:
+                assert False, "[Do you wnat to continue?] dialog is not shown"
 
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Click [Yes] button (L.base.confirm_dialog.btn_yes) in [Do you wnat to continue?] dialog"):
+            main_page.click(L.base.confirm_dialog.btn_yes)
 
-            # Verify Step:
-            current_balance = fix_enhance_page.enhance.split_toning.balance.get_value()
-            current_hue = fix_enhance_page.enhance.split_toning.shadow.hue.get_value()
-            current_saturation = fix_enhance_page.enhance.split_toning.shadow.saturation.get_value()
+        with step("[Verify] Get [Fix Enhance][Split Toning][Balance] value > Check result is ('0')"):
+            balance_value = fix_enhance_page.enhance.split_toning.balance.get_value()
+            if balance_value != '0':
+                assert False, f"Balance value does not match expected ('0'), got '{balance_value}'"
 
-            if (current_balance == '0') and (current_hue == '0') and (current_saturation == '0'):
-                case.result = True
-            else:
-                case.result = False
-                logger(f'current_balance = {current_balance}, current_hue = {current_hue}, current_saturation = {current_saturation}')
+        with step("[Verify] Get [Fix Enhance][Split Toning][Hue] value > Check result is ('0')"):
+            hue_value =fix_enhance_page.enhance.split_toning.shadow.hue.get_value()
+            if hue_value != '0':
+                assert False, f"Hue value does not match expected ('0'), got '{hue_value}'"
+
+        with step("[Verify] Get [Fix Enhance][Split Toning][Saturation] value > Check result is ('0')"):
+            saturation_value = fix_enhance_page.enhance.split_toning.shadow.saturation.get_value()
+            if saturation_value != '0':
+                assert False, f"Saturation value does not match expected ('0'), got '{saturation_value}'"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.keyframe
+    @pytest.mark.color_adjustment
+    @pytest.mark.exposure
+    @pytest.mark.hue
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_69] Set [Keyframe] for [Fix Enhance][Color Adjustment][Exposure]/[Hue] > Switch > Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_69(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_68') is run and passed
+        1. Click [Undo] button
+        2. Enable [Color Adjustment] Tab in [Fix Enhance] page
+        3. Click [Keyframe] button in [Tips Area] > Check result is True
+        4. Drag scroll bar to (0.24)
+        5. Add [Keyframe] for [Fix Enhance][Color Adjustment][Exposure]
+        6. Add [Keyframe] for [Fix Enhance][Color Adjustment][Hue]
+        7. Set timecode to ('00_00_03_00')
+        8. Set value for [KeyFrame Page][Fix Enhance][Color Adjustment][Exposure] to (53)
+        9. Set value for [KeyFrame Page][Fix Enhance][Color Adjustment][Hue] to (182) by slider
+        10. Set timecode to ('00_00_01_22')
+        11. Get value for [KeyFrame Page][Fix Enhance][Color Adjustment][Exposure] > Check result is ('107')
+        12. Get value for [KeyFrame Page][Fix Enhance][Color Adjustment][Hue] > Check result is ('120')
+        """
 
         # [L351] 4.4 Keyframe > Fix / Enhance > Adjust [Color Adjustment]
-        with uuid("3077f9c9-7194-4edc-b3e8-707495e22520") as case:
-            # Click [Undo] : Split Toning (Balance) = 53, (Shadow.Hue) = 291, (Shadow.Saturation) = 89
+        # with uuid("3077f9c9-7194-4edc-b3e8-707495e22520") as case:
+
+        dependency_test = "test_tip_areas_func_33_68"
+        self.ensure_dependency(dependency_test)
+
+        with step("[Action] Click [Undo] button"):
             main_page.click_undo()
-            time.sleep(DELAY_TIME)
 
-            # Switch to (Color Adjustment) on fix/enhance page
+        with step("[Action] Enable [Color Adjustment] Tab in [Fix Enhance] page"):
             fix_enhance_page.enhance.switch_to_color_adjustment()
-            time.sleep(DELAY_TIME * 2)
-            # Enter Keyframe page
-            tips_area_page.click_keyframe()
-            time.sleep(DELAY_TIME * 2)
 
-            # Scroll down to Color Adjustment
-            keyframe_room_page.drag_scroll_bar(0.34)
-            time.sleep(DELAY_TIME * 2)
-            # Add 1st keyframe on (Color Adjustment).Exposure and (Color Adjustment).Hue on (00;00;00;00)
+        with step("[Verify] Click [Keyframe] button in [Tips Area] > Check result is True"):
+            result = tips_area_page.click_keyframe()
+            if not result:
+                assert False, "[Keyframe] button click did not return True"
+
+        with step("[Action] Drag scroll bar to (0.24)"):
+            keyframe_room_page.drag_scroll_bar(0.24)
+
+        with step("[Action] Add [Keyframe] for [Fix Enhance][Color Adjustment][Exposure]"):
             keyframe_room_page.fix_enhance.color_adjustment.exposure.add_remove_keyframe()
-            time.sleep(DELAY_TIME * 2)
+
+        with step("[Action] Add [Keyframe] for [Fix Enhance][Color Adjustment][Hue]"):
             keyframe_room_page.fix_enhance.color_adjustment.hue.add_remove_keyframe()
-            time.sleep(DELAY_TIME * 2)
 
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_03_00')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Set timecode to ('00_00_03_00')"):
+            main_page.set_timeline_timecode('00_00_03_00', is_verify=True)
 
-            # Add 2nd keyframe on (Color Adjustment).Exposure and (Color Adjustment).Hue on (00;00;03;00)
+        with step("[Action] Set value for [KeyFrame Page][Fix Enhance][Color Adjustment][Exposure] to (53)"):
             keyframe_room_page.fix_enhance.color_adjustment.exposure.set_value(53)
-            time.sleep(DELAY_TIME * 2)
+
+        with step("[Action] Set value for [KeyFrame Page][Fix Enhance][Color Adjustment][Hue] to (182) by slider"):
             keyframe_room_page.fix_enhance.color_adjustment.hue.set_slider(182)
-            time.sleep(DELAY_TIME * 2)
 
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_01_22')
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Set timecode to ('00_00_01_22')"):
+            main_page.set_timeline_timecode('00_00_01_22', is_verify=True)
 
-            # Verify Step:
-            get_exposure = keyframe_room_page.fix_enhance.color_adjustment.exposure.get_value()
-            get_hue = keyframe_room_page.fix_enhance.color_adjustment.hue.get_value()
+        with step("[Verify] Get value for [KeyFrame Page][Fix Enhance][Color Adjustment][Exposure] > Check result is ('107')"):
+            exposure_value = keyframe_room_page.fix_enhance.color_adjustment.exposure.get_value()
+            if exposure_value != '107':
+                # Expected Exposure value should equal '107'
+                assert False, f"Exposure value does not match expected ('107'), got '{exposure_value}'"
 
-            if get_exposure == '107':
-                set_exposure = True
-            else:
-                set_exposure = False
-                logger(get_exposure)
+        with step("[Verify] Get value for [KeyFrame Page][Fix Enhance][Color Adjustment][Hue] > Check result is ('120')"):
+            hue_value = keyframe_room_page.fix_enhance.color_adjustment.hue.get_value()
+            if hue_value != '120':
+                # Expected Hue value should equal '120'
+                assert False, f"Hue value does not match expected ('120'), got '{hue_value}'"
 
-            if get_hue == '120':
-                set_hue = True
-            else:
-                set_hue = False
-                logger(set_hue)
+        assert True
 
-            case.result = set_exposure and set_hue
+    @pytest.mark.tip_areas_func
+    @pytest.mark.name('[test_tip_areas_func_33_70] Verify [Clip Attributes] position update')
+    @exception_screenshot
+    def test_tip_areas_func_33_70(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_69') is run and passed
+        1. Drag scroll bar to (0)
+        2. Fold [Fix Enhance] tab > Unfold [Clip Attributes] tab
+        3. Set [KeyFrame Page][Clip Attributes][Position][X] value to (0.4)
+        4. Set timecode to ('00_00_03_12')
+        5. Set [KeyFrame Page][Clip Attributes][Position][Y] value to (0.71)
+        6. Set timecode to ('00_00_02_10')
+        7. Get value for [KeyFrame Page][Clip Attributes][Position][X] > Check result is ('0.4')
+        8. Get value for [KeyFrame Page][Clip Attributes][Position][Y] > Check result is ('0.576')
+        """
+
+        dependency_test = "test_tip_areas_func_33_69"
+        self.ensure_dependency(dependency_test)
 
         # [L356] 4.4 Keyframe > Clip Attribute > Position
-        with uuid("e3a6c143-9a07-4385-a593-63b511cd213e") as case:
-            # Fold (Fix/ Enhance) for Keyframe page
+        # with uuid("e3a6c143-9a07-4385-a593-63b511cd213e") as case:
+
+        with step("[Action] Drag scroll bar to (0)"):
             keyframe_room_page.drag_scroll_bar(0)
-            time.sleep(DELAY_TIME)
-            keyframe_room_page.fix_enhance.unfold_tab(0)
 
-            # Unfold (Clip Attribute) for Keyframe page
-            keyframe_room_page.clip_attributes.unfold_tab()
+        with step("[Action] Fold [Fix Enhance] tab > Unfold [Clip Attributes] tab"):
+            # Fold [Fix Enhance] tab (using value 0 to fold)
+            keyframe_room_page.fix_enhance.unfold_tab(value=0)
+            # Unfold [Clip Attributes] tab (using value 1 to unfold)
+            keyframe_room_page.clip_attributes.unfold_tab(value=1)
 
-            # Set position x = 0.4  / position y = 0.5 on (00;00:01;22)
-            keyframe_room_page.clip_attributes.position.x.set_value(0.4)
-            time.sleep(DELAY_TIME)
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Position][X] value to (0.4)"):
+            keyframe_room_page.clip_attributes.position.x.set_value(0.4, index_node=-1)
 
-            # Set timeline
+        with step("[Action] Set timecode to ('00_00_03_12')"):
             main_page.set_timeline_timecode('00_00_03_12')
 
-            # Set position x = 0.4  / position y = 0.71 on (00;00:03;12)
-            keyframe_room_page.clip_attributes.position.y.set_value(0.71)
-            time.sleep(DELAY_TIME)
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Position][Y] value to (0.71)"):
+            keyframe_room_page.clip_attributes.position.y.set_value(0.71, index_node=-1)
 
-            # Verify Step
-            # Set timeline
+        with step("[Action] Set timecode to ('00_00_02_10')"):
             main_page.set_timeline_timecode('00_00_02_10')
 
-            current_x = keyframe_room_page.clip_attributes.position.x.get_value()
-            current_y = keyframe_room_page.clip_attributes.position.y.get_value()
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Position][X] > Check result is ('0.4')"):
+            x_value = keyframe_room_page.clip_attributes.position.x.get_value(index_node=-1)
+            if x_value != '0.4':
+                assert False, f"Position X value does not match expected ('0.4'), got '{x_value}'"
 
-            if current_x == '0.400':
-                check_x = True
-            else:
-                check_x = False
-                logger(current_x)
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Position][Y] > Check result is ('0.576')"):
+            y_value = keyframe_room_page.clip_attributes.position.y.get_value(index_node=-1)
+            if y_value != '0.576':
+                assert False, f"Position Y value does not match expected ('0.576'), got '{y_value}'"
 
-            if current_y == '0.576':
-                check_y = True
-            else:
-                check_y = False
-                logger(current_y)
+        assert True
 
-            case.result = check_x and check_y
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.clip_attributes
+    @pytest.mark.keyframe
+    @pytest.mark.freeform
+    @pytest.mark.name('[test_tip_areas_func_33_71] Apply [Clip Attributes][Freeform][Top Right Y] in [KeyFrame] and Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_71(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_70') is run and passed
+        1. Drag scroll bar to (1)
+        2. Set [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] value to (0.06)
+        3. Set timecode to ('00_00_00_00')
+        4. Set [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] value to (0.9)
+        5. Get value for [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] > Check result is ('0.900')
+        6. Click [Next Keyframe] button in [KeyFrame Page][Clip Attributes][Freeform]
+        7. Get value for [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] > Check result is ('0.060')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_70")
 
         # [L360] 4.4 Keyframe > Clip Attribute > Freeform
-        with uuid("85a485fe-c64b-430a-8cd2-64bc82e15822") as case:
+        # with uuid("85a485fe-c64b-430a-8cd2-64bc82e15822") as case:
+
+        with step("[Action] Drag scroll bar to (1)"):
             keyframe_room_page.drag_scroll_bar(1)
-            time.sleep(DELAY_TIME * 2)
 
-            # Set Freeform top-right position y = 0.06 on (00;00;02;11)
-            keyframe_room_page.clip_attributes.freeform.top_right_y.set_value(0.06)
-            time.sleep(DELAY_TIME)
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] value to (0.06)"):
+            keyframe_room_page.clip_attributes.freeform.top_right_y.set_value(0.06, index_node=-1)
 
-            # Set timeline
+        with step("[Action] Set timecode to ('00_00_00_00')"):
             main_page.set_timeline_timecode('00_00_00_00')
-            # Set Freeform top-right position y = 0.9 on (00;00;00;00)
-            keyframe_room_page.clip_attributes.freeform.top_right_y.set_value(0.9)
-            time.sleep(DELAY_TIME)
 
-            # Verify Step:
-            current_1st_y_value = keyframe_room_page.clip_attributes.freeform.top_right_y.get_value()
-            if current_1st_y_value == '0.900':
-                check_1st_result = True
-            else:
-                check_1st_result = False
-                logger(current_1st_y_value)
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] value to (0.9)"):
+            keyframe_room_page.clip_attributes.freeform.top_right_y.set_value(0.9, index_node=-1)
 
-            # click next keyframe of freeform
-            keyframe_room_page.clip_attributes.freeform.next_keyframe()
-            time.sleep(DELAY_TIME*2)
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] > Check result is ('0.900')"):
+            value = keyframe_room_page.clip_attributes.freeform.top_right_y.get_value(index_node=-1)
+            if value != '0.900':
+                assert False, f"Expected value ('0.900'), got ({value})"
 
-            current_2nd_y_value = keyframe_room_page.clip_attributes.freeform.top_right_y.get_value()
-            if current_2nd_y_value == '0.060':
-                check_2nd_result = True
-            else:
-                check_2nd_result = False
-                logger(current_2nd_y_value)
+        with step("[Action] Click [Next Keyframe] button in [KeyFrame Page][Clip Attributes][Freeform]"):
+            keyframe_room_page.clip_attributes.freeform.next_keyframe(index_node=-1)
 
-            case.result = check_1st_result and check_2nd_result
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Freeform][Top Right Y] > Check result is ('0.060')"):
+            value = keyframe_room_page.clip_attributes.freeform.top_right_y.get_value(index_node=-1)
+            if value != '0.060':
+                assert False, f"Expected value ('0.060'), got ({value})"
 
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.clip_attributes
+    @pytest.mark.keyframe
+    @pytest.mark.rotation
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_72] Verify [Rotation] update in Clip Attributes')
+    @exception_screenshot
+    def test_tip_areas_func_33_72(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_71') is run and passed
+        1. Drag scroll bar to (0.77)
+        2. Add [Keyframe] for [Clip Attributes][Rotation]
+        3. Set timecode to ('00_00_01_00')
+        4. Set [KeyFrame Page][Clip Attributes][Rotation] value to (130)
+        5. Get value for [KeyFrame Page][Clip Attributes][Rotation] > Check result is ('130.00')
+        6. Click [Next Keyframe] button in [KeyFrame Page][Clip Attributes][Rotation]
+        7. Get value for [KeyFrame Page][Clip Attributes][Rotation] > Check result is ('0.00')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_71")
+        
         # [L359] 4.4 Keyframe > Clip Attribute > Rotate
-        with uuid("87b99fc8-b634-4c8b-b04f-d153cc439a0c") as case:
+        # with uuid("87b99fc8-b634-4c8b-b04f-d153cc439a0c") as case:
+
+        with step("[Action] Drag scroll bar to (0.77)"):
             keyframe_room_page.drag_scroll_bar(0.77)
-            time.sleep(DELAY_TIME * 2)
-            # Add rotate keyframe : Degree = 0 on (00:00:02:10)
+        
+        with step('[Action] Add [Keyframe] for [Clip Attributes][Rotation]'):
             keyframe_room_page.clip_attributes.rotation.add_remove_keyframe()
-            time.sleep(DELAY_TIME)
 
-            # Set timeline
+        with step('[Action] Set timecode to (00_00_01_00)'):
             main_page.set_timeline_timecode('00_00_01_00')
-            time.sleep(DELAY_TIME)
 
-            # Add rotate keyframe : Degree = 130 on (00:00:01:00)
-            keyframe_room_page.clip_attributes.rotation.set_value(130)
-            time.sleep(DELAY_TIME)
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Rotation] value to (130)"):
+            keyframe_room_page.clip_attributes.rotation.set_value(130, index_node=-1)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Rotation] > Check result is ('130.00')"):
+            rotation_value = keyframe_room_page.clip_attributes.rotation.get_value(index_node=-1)
+            if rotation_value != '130.00':
+                assert False, f"Rotation value does not match expected ('130.00'), got ({rotation_value})"
+        
+        with step("[Action] Click [Next Keyframe] button in [KeyFrame Page][Clip Attributes][Rotation]"):
+            keyframe_room_page.clip_attributes.rotation.next_keyframe(index_node=-1)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Rotation] > Check result is ('0.00')"):
+            rotation_value = keyframe_room_page.clip_attributes.rotation.get_value(index_node=-1)
+            if rotation_value != '0.00':
+                assert False, f"Rotation value does not match expected ('0.00'), got ({rotation_value})"
+        
+        assert True
 
-            #  Verify step:
-            sec_0_value = keyframe_room_page.clip_attributes.rotation.get_value()
-            if sec_0_value == '130.00':
-                check_0_degree = True
-            else:
-                check_0_degree = False
-
-            # Click next keyframe
-            keyframe_room_page.clip_attributes.rotation.next_keyframe()
-            time.sleep(DELAY_TIME)
-
-            sec_2_value = keyframe_room_page.clip_attributes.rotation.get_value()
-            if sec_2_value == '0.00':
-                check_2_degree = True
-            else:
-                check_2_degree = False
-
-            case.result = check_0_degree and check_2_degree
-
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.clip_attributes
+    @pytest.mark.keyframe
+    @pytest.mark.opacity
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_73] Set [Clip Attributes][Opacity] > Switch Keyframe > Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_73(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_72') is run and passed
+        1. Add [KeyFrame] for [KeyFrame Page][Clip Attributes][Opacity] 
+        2. Click [Previous Keyframe] button in [KeyFrame Page][Clip Attributes][Opacity]
+        3. Set [KeyFrame Page][Clip Attributes][Opacity] value to (81)
+        4. Click [Next Keyframe] button in [KeyFrame Page][Clip Attributes][Opacity]
+        5. Click [Previous Keyframe] button in [KeyFrame Page][Clip Attributes][Opacity]
+        6. Get value for [KeyFrame Page][Clip Attributes][Opacity] > Check result is ('81')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_72")
+        
         # [L358] 4.4 Keyframe > Clip Attribute > Opacity
-        with uuid("91d9dcd4-5b93-473a-9816-00952ae14584") as case:
-            # Add Opacity keyframe : value = 100 on (00:00:02:10)
-            keyframe_room_page.clip_attributes.opacity.add_remove_keyframe()
-            time.sleep(DELAY_TIME)
+        # with uuid("91d9dcd4-5b93-473a-9816-00952ae14584") as case:
 
-            # Click previous keyframe
+        with step("[Action] Add [KeyFrame] for [KeyFrame Page][Clip Attributes][Opacity]"):
+            keyframe_room_page.clip_attributes.opacity.add_remove_keyframe(index_node=-1)
+        
+        with step("[Action] Click [Previous Keyframe] button in [KeyFrame Page][Clip Attributes][Opacity]"):
+            # keyframe_room_page.clip_attributes.opacity.previous_keyframe(index_node=-1)
             keyframe_room_page.clip_attributes.rotation.previous_keyframe()
-            time.sleep(DELAY_TIME)
+        
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Opacity] value to (81)"):
+            keyframe_room_page.clip_attributes.opacity.set_value(81, index_node=-1)
+        
+        with step("[Action] Click [Next Keyframe] button in [KeyFrame Page][Clip Attributes][Opacity]"):
+            keyframe_room_page.clip_attributes.opacity.next_keyframe(index_node=-1)
+        
+        with step("[Action] Click [Previous Keyframe] button in [KeyFrame Page][Clip Attributes][Opacity]"):
+            keyframe_room_page.clip_attributes.opacity.previous_keyframe(index_node=-1)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Opacity] > Check result is ('81')"):
+            opacity_value = keyframe_room_page.clip_attributes.opacity.get_value(index_node=-1)
+            if opacity_value != '81':
+                assert False, f"Opacity value does not match expected ('81'), got ({opacity_value})"
+        
+        assert True
 
-            # Add Opacity keyframe : value = 81 on (00:00:01:00)
-            keyframe_room_page.clip_attributes.opacity.set_value(81)
-
-
-            # Verify step:
-            # Click next keyframe > previous keyframe
-            keyframe_room_page.clip_attributes.opacity.next_keyframe()
-            time.sleep(DELAY_TIME)
-            keyframe_room_page.clip_attributes.opacity.previous_keyframe()
-            time.sleep(DELAY_TIME)
-
-            opacity_value = keyframe_room_page.clip_attributes.opacity.get_value()
-            if opacity_value == '81':
-                case.result = True
-            else:
-                case.result = False
-                logger(opacity_value)
-
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.clip_attributes
+    @pytest.mark.keyframe
+    @pytest.mark.scale
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_74] Adjust [Clip Attributes][Scale] in [KeyFrame]> Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_74(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_73') is run and passed
+        1. Drag scroll bar to (0.28)
+        2. Set timecode to ('00_00_01_21') in main page
+        3. Set [Maintain Aspect Ratio] in [KeyFrame Page][Clip Attributes][Scale] to (set_status=0)
+        4. Set [KeyFrame Page][Clip Attributes][Scale][Width] value to (0.91) by slider
+        5. Set [KeyFrame Page][Clip Attributes][Scale][Height] value to (1.22) by slider
+        6. Set timecode to ('00_00_01_13') in main page
+        7. Get value for [KeyFrame Page][Clip Attributes][Scale][Width] > Check result is ('0.944')
+        8. Get value for [KeyFrame Page][Clip Attributes][Scale][Height] > Check result is ('1.136')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_73")
+        
         # [L357] 4.4 Keyframe > Clip Attribute > Scale
-        with uuid("9e959cab-a100-4b54-8369-db894e1acce6") as case:
+        # with uuid("9e959cab-a100-4b54-8369-db894e1acce6") as case:
+
+        with step("[Action] Drag scroll bar to (0.28)"):
             keyframe_room_page.drag_scroll_bar(0.28)
-            time.sleep(DELAY_TIME * 2)
 
-            # Add Scale keyframe on (00:00:01:00):
-            # Width value = 1.000, Height value = 1.000
+        with step("[Action] Add [Keyframe] for [KeyFrame Page][Clip Attributes][Scale]"):
             keyframe_room_page.clip_attributes.scale.add_remove_keyframe()
-
-            # Set timeline
+        
+        with step("[Action] Set timecode to ('00_00_01_21') in main page"):
             main_page.set_timeline_timecode('00_00_01_21')
-            time.sleep(DELAY_TIME * 2)
-
-            # Add Scale keyframe on (00:00:01:21):
-            # Width value = 0.91, Height value = 1.22
-            keyframe_room_page.clip_attributes.scale.set_maintain_aspect_ratio(set_status=0)
+        
+        with step("[Action] Set [Maintain Aspect Ratio] in [KeyFrame Page][Clip Attributes][Scale] to (set_status=0)"):
+            keyframe_room_page.clip_attributes.scale.set_maintain_aspect_ratio(set_status=0, index_node=-1)
+        
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Scale][Width] value to (0.91) by slider"):
             keyframe_room_page.clip_attributes.scale.width.set_slider(0.91)
+        
+        with step("[Action] Set [KeyFrame Page][Clip Attributes][Scale][Height] value to (1.22) by slider"):
             keyframe_room_page.clip_attributes.scale.height.set_slider(1.22)
-
-            # Verify Step:
-            # Set timeline
+        
+        with step("[Action] Set timecode to ('00_00_01_13') in main page"):
             main_page.set_timeline_timecode('00_00_01_13')
-            time.sleep(DELAY_TIME)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Scale][Width] > Check result is ('0.944')"):
+            width_value = keyframe_room_page.clip_attributes.scale.width.get_value()
+            if width_value != '0.944':
+                assert False, f"Width scale value does not match expected ('0.944'), got ({width_value})"
+        
+        with step("[Verify] Get value for [KeyFrame Page][Clip Attributes][Scale][Height] > Check result is ('1.136')"):
+            height_value = keyframe_room_page.clip_attributes.scale.height.get_value()
+            if height_value != '1.136':
+                assert False, f"Height scale value does not match expected ('1.136'), got ({height_value})"
+        
+        assert True
 
-            current_width_value = keyframe_room_page.clip_attributes.scale.width.get_value()
-            if current_width_value == '0.944':
-                check_width = True
-            else:
-                check_width = False
 
-            current_height_value = keyframe_room_page.clip_attributes.scale.height.get_value()
-            if current_height_value == '1.136':
-                check_height = True
-            else:
-                check_height = False
-
-            case.result = check_width and check_height
-
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.scale
+    @pytest.mark.play_video
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_75] Play video and check preview as GT for effects in [KeyFrame]')
+    @exception_screenshot
+    def test_tip_areas_func_33_75(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_74') is run and passed
+        1. Click [Timeline Track Visible] Button for track (0)
+        2. Click [Play] button in playback window
+        3. Check preview is changin when playing (L.base.Area.preview.only_mtk_view, sec=3)
+        4. Click [Stop] button in playback window
+        5. Set timecode to ('00_00_01_25')
+        6. Check preview (L.base.Area.preview.only_mtk_view,file_name=Auto_Ground_Truth_Folder + 'L362.png') matches GT (Ground_Truth_Folder + 'L362.png', check_preview) with similarity=0.95
+        """
+        self.ensure_dependency("test_tip_areas_func_33_74")
+        
         # [L362] 4.4 Keyframe > Preview adjustment
-        with uuid("b9762b30-d4c8-49ee-a3bc-28f77529f56f") as case:
-            # Enable Video Track 1 visible
+        # with uuid("b9762b30-d4c8-49ee-a3bc-28f77529f56f") as case:
+
+        with step("[Action] Click [Timeline Track Visible] Button for track (0)"):
             timeline_operation_page.click_timeline_track_visible_button(0)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            # Click [Play] button to check preview different
+        
+        with step("[Action] Click [Play] button in playback window"):
             playback_window_page.Edit_Timeline_PreviewOperation('Play')
-            check_preview_update = main_page.Check_PreviewWindow_is_different(L.base.Area.preview.only_mtk_view, sec=3)
-            # Click [Stop]
+        
+        with step("[Verify] Check preview is changin when playing (L.base.Area.preview.only_mtk_view, sec=3)"):
+            preview_changed = main_page.Check_PreviewWindow_is_different(area=L.base.Area.preview.only_mtk_view, sec=3)
+            if not preview_changed:
+                assert False, "Preview did not change when playing! Expected change with sec=3"
+        
+        with step("[Action] Click [Stop] button in playback window"):
             playback_window_page.Edit_Timeline_PreviewOperation('Stop')
-            time.sleep(DELAY_TIME * 3)
+        
+        with step("[Action] Set timecode to ('00_00_01_25')"):
+             mask_designer_page.set_MaskDesigner_timecode('00_00_01_25')
+        
+        with step("[Verify] Check preview (L.base.Area.preview.only_mtk_view,file_name=Auto_Ground_Truth_Folder + 'L362.png') matches GT (Ground_Truth_Folder + 'L362.png', check_preview) with similarity=0.95"):
+            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L362.png')
+            is_preview_correct = main_page.compare(Ground_Truth_Folder + 'L362.png', current_preview, similarity=0.95)
+            if not is_preview_correct:
+                assert False, "Preview does not match Ground Truth (L362.png)! Similarity should >0.95"
+        
+        assert True
 
-            # check preview
-            mask_designer_page.set_MaskDesigner_timecode('00_00_01_25')
-            time.sleep(DELAY_TIME * 2)
-            check_preview = main_page.snapshot(L.base.Area.preview.only_mtk_view,file_name=Auto_Ground_Truth_Folder + 'L362.png')
-            check_result = precut_page.compare(Ground_Truth_Folder + 'L362.png', check_preview)
-
-            case.result = check_preview_update and check_result
-            logger(check_preview_update)
-            logger(check_result)
-
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.clip_attributes
+    @pytest.mark.hdr_effect
+    @pytest.mark.timecode
+    @pytest.mark.name('[test_tip_areas_func_33_76] Set [Fix Enhance][HDR Effect][Strength] in [KeyFrame] > Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_76(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_75') is run and passed
+        1. Click [Timeline Track Visible] Button for track (4)
+        2. Select timeline media (track_index=4, clip_index=1)
+        3. Fold [Clip Attributes] tab in [KeyFrame Page]
+        4. Unfold [Fix Enhance] tab in [KeyFrame Page]
+        5. Drag scroll bar to (1)
+        6. Add [KeyFrame] for [KeyFrame Page][Fix Enhance][HDR Effect][Strength]
+        7. Click [Stepper Up] button in [KeyFrame Page][Fix Enhance][HDR Effect][Strength] for 5 times
+        8. Get value for [KeyFrame Page][Fix Enhance][HDR Effect][Strength] > Check result is ('94')
+        9. Click [Stepper Down] button in [KeyFrame Page][Fix Enhance][HDR Effect][Strength] for 2 times
+        10. Get value for [KeyFrame Page][Fix Enhance][HDR Effect][Strength] > Check result is ('92')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_75")
+        
         # [L355] 4.4 Keyframe > Fix Enhance > Adjust [HDR Effect]
-        with uuid("34fb1dc3-57c1-4071-a3e8-97d9eafdea04") as case:
-            # Enable Video Track 3 visible
+        # with uuid("34fb1dc3-57c1-4071-a3e8-97d9eafdea04") as case:
+
+        with step("[Action] Click [Timeline Track Visible] Button for track (4)"):
             timeline_operation_page.click_timeline_track_visible_button(4)
-            time.sleep(DELAY_TIME)
-            # Select track 3 (Sport 01.jpg) clip
-            timeline_operation_page.select_timeline_media(track_index=4, clip_index=1)
-
-            # Fold (Clip Attribute) for Keyframe page
-            keyframe_room_page.clip_attributes.unfold_tab(0)
-            time.sleep(DELAY_TIME)
-
-            # Unfold (Fix / Enhance) page
-            keyframe_room_page.fix_enhance.unfold_tab()
-            time.sleep(DELAY_TIME)
-            # Scroll down to shwo (HDR Effect)
+        
+        with step("[Action] Select timeline media (track_index=4, clip_index=1)"):
+            timeline_operation_page.select_timeline_media(4, 1)
+        
+        with step("[Action] Fold [Clip Attributes] tab in [KeyFrame Page]"):
+            keyframe_room_page.clip_attributes.unfold_tab(value=0)
+        
+        with step("[Action] Unfold [Fix Enhance] tab in [KeyFrame Page]"):
+            keyframe_room_page.fix_enhance.unfold_tab(value=1)
+        
+        with step("[Action] Drag scroll bar to (1)"):
             keyframe_room_page.drag_scroll_bar(1)
-            time.sleep(DELAY_TIME * 2)
-
-            # Add keyframe of (Glow strength) on (00;00;01;25)
+        
+        with step("[Action] Add [KeyFrame] for [KeyFrame Page][Fix Enhance][HDR Effect][Strength]"):
             keyframe_room_page.fix_enhance.hdr_effect.glow_strength.add_remove_keyframe()
-            time.sleep(DELAY_TIME * 2)
-
-            # Set value = 92 for (Glow strength) on (00;00;01;25)
+        
+        with step("[Action] Click [Stepper Up] button in [KeyFrame Page][Fix Enhance][HDR Effect][Strength] for 5 times"):
             keyframe_room_page.fix_enhance.hdr_effect.glow_strength.click_stepper_up(5)
-            time.sleep(DELAY_TIME)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Fix Enhance][HDR Effect][Strength] > Check result is ('94')"):
+            strength_value = keyframe_room_page.fix_enhance.hdr_effect.glow_strength.get_value()
+            if strength_value != '94':
+                assert False, f"Strength value does not match expected ('94'), got ({strength_value})"
+        
+        with step("[Action] Click [Stepper Down] button in [KeyFrame Page][Fix Enhance][HDR Effect][Strength] for 2 times"):
             keyframe_room_page.fix_enhance.hdr_effect.glow_strength.click_stepper_down(2)
-            time.sleep(DELAY_TIME)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Fix Enhance][HDR Effect][Strength] > Check result is ('92')"):
+            strength_value = keyframe_room_page.fix_enhance.hdr_effect.glow_strength.get_value()
+            if strength_value != '92':
+                assert False, f"Strength value does not match expected ('92'), got ({strength_value})"
+        
+        assert True
 
-            # Verify Step:
-            check_glow_strength_value = keyframe_room_page.fix_enhance.hdr_effect.glow_strength.get_value()
-            if check_glow_strength_value == '92':
-                case.result = True
-            else:
-                case.result = False
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.save_project
+    @pytest.mark.name('[test_tip_areas_func_33_77] Save the project as [test_tip_areas_func_33_77] > Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_77(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_76') is run and passed
+        1. Save the project as ('test_tip_areas_func_33_77')
+        2. Check back to main program after saving project by check (main_page.exist(L.base.main_caption))
+        3. Check the AXValue of main_caption is ('test_tip_areas_func_33_77')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_76")
 
         # [L363] 4.4 Keyframe > Save as Project
-        with uuid("77a67c4a-2f74-47bf-b5bc-31defc5d3280") as case:
-            # Save project:
+        # with uuid("77a67c4a-2f74-47bf-b5bc-31defc5d3280") as case:
+
+        with step("[Action] Save the project as ('test_tip_areas_func_33_77')"):
             main_page.top_menu_bar_file_save_project_as()
-            check_save_result = main_page.handle_save_file_dialog(name='test_case_1_1_31',
-                                              folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-            time.sleep(DELAY_TIME*2)
+            if not main_page.handle_save_file_dialog('test_tip_areas_func_33_77', folder_path=Test_Material_Folder + 'BFT_21_Stage1/'):
+                assert False, "Failed to save project as 'test_tip_areas_func_33_77'"
+        
+        with step("[Verify] Check back to main program after saving project by check (main_page.exist(L.base.main_caption))"):
+            main_caption = main_page.exist(L.base.main_caption)
+            if not main_caption:
+                assert False, "Main caption not found after saving project"
+        
+        with step("[Verify] Check the AXValue of main_caption is ('test_tip_areas_func_33_77')"):
+            if main_caption.AXValue != 'test_tip_areas_func_33_77':
+                assert False, f"Main caption AXValue does not match expected ('test_tip_areas_func_33_77'), got ({main_caption.AXValue})"
+        
+        assert True
 
-            if not main_page.exist(L.base.main_caption):
-                logger('Cannot find locator main_caption')
-                check_save_name = False
-            elif main_page.exist(L.base.main_caption).AXValue == 'test_case_1_1_31':
-                check_save_name = True
-            else:
-                logger(main_page.exist(L.base.main_caption).AXValue)
-                check_save_name = False
-
-            case.result = check_save_result and check_save_name
-
-    # 6 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.fix_enhance
+    @pytest.mark.video_denoise
+    @pytest.mark.name('[test_tip_areas_func_33_78] Launch APP > Set [Video Denoise] in [Fix Enhance] > Verify Result')
     @exception_screenshot
-    def test_10_1_32(self):
-        # clear AI module
-        main_page.clear_AI_module()
+    def test_tip_areas_func_33_78(self):
+        """
+        1. Clear [AI Module] files > Start APP
+        2. Open packed project ('test_tip_areas_func_33_78_from_test_tip_areas_func_33_77')
+        3. Select timeline media (track_index=4, clip_index=0)
+        4. Click [Fix Enhance] button from [Tip Areas]
+        5. Enable [Video Denoise] tab in [Fix Enhance]
+        6. Get [Fix Enhance][Video Denoise][Degree] value > Check result is ('50')
+        7. Click [Up] Button in [Fix Enhance][Video Denoise][Degree] for 4 times
+        8. Get [Fix Enhance][Video Denoise][Degree] value > Check result is ('54')
+        """
+        with step("[Action] Clear [AI Module] files > Start APP"):
+            main_page.clear_AI_module()
+            main_page.start_app()
 
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # Open project: test_case_1_1_31
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_31.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-        time.sleep(DELAY_TIME * 5)
-
+        with step("[Action] Open packed project ('test_tip_areas_func_33_78_from_test_tip_areas_func_33_77')"):
+            self.open_packed_project("Packed_Project/test_tip_areas_func_33_78_from_test_tip_areas_func_33_77.pdk",
+                                    "Extracted_Folder/test_tip_areas_func_33_78")
+            
         # [L333] 4.3 Fix / Enhance > Fix > Apply [Video Denoise]
-        with uuid("7f017914-00c7-489f-a410-e6c6f4e9e080") as case:
-            # Select track 3 (Skateboard 01.mp3) clip
-            timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
+        # with uuid("7f017914-00c7-489f-a410-e6c6f4e9e080") as case:
 
-            # Click Fix/Enhance button
+        with step("[Action] Select timeline media (track_index=4, clip_index=0)"):
+            timeline_operation_page.select_timeline_media(4, 0)
+
+        with step("[Action] Click [Fix Enhance] button from [Tip Areas]"):
             tips_area_page.click_fix_enhance()
 
-            # Switch to Video Denoise
+        with step("[Action] Enable [Video Denoise] tab in [Fix Enhance]"):
             fix_enhance_page.fix.enable_video_denoise()
-            time.sleep(DELAY_TIME * 2)
 
-            # Check default value
-            default_value = fix_enhance_page.fix.video_denoise.degree.get_value()
-            if default_value == '50':
-                check_default = True
-            else:
-                check_default = False
-                logger(default_value)
+        with step("[Verify] Get [Fix Enhance][Video Denoise][Degree] value > Check result is ('50')"):
+            degree_value = fix_enhance_page.fix.video_denoise.degree.get_value()
+            if degree_value != '50':
+                assert False, f"Degree value does not match expected ('50'), got ({degree_value})"
 
-            # Set value = 54
-            fix_enhance_page.fix.video_denoise.degree.click_up(4)
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Click [Up] Button in [Fix Enhance][Video Denoise][Degree] for 4 times"):
+            keyframe_room_page.fix_enhance.video_denoise.degree.click_up(4)
 
-            current_value = fix_enhance_page.fix.video_denoise.degree.get_value()
-            if current_value == '54':
-                adjust_result = True
-            else:
-                adjust_result = False
-                logger(current_value)
+        with step("[Verify] Get [Fix Enhance][Video Denoise][Degree] value > Check result is ('54')"):
+            new_degree_value = fix_enhance_page.fix.video_denoise.degree.get_value()
+            if new_degree_value != '54':
+                assert False, f"Degree value does not match expected ('54'), got ({new_degree_value})"
 
-            case.result = check_default and adjust_result
+        assert True
 
+    @pytest.mark.tip_areas_func
+    @pytest.mark.name('[test_tip_areas_func_33_79] Verify [Fix Enhance][Video Denoise][Degree] update and timecode reset')
+    @exception_screenshot
+    def test_tip_areas_func_33_79(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_78') is run and passed
+        1. Click [KeyFrame] Button in [Fix Enhance]
+        2. Get [KeyFrame Page][Fix Enhance][Video Denoise][Degree] value > Check result is ('54')
+        3. Set timecode to ('00_00_02_00') at main page
+        4. Set [KeyFrame Page][Fix Enhance][Video Denoise][Degree] value to (68) by slider
+        5. Get value for [KeyFrame Page][Fix Enhance][Video Denoise][Degree] > Check result is ('68')
+        6. Reset [Keyframe] in [KeyFrame Page][Fix Enhance][Video Denoise][Degree]
+        7. Click [Previous KeyFrame] button in [KeyFrame Page][Fix Enhance][Video Denoise][Degree]
+        8. Get timecode in playback window > Check result is ('00:00:00:00')
+        9. Click [Next KeyFrame] button in [KeyFrame Page][Fix Enhance][Video Denoise][Degree]
+        10. Get timecode in playback window > Check result is ('00:00:00:00')
+        11. Get value for [KeyFrame Page][Fix Enhance][Video Denoise][Degree] > Check result is ('68')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_78")
+        
         # [L349] 4.4 Keyframe > Fix / Enhance > Adjust [Video Denoise]
-        with uuid("ce527c43-3c62-49c2-8e13-dd07ded26eba") as case:
-            # Click [Keyframe] on below button of (Fix/Enhance page)
+        # with uuid("ce527c43-3c62-49c2-8e13-dd07ded26eba") as case:
+
+        with step("[Action] Click [KeyFrame] Button in [Fix Enhance]"):
             fix_enhance_page.click_keyframe()
-
-            # Can show Video Denoise of (Keyframe Settings)
-            get_value = keyframe_room_page.fix_enhance.video_denoise.degree.get_value()
-            logger(get_value)
-            if get_value == '54':
-                unfold_result = True
-            else:
-                unfold_result = False
-
-            # Set timeline
+        
+        with step("[Verify] Get [KeyFrame Page][Fix Enhance][Video Denoise][Degree] value > Check result is ('54')"):
+            degree_value = keyframe_room_page.fix_enhance.video_denoise.degree.get_value()
+            if degree_value != '54':
+                assert False, f"Video Denoise Degree value does not match expected ('54'), got ({degree_value})"
+        
+        with step("[Action] Set timecode to ('00_00_02_00') at main page"):
             main_page.set_timeline_timecode('00_00_02_00')
-            time.sleep(DELAY_TIME * 2)
-
-            # Add 2nd keyframe = 68  at (00;00;02;00)
-            keyframe_room_page.fix_enhance.video_denoise.degree.set_slider(68)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            # Click "Reset" keyframe button
-            # Only exist 1 keyframe at (00;00;00;00)
+        
+        with step("[Action] Set [KeyFrame Page][Fix Enhance][Video Denoise][Degree] value to (68) by slider"):
+            keyframe_room_page.fix_enhance.video_denoise.degree.set_slider(68, index_node=-1)
+        
+        with step("[Verify] Get value for [KeyFrame Page][Fix Enhance][Video Denoise][Degree] > Check result is ('68')"):
+            new_degree_value = keyframe_room_page.fix_enhance.video_denoise.degree.get_value(index_node=-1)
+            if new_degree_value != '68':
+                assert False, f"Video Denoise Degree value does not match expected ('68'), got ({new_degree_value})"
+        
+        with step("[Action] Reset [Keyframe] in [KeyFrame Page][Fix Enhance][Video Denoise][Degree]"):
             keyframe_room_page.fix_enhance.video_denoise.degree.reset_keyframe()
-            time.sleep(DELAY_TIME * 2)
+        
+        with step("[Action] Click [Previous KeyFrame] button in [KeyFrame Page][Fix Enhance][Video Denoise][Degree]"):
+            keyframe_room_page.fix_enhance.video_denoise.degree.previous_keyframe(index_node=-1)
+        
+        with step("[Verify] Get timecode in playback window > Check result is ('00:00:00:00')"):
+            current_timecode = playback_window_page.get_timecode_slidebar()
+            if current_timecode != "00:00:00:00":
+                assert False, f"Playback window timecode does not match expected ('00:00:00:00'), got ({current_timecode})"
+        
+        with step("[Action] Click [Next KeyFrame] button in [KeyFrame Page][Fix Enhance][Video Denoise][Degree]"):
+            keyframe_room_page.fix_enhance.video_denoise.degree.next_keyframe(index_node=-1)
+        
+        with step("[Verify] Get timecode in playback window > Check result is ('00:00:00:00')"):
+            current_timecode = playback_window_page.get_timecode_slidebar()
+            if current_timecode != "00:00:00:00":
+                assert False, f"Playback window timecode does not match expected ('00:00:00:00'), got ({current_timecode})"
+        
+        with step("[Verify] Get value for [KeyFrame Page][Fix Enhance][Video Denoise][Degree] > Check result is ('68')"):
+            final_degree_value = keyframe_room_page.fix_enhance.video_denoise.degree.get_value(index_node=-1)
+            if final_degree_value != '68':
+                assert False, f"Final Video Denoise Degree value does not match expected ('68'), got ({final_degree_value})"
+        
+        assert True
 
-            # Click previous keyframe > then (click next keyframe) will stay at (00;00;00;00)
-            keyframe_room_page.fix_enhance.video_denoise.degree.previous_keyframe()
-            time.sleep(DELAY_TIME * 2)
-            keyframe_room_page.fix_enhance.video_denoise.degree.next_keyframe()
-            time.sleep(DELAY_TIME * 2)
-
-            check_timecode = playback_window_page.get_timecode_slidebar()
-            if check_timecode == '00:00:00:00':
-                reset_result = True
-            else:
-                reset_result = False
-                logger(check_timecode)
-
-            get_value = keyframe_room_page.fix_enhance.video_denoise.degree.get_value()
-            logger(get_value)
-            if get_value == '68':
-                check_value = True
-            else:
-                check_value = False
-
-            case.result = unfold_result and reset_result and check_value
-
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.color_enhancement
+    @pytest.mark.name('[test_tip_areas_func_33_80] Set [Fix Enhance][Color Enhancement][Degree] > Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_80(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_79') is run and passed
+        1. Click [Fix Enhance] button from [Tip Areas]
+        2. Enable [Color Enhancement] tab in [Fix Enhance]
+        3. Adjust [Fix Enhance][Color Enhancement][Degree] slider to (20) > Screenshot (L.base.Area.preview.only_mtk_view)
+        4. Get Value for [Fix Enhance][Color Enhancement][Degree] > Check result is ('20')
+        5. Set [Fix Enhance][Color Enhancement][Degree] to (99)
+        6. Get Value for [Fix Enhance][Color Enhancement][Degree] > Check result is ('99')
+        7. Check preview is updated after set value with similarity<0.9999
+        """
+        self.ensure_dependency("test_tip_areas_func_33_79")
+        
         # [L337] 4.3 Fix / Enhance > Enhance > Apply [Color Enhancement]
-        with uuid("60eee427-45e9-4193-9e35-66c4400c7fb8") as case:
-            # Click [Fix /Enhance] button on tips area
+        # with uuid("60eee427-45e9-4193-9e35-66c4400c7fb8") as case:
+
+        with step("[Action] Click [Fix Enhance] button from [Tip Areas]"):
             tips_area_page.click_fix_enhance()
 
-            # Enable Color Enhancement
+        with step("[Action] Enable [Color Enhancement] tab in [Fix Enhance]"):
             fix_enhance_page.enhance.enable_color_enhancement()
-            time.sleep(DELAY_TIME * 2)
-
-            # Set slider = 20
+        
+        with step("[Action] Adjust [Fix Enhance][Color Enhancement][Degree] slider to (20) > Screenshot (L.base.Area.preview.only_mtk_view)"):
             fix_enhance_page.enhance.color_enhancement.degree.adjust_slider(20)
-            time.sleep(DELAY_TIME * 2)
-            check_preview_20 = main_page.snapshot(L.base.Area.preview.only_mtk_view)
-
-            # Set slider = 99
+            preview_20 = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+        
+        with step("[Verify] Get Value for [Fix Enhance][Color Enhancement][Degree] > Check result is ('20')"):
+            value_20 = fix_enhance_page.enhance.color_enhancement.degree.get_value()
+            if value_20 != '20':
+                assert False, f"Color Enhancement Degree value does not match expected ('20'), got ({value_20})"
+        
+        with step("[Action] Set [Fix Enhance][Color Enhancement][Degree] to (99)"):
             fix_enhance_page.enhance.color_enhancement.degree.set_value(99)
-            time.sleep(DELAY_TIME * 2)
-            check_preview_99 = main_page.snapshot(L.base.Area.preview.only_mtk_view)
+        
+        with step("[Verify] Get Value for [Fix Enhance][Color Enhancement][Degree] > Check result is ('99')"):
+            value_99 = fix_enhance_page.enhance.color_enhancement.degree.get_value()
+            if value_99 != '99':
+                assert False, f"Color Enhancement Degree value does not match expected ('99'), got ({value_99})"
+        
+        with step("[Verify] Check preview is updated after set value with similarity<0.9999"):
+            preview_99 = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(preview_20, preview_99, similarity=0.9999):
+                assert False, "Preview did not update after changing Color Enhancement Degree! Similarity should < 0.9999"
+        
+        assert True
 
-            # Verify Step:
-            no_update = main_page.compare(check_preview_20, check_preview_99, similarity=1)
-            get_value = fix_enhance_page.enhance.color_enhancement.degree.get_value()
-            if get_value == '99':
-                set_value= True
-            else:
-                set_value = False
-            case.result = (not no_update) and set_value
 
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.keyframe
+    @pytest.mark.fix_enhance
+    @pytest.mark.color_enhancement
+    @pytest.mark.name('[test_tip_areas_func_33_81] Set [Fix Enhance][Color Enhancement][Degree] Value > Check Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_81(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_80') is run and passed
+        1. Click [KeyFrame] Button in [Fix Enhance]
+        2. Get [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] value > Check result is ('99')
+        3. Click [Stepper Up] button in [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] for 3 times
+        4. Get [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] value > Check result is ('100')
+        5. Click [Stepper Down] button in [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] for 5 times
+        6. Get [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] value > Check result is ('95')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_80")
+        
         # [L352] 4.4 Keyframe > Fix / Enhance > Adjust [Color Enhancement]
-        with uuid("e786aad5-ba6a-4ad7-87b0-e8fe9cbadaca") as case:
-            # Click [Keyframe] on below button of (Fix/Enhance page)
+        # with uuid("e786aad5-ba6a-4ad7-87b0-e8fe9cbadaca") as case:
+
+        with step("[Action] Click [KeyFrame] Button in [Fix Enhance]"):
             fix_enhance_page.click_keyframe()
-            time.sleep(DELAY_TIME * 2)
-
-            # Can show Color Enhancement of (Keyframe Settings)
-            get_value = keyframe_room_page.fix_enhance.color_enhancement.degree.get_value()
-            if get_value == '99':
-                unfold_result = True
-            else:
-                unfold_result = False
-                logger(get_value)
-
-            # Adjust editbox
-            # (Click arrow up : 3 times) then (Click arrow down : 5 times)
+        
+        with step("[Verify] Get [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] value > Check result is ('99')"):
+            degree_value_99 = keyframe_room_page.fix_enhance.color_enhancement.degree.get_value()
+            if degree_value_99 != '99':
+                assert False, f"Color Enhancement Degree value is not ('99'). Actual value: {degree_value_99}"
+        
+        with step("[Action] Click [Stepper Up] button in [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] for 3 times"):
             keyframe_room_page.fix_enhance.color_enhancement.degree.click_stepper_up(3)
+        
+        with step("[Verify] Get [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] value > Check result is ('100')"):
+            degree_value_100 = keyframe_room_page.fix_enhance.color_enhancement.degree.get_value(index_node=-1)
+            if degree_value_100 != '100':
+                assert False, f"Color Enhancement Degree value is not ('100'). Actual value: {degree_value_100}"
+        
+        with step("[Action] Click [Stepper Down] button in [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] for 5 times"):
             keyframe_room_page.fix_enhance.color_enhancement.degree.click_stepper_down(5)
-            time.sleep(DELAY_TIME * 2)
-            get_value = keyframe_room_page.fix_enhance.color_enhancement.degree.get_value()
-            if get_value == '95':
-                click_arrow = True
-            else:
-                click_arrow = False
-                logger(get_value)
-            case.result = unfold_result and click_arrow
+        
+        with step("[Verify] Get [KeyFrame Page][Fix Enhance][Color Enhancement][Degree] value > Check result is ('95')"):
+            degree_value_95 = keyframe_room_page.fix_enhance.color_enhancement.degree.get_value(index_node=-1)
+            if degree_value_95 != '95':
+                assert False, f"Color Enhancement Degree value is not ('95'). Actual value: {degree_value_95}"
+        
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.speech_enhancement
+    @pytest.mark.ai_module
+    @pytest.mark.name('[test_tip_areas_func_33_82] Apply [Speech Enhancement] > Verify Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_82(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_81') is run and passed
+        1. Click [Timeline Track Visible] Button for track (5)
+        2. Click [Fix Enhance] Button in [Tip Areas]
+        3. Enable [Speech Enhancement] tab in [Fix Enhance]
+        4. Click [Speech Enhancement] button in [KeyFrame Page]
+        5. Wait for downloading ai module
+        6. Set [Fix Enhance][Speech Enhancement][Compensation] to (68)
+        7. Get value for [Fix Enhance][Speech Enhancement][Compensation] > Check result is ('68')
+        8. Apply Effect in [Speech Enhancement] Window
+        9. Check [Speech Enhancement] Window (L.fix_enhance.enhance.speech_enhancement.main_window) is closed
+        """
+        self.ensure_dependency("test_tip_areas_func_33_81")
 
         # [L341] 4.3 Fix / Enhance > Enhance > Speech Enhancement
-        with uuid("346d93d8-ee16-4c75-b6cc-1828a6a632b5") as case:
-            # Enable audio track3
-            timeline_operation_page.click_timeline_track_visible_button(5)
-            time.sleep(DELAY_TIME * 2)
+        # with uuid("346d93d8-ee16-4c75-b6cc-1828a6a632b5") as case:
 
-            # Enter (Fix / Enhance) page
+        with step("[Action] Click [Timeline Track Visible] Button for track (5)"):
+            timeline_operation_page.click_timeline_track_visible_button(5)
+
+        with step("[Action] Click [Fix Enhance] Button in [Tip Areas]"):
             tips_area_page.click_fix_enhance()
 
-            # Switch to (Speech Enhancement)
+        with step("[Action] Enable [Speech Enhancement] tab in [Fix Enhance]"):
             fix_enhance_page.enhance.switch_to_speech_enhancement()
-            time.sleep(DELAY_TIME * 2)
 
-            # Click [Speech Enhancement] button
+        with step("[Action] Click [Speech Enhancement] button in [KeyFrame Page]"):
             fix_enhance_page.enhance.click_speech_enhancement()
-            time.sleep(DELAY_TIME * 2)
 
-            # Check download AI module
+        with step("[Action] Wait for downloading AI module"):
             self.check_downloading_AI_module()
 
-            # Set compensation = 68%
+        with step("[Action] Set [Fix Enhance][Speech Enhancement][Compensation] to (68)"):
             fix_enhance_page.enhance.speech_enhancement.compensation.set_value(68)
             time.sleep(DELAY_TIME)
 
-            # Verify Step:
-            get_value = fix_enhance_page.enhance.speech_enhancement.compensation.get_value()
-            if get_value == '68%':
-                set_result = True
-            else:
-                set_result = False
+        with step("[Verify] Get value for [Fix Enhance][Speech Enhancement][Compensation] > Check result is ('68')"):
+            compensation_value =  fix_enhance_page.enhance.speech_enhancement.compensation.get_value()
+            if compensation_value != '68%':
+                assert False, f"Speech Enhancement Compensation value is not ('68%'). Actual value: {compensation_value}"
 
-            # Click [Apply]
+        with step("[Action] Apply Effect in [Speech Enhancement] Window"):
             fix_enhance_page.enhance.speech_enhancement.click_apply()
-            time.sleep(DELAY_TIME * 2)
 
-            # Verify Step:
-            if main_page.exist(L.fix_enhance.enhance.speech_enhancement.main_window):
-                apply_result = False
-            else:
-                apply_result = True
+        with step("[Verify] Check [Speech Enhancement] Window is closed"):
+            speech_enhancement_window = main_page.exist(L.fix_enhance.enhance.speech_enhancement.main_window)
+            if speech_enhancement_window:
+                assert False, "Speech Enhancement window is not closed!"
 
-            case.result = set_result and apply_result
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.fix_enhance
+    @pytest.mark.video_stabilizer
+    @pytest.mark.correction_level
+    @pytest.mark.save_project
+    @pytest.mark.pack_project
+    @pytest.mark.name('[test_tip_areas_func_33_83] Set [Video Stabilizer][Correction Level] > Check result > Save Project > Pack Project')
+    @exception_screenshot
+    def test_tip_areas_func_33_83(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_82') is run and passed
+        1. Select timeline media (track_index=4, clip_index=0)
+        2. Enable [Video Stabilizer]
+        3. Get [Fix Enhance][Video Stabilizer][Correction Level] value > Check result is ('50')
+        4. Click [Plus] Button in [Fix Enhance][Video Stabilizer][Correction Level] for 4 times
+        5. Get [Fix Enhance][Video Stabilizer][Correction Level] value > Check result is ('54')
+        6. Save the project as ('test_tip_areas_func_33_83')
+        7. Pack the project as ('test_tip_areas_func_33_83')
+        """
+        self.ensure_dependency("test_tip_areas_func_33_82")
 
         # [L331] 4.3 Fix / Enhance > Fix > Video Stabilizer
-        with uuid("3577e439-7c24-4690-8386-8c4b3f34edc1") as case:
-            # Select track 3 (1st video clip): Skateboard 01.mp4
-            timeline_operation_page.select_timeline_media(track_index=4, clip_index=0)
+        # with uuid("3577e439-7c24-4690-8386-8c4b3f34edc1") as case:
 
-            # Enable (Video Stabilizer)
-            fix_enhance_page.fix.enable_video_stabilizer()
-            time.sleep(DELAY_TIME * 2)
+        with step("[Action] Select timeline media (track_index=4, clip_index=0)"):
+            timeline_operation_page.select_timeline_media(4, 0)
 
-            # Check default value = 50
-            default_value = fix_enhance_page.fix.video_stabilizer.correction_level.get_value()
-            if default_value == '50':
-                check_default = True
-            else:
-                check_default = False
+        with step("[Action] Enable [Video Stabilizer]"):
+            fix_enhance_page.fix.enable_video_stabilizer(value=True)
 
-            # Click [+] (4 times)
+        with step("[Verify] Get [Fix Enhance][Video Stabilizer][Correction Level] value > Check result is ('50')"):
+            correction_level = fix_enhance_page.fix.video_stabilizer.correction_level.get_value()
+            if correction_level != '50':
+                assert False, f"Correction Level value is not ('50'). Actual value: {correction_level}"
+
+        with step("[Action] Click [Plus] Button in [Fix Enhance][Video Stabilizer][Correction Level] for 4 times"):
             fix_enhance_page.fix.video_stabilizer.correction_level.click_plus(4)
-            time.sleep(DELAY_TIME * 2)
 
-            # Check current value
-            current_value = fix_enhance_page.fix.video_stabilizer.correction_level.get_value()
-            if current_value == '54':
-                apply_result = True
-            else:
-                apply_result = False
+        with step("[Verify] Get [Fix Enhance][Video Stabilizer][Correction Level] value > Check result is ('54')"):
+            correction_level = fix_enhance_page.fix.video_stabilizer.correction_level.get_value()
+            if correction_level != '54':
+                assert False, f"Correction Level value is not ('54'). Actual value: {correction_level}"
 
-            case.result = check_default and apply_result
+        with step("[Action] Save the project as 'test_tip_areas_func_33_83'"):
+            main_page.top_menu_bar_file_save_project_as()
+            main_page.handle_save_file_dialog(name="test_tip_areas_func_33_83", folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
 
-        # Save project:
-        main_page.top_menu_bar_file_save_project_as()
-        main_page.handle_save_file_dialog(name='test_case_1_1_32', folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
-        time.sleep(DELAY_TIME * 5)
+        with step("[Action] Pack the project as 'test_tip_areas_func_33_83'"):
+            main_page.top_menu_bar_file_pack_project_materials(project_path=Test_Material_Folder + 'BFT_21_Stage1/test_tip_areas_func_33_83/')
+            time.sleep(DELAY_TIME * 15)
 
-        # Pack project:
-        main_page.top_menu_bar_file_pack_project_materials(project_path=Test_Material_Folder + 'BFT_21_Stage1/third_project/')
-        # wait pack project processing ready
-        time.sleep(DELAY_TIME * 15)
+        assert True
 
-    # 7 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.remove
+    @pytest.mark.view_entire_video
+    @pytest.mark.mark_in_out
+    @pytest.mark.name('[test_tip_areas_func_33_84] Set [Mark In/ Mark Out] range > Click [Remove] button > Check result')
     @exception_screenshot
-    def test_10_1_33(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
+    def test_tip_areas_func_33_84(self):
+        """
+        1. Start APP
+        2. Open packed project ('Packed_Project/test_tip_areas_func_33_84_from_test_tip_areas_func_33_83.pdk', 'Extracted_Folder/test_tip_areas_func_33_84')
+        3. Screenshot (L.base.Area.preview.only_mtk_view)
+        4. Click the [View Entire Video] button
+        5. Set [Mark In/ Mark Out] range to (30, 240)
+        6. Click [Remove] button on [Tips Area]
+        7. Get timecode from slidebar > Check result is ('00:00:01:00')
+        8. Set timecode to ('00_00_05_02') at main page
+        9. Check preview is updated with similarity<0.85
+        """
+        with step("[Action] Start APP"):
+            main_page.start_app()
 
-        # Open project: test_case_1_1_31
-        main_page.top_menu_bar_file_open_project(save_changes='no')
-        main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/test_case_1_1_32.pds')
-        main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
+        with step("[Action] Open packed project"):
+            self.open_packed_project('Packed_Project/test_tip_areas_func_33_84_from_test_tip_areas_func_33_83.pdk', 
+                                    'Extracted_Folder/test_tip_areas_func_33_84')
 
-        # Default :(00;00;05;02) current preview
-        default_preview = main_page.snapshot(L.base.Area.preview.only_mtk_view)
-        time.sleep(DELAY_TIME)
+        with step("[Action] Screenshot (L.base.Area.preview.only_mtk_view)"):
+            initial_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
 
-        # Click [View entire video]
-        timeline_operation_page.click_view_entire_video_btn()
-
-        # [L367] 4.5 Timeline operation > Range selection > Remove
-        with uuid("e5c5187a-9740-43ad-9fb5-3c3594a4e72a") as case:
-            timeline_operation_page.set_range_markin_markout(30, 240)
-            time.sleep(DELAY_TIME * 2)
-
-            # Click [Remove]
-            tips_area_page.click_TipsArea_btn_Remove()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            check_timecode = playback_window_page.get_timecode_slidebar()
-            if check_timecode == '00:00:01:00':
-                remove_result = True
-            else:
-                remove_result = False
-                logger(check_timecode)
-
-            # Set timecode (00;00;05;02) to check preview is updated
-            main_page.set_timeline_timecode('00_00_05_02')
-            time.sleep(DELAY_TIME * 2)
-
-            current_remove_preview = main_page.snapshot(L.base.Area.preview.only_mtk_view)
-            preview_no_update = main_page.compare(default_preview, current_remove_preview, similarity=0.85)
-            logger(f'{preview_no_update=}, {remove_result=}')
-
-            case.result = (not preview_no_update) and remove_result
-
-        # [L366] 4.5 Timeline operation > Range selection > Cut
-        with uuid("0113318f-180d-4b34-80c0-faf6f765a86f") as case:
-            timeline_operation_page.set_range_markin_markout(240, 330)
-            time.sleep(DELAY_TIME * 2)
-            # Click [Cut]
-            tips_area_page.click_TipsArea_btn_Cut()
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify step:
-            # Select track3 2nd clip (Sport 01.jpg) to check clip duration
-            timeline_operation_page.select_timeline_media(track_index=4, clip_index=1)
-
-            # Click duration
-            tips_area_page.click_TipsArea_btn_Duration()
-            time.sleep(DELAY_TIME * 2)
-
-            check_timecode = main_page.exist(L.tips_area.window.duration_timecode).AXValue
-            if check_timecode == '00:00:04:00':
-                cut_result = True
-            else:
-                cut_result = False
-                logger(check_timecode)
-            case.result = cut_result
-
-            time.sleep(DELAY_TIME)
-            # Press [Enter] to close (Duration Setting) window
-            main_page.press_enter_key()
-            time.sleep(DELAY_TIME * 2)
-
-        # [L373] 4.5 Timeline operation > Ripple Editing > Trim to Fit (video only)
-        with uuid("d3561515-1f17-4fd9-8a74-4f8fab04e604") as case:
-            # Click timeline track 1
-            main_page.timeline_select_track(1)
-
-            # Set timecode (00;00;01;00)
-            main_page.set_timeline_timecode('00_00_01_00')
-            time.sleep(DELAY_TIME * 2)
-
-            # Select video to insert (Trim to fit)
-            main_page.select_library_icon_view_media('Skateboard 03.mp4')
-            #trim_to_fit_result_1 = tips_area_page.click_TipsArea_btn_insert(5)
-            self.temp_for_os_14_insert_function(1)
-
-            time.sleep(DELAY_TIME * 2)
-
-            # click undo
-            main_page.click_undo()
-            time.sleep(DELAY_TIME * 2)
-
-            # Bug regression : VDE235705-0020
-            logger('10725')
-            main_page.drag_media_to_timeline_playhead_position_offset('Skateboard 03.mp4', track_no=1)
-            time.sleep(DELAY_TIME * 3)
-            logger('10728')
-
-            # Pop up Floating Menu then click 'Trim to Fit'
-            current_timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            main_page.keyboard.down()
-            time.sleep(DELAY_TIME * 2)
-            main_page.press_enter_key()
-
-            time.sleep(DELAY_TIME * 5)
-            after_timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            trim_to_fit_result_2 = main_page.compare(current_timeline_preview, after_timeline_preview)
-            logger(trim_to_fit_result_2)
-
-            case.result = trim_to_fit_result_2
-
-        # [L374] 4.5 Timeline operation > Ripple Editing > Speed up to Fit (video only)
-        with uuid("f851fa10-4f1b-4d47-9498-1913b1312273") as case:
-            # Click Undo
-            main_page.click_undo()
-            time.sleep(DELAY_TIME * 2)
-
-            # Select video to insert (Speed up to Fit)
-            main_page.select_library_icon_view_media('Skateboard 03.mp4')
-            #tips_area_page.click_TipsArea_btn_insert(6)
-            self.temp_for_os_14_insert_function(2)
-            time.sleep(DELAY_TIME * 2)
-
-            # Tools > Click [Video Speed]
-            tips_area_page.tools.select_VideoSpeed()
-            time.sleep(DELAY_TIME*2)
-
-            # Verify Step:
-            get_speed_multiplier = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue()
-            if get_speed_multiplier == '16.667':
-                case.result = True
-            else:
-                case.result = False
-                logger(get_speed_multiplier)
-
-            # Click [OK] to close (Video Speed Designer)
-            time.sleep(DELAY_TIME)
-            video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
-            time.sleep(DELAY_TIME * 4)
-
-        # [L372] 4.5 Timeline operation > Ripple Editing > Overwrite
-        with uuid("09c94b67-75a8-40fd-8603-9aa44d88b02c") as case:
-            # Select track1 2nd clip (Skateboard 03.mp4) to check clip duration
-            timeline_operation_page.select_timeline_media(track_index=0, clip_index=1)
-            time.sleep(DELAY_TIME * 2)
-
-            main_page.select_library_icon_view_media('Landscape 02.jpg')
-            time.sleep(DELAY_TIME * 4)
-            # Click Insert > Overwrite
-            #tips_area_page.click_TipsArea_btn_insert(0)
-            self.temp_for_os_14_insert_function(0)
-            time.sleep(DELAY_TIME * 2)
-
-            # Verify Step:
-            # Click duration
-            tips_area_page.click_TipsArea_btn_Duration()
-            time.sleep(DELAY_TIME * 2)
-
-            check_timecode = main_page.exist(L.tips_area.window.duration_timecode).AXValue
-            if check_timecode == '00:00:05:00':
-                case.result = True
-            else:
-                case.result = False
-                logger(check_timecode)
-
-            time.sleep(DELAY_TIME)
-            # Press [Enter] to close (Duration Setting) window
-            main_page.press_enter_key()
-
-        # [L368] 4.5 Timeline operation > Range Selection > Render Preview
-        with uuid("919cce85-cd3e-4147-9c40-ffe9dbf6a978") as case:
-            # Select range : 1 min. ~ 3 sec 02 frame
-            timeline_operation_page.set_range_markin_markout(30, 92)
-            time.sleep(DELAY_TIME * 2)
-
-            # Click [Render Preview]
-            click_button = timeline_operation_page.edit_timeline_render_preview()
-            progress_complete = False
-            for x in range(160):
-                show_progress_bar = main_page.exist(L.timeline_operation.render_preview_progress_bar)
-                if show_progress_bar:
-                    time.sleep(DELAY_TIME)
-                else:
-                    progress_complete = True
-                    break
-
-            case.result = click_button and progress_complete
-
-        # [L371] 4.5 Timeline operation > Range Selection > Lock Range
-        with uuid("d9d0062d-bcf4-46f9-8c22-1d48642a5588") as case:
-            timeline_operation_page.set_range_markin_markout(100, 150)
-            tips_area_page.click_TipsArea_btn_Lock_Range()
-
-            # Set timecode
-            main_page.set_timeline_timecode('00_00_07_06')
-            time.sleep(DELAY_TIME * 2)
-
-            lock_range_button = main_page.exist(L.tips_area.button.btn_Lock_Range)
-            if lock_range_button:
-                case.result = True
-                # Click [Lock Range] again to release (Lock range) setting
-                tips_area_page.click_TipsArea_btn_Lock_Range()
-            else:
-                case.result = False
-
-    # 7 uuid
-    # @pytest.mark.skip
-    # @pytest.mark.bft_check
-    @exception_screenshot
-    def test_10_1_34(self):
-        # launch APP
-        main_page.start_app()
-        time.sleep(DELAY_TIME*3)
-
-        # [L396] 5. Produce > H.265 > Open pack project
-        with uuid("8281b84c-4b96-4801-8d13-6160084f73c8") as case:
-            # Open project: first_project
-            main_page.top_menu_bar_file_open_project(save_changes='no')
-            check_open_result = main_page.handle_open_project_dialog(Test_Material_Folder + 'BFT_21_Stage1/third_project.pdk')
-            main_page.handle_merge_media_to_current_library_dialog(option='no', do_not_show_again='no')
-
-            time.sleep(DELAY_TIME * 3)
-            if not check_open_result:
-                logger('handle_open_project_dialog [NG]')
-                case.result = False
-            else:
-
-                # Select extract path
-                main_page.delete_folder(Test_Material_Folder + 'BFT_21_Stage1/extract_flder_3')
-                time.sleep(DELAY_TIME)
-                main_page.select_file(Test_Material_Folder + 'BFT_21_Stage1/extract_flder_3')
-                time.sleep(DELAY_TIME * 5)
-                main_page.handle_merge_media_to_current_library_dialog(do_not_show_again='no')
-                # Wait for open project
-                time.sleep(DELAY_TIME * 12)
-
-                # Verify Step:
-                if not main_page.exist(L.base.main_caption):
-                    logger('Cannot find locator main_caption')
-                    case.result = False
-                elif main_page.exist(L.base.main_caption).AXValue == 'third_project':
-                    case.result = True
-                else:
-                    logger(main_page.exist(L.base.main_caption).AXValue)
-                    case.result = False
-
-        # [L370] 4.5 Timeline operation > Range selection > Produce Range
-        with uuid("806ada7f-9a80-4ce0-8d42-25117181f691") as case:
-            # Click [View entire video]
+        with step("[Action] Click the [View Entire Video] button"):
             timeline_operation_page.click_view_entire_video_btn()
 
-            timeline_operation_page.set_range_markin_markout(0, 45)
-            time.sleep(DELAY_TIME * 2)
+        # [L367] 4.5 Timeline operation > Range selection > Remove
+        # with uuid("e5c5187a-9740-43ad-9fb5-3c3594a4e72a") as case:
 
-            # Click [Produce Range]
+        with step("[Action] Set [Mark In/ Mark Out] range to (30, 240)"):
+            timeline_operation_page.set_range_markin_markout(30, 240)
+
+        with step("[Action] Click [Remove] button on [Tips Area]"):
+            tips_area_page.click_TipsArea_btn_Remove()
+
+        with step("[Verify] Get timecode from slidebar > Check result is ('00:00:01:00')"):
+            timecode = playback_window_page.get_timecode_slidebar()
+            if timecode != '00:00:01:00':
+                assert False, f"Timecode is not as expected! Expected '00:00:01:00', got {timecode}"
+
+        with step("[Action] Set timecode to ('00_00_05_02') at main page"):
+           main_page.set_timeline_timecode('00_00_05_02')
+
+        with step("[Verify] Check preview is updated with similarity < 0.85"):
+            updated_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(initial_preview, updated_preview, similarity=0.85):
+                assert False, "Preview did not update as expected! Similarity should < 0.85"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.mark_in_out
+    @pytest.mark.cut
+    @pytest.mark.duration
+    @pytest.mark.name('[test_tip_areas_func_33_85] Set [Mark In/ Mark Out] range > Click [Cut] button > Check result via [Duration]')
+    @exception_screenshot
+    def test_tip_areas_func_33_85(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_84') is run and passed
+        1. Set [Mark In/ Mark Out] range for (240, 330)
+        2. Click [Cut] button on [Tips Area]
+        3. Select Timeline media (track_index=4, clip_index=1)
+        4. Click [Duration] button on [Tip Areas]
+        5. Check the duration is ('00:00:04:00') by main_page.exist(L.tips_area.window.duration_timecode).AXValue
+        6. Press [Enter] key to close [Duration Setting] window
+        """
+        self.ensure_dependency("test_tip_areas_func_33_84")
+
+        # [L366] 4.5 Timeline operation > Range selection > Cut
+        # with uuid("0113318f-180d-4b34-80c0-faf6f765a86f") as case:
+
+        with step("[Action] Set [Mark In/ Mark Out] range for (240, 330)"):
+            timeline_operation_page.set_range_markin_markout(240, 330)
+
+        with step("[Action] Click [Cut] button on [Tips Area]"):
+            tips_area_page.click_TipsArea_btn_Cut()
+
+        with step("[Action] Select Timeline media (track_index=4, clip_index=1)"):
+            timeline_operation_page.select_timeline_media(4, 1)
+
+        with step("[Action] Click [Duration] button on [Tip Areas]"):
+            tips_area_page.click_TipsArea_btn_Duration()
+
+        with step("[Verify] Check the duration is ('00:00:04:00')"):
+            duration_value = main_page.exist(L.tips_area.window.duration_timecode)
+            if duration_value.AXValue != '00:00:04:00':
+                assert False, f"Duration is not correct! Expected: '00:00:04:00', Got: {duration_value.AXValue}"
+
+        with step("[Action] Press [Enter] key to close [Duration Setting] window"):
+            main_page.press_enter_key()
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.timeline
+    @pytest.mark.timecode
+    @pytest.mark.trim
+    @pytest.mark.name('[test_tip_areas_func_33_86] Select media > Add to Timeline > Trim to Fit > Check result')
+    @exception_screenshot
+    def test_tip_areas_func_33_86(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_85') is run and passed
+        1. Select timeline track (1)
+        2. Set timecode to ('00_00_01_00') at main page
+        3. Select media ('Skateboard 03.mp4') by library icon view > Insert to timeline by self.temp_for_os_14_insert_function(1)
+        4. Click [Undo] button > Screenshot (L.base.Area.preview.only_mtk_view)
+        5. Drag media to timeline playhead position with offset ('Skateboard 03.mp4', track_no=1)
+        6. Press [Down] Key > Press [Enter] Key to deal with Pop up Floating Menu then click 'Trim to Fit'
+        7. Check preview is updated with similarity<0.95
+        """
+        self.ensure_dependency("test_tip_areas_func_33_85")
+
+        # [L373] 4.5 Timeline operation > Ripple Editing > Trim to Fit (video only)
+        # with uuid("d3561515-1f17-4fd9-8a74-4f8fab04e604") as case:
+        with step("[Action] Select timeline track (1)"):
+            main_page.timeline_select_track(1)
+
+        with step("[Action] Set timecode to ('00_00_01_00') at main page"):
+            main_page.set_timeline_timecode('00_00_01_00')
+
+        with step("[Action] Select media ('Skateboard 03.mp4') by library icon view and insert to timeline"):
+            main_page.select_library_icon_view_media('Skateboard 03.mp4')
+            self.temp_for_os_14_insert_function(1)
+
+        with step("[Action] Click [Undo] button and screenshot"):
+            main_page.click_undo()
+            screenshot_after_undo = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+
+        with step("[Action] Drag media to timeline playhead position with offset ('Skateboard 03.mp4', track_no=1)"):
+            main_page.drag_media_to_timeline_playhead_position_offset('Skateboard 03.mp4', track_no=1)
+
+        with step("[Action] Press [Down] key > Press [Enter] key and click 'Trim to Fit'"):
+            main_page.keyboard.down()
+            main_page.press_enter_key()
+
+        with step("[Verify] Check preview is updated with similarity<0.95"):
+            preview_after_trim = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
+            if main_page.compare(screenshot_after_undo, preview_after_trim, similarity=0.95):
+                assert False, "Preview did not update after trimming! Similarity should < 0.95"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.video_speed
+    @pytest.mark.speed_multiplier
+    @pytest.mark.name('[test_tip_areas_func_33_87] Insert Media > Video Speed > Check [Speed Multiplier] value')
+    @exception_screenshot
+    def test_tip_areas_func_33_87(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_86') is run and passed
+        1. Click [Undo] button
+        2. Select media ('Skateboard 03.mp4') by library icon view > Insert to timeline by self.temp_for_os_14_insert_function(1)
+        3. Select [Video Speed] button in [Fix Enhance]
+        4. Get [Speed Multiplier] value for [Entire Clip] > Check result is ('16.667')
+        5. Click [OK] button to leave [Video Speed] window
+        """
+        self.ensure_dependency("test_tip_areas_func_33_86")
+
+        # [L374] 4.5 Timeline operation > Ripple Editing > Speed up to Fit (video only)
+        # with uuid("f851fa10-4f1b-4d47-9498-1913b1312273") as case:
+
+        with step("[Action] Click [Undo] button"):
+            main_page.click_undo()
+
+        with step("[Action] Select media ('Skateboard 03.mp4') by library icon view and insert to timeline"):
+            main_page.select_library_icon_view_media('Skateboard 03.mp4')
+            self.temp_for_os_14_insert_function(2)
+
+        with step("[Action] Select [Video Speed] button in [Fix Enhance]"):
+            tips_area_page.tools.select_VideoSpeed()
+
+        with step("[Verify] Get [Speed Multiplier] value for [Entire Clip] and check result is ('16.667')"):
+            speed_multiplier = video_speed_page.Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue()
+            if speed_multiplier != '16.667':
+                assert False, f"Speed multiplier is incorrect! Expected: '16.667', Got: {speed_multiplier}"
+
+        with step("[Action] Click [OK] button to leave [Video Speed] window"):
+            video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.duration
+    @pytest.mark.name('[test_tip_areas_func_33_88] Insert Media > Check [Duration] value')
+    @exception_screenshot
+    def test_tip_areas_func_33_88(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_87') is run and passed
+        1. Select timeline media (track_index=0, clip_index=1)
+        2. Select media ('Landscape 02.jpg') by library icon view > Insert to timeline by self.temp_for_os_14_insert_function(0)
+        3. Click [Duration] button on [Tips Area]
+        4. Get [Duration] value for [Tips Area] > Check result is ('00:00:05:00')
+        5. Press [Enter] key to leave [Duration Setting] window
+        """
+        self.ensure_dependency("test_tip_areas_func_33_87")
+
+        # [L372] 4.5 Timeline operation > Ripple Editing > Overwrite
+        # with uuid("09c94b67-75a8-40fd-8603-9aa44d88b02c") as case:
+
+        with step("[Action] Select timeline media (track_index=0, clip_index=1)"):
+            main_page.select_timeline_media(track_index=0, clip_index=1)
+
+        with step("[Action] Select media ('Landscape 02.jpg') by library icon view and insert to timeline"):
+            main_page.select_library_icon_view_media('Landscape 02.jpg')
+            self.temp_for_os_14_insert_function(0)
+
+        with step("[Action] Click [Duration] button on [Tips Area]"):
+            tips_area_page.click_TipsArea_btn_Duration()
+
+        with step("[Verify] Get [Duration] value for [Tips Area] and check result is ('00:00:05:00')"):
+            duration_value = main_page.exist(L.tips_area.window.duration_timecode).AXValue
+            if duration_value != '00:00:05:00':
+                assert False, f"Duration is incorrect! Expected: '00:00:05:00', Got: {duration_value}"
+
+        with step("[Action] Press [Enter] key to leave [Duration Setting] window"):
+            main_page.press_enter_key()
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.render_preview
+    @pytest.mark.mark_in_out
+    @pytest.mark.name('[test_tip_areas_func_33_89] Set [Mark In/ Mark Out] range > Click [Render Preview] button > Check [Render Preivew] Process ends')
+    @exception_screenshot
+    def test_tip_areas_func_33_89(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_88') is run and passed
+        1. Set [Mark In/ Mark Out] range for (30, 92)
+        2. Click the [Render Preview] button in [Timeline Operation]
+        3. Check progress process is completed by checking the progress bar (L.timeline_operation.render_preview_progress_bar) disappear in 160 seconds
+        """
+        self.ensure_dependency('test_tip_areas_func_33_88')
+
+        # [L368] 4.5 Timeline operation > Range Selection > Render Preview
+        # with uuid("919cce85-cd3e-4147-9c40-ffe9dbf6a978") as case:
+
+        with step("[Action] Set [Mark In/ Mark Out] range for (30, 92)"):
+            timeline_operation_page.set_range_markin_markout(30, 92)
+
+        with step("[Action] Click the [Render Preview] button in [Timeline Operation]"):
+            if not timeline_operation_page.edit_timeline_render_preview():
+                assert False, 'Unable to click [Render Preview] button!'
+
+        with step("[Verify] Check if progress process is completed within 160 seconds"):
+            progress_completed = False
+            for _ in range(160):
+                if main_page.exist(L.timeline_operation.render_preview_progress_bar):
+                    time.sleep(DELAY_TIME)
+                else:
+                    progress_completed = True
+            if not progress_completed:
+                assert False, "Progress bar did not disappear within 160 seconds!"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.mark_in_out
+    @pytest.mark.lock_range
+    @pytest.mark.name('[test_tip_areas_func_33_90] Set [Mark In/ Mark Out] > Set [Lock Range] > Check Result')
+    @exception_screenshot
+    def test_tip_areas_func_33_90(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_89') is run and passed
+        1. Set [Mark In/ Mark Out] range for (100, 150)
+        2. Click [Lock Range] button on [Tip Areas]
+        3. Set timecode to ('00_00_07_06') at main page
+        4. Check if [Lock Range] button (L.tips_area.button.btn_Lock_Range) is still shown
+        5. Click [Lock Range] button on [Tip Areas] again
+        """
+        self.ensure_dependency('test_tip_areas_func_33_89')
+
+        # [L371] 4.5 Timeline operation > Range Selection > Lock Range
+        # with uuid("d9d0062d-bcf4-46f9-8c22-1d48642a5588") as case:
+
+        with step("[Action] Set [Mark In/ Mark Out] range for (100, 150)"):
+            timeline_operation_page.set_range_markin_markout(100, 150)
+
+        with step("[Action] Click [Lock Range] button on [Tip Areas]"):
+            tips_area_page.click_TipsArea_btn_Lock_Range()
+
+        with step("[Action] Set timecode to ('00_00_07_06') at main page"):
+            main_page.set_timeline_timecode('00_00_07_06')
+
+        with step("[Verify] Check if [Lock Range] button is still shown"):
+            if not main_page.exist(L.tips_area.button.btn_Lock_Range):
+                assert False, "Lock Range button is not shown after setting timecode!"
+
+        with step("[Action] Click [Lock Range] button on [Tip Areas] again"):
+            tips_area_page.click_TipsArea_btn_Lock_Range()
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.launch
+    @pytest.mark.open_project
+    @pytest.mark.name('[test_tip_areas_func_33_91] Open Project > Check Project Name on Caption Bar')
+    @exception_screenshot
+    def test_tip_areas_func_33_91(self):
+        """
+        1. Start APP
+        2. Open packed project ('Packed_Project/test_tip_areas_func_33_91_from_test_tip_areas_func_33_82.pdk', 'Extracted_Folder/test_tip_areas_func_33_91')
+        3. Check if [Main Caption] bar (L.base.main_caption) is shown after open project
+        4. Check if [Main Caption] bar value is ('test_tip_areas_func_33_91')
+        """
+        with step("[Action] Start APP"):
+            main_page.start_app()
+
+        # [L396] 5. Produce > H.265 > Open pack project
+        # with uuid("8281b84c-4b96-4801-8d13-6160084f73c8") as case:
+        
+        with step("[Action] Open packed project ('Packed_Project/test_tip_areas_func_33_91_from_test_tip_areas_func_33_82.pdk', 'Extracted_Folder/test_tip_areas_func_33_91')"):
+            self.open_packed_project('Packed_Project/test_tip_areas_func_33_91_from_test_tip_areas_func_33_82.pdk', 'Extracted_Folder/test_tip_areas_func_33_91')
+
+        with step("[Verify] Check if [Main Caption] bar (L.base.main_caption) is shown after open project"):
+            if not main_page.exist(L.base.main_caption):
+                assert False, "Main Caption bar is not shown after opening project!"
+
+        with step("[Verify] Check if [Main Caption] bar value is ('test_tip_areas_func_33_91')"):
+            main_caption_value = main_page.exist(L.base.main_caption).AXValue
+            if main_caption_value != 'test_tip_areas_func_33_91':
+                assert False, f"Main Caption value is incorrect! Expected: 'test_tip_areas_func_33_91', Got: '{main_caption_value}'"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.viwe_entire_video
+    @pytest.mark.mark_in_out
+    @pytest.mark.produce_range
+    @pytest.mark.name('[test_tip_areas_func_33_92] View Entire Video > Set [Mark In/ Mark Out] range > Click [Produce Range] button > Check timecode')
+    @exception_screenshot
+    def test_tip_areas_func_33_92(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_91') is run and passed
+        1. Click the [View Entire Video] button
+        2. Set [Mark In/ Mark Out] range for (0, 45)
+        3. Click [Produce Range] button on [Tip Areas]
+        4. Set timecode to ('00_00_10_30') at produce page
+        5. Get timecode from produce page > Check result is ('00:00:01:15')
+        """
+        dependency_test = "test_tip_areas_func_33_91"
+        self.ensure_dependency(dependency_test)
+
+        # [L370] 4.5 Timeline operation > Range selection > Produce Range
+        # with uuid("806ada7f-9a80-4ce0-8d42-25117181f691") as case:
+
+        with step("[Action] Click the [View Entire Video] button"):
+            timeline_operation_page.click_view_entire_video_btn()
+
+        with step("[Action] Set [Mark In/ Mark Out] range for (0, 45)"):
+            timeline_operation_page.set_range_markin_markout(0, 45)
+
+        with step("[Action] Click [Produce Range] button on [Tip Areas]"):
             tips_area_page.click_TipsArea_btn_Produce_Range()
 
-            # Verify Step:
+        with step("[Action] Set timecode to ('00_00_10_30') at produce page"):
             produce_page.local.set_preview_timecode('00_00_10_30')
-            time.sleep(DELAY_TIME)
 
-            get_timecode = produce_page.get_preview_timecode()
-            if get_timecode == '00:00:01:15':
-                case.result = True
-            else:
-                case.result = False
-                logger(get_timecode)
+        with step("[Verify] Get timecode from produce page and check result is ('00:00:01:15')"):
+            timecode = produce_page.get_preview_timecode()
+            if timecode != '00:00:01:15':
+                assert False, f"Timecode is incorrect! Expected: '00:00:01:15', Got: '{timecode}'"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.tip_areas
+    @pytest.mark.produce_page
+    @pytest.mark.name('[test_tip_areas_func_33_93] Set Produce [File Format]/ [File Extension] > Check [Produced Filename]')
+    @exception_screenshot
+    def test_tip_areas_func_33_93(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_92') is run and passed
+        1. Select file format ('hevc')
+        2. Select file extension ('mov')
+        3. Get [Produced Filename] and save as self.temp_file_name
+        4. Check result is ('test_tip_areas_func_33_91.mov')
+        """
+        dependency_test = "test_tip_areas_func_33_92"
+        self.ensure_dependency(dependency_test)
 
         # [L397] 5 Produce > H.265 > Select Format > MOV
-        with uuid("5dbadbaa-3de2-4d89-9836-8faba7f51266") as case:
-            # Click HEVC
+        # with uuid("5dbadbaa-3de2-4d89-9836-8faba7f51266") as case:
+
+        with step("[Action] Select file format ('hevc')"):
             produce_page.local.select_file_format('hevc')
-            time.sleep(DELAY_TIME)
+
+        with step("[Action] Select file extension ('mov')"):
             produce_page.local.select_file_extension('mov')
-            time.sleep(DELAY_TIME)
 
-            # Get produced file name
-            explore_mov_file = produce_page.get_produced_filename()
+        with step("[Action] Get [Produced Filename] and save as self.temp_file_name"):
+            self.temp_file_name = produce_page.get_produced_filename()
 
-            if explore_mov_file == 'third_project.mov':
-                case.result = True
-            else:
-                case.result = False
-                logger(explore_mov_file)
+        with step("[Verify] Check result is ('test_tip_areas_func_33_91.mov')"):
+            if self.temp_file_name != 'test_tip_areas_func_33_91.mov':
+                assert False, f"Produced filename is incorrect! Expected: 'test_tip_areas_func_33_91.mov', Got: '{self.temp_file_name}'"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.produce_page
+    @pytest.mark.profile_name
+    @pytest.mark.name('[test_tip_areas_func_33_94] Set [Profile Name] by index (3) > Check [Profile FName] value')
+    @exception_screenshot
+    def test_tip_areas_func_33_94(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_93') is run and passed
+        1. Select [Profile Name] by index (3)
+        2. Get [Profile FName] value > Check result is ('MPEG-4 1280 x 720/24p (7 Mbps)')
+        """
+        dependency_test = "test_tip_areas_func_33_93"
+        self.ensure_dependency(dependency_test)
 
         # [L398] 5 Produce > H.265 > Select Format > 1280x720/24p
-        with uuid("dc651ed7-a7df-475a-ad4f-3eeedcd5b153") as case:
-            # Select profile name
-            produce_page.local.select_profile_name(3)
-            time.sleep(DELAY_TIME)
+        # with uuid("dc651ed7-a7df-475a-ad4f-3eeedcd5b153") as case:
 
+        with step("[Action] Select [Profile Name] by index (3)"):
+            produce_page.local.select_profile_name(3)
+
+        with step("[Action] Get [Profile FName] value"):
             check_profile = produce_page.local.get_profile_name()
+
+        with step("[Verify] Check result is ('MPEG-4 1280 x 720/24p (7 Mbps)')"):
             if check_profile != 'MPEG-4 1280 x 720/24p (7 Mbps)':
-                case.result = False
-                case.fail_log = check_profile
-            else:
-                case.result = True
+                assert False, f"Profile Name is incorrect! Expected: 'MPEG-4 1280 x 720/24p (7 Mbps)', Got: '{check_profile}'"
+
+        assert True
+
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.produce_page
+    @pytest.mark.fast_video_rendering
+    @pytest.mark.name('[test_tip_areas_func_33_95] Set [Fast Video Rendering] to (Hardware Encode) > Check result is True')
+    @exception_screenshot
+    def test_tip_areas_func_33_95(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_94') is run and passed
+        1. Set [Fast Video Rendering] to (Hardware Encode) > Check result is True
+        """
+        dependency_test = "test_tip_areas_func_33_94"
+        self.ensure_dependency(dependency_test)
 
         # [L399] 5 Produce > H.265 > Enable HW
-        with uuid("fcfe5a6c-52cf-4518-8f8d-d1c323f36482") as case:
-            produce_page.local.set_fast_video_rendering_hardware_encode()
-            time.sleep(DELAY_TIME)
-            current_HW_status = produce_page.local.set_fast_video_rendering_hardware_encode()
-            case.result = current_HW_status
+        # with uuid("fcfe5a6c-52cf-4518-8f8d-d1c323f36482") as case:
+
+        with step("[Action] Set [Fast Video Rendering] to (Hardware Encode)"):
+            fast_rendering_status = produce_page.local.set_fast_video_rendering_hardware_encode()
+
+        with step("[Verify] Check result is True"):
+            if not fast_rendering_status:
+                assert False, "Fast Video Rendering is not enabled for Hardware Encode!"
+
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.produce_page
+    @pytest.mark.surround_sound
+    @pytest.mark.aac_5_1
+    @pytest.mark.name('[test_tip_areas_func_33_96] Set [Surround Sound] to (AAC 5.1) > Check [AAC 5.1] is enabled')
+    @exception_screenshot
+    def test_tip_areas_func_33_96(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_95') is run and passed
+        1. Enable [Surround Sound] > Set [Surround Sound] to (AAC 5.1)
+        2. Check [AAC 5.1] is enabled by main_page.exist(L.produce.local.rdb_surround_sound_ac51).AXValue = 1
+        3. Click [Stop] button on [Produce] page
+        """
+
+        dependency_test = "test_tip_areas_func_33_95"
+        self.ensure_dependency(dependency_test)
 
         # [L400] 5 Produce > H.265 > Set [Surround Sound] > AAC 5.1
-        with uuid("6002d3b3-0264-4e1e-89a1-ecec9563c14c") as case:
+        # with uuid("6002d3b3-0264-4e1e-89a1-ecec9563c14c") as case:
+
+        with step("[Action] Enable [Surround Sound] > Set [Surround Sound] to (AAC 5.1)"):
             produce_page.local.set_surround_sound()
-            time.sleep(DELAY_TIME)
-
             produce_page.local.set_surround_sound_aac51()
-            time.sleep(DELAY_TIME * 2)
 
-            check_surround = main_page.exist(L.produce.local.rdb_surround_sound_ac51).AXValue
+        with step("[Verify] Check [AAC 5.1] is enabled by checking AXValue"):
+            surround_sound_status = main_page.exist(L.produce.local.rdb_surround_sound_ac51).AXValue
+            if surround_sound_status != 1:
+                assert False, "[AAC 5.1] is not enabled. AXValue should be 1"
 
-            if check_surround == 1:
-                case.result = True
-            else:
-                case.result = False
+        with step("[Action] Click [Stop] button on [Produce] page"):
+             produce_page.click_preview_operation('stop')
 
-        # Preview operation: Click [Stop] to stay 0s
-        produce_page.click_preview_operation('stop')
-        time.sleep(DELAY_TIME * 2)
+        assert True
+
+    @pytest.mark.tip_areas_func
+    @pytest.mark.produce_page
+    @pytest.mark.produce
+    @pytest.mark.pip_designer
+    @pytest.mark.name('[test_tip_areas_func_33_97] Produce > Insert Produced Media > Pip Designer > Check Preview')
+    @exception_screenshot
+    def test_tip_areas_func_33_97(self):
+        """
+        0. Ensure the dependency test ('test_tip_areas_func_33_96') is run and passed
+        1. Click [Produce] button on [Produce] page
+        2. Check produce process is completed in 150 secs
+        3. Click [Back to Edit] button
+        4. Open [New Workspace] via hotkey > Handle [Do you want to save changes] dialog with option ('no') 
+        5. Select media (self.temp_file_name) by library icon view > Check result is True
+        6. Insert media to selected track
+        7. Select Timeline media (track_index=0, clip_index=0) > Double Click
+        8. Switch to ('Express') mode in [Pip Designer]
+        9. Check preview (locator=L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L401.png') matches GT (Ground_Truth_Folder + 'L401.png', check_preview) with similarity=0.95
+        10. Click [OK] button to leave [Pip Designer]
+        11. Select media (self.temp_file_name) by library icon view > Move clip in library to trash can
+        """
+        dependency_test = "test_tip_areas_func_33_96"
+        self.ensure_dependency(dependency_test)
 
         # New issue: VDE235830-0018
         # [L401] 5 Produce > H.265 > [Start] > Produce
-        with uuid("4e526fa8-9881-4304-ab8e-d90fd0825309") as case:
-            # Start : produce
-            produce_page.click(L.produce.btn_start_produce)
-            time.sleep(DELAY_TIME * 4)
+        # with uuid("4e526fa8-9881-4304-ab8e-d90fd0825309") as case:
 
-            # Wait for produce complete
-            for x in range(150):
-                check_result = produce_page.check_produce_complete()
-                if check_result is True:
-                    break
-                else:
-                    time.sleep(DELAY_TIME)
+        with step("[Action] Click [Produce] button on [Produce] page"):
+            main_page.click_produce()
 
-            # Back to Edit
+        with step("[Verify] Check produce process is completed in 150 secs"):
+            produce_page.check_produce_complete(wait_time=150)
+            # # Wait for produce complete
+            # for x in range(150):
+            #     check_result = produce_page.check_produce_complete()
+            #     if check_result is True:
+            #         break
+            #     else:
+            #         time.sleep(DELAY_TIME)
+
+        with step("[Action] Click [Back to Edit] button"):
             produce_page.click_back_to_edit()
-            time.sleep(DELAY_TIME * 5)
 
-            # New Workspace
+        with step("[Action] Open [New Workspace] via hotkey > Handle [Do you want to save changes] dialog with option ('no')"):
             main_page.tap_NewWorkspace_hotkey()
-            time.sleep(2)
+            main_page.handle_no_save_project_dialog(option='no')
 
-            # handle (Do you want to save the changes now?)
-            main_page.handle_no_save_project_dialog()
-            time.sleep(2)
+        with step("[Action] Select media (self.temp_file_name) by library icon view"):
+            if not main_page.select_library_icon_view_media(self.temp_file_name):
+                assert False, f"Media file '{self.temp_file_name}' does not exist!"
 
-            # Verify step:
-            check_produce_file = main_page.select_library_icon_view_media(explore_mov_file)
+        with step("[Action] Insert media to selected track"):
+            main_page.tips_area_insert_media_to_selected_track()
 
-            if check_produce_file:
-                # Click Insert to timeline
-                main_page.tips_area_insert_media_to_selected_track()
+        with step("[Action] Select Timeline media (track_index=0, clip_index=0) > Double Click"):
+            timeline_operation_page.select_timeline_media(0, 0)
+            main_page.double_click()
 
-                # Select timeline produced clip to enter pip designer
-                timeline_operation_page.select_timeline_media(track_index=0, clip_index=0)
-                main_page.double_click()
-                time.sleep(2)
+        with step("[Action] Switch to ('Express') mode in [Pip Designer]"):
+            pip_designer_page.switch_mode('Express')
 
-                # click [Express mode]
-                pip_designer_page.switch_mode('Express')
+        with step("[Verify] Check preview matches GT (L401.png) with similarity=0.95"):
+            preview = main_page.snapshot(locator=L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L401.png')
+            check_preview = main_page.compare(Ground_Truth_Folder + 'L401.png', preview, similarity=0.95)
+            if not check_preview:
+                assert False, "Preview does not match GT (L401.png)! Similarity should > 0.95"
 
-                check_preview = main_page.snapshot(locator=L.pip_designer.preview,
-                                                   file_name=Auto_Ground_Truth_Folder + 'L401.png')
-                compare_result = main_page.compare(Ground_Truth_Folder + 'L401.png', check_preview)
-                case.result = check_produce_file and compare_result
+        with step("[Action] Click [OK] button to leave [Pip Designer]"):
+            pip_designer_page.click_ok()
 
-                # Leave pip designer and Remove the produce the clip
-                pip_designer_page.click_ok()
-                time.sleep(DELAY_TIME * 2)
+        with step("[Action] Select media (self.temp_file_name) by library icon view > Move clip in library to trash can"):
+            main_page.select_library_icon_view_media(self.temp_file_name)
+            media_room_page.library_clip_context_menu_move_to_trash_can()
 
-                main_page.select_library_icon_view_media(explore_mov_file)
-                media_room_page.library_clip_context_menu_move_to_trash_can()
-            else:
-                logger('Can NOT find the produced .mov file')
-                case.result = False
+        assert True
 
-    def test_na_cases(self):
-        with uuid("""758e68c1-a62d-4ffb-87f0-13b98fa82f7e
-                    f6068849-031c-48a0-912f-ae72071a46ad
-                    da0b07b8-ab61-4351-bd85-b43caef54696
-                    67391393-7c99-42e4-ab81-99a1a47c4f04
-                    6677c5ba-305e-4742-9988-099a48d10270
-                    ff239744-74cd-4b8e-91a3-9844d624a964
-                    af0c9188-3a17-4cba-81c7-a229353698cb
-                    37eea6f6-4e58-42fb-91b3-f7c3f3511d92
-                    aa965a18-7823-42e6-a6cc-7e1696500b99
-                    4372f92a-5da4-42ab-b8b2-db555fbc4fee
-                    8d9287b4-765f-43ac-b628-4a8802a14e91
-                    f5aee31f-25fe-4b66-84ce-a4105113ee87
-                    c07a4bfc-ce9d-401c-be8a-18a2eab602ca
-                    6510cb1c-17cf-47b4-8ad0-de8c15e71d48
-                    01bae86c-ef1b-4d49-aa1d-ecfa8ae7e70d
-                    acf4e893-b714-408e-9658-566fe7060f15
-                    718f50b3-517d-48c2-ad6b-d067a270da1f
-                    798c0668-9be6-40fc-948b-5a73726e3c34
-                    97affa2a-c953-49a3-925c-417b95db719f
-                    ee316164-79e3-40da-91a8-78ef31c1b08b
-                    deeae229-a221-4738-9de1-61b0fd983374
-                    923f1789-4139-49aa-a2bb-509f841b4dad
-                    9f35ba03-1cef-4b0e-96cb-191310b2cecd
-                    7b066cbc-1607-4469-b677-7b8cab1b3a55
-                    fdceddae-485a-447c-a89c-fef3e06326bf
-                    1f0fbbb2-a77d-459b-bb90-4bcbff2c9b86
-                    7cae4f2a-fa01-4d3b-8c06-71f2158091c9
-                    8145aec8-8fc1-4a62-a17b-ae8cfaad39cf
-                    662d72bf-19e7-4200-8bec-14a7c97b34b4
-                    22b24c83-bff2-48af-9fe5-afe866158399
-                    55aa8d43-0d80-465f-bad7-c14a7104f9a6
-                    22fdea74-6a4a-475d-b8aa-953ec9987fab
-                    01f08c96-e7ec-4ca7-b86f-4c6c7205287e
-                    77f85454-ae23-4306-954a-1b6c33c960ee
-                    838697fb-5e4e-4d77-bd72-6780e588b3c2
-                    d666e85a-ea54-4c2a-82f2-d06e07b2cd8a
-                    302a858b-f48c-4094-9ae0-bd37e6d542e1
-                    461a78c6-9db8-43fe-94c8-6a1f3ab16182
-                    fe0d0793-f9d3-4dd5-850f-26914dcb14c1
-                    d9079e1c-b8a5-4d27-94e6-d9dd71ccb90c
-                    d0f8f9c2-3ea7-4e1b-b88d-1fa88c5bb2fd
-                    85b38734-3f9a-4bf0-ae0a-a2701628dccf
-                    0811b795-5fa4-42bf-8a57-22f389e9f6f7
-                    98ea0e05-c63e-4be7-8c32-7055b526a850
-                    b75b3f6d-1f3c-4431-a1b4-06999c7d3598
-                    999ef8a7-3db0-414e-b2b6-602b1670ad37
-                    7ac86abb-4b66-498b-9857-e09eb6d176f2
-                    8d69ec14-dbed-4ed9-877a-9c58de1a9bc5
-                    ad8f3229-129f-45c5-a9c4-e8c490be438c
-                    32b3fc79-6dfb-4ff5-9348-15e4b6d6dce1
-                    96ee5e10-47e1-4c84-b13c-2e6ddc5fdc48
-                    dd55a4de-e286-462c-bf18-990daed490d9
-                    a93a1fe6-78f0-48a2-958e-251f3d95bf1e
-                    9a90ab51-c059-4084-a1f1-b3c1f5ae5553
-                    bb2184bb-47cf-45d5-931f-cd20daccf879
-                    13a760bb-7e1c-401a-8ace-fdba828c3fb8
-                    475fcf12-b238-405c-8e37-6cd246afd396""") as case:
-            case.result = None
-            case.fail_log = 'Not support in BFT testing'
+    # def test_na_cases(self):
+    #     with uuid("""758e68c1-a62d-4ffb-87f0-13b98fa82f7e
+    #                 f6068849-031c-48a0-912f-ae72071a46ad
+    #                 da0b07b8-ab61-4351-bd85-b43caef54696
+    #                 67391393-7c99-42e4-ab81-99a1a47c4f04
+    #                 6677c5ba-305e-4742-9988-099a48d10270
+    #                 ff239744-74cd-4b8e-91a3-9844d624a964
+    #                 af0c9188-3a17-4cba-81c7-a229353698cb
+    #                 37eea6f6-4e58-42fb-91b3-f7c3f3511d92
+    #                 aa965a18-7823-42e6-a6cc-7e1696500b99
+    #                 4372f92a-5da4-42ab-b8b2-db555fbc4fee
+    #                 8d9287b4-765f-43ac-b628-4a8802a14e91
+    #                 f5aee31f-25fe-4b66-84ce-a4105113ee87
+    #                 c07a4bfc-ce9d-401c-be8a-18a2eab602ca
+    #                 6510cb1c-17cf-47b4-8ad0-de8c15e71d48
+    #                 01bae86c-ef1b-4d49-aa1d-ecfa8ae7e70d
+    #                 acf4e893-b714-408e-9658-566fe7060f15
+    #                 718f50b3-517d-48c2-ad6b-d067a270da1f
+    #                 798c0668-9be6-40fc-948b-5a73726e3c34
+    #                 97affa2a-c953-49a3-925c-417b95db719f
+    #                 ee316164-79e3-40da-91a8-78ef31c1b08b
+    #                 deeae229-a221-4738-9de1-61b0fd983374
+    #                 923f1789-4139-49aa-a2bb-509f841b4dad
+    #                 9f35ba03-1cef-4b0e-96cb-191310b2cecd
+    #                 7b066cbc-1607-4469-b677-7b8cab1b3a55
+    #                 fdceddae-485a-447c-a89c-fef3e06326bf
+    #                 1f0fbbb2-a77d-459b-bb90-4bcbff2c9b86
+    #                 7cae4f2a-fa01-4d3b-8c06-71f2158091c9
+    #                 8145aec8-8fc1-4a62-a17b-ae8cfaad39cf
+    #                 662d72bf-19e7-4200-8bec-14a7c97b34b4
+    #                 22b24c83-bff2-48af-9fe5-afe866158399
+    #                 55aa8d43-0d80-465f-bad7-c14a7104f9a6
+    #                 22fdea74-6a4a-475d-b8aa-953ec9987fab
+    #                 01f08c96-e7ec-4ca7-b86f-4c6c7205287e
+    #                 77f85454-ae23-4306-954a-1b6c33c960ee
+    #                 838697fb-5e4e-4d77-bd72-6780e588b3c2
+    #                 d666e85a-ea54-4c2a-82f2-d06e07b2cd8a
+    #                 302a858b-f48c-4094-9ae0-bd37e6d542e1
+    #                 461a78c6-9db8-43fe-94c8-6a1f3ab16182
+    #                 fe0d0793-f9d3-4dd5-850f-26914dcb14c1
+    #                 d9079e1c-b8a5-4d27-94e6-d9dd71ccb90c
+    #                 d0f8f9c2-3ea7-4e1b-b88d-1fa88c5bb2fd
+    #                 85b38734-3f9a-4bf0-ae0a-a2701628dccf
+    #                 0811b795-5fa4-42bf-8a57-22f389e9f6f7
+    #                 98ea0e05-c63e-4be7-8c32-7055b526a850
+    #                 b75b3f6d-1f3c-4431-a1b4-06999c7d3598
+    #                 999ef8a7-3db0-414e-b2b6-602b1670ad37
+    #                 7ac86abb-4b66-498b-9857-e09eb6d176f2
+    #                 8d69ec14-dbed-4ed9-877a-9c58de1a9bc5
+    #                 ad8f3229-129f-45c5-a9c4-e8c490be438c
+    #                 32b3fc79-6dfb-4ff5-9348-15e4b6d6dce1
+    #                 96ee5e10-47e1-4c84-b13c-2e6ddc5fdc48
+    #                 dd55a4de-e286-462c-bf18-990daed490d9
+    #                 a93a1fe6-78f0-48a2-958e-251f3d95bf1e
+    #                 9a90ab51-c059-4084-a1f1-b3c1f5ae5553
+    #                 bb2184bb-47cf-45d5-931f-cd20daccf879
+    #                 13a760bb-7e1c-401a-8ace-fdba828c3fb8
+    #                 475fcf12-b238-405c-8e37-6cd246afd396""") as case:
+    #         case.result = None
+    #         case.fail_log = 'Not support in BFT testing'

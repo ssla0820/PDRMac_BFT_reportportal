@@ -531,6 +531,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Sort by [Name] in [Library Menu]')
     def library_menu_sort_by_name(self):
         try:
             self.library_menu_sort_by(L.media_room.library_menu.option_sort_by_name)
@@ -538,12 +539,12 @@ class Media_Room(BasePage):
             self.library_menu_sort_by()
             if self.exist(L.media_room.library_menu.option_sort_by_name).AXMenuItemMarkChar == '':
                 logger('Fail to verify option mark')
-                raise Exception
+                raise Exception('Fail to verify option mark')
             self.keyboard.esc()
             time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_menu_sort_by_duration(self):
@@ -1240,6 +1241,7 @@ class Media_Room(BasePage):
             raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Media Room] Insert clip in library to selected track')
     def library_clip_context_menu_insert_on_selected_track(self):
         try:
             self.activate()
@@ -1248,7 +1250,7 @@ class Media_Room(BasePage):
             time.sleep(OPERATION_DELAY)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_clip_context_menu_remove_from_library(self):
@@ -1309,6 +1311,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Click [Precut...] from right click menu')
     def library_clip_context_menu_precut(self):
         try:
             self.activate()
@@ -1317,10 +1320,10 @@ class Media_Room(BasePage):
             time.sleep(OPERATION_DELAY)
             if not self.exist(L.precut.main_window):
                 logger(f'Fail to enter precut')
-                raise Exception
+                raise Exception(f'Fail to enter precut')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def library_clip_context_menu_dock_undock_library_window(self):
@@ -2283,6 +2286,7 @@ class Media_Room(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Media Room] Click [Up One Level] button in media content')
     def media_content_click_up_one_level(self):
         try:
             img_before = self.snapshot(L.media_room.scroll_area.library_table_view)
@@ -2292,10 +2296,10 @@ class Media_Room(BasePage):
             result_verify = self.compare(img_before, img_after)
             if result_verify:
                 logger(f'Fail to verify table view content change')
-                raise Exception
+                raise Exception(f'Fail to verify table view content change')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def set_splitter_between_media_libaray_and_preview_window(self, percentage=55): # percentage: range - 50(center) to 70(right)

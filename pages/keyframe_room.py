@@ -4,6 +4,7 @@ from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -568,6 +569,7 @@ class KeyFrame_Page(BasePage):
     def is_enter_keyframe_settings(self):
         return self.is_exist(L.keyframe_room.btn_close, None, 3)
 
+    @step('[Action][KeyFrame] Drag scroll bar')
     def drag_scroll_bar(self, value):
         try:
             logger(f'input {value=}')
@@ -587,10 +589,10 @@ class KeyFrame_Page(BasePage):
             # logger(f'Current Scrollbar value: {el_scrollbar.AXValue}')
             if not el_scrollbar.AXValue == value:
                 logger('Fail to verify scroll bar value')
-                raise Exception
+                raise Exception('Fail to verify scroll bar value')
         except Exception as e:
             logger(f'Exception occurs: {e}')
-            return False
+            raise Exception(f'Exception occurs: {e}')
         return True
 
     def select_keyframe_node_by_outline_row(self, index_outline_row=0, index_node=0):
@@ -758,6 +760,7 @@ class KeyFrame_Page(BasePage):
             self.split_toning = self.Split_Toning(self.category_name, *args, **kwargs)
             self.hdr_effect = self.HDR_Effect(self.category_name, *args, **kwargs)
 
+        @step('[Action][KeyFrame Page][Fix_Enhance] Unfold [Fix Enhance] tab')
         def unfold_tab(self, value=1): # value: 1(unfold), 0(fold)
             return set_category_fold_enable(self, self.category_name, value)
 
@@ -827,10 +830,10 @@ class KeyFrame_Page(BasePage):
                     self.root_category = root_category
                     self.category_name = category_name
                     self.attribute_name = 'Degree:'
-
+                @step('[Action][KeyFrame Page][Fix_Enhance][Lighting_Adjustment][Degree] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix_Enhance][Lighting_Adjustment][Degree] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, None, -1, self.category_name)
 
@@ -842,10 +845,10 @@ class KeyFrame_Page(BasePage):
 
                 def add_remove_keyframe(self, index_node=-1):
                     return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix_Enhance][Lighting_Adjustment][Degree] Click [Previous Keyframe]')
                 def previous_keyframe(self, index_node=-1):
                     return click_attribute_previous_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix_Enhance][Lighting_Adjustment][Degree] Click [Next Keyframe]')
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node, self.category_name)
 
@@ -884,31 +887,31 @@ class KeyFrame_Page(BasePage):
                     self.root_category = root_category
                     self.category_name = category_name
                     self.attribute_name = 'Degree:'
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Set value by slider')
                 def set_slider(self, value, index_node=-1): # value: 0 - 100
                     return set_attribute_slider_value(self, self.attribute_name, value, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Reset [Keyframe]')
                 def reset_keyframe(self):
                     return click_attribute_reset_keyframe(self, self.attribute_name, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Add/Remove [Keyframe]')
                 def add_remove_keyframe(self, index_node=-1):
                     return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Click [Previous Keyframe]')
                 def previous_keyframe(self, index_node=-1):
                     return click_attribute_previous_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Click [Next Keyframe]')
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Video Denoise][Degree] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, None, -1, self.category_name)
 
@@ -972,10 +975,10 @@ class KeyFrame_Page(BasePage):
                     self.root_category = root_category
                     self.category_name = category_name
                     self.attribute_name = 'Degree:'
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Audio Denoise][Degree] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Audio Denoise][Degree] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, None, -1, self.category_name)
 
@@ -993,10 +996,10 @@ class KeyFrame_Page(BasePage):
 
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Audio Denoise][Degree] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Audio Denoise][Degree] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, None, -1, self.category_name)
 
@@ -1037,25 +1040,25 @@ class KeyFrame_Page(BasePage):
                     self.root_category = root_category
                     self.category_name = category_name
                     self.attribute_name = attribute_name
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Adjustment][Unit CAOperation] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Adjustment][Unit CAOperation] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Adjustment][Unit CAOperation] Set value by slider')
                 def set_slider(self, value, index_node=-1): # value: 0 - 100
                     return set_attribute_slider_value(self, self.attribute_name, value, index_node)
 
                 def reset_keyframe(self):
                     return click_attribute_reset_keyframe(self, self.attribute_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Adjustment][Unit CAOperation] Add/ Remove keyframe')
                 def add_remove_keyframe(self, index_node=-1):
                     return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Adjustment][Unit CAOperation] Click [Previous Keyframe] button')
                 def previous_keyframe(self, index_node=-1):
                     return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Adjustment][Unit CAOperation] Click [Next Keyframe] button')
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node)
 
@@ -1130,13 +1133,13 @@ class KeyFrame_Page(BasePage):
                     self.locator_group = locator_group
                     self.index_group = index_group
                     self.index_slider = index_slider
-
+                @step('[Action][KeyFrame Page][Fix Enhance][White Balance][Unit WBOperation] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][White Balance][Unit WBOperation] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, self.locator_group, self.index_group)
-
+                
                 def set_slider(self, value, index_node=-1): # value: 0 - 100
                     return set_attribute_slider_value(self, self.attribute_name, value, index_node, None, self.index_slider)
 
@@ -1223,10 +1226,10 @@ class KeyFrame_Page(BasePage):
 
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Enhancement][Degree] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, None, -1, self.category_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Color Enhancement][Degree] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, None, -1, self.category_name)
 
@@ -1263,25 +1266,25 @@ class KeyFrame_Page(BasePage):
                     self.root_category = root_category
                     self.category_name = category_name
                     self.attribute_name = attribute_name
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Set value by slider')
                 def set_slider(self, value, index_node=-1): # value: 0 - 100
                     return set_attribute_slider_value(self, self.attribute_name, value, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Reset [Keyframe]')
                 def reset_keyframe(self):
                     return click_attribute_reset_keyframe(self, self.attribute_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Add/ Remove [Keyframe]')
                 def add_remove_keyframe(self, index_node=-1):
                     return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Click [Previous Keyframe]')
                 def previous_keyframe(self, index_node=-1):
                     return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][Split Toning][Unit STOperation] Click [Next Keyframe]')
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node)
 
@@ -1325,31 +1328,31 @@ class KeyFrame_Page(BasePage):
                     self.root_category = root_category
                     self.category_name = category_name
                     self.attribute_name = attribute_name
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Set value')
                 def set_value(self, value, index_node=-1): # 0 - 100
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Set value by slider')
                 def set_slider(self, value, index_node=-1): # value: 0 - 100
                     return set_attribute_slider_value(self, self.attribute_name, value, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Reset [Keyframe]')
                 def reset_keyframe(self):
                     return click_attribute_reset_keyframe(self, self.attribute_name)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Add/ Remove [Keyframe]')
                 def add_remove_keyframe(self, index_node=-1):
                     return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Click [Previous Keyframe]')
                 def previous_keyframe(self, index_node=-1):
                     return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Click [Next Keyframe]')
                 def next_keyframe(self, index_node=-1):
                     return click_attribute_next_keyframe(self, self.attribute_name, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Click [Stepper Up]')
                 def click_stepper_up(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node)
-
+                @step('[Action][KeyFrame Page][Fix Enhance][HDR Effect][Unit HEOperation] Click [Stepper Down]')
                 def click_stepper_down(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node)
 
@@ -1367,7 +1370,7 @@ class KeyFrame_Page(BasePage):
             self.opacity = self.Opacity(self.category_name, *args, **kwargs)
             self.rotation = self.Rotation(self.category_name, *args, **kwargs)
             self.freeform = self.Freeform(self.category_name, *args, **kwargs)
-
+        @step('[Action][KeyFrame Page][Clip Attributes] Fold/ Unfold [Clip Attributes] tab')
         def unfold_tab(self, value=1): # value: 1(unfold), 0(fold)
             return set_category_fold_enable(self, self.category_name, value)
 
@@ -1424,19 +1427,19 @@ class KeyFrame_Page(BasePage):
                 def __init__(self, attribute_name, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.attribute_name = attribute_name
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][X] Set value')
                 def set_value(self, value, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, locator_group, 0)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][X] Get value')
                 def get_value(self, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, locator_group, 0)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][X] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, locator_group, 0)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][X] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, locator_group, 0)
@@ -1445,19 +1448,19 @@ class KeyFrame_Page(BasePage):
                 def __init__(self, attribute_name, *args, **kwargs):
                     super().__init__(*args, **kwargs)
                     self.attribute_name = attribute_name
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][Y] Set value')
                 def set_value(self, value, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, locator_group, 1)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][Y] Get value')
                 def get_value(self, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, locator_group, 1)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][Y] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, locator_group, 1)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Position][Y] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
                     locator_group = L.keyframe_room.group_edittext_stepper_xy
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, locator_group, 1)
@@ -1535,19 +1538,19 @@ class KeyFrame_Page(BasePage):
                 set_category_fold_enable(self, self.category_name, 1)
                 set_attribute_visible(self, self.attribute_name)
                 return True
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Scale] Add/ Remove [Keyframe]')
             def add_remove_keyframe(self, index_node=-1):
                 return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Scale] Reset [Keyframe]')
             def reset_keyframe(self):
                 return click_attribute_reset_keyframe(self, self.attribute_name)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Scale] Click [Previous Keyframe]')
             def previous_keyframe(self, index_node=-1):
                 return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Scale] Click [Next Keyframe]')
             def next_keyframe(self, index_node=-1):
                 return click_attribute_next_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Scale] Set [Maintain Aspect Ratio]')
             def set_maintain_aspect_ratio(self, set_status=1, index_node=-1):
                 locator_checkbox = L.keyframe_room.chx_maintain_aspect_ratio
                 return set_attribute_checkbox(self, self.attribute_name, locator_checkbox, set_status, index_node)
@@ -1559,21 +1562,20 @@ class KeyFrame_Page(BasePage):
                     self.locator_group = locator_group
                     self.index_group = index_group
                     self.index_slider = index_slider
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Scale][Unit Width Height Operation] Set value by slider')
                 def set_slider(self, value, index_node=-1):
                     return set_attribute_slider_value(self, self.attribute_name, value, index_node, None, self.index_slider)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Scale][Unit Width Height Operation] Get value')
                 def set_value(self, value, index_node=-1):
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Scale][Unit Width Height Operation] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Scale][Unit Width Height Operation] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Scale][Unit Width Height Operation] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
-
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, self.locator_group, self.index_group)
 
             class Ease_In(BasePage):
@@ -1645,37 +1647,37 @@ class KeyFrame_Page(BasePage):
                 set_category_fold_enable(self, self.category_name, 1)
                 set_attribute_visible(self, self.attribute_name)
                 return True
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Set value')
             def set_value(self, value, index_node=-1):  # 0 - 100
                 return set_attribute_edittext_value(self, self.attribute_name, value, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Get value')
             def get_value(self, index_node=-1):
                 return get_attribute_edittext_value(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Set value by slider')
             def set_slider(self, value, index_node=-1):  # value: 0 - 100
                 return set_attribute_slider_value(self, self.attribute_name, value, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Reset [Keyframe]')
             def reset_keyframe(self):
                 return click_attribute_reset_keyframe(self, self.attribute_name)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Add/ Remove [Keyframe]')
             def add_remove_keyframe(self, index_node=-1):
                 return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Click [Previous Keyframe]')
             def previous_keyframe(self, index_node=-1):
                 return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Click [Next Keyframe]')
             def next_keyframe(self, index_node=-1):
                 return click_attribute_next_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Click [Stepper Up] button')
             def click_stepper_up(self, times=1, index_node=-1):
                 return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Click [Stepper Down] button')
             def click_stepper_down(self, times=1, index_node=-1):
                 return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Set [Blending Mode]')
             def set_blending_mode(self, index_option=1, index_node=-1):
                 return select_attribute_combobox_option(self, self.attribute_name, index_option, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Opacity] Get [Blending Mode]')
             def get_blending_mode(self, index_node=-1):
                 return get_attribute_combobox_option(self, self.attribute_name, index_node)
 
@@ -1691,28 +1693,28 @@ class KeyFrame_Page(BasePage):
                 set_category_fold_enable(self, self.category_name, 1)
                 set_attribute_visible(self, self.attribute_name)
                 return True
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Add/ Remove [Keyframe]')
             def add_remove_keyframe(self, index_node=-1):
                 return click_attribute_add_remove_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Reset [Keyframe]')
             def reset_keyframe(self):
                 return click_attribute_reset_keyframe(self, self.attribute_name)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Click [Previous Keyframe]')
             def previous_keyframe(self, index_node=-1):
                 return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Click [Next Keyframe]')
             def next_keyframe(self, index_node=-1):
                 return click_attribute_next_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Set value')
             def set_value(self, value, index_node=-1):
                 return set_attribute_edittext_value(self, self.attribute_name, value, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Set value by slider')
             def get_value(self, index_node=-1):
                 return get_attribute_edittext_value(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Click [Stepper Up] button')
             def click_stepper_up(self, times=1, index_node=-1):
                 return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Rotation] Click [Stepper Down] button')
             def click_stepper_down(self, times=1, index_node=-1):
                 return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node)
 
@@ -1801,7 +1803,7 @@ class KeyFrame_Page(BasePage):
 
             def previous_keyframe(self, index_node=-1):
                 return click_attribute_previous_keyframe(self, self.attribute_name, index_node)
-
+            @step('[Action][KeyFrame Page][Clip Attributes][Freeform] Click [Next Keyframe]')
             def next_keyframe(self, index_node=-1):
                 return click_attribute_next_keyframe(self, self.attribute_name, index_node)
 
@@ -1811,16 +1813,16 @@ class KeyFrame_Page(BasePage):
                     self.attribute_name = 'Freeform*'
                     self.locator_group = L.keyframe_room.group_edittext_stepper_xy
                     self.index_group = index_group
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Freeform][Adjust Operation] Set value')
                 def set_value(self, value, index_node=-1):
                     return set_attribute_edittext_value(self, self.attribute_name, value, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Freeform][Adjust Operation] Get value')
                 def get_value(self, index_node=-1):
                     return get_attribute_edittext_value(self, self.attribute_name, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Freeform][Adjust Operation] Click [Stepper Up] button')
                 def click_stepper_up(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'up', times, index_node, self.locator_group, self.index_group)
-
+                @step('[Action][KeyFrame Page][Clip Attributes][Freeform][Adjust Operation] Click [Stepper Down] button')
                 def click_stepper_down(self, times=1, index_node=-1):
                     return click_attribute_stepper(self, self.attribute_name, 'down', times, index_node, self.locator_group, self.index_group)
 
@@ -1830,6 +1832,7 @@ class KeyFrame_Page(BasePage):
             self.category_name = 'Volume'
             self.attribute_name = 'dB'
 
+        @step('[Action][KeyFrame Page][Volume] Unfold/ Fold [Volume] Tab')
         def unfold_tab(self, value=1): # value: 1(unfold), 0(fold)
             return set_category_fold_enable(self, self.category_name, value)
 
@@ -1855,10 +1858,11 @@ class KeyFrame_Page(BasePage):
 
         def set_slider(self, value, index_node=-1):  # value: 0 - 100 (0: -∞, 1:-28, 25:0, 100:12)
             return set_attribute_slider_value(self, self.attribute_name, value, index_node)
-
+        @step('[Action][KeyFrame Page][Volume] Set [Volume] Value')
         def set_value(self, value, index_node=-1):
             return set_attribute_edittext_value(self, self.attribute_name, value, index_node)
 
+        @step('[Action][KeyFrame Page][Volume] Get [Volume] Value')
         def get_value(self, index_node=-1):
             return get_attribute_edittext_value(self, self.attribute_name, index_node)
 

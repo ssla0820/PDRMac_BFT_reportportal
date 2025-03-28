@@ -3,7 +3,7 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from .locator import locator as L
 from ATFramework.utils import logger
-
+from reportportal_client import step
 
 def arrow(obj, button="up", times=1, locator=None):
     locator = locator[button.lower() == "up"]
@@ -47,6 +47,7 @@ class Video_speed_page(BasePage):
         logger(f'{current_snapshot=}')
         return self.compare(file_full_path, current_snapshot, similarity)
 
+    @step('[Action][Video Speed] Set [Timecode] in [Video Speed Designer]')
     def set_VideoSpeedDesigner_timecode(self, timecode):
         '''
         :param timecode: "HH_MM_SS_mm" -> "1_00_59_99"
@@ -63,6 +64,7 @@ class Video_speed_page(BasePage):
         self.keyboard.enter()
         return True
 
+    @step('[Action][Video Speed] Select Tab in [Video Speed Designer]')
     def Edit_VideoSpeedDesigner_SelectTab(self, tab):
         target = [L.video_speed.tab.entire_clip,
                   L.video_speed.tab.selected_range][tab.lower() == "selected range"]
@@ -105,6 +107,7 @@ class Video_speed_page(BasePage):
         self.mouse.click(*elem.center)
         return True
 
+    @step('[Action][Video Speed] Set [Sppeed Multiplier] value')
     def Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_SetValue(self, multiplier):
         return self.Edit_VideoSpeedDesigner_EntireClip_NewVideoDuration_SetValue(
             str(multiplier),
@@ -112,11 +115,13 @@ class Video_speed_page(BasePage):
             True
         )
 
+    @step('[Action][Video Speed] Set [Speed Multiplier] for [Entire Clip] by dragging the slider')
     def Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_DragSlider(self, percentage):
         elem = self.find(L.video_speed.multiplier.slider)
         elem.AXValue = float(percentage)
         return True
 
+    @step('[Action][Video Speed] Set [Speed Multiplier] for [Entire Clip] by clicking the arrow button')
     def Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_ArrowButton(self, direction):
         return self.Edit_VideoSpeedDesigner_EntireClip_NewVideoDuration_ArrowButton(
             direction,
@@ -130,10 +135,11 @@ class Video_speed_page(BasePage):
         time.sleep(1)
         return self.is_exist(L.video_speed.i_dialog)
 
+    @step('[Action][Video Speed] Click [Create Time Shift] button to upper')
     def VideoSpeedDesigner_SelectRange_Click_Upper_CreateTimeShift_btn(self):
         self.exist(L.video_speed.time_shift_1).press()
         return True
-
+    @step('[Action][Video Speed] Click [Create Time Shift] button to lower')
     def VideoSpeedDesigner_SelectRange_Click_lower_CreateTimeShift_btn(self):
         self.exist(L.video_speed.time_shift_2).press()
         return True
@@ -151,6 +157,7 @@ class Video_speed_page(BasePage):
              L.video_speed.duration.down]
         )
 
+    @step('[Action][Video Speed] Set [Speed Multiplier] value for [Selected Range]')
     def Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_SetValue(self, multiplier):
         return self.Edit_VideoSpeedDesigner_EntireClip_NewVideoDuration_SetValue(
             str(multiplier),
@@ -204,6 +211,7 @@ class Video_speed_page(BasePage):
         self.find(L.video_speed.view_entir_movie).press()
         return True
 
+    @step('[Action][Video Speed] Click [Reset] button in [Video Speed Designer]')
     def Edit_VideoSpeedDesigner_ClickReset(self):
         self.find(L.video_speed.reset).press()
         return True
@@ -212,6 +220,7 @@ class Video_speed_page(BasePage):
         self.find(L.video_speed.cancel).press()
         return True
 
+    @step('[Action][Video Speed] Click [OK] button')
     def Edit_VideoSpeedDesigner_ClickOK(self):
         self.find(L.video_speed.ok).press()
         return True
@@ -225,6 +234,7 @@ class Video_speed_page(BasePage):
         return True
 
     # video speed
+    @step('[Action][Video Speed] Set [New Video Duration] value for [Entire Clip]')
     def Edit_VideoSpeed_EntireClip_NewVideoDuration_SetValue(self, timecode):
         return self.Edit_VideoSpeedDesigner_EntireClip_NewVideoDuration_SetValue(
             timecode,
@@ -277,15 +287,18 @@ class Video_speed_page(BasePage):
     def Edit_VideoSpeedDesigner_EntireClip_OriginalVideoLength(self):
         return self.find(L.video_speed.original_video.timecode).AXValue
 
+    @step('[Action][Video Speed] Get [Speed Multiplier] value for [Entire Clip]')
     def Edit_VideoSpeedDesigner_EntireClip_SpeedMultiplier_GetValue(self):
         return self.find(L.video_speed.multiplier.value).AXValue
-
+    
+    @step('[Action][Video Speed] Get [Speed Multiplier] value for [Selected Range]')
     def Edit_VideoSpeedDesigner_SelectRange_SpeedMultiplier_GetValue(self):
         return self.find(L.video_speed.multiplier_partial.value).AXValue
 
     def Edit_VideoSpeed_EntireClip_SpeedMultiplier_GetValue(self):
         return self.find(L.video_speed.video_speed.multiplier.value).AXValue
-
+    
+    @step('[Action][Video Speed] Get [New Video Duration] value for [Entire Clip]')
     def Edit_VideoSpeed_EntireClip_NewVideoDuration_GetValue(self):
         return self.find(L.video_speed.video_speed.time_code).AXValue
 
@@ -296,9 +309,11 @@ class Video_speed_page(BasePage):
         self.find(L.video_speed.i_close).press()
         return True
 
+    @step('[Action][Video Speed] Get [New Video Length] value')
     def Edit_VideoSpeedDesigner_EntireClip_NewVideoLength_GetValue(self):
         return self.find(L.video_speed.new_video.time_code).AXValue
 
+    @step('[Action][Video Speed] Get [Video Length] value for [Select Range]')
     def Edit_VideoSpeedDesigner_SelectRange_VideoLength_GetValue(self):
         return self.find(L.video_speed.duration.time_code).AXValue
 

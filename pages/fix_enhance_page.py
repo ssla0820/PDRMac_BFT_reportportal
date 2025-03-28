@@ -20,11 +20,12 @@ class AdjustSet:
     def __init__(self, driver, locators):
         self.driver = driver
         self.locators = locators
-
+    @step('[Action][Fix Enhance][AdjustSet] Adjust slider')
     def adjust_slider(self, value):
         self.driver.exist(self.locators[0]).AXValue = value
         return True
-
+    
+    @step('[Action][Fix Enhance][AdjustSet] Set value')
     def set_value(self, value):
         target = self.driver.exist(self.locators[1])
         self.driver.mouse.click(*target.center)
@@ -32,20 +33,21 @@ class AdjustSet:
         self.driver.keyboard.enter()
         return True
 
+    @step('[Action][Fix Enhance][AdjustSet] Get value')
     def get_value(self):
         return self.driver.exist(self.locators[1]).AXValue
-
+    @step('[Action][Fix Enhance][AdjustSet] Click [Up] Button')
     def click_up(self, times=1):
         return arrow(self.driver, button="up", times=times, locator=self.locators[3:1:-1])
-
+    @step('[Action][Fix Enhance][AdjustSet] Click [Down] Button')
     def click_down(self, times=1):
         return arrow(self.driver, button="down", times=times, locator=self.locators[3:1:-1])
-
+    @step('[Action][Fix Enhance][AdjustSet] Click [Arrow] Button')
     def click_arrow(self, opt="up", times=1):
         index = opt if isinstance(opt, int) else opt.lower() == "down"
         option = ["up", "down"][index]
         return self.__getattribute__(f"click_{option}")(times)
-
+    @step('[Action][Fix Enhance][AdjustSet] Click [Plus] Button')
     def click_plus(self, times=1, _btn=True, _get_status=False):
         try:
             locator = self.locators[5:3:-1][bool(_btn)]
@@ -58,7 +60,7 @@ class AdjustSet:
         else:
             self.driver.mouse.click(*target.center, times=times)
             return True
-
+    @step('[Action][Fix Enhance][AdjustSet] Click [Minus] Button in [Fix Enhance]')
     def click_minus(self, times=1):
         return self.click_plus(times, False)
 
@@ -112,21 +114,23 @@ class FixEnhance(BasePage):
         self.fix = self.Fix(*args, **kwargs)
         self.enhance = self.Enhance(*args, **kwargs)
 
+    @step('[Verify][Fix Enhance] Check if [Fix Enhance] Window is Opened')
     def is_in_fix_enhance(self):
         return self.is_exist(L.fix_enhance.btn_close)
 
     def click_close(self):
         return bool(self.exist_press(L.fix_enhance.btn_close))
-
+    @step('[Action][Fix Enhance] Click [Reset] Button')
     def click_reset(self):
         return bool(self.exist_press(L.fix_enhance.btn_reset))
-
+    @step('[Action][Fix Enhance] Click [KeyFrame] Button')
     def click_keyframe(self):
         return bool(self.exist_press(L.fix_enhance.btn_keyframe))
 
     def click_apply_to_all(self):
         return bool(self.exist_press(L.fix_enhance.btn_apply_to_all))
 
+    @step('[Action][Fix Enhance] Enable/ Disable [Compare in Split Preview] Checkbox')
     def set_check_compare_in_split_preview(self, value):
         target = self.exist(L.fix_enhance.checkbox_compare_in_split_preview)
         if bool(target.AXValue) != value: target.press()
@@ -148,9 +152,10 @@ class FixEnhance(BasePage):
         def switch_to_video_stabilizer(self):
             return bool(self.exist_press(L.fix_enhance.fix.tab_video_stabilizer))
 
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [Lens Correction] Tab')
         def switch_to_lens_correction(self):
             return bool(self.exist_press(L.fix_enhance.fix.tab_lens_correction))
-
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [Audio Denoise] Tab')
         def switch_to_audio_denoise(self):
             return bool(self.exist_press(L.fix_enhance.fix.tab_audio_denoise))
 
@@ -161,14 +166,15 @@ class FixEnhance(BasePage):
         def switch_to_video_denoise(self):
             self.exist_press(L.fix_enhance.fix.tab_video_denoise)
             return self.is_exist(L.fix_enhance.fix.video_denoise.degree.slider)
-
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [Wind Removal] Tab')
         def switch_to_wind_removal(self):
             self.exist_press(L.fix_enhance.fix.tab_wind_removal)
             return self.is_exist(L.fix_enhance.fix.wind_removal.btn_wind_removal)
 
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [White Balance]')
         def enable_white_balance(self, value=True):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_white_balance, value)
-
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [Video Stabilizer]')
         def enable_video_stabilizer(self, value=True):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_video_stabilizer, value)
 
@@ -178,6 +184,7 @@ class FixEnhance(BasePage):
         def enable_audio_denoise(self, value=True):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_audio_denoise, value)
 
+        @step('[Action][Fix Enhance][Fix] Enable/ Disable [Lighting Adjustment]')
         def enable_lighting_adjustment(self, value=True):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_lighting_adjustment, value)
 
@@ -194,6 +201,7 @@ class FixEnhance(BasePage):
         def get_lens_correction(self):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_lens_correction, _get_status_only=True)
 
+        @step('[Action][Fix Enhance][Fix] Get [Audio Denoise] Checkbox Status')
         def get_audio_denoise(self):
             return _set_checkbox(self, L.fix_enhance.fix.checkbox_audio_denoise, _get_status_only=True)
 
@@ -232,37 +240,41 @@ class FixEnhance(BasePage):
             self.color_enhancement = ColorEnhancement(*args, **kwargs)
             self.speech_enhancement = SpeechEnhancement(*args, **kwargs)
 
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Color Adjustment] Tab')
         def switch_to_color_adjustment(self):
             return bool(self.exist_press(L.fix_enhance.enhance.tab_color_adjustment))
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Split Toning] Tab')
         def switch_to_split_toning(self):
             return bool(self.exist_press(L.fix_enhance.enhance.tab_split_toning))
 
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [HDR Effect] Tab')
         def switch_to_hdr_effect(self):
             return bool(self.exist_press(L.fix_enhance.enhance.tab_hdr_effect))
 
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Color Match] Tab')
         def switch_to_color_match(self):
             return bool(self.exist_press(L.fix_enhance.enhance.tab_color_match))
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Color Enhancement] Tab')
         def switch_to_color_enhancement(self):
             return bool(self.exist_press(L.fix_enhance.enhance.tab_color_enhancement))
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Speech Enhancement] Tab')
         def switch_to_speech_enhancement(self):
             self.exist_press(L.fix_enhance.enhance.tab_speech_enhancement)
             return self.is_exist(L.fix_enhance.enhance.speech_enhancement.btn_speech_enhancement)
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Color Adjustment]')
         def enable_color_adjustment(self, value=True):
             return only_set_checkbox(self, L.fix_enhance.enhance.checkbox_color_adjustment, value)
 
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Split Toning]')
         def enable_split_toning(self, value=True):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_split_toning, value)
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [HDR Effect]')
         def enable_hdr_effect(self, value=True):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_hdr_effect, value)
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Color Match]')
         def enable_color_match(self, value=True):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_color_match, value)
-
+        @step('[Action][Fix Enhance][Enhance] Enable/ Disable [Color Enhancement]')
         def enable_color_enhancement(self, value=True):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_color_enhancement, value)
 
@@ -282,7 +294,7 @@ class FixEnhance(BasePage):
 
         def get_color_match(self):
             return _set_checkbox(self, L.fix_enhance.enhance.checkbox_color_match, _get_status_only=True)
-
+        @step('[Action][Fix Enhance][Enhance] Click [Speech Enhancement] button')
         def click_speech_enhancement(self):
             self.click(L.fix_enhance.enhance.speech_enhancement.btn_speech_enhancement)
 
@@ -291,9 +303,11 @@ class LightingAdjusement(BasePage):
         super().__init__(*args, **kwargs)
         self.extreme_backlight = AdjustSet(self, L.fix_enhance.fix.lighting_adjustment.extreme_backlight.group)
 
+    @step('[Action][Fix Enhance][Lighting Adjustment] Enable/ Disable [Extreme Backlight]')
     def enable_extreme_backlight(self, value):
         return _set_checkbox(self, L.fix_enhance.fix.lighting_adjustment.btn_extreme_backlight, value)
-
+    
+    @step('[Action][Fix Enhance][Lighting Adjustment] Get [Extreme Backlight] Checkbox Status')
     def get_extreme_backlight(self):
         return _set_checkbox(self, L.fix_enhance.fix.lighting_adjustment.btn_extreme_backlight, _get_status_only=True)
 
@@ -385,6 +399,7 @@ class LensCorrection(BasePage):
         self.vignette_amount = AdjustSet(self, L.fix_enhance.fix.lens_correction.group_vignette_amount)
         self.vignette_midpoint = AdjustSet(self, L.fix_enhance.fix.lens_correction.group_vignette_midpoint)
 
+    @step('[Action][Fix Enhance][Lens Correction] Set [Marker Type] in [Lens Correction] Window')
     def select_marker_type(self, type):
         target = copy.deepcopy(L.fix_enhance.fix.lens_correction.menu_item_maker)
         target[-1]["AXValue"] = type
@@ -443,14 +458,14 @@ class AudioDenoise(BasePage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.degree = AdjustSet(self, L.fix_enhance.fix.audio_denoise.degree.group)
-
+    @step('[Action][Fix Enhance][Audio Denoise] Set [Noise Type] in [Audio Denoise] Window')
     def set_noise_type(self, index):
         target = copy.deepcopy(L.fix_enhance.fix.audio_denoise.menu_item_noise_type)
         target[-1]["AXValue"] = ["Stationary noise", "Wind noise"][index]
         self.exist_click(L.fix_enhance.fix.audio_denoise.menu_noise_type)
         self.exist_click(target)
         return True
-
+    @step('[Action][Fix Enhance][Audio Denoise] Get [Noise Type] in [Audio Denoise] Window')
     def get_noise_type(self):
         return self.exist(L.fix_enhance.fix.audio_denoise.menu_noise_type).AXTitle
 
@@ -539,10 +554,11 @@ class ColorMatch(BasePage):
     def exist_color_match_button(self):
         return bool(self.exist(L.fix_enhance.enhance.color_match.btn_color_match))
 
+    @step('[Action][Fix Enhance][Color Match] Click [Color Match] Button')
     def click_color_match_button(self):
         if not self.exist_color_match_button():
             logger('Cannot find  Color Match button')
-            raise Exception
+            raise Exception('Cannot find  Color Match button')
         self.click(L.fix_enhance.enhance.color_match.btn_color_match)
 
         # Verify Step:
@@ -551,8 +567,9 @@ class ColorMatch(BasePage):
             return True
         else:
             logger('Does NOT enter Color match setting, raise Exception')
-            raise Exception
+            raise Exception('Does NOT enter Color match setting')
 
+    @step('[Action][Fix Enhance][Color Match] Get [Match Color] button Status')
     def get_match_color_status(self):
         btn_elem = self.exist(L.fix_enhance.enhance.color_match.btn_match_color)
         if not btn_elem:
@@ -568,12 +585,13 @@ class ColorMatch(BasePage):
         else:
             logger('Button is disabled or not found now.')
             raise Exception
-
+    
+    @step('[Action][Fix Enhhance][Color Match] Click [Close] Button to leave [Color Match]')
     def click_close(self, option=None):
         btn_elem = self.exist(L.fix_enhance.enhance.color_match.btn_close)
         if not btn_elem:
             logger('Cannot find the close button')
-            raise Exception
+            raise Exception('Cannot find the close button')
         self.click(L.fix_enhance.enhance.color_match.btn_close)
 
         # not set aug1 (option = None)

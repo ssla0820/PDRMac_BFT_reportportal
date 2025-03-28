@@ -700,7 +700,8 @@ class BasePage(BasePage):
     def press_del_key(self):
         # self.keyboard.tap(self.keyboard.key.delete)
         self.keyboard.tap(self.keyboard.key.backspace)  # It shows "delete" on MacBook
-
+        
+    @step("[Action][Base_page] Press [Backspace] key")
     def press_backspace_key(self):
         self.keyboard.tap(self.keyboard.key.backspace)
 
@@ -966,6 +967,7 @@ class BasePage(BasePage):
     def delete_custom_file(self, file_path):
         self.driver.shell(f"rm -r {file_path}")
 
+    @step("[Action][Base_page] Clear [Remix] file")
     def clear_remix_file(self,file_name):
         # Clear Voice-Over Recording file
         self.driver.shell(f"rm -r ~/Movies/PowerDirector/{file_name}")

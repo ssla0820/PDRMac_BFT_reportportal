@@ -19,6 +19,7 @@ class Crop_Zoom_Pan(BasePage):
         self.exist_click(L.crop_zoom_pan.close)
         return self.is_not_exist({'AXIdentifier': 'IDC_MAGIC_MOTION_DESIGNER_WINDOW'}, timeout=3)
 
+    @step('[Verify][Crop Zoom Pan] Check if [Crop Zoom Pan] Window is shown')
     def is_enter_crop_zoom_pan(self):
         return self.is_exist({'AXIdentifier': 'IDC_MAGIC_MOTION_DESIGNER_WINDOW'}, timeout=3)
 
@@ -79,6 +80,7 @@ class Crop_Zoom_Pan(BasePage):
                 return True
         return False
 
+    @step('[Action][Crop Zoom Pan] Set [Aspect Ratio] to (1:1)')
     def set_AspectRatio_1_1(self):
         self.exist_click(L.crop_zoom_pan.aspect_ratio_btn)
         items = self.exist(L.crop_zoom_pan.aspect_ratio_list)
@@ -164,6 +166,7 @@ class Crop_Zoom_Pan(BasePage):
     def get_viewer_setting(self):
         return self.exist(L.crop_zoom_pan.viewer_zoom_menu).AXTitle
 
+    @step('[Action][Crop Zoom Pan] Get [Aspect Ratio]')
     def get_current_AspectRatio(self):
         return self.exist(L.crop_zoom_pan.aspect_ratio_btn).AXTitle
 
@@ -189,7 +192,7 @@ class Crop_Zoom_Pan(BasePage):
             raise Exception
         return True
 
-
+    @step('[Action][Crop Zoom Pan] Click [OK] Button to leave [Crop Zoom Pan] window')
     def click_ok(self):
         self.exist_click(L.crop_zoom_pan.ok)
         return self.is_not_exist(L.crop_zoom_pan.window, timeout=3)
@@ -201,7 +204,7 @@ class Crop_Zoom_Pan(BasePage):
     def get_reset_status(self):
         return self.exist(L.crop_zoom_pan.reset).AXEnabled
 
-
+    @step('[Action][Crop Zoom Pan] Click [Reset] Button')
     def click_reset(self):
         if self.get_reset_status():
             self.exist_click(L.crop_zoom_pan.reset)
@@ -209,23 +212,28 @@ class Crop_Zoom_Pan(BasePage):
         else:
             logger("Reset button is disabled")
             return False
-
+        
+    @step('[Action][Crop Zoom Pan] Get [Position X]')
     def get_position_x(self):
         return self.exist(L.crop_zoom_pan.position_x).AXValue
 
+    @step('[Action][Crop Zoom Pan] Get [Position Y]')
     def get_position_y(self):
         return self.exist(L.crop_zoom_pan.position_y).AXValue
 
+    @step('[Action][Crop Zoom Pan] Set [Position X]')
     def set_position_x(self, value):
         self.exist(L.crop_zoom_pan.position_x).AXValue = value
         self.press_enter_key()
         return True
 
+    @step('[Action][Crop Zoom Pan] Set [Position Y]')
     def set_position_y(self, value):
         self.exist(L.crop_zoom_pan.position_y).AXValue = value
         self.press_enter_key()
         return True
-
+    
+    @step('[Action][Crop Zoom Pan] Set [Position X] by arrow')
     def click_position_x_arrow(self, default='up'):
         if default == 'up':
             self.exist_click(L.crop_zoom_pan.position_x_arrow_up)
@@ -236,7 +244,7 @@ class Crop_Zoom_Pan(BasePage):
         else:
             logger("wrong input")
             return False
-
+    @step('[Action][Crop Zoom Pan] Set [Position Y] by arrow')
     def click_position_y_arrow(self, default='up'):
         if default == 'up':
             self.exist_click(L.crop_zoom_pan.position_y_arrow_up)
@@ -269,22 +277,22 @@ class Crop_Zoom_Pan(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    @step('[Action][Crop Zoom Pan] Set [Scale Width]')
     def set_scale_width(self, value):
         self.exist_click(L.crop_zoom_pan.scale_width)
         self.exist(L.crop_zoom_pan.scale_width).AXValue = value
         self.press_enter_key()
         return True
-
+    @step('[Action][Crop Zoom Pan] Set [Scale Height]')
     def set_scale_height(self, value):
         self.exist_click(L.crop_zoom_pan.scale_height)
         self.exist(L.crop_zoom_pan.scale_height).AXValue = value
         self.press_enter_key()
         return True
-
+    @step('[Action][Crop Zoom Pan] Get [Scale Width]')
     def get_scale_width(self):
         return self.exist(L.crop_zoom_pan.scale_width).AXValue
-
+    @step('[Action][Crop Zoom Pan] Get [Scale Height]')
     def get_scale_height(self):
         return self.exist(L.crop_zoom_pan.scale_height).AXValue
 

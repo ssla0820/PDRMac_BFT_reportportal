@@ -30,7 +30,7 @@ class Tips_area(Main_Page, BasePage):
                 raise Exception
             return True
 
-        @step('[Action][Tip Areas][Tools] Select [Pip Designer] from [Tools]')
+        @step('[Action][Tip Areas][Tools] Select [Pip Designer] from [Tip Areas]')
         def select_PiP_Designer(self):
             # Description : Click TipsArea [Tools] button > Select (PiP Designer)
             try:
@@ -87,12 +87,13 @@ class Tips_area(Main_Page, BasePage):
                 raise Exception
             return True
 
+        @step('[Action][Tip Areas][Tools] Select [Blending Mode] from [Tip Areas]')
         def select_Blending_Mode(self):
             # Description : Click TipsArea [Tools] button > Select (Blending Mode)
             try:
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 # Select (Blending Mode)
                 self.select_right_click_menu('Blending Mode')
@@ -103,15 +104,16 @@ class Tips_area(Main_Page, BasePage):
                     return False
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Actopm][Tip Areas][Tools] Select [Pan Zoom] from [Tip Areas]')
         def select_Pan_Zoom(self, close_win=False):
             # Description : Click TipsArea [Tools] button > Select (Pan & Zoom)
             try:
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 # Select (Pan & Zoom)
                 self.select_right_click_menu('Pan / Zoom')
@@ -126,15 +128,16 @@ class Tips_area(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Tip Areas][Tools] Select [Crop/Zoom/Pan] from [Tip Areas]')
         def select_CropZoomPan(self):
             # Description : Click TipsArea [Tools] button > Select (Crop/Zoom/Pan)
             try:
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 # Select (Crop/Zoom/Pan)
                 self.select_right_click_menu('Crop / Rotate')
@@ -148,15 +151,16 @@ class Tips_area(Main_Page, BasePage):
                     return False
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Tip Areas][Tools] Select [Video Speed] from [Tip Areas]')
         def select_VideoSpeed(self):
             # Description : Click TipsArea [Tools] button > Select (Video Speed)
             try:
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 # Select (Video Speed)
                 self.select_right_click_menu('Video Speed')
@@ -167,15 +171,16 @@ class Tips_area(Main_Page, BasePage):
                     return False
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Tip Areas][Tools] Select [Smart Fit for Duration] from [Tip Areas]')
         def select_smart_fit_duration(self):
             # Description : Click TipsArea [Tools] button > Select (Smart Fit for Duration)
             try:
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 # Select (Video Speed)
                 self.select_right_click_menu('Smart Fit for Duration')
@@ -186,9 +191,10 @@ class Tips_area(Main_Page, BasePage):
                     return False
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
+        @step('[Action][Tip Areas][Tools] Select [Video in Reverse] from [Tip Areas]')
         def select_Video_in_Reverse(self, skip=0):
             # Description : Click TipsArea [Tools] button > Select (Video in Reverse)
             try:
@@ -214,11 +220,11 @@ class Tips_area(Main_Page, BasePage):
                     result_verify = self.compare(img_before, img_after, similarity=0.99)
                     if result_verify:
                         logger(f'Fail to verify timeline table_view')
-                        raise Exception
+                        raise Exception(f'Fail to verify timeline table_view')
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def get_select_Video_in_Reverse_status(self):
@@ -244,6 +250,7 @@ class Tips_area(Main_Page, BasePage):
                 raise Exception
             return result
 
+        @step('[Action][Tip Areas][Tools] Select [Audio Editor] from [Tip Areas]')
         def select_Audio_Editor(self, close_win=False):
             # Description : Click TipsArea [Tools] button > Select (Audio Editor)
             try:
@@ -251,7 +258,7 @@ class Tips_area(Main_Page, BasePage):
 
                 # Click TipsArea [Tools] button
                 if not self.exist_click(L.tips_area.button.btn_Tools):
-                    raise Exception
+                    raise Exception('Fail to click [Tools] button')
 
                 # Select (Audio Editor)
                 self.select_right_click_menu('Audio Editor')
@@ -268,7 +275,7 @@ class Tips_area(Main_Page, BasePage):
 
             except Exception as e:
                 logger(f'Exception occurs. log={e}')
-                raise Exception
+                raise Exception(f'Exception occurs. log={e}')
             return True
 
         def select_Audio_Speed(self):
@@ -1206,6 +1213,7 @@ class Tips_area(Main_Page, BasePage):
         time.sleep(DELAY_TIME * 2)
         return True
 
+    @step('[Action][TipsArea] Click [Sync by Audio] button on [Tips Area]')
     def click_sync_by_audio(self):
         self.click(L.tips_area.button.btn_sync_by_audio)
         time.sleep(DELAY_TIME * 5)
@@ -1326,57 +1334,61 @@ class Tips_area(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][TipArea] Click [Cut] button on [Tips Area]')
     def click_TipsArea_btn_Cut(self):
         try:
             img_before = self.snapshot(L.main.timeline.table_view)
             if not self.exist_click(L.tips_area.button.btn_Cut):
                 logger('Cannot find btn_Cut')
-                raise Exception
+                raise Exception('Cannot find btn_Cut')
             time.sleep(DELAY_TIME)
             self.wait_for_image_changes(img_before, L.main.timeline.table_view, DELAY_TIME * 5, similarity=0.985)
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][TipsArea] Click [Remove] button on [Tips Area]')
     def click_TipsArea_btn_Remove(self):
         try:
             img_before = self.snapshot(L.main.timeline.table_view)
             if not self.exist_click(L.tips_area.button.btn_Remove):
                 logger('Cannot find btn_Remove')
-                raise Exception
+                raise Exception('Cannot find btn_Remove')
             time.sleep(DELAY_TIME)
             self.wait_for_image_changes(img_before, L.main.timeline.table_view, DELAY_TIME * 5)
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Tip Areas] Click [Produce Range] button on [Tip Areas]')
     def click_TipsArea_btn_Produce_Range(self):
         try:
             if not self.exist_click(L.tips_area.button.btn_Produce_Range):
                 logger('Cannot find btn_Produce_Range')
-                raise Exception
+                raise Exception('Cannot find btn_Produce_Range')
 
             # Verify Step: Check enter Produce Page
             if not self.is_exist(L.produce.btn_start_produce, None, DELAY_TIME * 10):
                 logger('Fail to enter produce page')
-                raise Exception
+                raise Exception('Fail to enter produce page')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
+    @step('[Action][Tip Areas] Click [Lock Range] button on [Tip Areas]')
     def click_TipsArea_btn_Lock_Range(self):
         try:
             img_collection_view_before = self.snapshot(L.tips_area.button.btn_Lock_Range)
 
             if not self.exist_click(L.tips_area.button.btn_Lock_Range):
                 logger('Cannot find btn_Lock_Range')
-                raise Exception
+                raise Exception('Cannot find btn_Lock_Range')
             el_position = self.find(L.tips_area.button.btn_Lock_Range).AXPosition
             x_axis = el_position[0]
             y_axis = el_position[1] - 25
@@ -1389,69 +1401,44 @@ class Tips_area(Main_Page, BasePage):
 
             if result_verify:
                 logger(f'Fail to click [Lock Range]] button')
-                raise Exception
+                raise Exception(f'Fail to click [Lock Range]] button')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
-    def click_TipsArea_btn_Lock_Range(self):
-        try:
-            img_collection_view_before = self.snapshot(L.tips_area.button.btn_Lock_Range)
-
-            if not self.exist_click(L.tips_area.button.btn_Lock_Range):
-                logger('Cannot find btn_Lock_Range')
-                raise Exception
-            el_position = self.find(L.tips_area.button.btn_Lock_Range).AXPosition
-            x_axis = el_position[0]
-            y_axis = el_position[1] - 25
-            self.mouse.move(x_axis, y_axis)
-
-            img_collection_view_after = self.snapshot(L.tips_area.button.btn_Lock_Range)
-
-            # Verify Step: Check before/after is changed by snapshot
-            result_verify = self.compare(img_collection_view_before, img_collection_view_after)
-
-            if result_verify:
-                logger(f'Fail to click [Lock Range]] button')
-                raise Exception
-
-        except Exception as e:
-            logger(f'Exception occurs. log={e}')
-            raise Exception
-        return True
-
+    
+    @step('[Action][Tip Areas] Select [Crop The Selected Image] button on [Tip Areas]')
     def click_TipsArea_btn_Crop_Image(self):
         try:
             if not self.exist_click(L.tips_area.button.btn_Crop_the_selected_image):
                 logger('Cannot find btn_Crop_the_selected_image')
-                raise Exception
+                raise Exception('Cannot find btn_Crop_the_selected_image')
 
             # Verify Step: Check to open (Crop Image) window
             if not self.is_exist(L.tips_area.window.crop_image, None, DELAY_TIME * 10):
                 logger('Fail to click Crop')
-                raise Exception
+                raise Exception('Fail to click Crop')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
-
+    @step('[Action][Tip Areas] Click [Duration] button on [Tip Areas]')
     def click_TipsArea_btn_Duration(self):
         try:
             if not self.exist_click(L.tips_area.button.btn_Set_the_length_of_the_selected_clip):
                 logger('Cannot find btn_Set_the_length_of_the_selected_clip')
-                raise Exception
+                raise Exception('Cannot find btn_Set_the_length_of_the_selected_clip')
 
             # Verify Step: Check to open (Duration Settings) window
             if not self.is_exist(L.tips_area.window.duration_settings, None, DELAY_TIME * 10):
                 logger('Fail to click Duration')
-                raise Exception
+                raise Exception('Fail to click Duration')
 
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def apply_duration_settings(self, duration):
@@ -1496,12 +1483,12 @@ class Tips_area(Main_Page, BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    @step('[Action][TipsArea] Click [Keyframe] button in [Tips Area]')
     def click_keyframe(self, close_win=False):
         try:
             if not self.exist_click(L.tips_area.button.btn_Keyframe):
                 logger('Cannot find btn_Keyframe')
-                raise Exception
+                raise Exception('Cannot find btn_Keyframe')
 
             # Verify Step: Check to enter (Keyframe)
             if not self.exist(L.tips_area.keyframe.tab):
@@ -1512,7 +1499,7 @@ class Tips_area(Main_Page, BasePage):
                 self.exist_click(L.tips_area.keyframe.close)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     @step('[Action][TipsArea] Click [Trim] button in [Tips Area]')

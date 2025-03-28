@@ -3,10 +3,11 @@ import time, datetime, os, copy
 from .base_page import BasePage
 from ATFramework.utils import logger
 from ATFramework.utils.Image_Search import CompareImage
-# from AppKit import NSScreen
+from AppKit import NSScreen
 from .locator import locator as L
 #from .locator.hardcode_0408 import locator as L
 from .main_page import Main_Page
+from reportportal_client import step
 
 DELAY_TIME = 1 # sec
 
@@ -30,22 +31,25 @@ class Motion_Tracker(Main_Page, BasePage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    @step('[Verify][Motion Tracker] Check if [Motion Tracker] window is opened')
     def is_in_motion_tracker(self):
         return self.exist(L.motion_tracker.main_window).AXTitle.startswith("Motion Tracker |")
 
+    @step('[Action][Motion Tracker] Click [Object Track] button in [Motion Tracker]')
     def click_object_track(self, delay_time=10):
         if not self.is_in_motion_tracker():
             logger('Not enter motion tracker. Raise Exception')
-            raise Exception
+            raise Exception('Not enter motion tracker. Raise Exception')
 
         self.click(L.motion_tracker.btn_track)
         time.sleep(delay_time)
         return True
 
+    @step('[Action][Motion Tracker] Click [Add Title] button in [Motion Tracker]')
     def add_title_button(self):
         if not self.is_in_motion_tracker():
             logger('Not enter motion tracker. Raise Exception')
-            raise Exception
+            raise Exception('Not enter motion tracker. Raise Exception')
 
         self.click(L.motion_tracker.btn_add_title)
         time.sleep(DELAY_TIME*2)
@@ -58,13 +62,14 @@ class Motion_Tracker(Main_Page, BasePage):
             return True
         else:
             return False
-
+    @step('[Action][Motion Tracker] Edit [Title] in [Motion Tracker]')
     def edit_title(self, custom_title):
         self.click(L.motion_tracker.text_object)
         time.sleep(DELAY_TIME)
         self.input_text(custom_title)
         time.sleep(DELAY_TIME)
 
+    @step('[Action][Motion Tracker] Change [Title Color] in [Motion Tracker]')
     def change_title_color(self, HexColor):
         self.click(L.motion_tracker.btn_change_color)
         return _set_color(self, HexColor)
@@ -74,10 +79,11 @@ class Motion_Tracker(Main_Page, BasePage):
         if self.exist(L.base.confirm_dialog.main_window):
             self.click(btn_no_yes[option])
 
+    @step('[Action][Motion Tracker] Click [Add Pip] button in [Motion Tracker]')
     def add_pip_button(self):
         if not self.is_in_motion_tracker():
             logger('Not enter motion tracker. Raise Exception')
-            raise Exception
+            raise Exception('Not enter motion tracker. Raise Exception')
 
         # Click [Add Pip] button
         self.click(L.motion_tracker.btn_add_pip)
@@ -92,10 +98,11 @@ class Motion_Tracker(Main_Page, BasePage):
         else:
             return False
 
+    @step('[Action][Motion Tracker] Import media from [Hard Drive] in [Motion Tracker]')
     def import_from_hard_drive(self, media_path):
         if not self.exist(L.motion_tracker.btn_import_media):
             logger('Cannot find import media clip button, raise Exception')
-            raise Exception
+            raise Exception('Cannot find import media clip button, raise Exception')
 
         self.click(L.motion_tracker.btn_import_media)
         time.sleep(DELAY_TIME)
@@ -105,6 +112,7 @@ class Motion_Tracker(Main_Page, BasePage):
         self.move_mouse_to_0_0()
         time.sleep(DELAY_TIME*2)
 
+    @step('[Action][Motion Tracker] Set Timecode in [Motion Tracker]')
     def set_timecode(self, timecode):
         self.activate()
         elem = self.find(L.motion_tracker.timecode)
@@ -117,10 +125,11 @@ class Motion_Tracker(Main_Page, BasePage):
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
 
+    @step('[Action][Motion Tracker] Click [Add Effect] button in [Motion Tracker]')
     def add_effect_button(self):
         if not self.is_in_motion_tracker():
             logger('Not enter motion tracker. Raise Exception')
-            raise Exception
+            raise Exception('Not enter motion tracker. Raise Exception')
 
         self.click(L.motion_tracker.btn_add_effect)
         time.sleep(DELAY_TIME*2)
@@ -133,19 +142,21 @@ class Motion_Tracker(Main_Page, BasePage):
             return True
         else:
             return False
-
+    
+    @step('[Action][Motion Tracker] Click [Add A Tracker] button in [Motion Tracker]')
     def add_a_tracker(self):
         if not self.is_in_motion_tracker():
             logger('Not enter motion tracker. Raise Exception')
-            raise Exception
+            raise Exception('Not enter motion tracker. Raise Exception')
 
         self.click(L.motion_tracker.btn_add_a_tracker)
         time.sleep(DELAY_TIME)
 
+    @step('[Action][Motion Tracker] Click [OK] button to leave [Motion Tracker]')
     def click_ok(self):
         if not self.is_in_motion_tracker():
             logger('Not enter motion tracker. Raise Exception')
-            raise Exception
+            raise Exception('Not enter motion tracker. Raise Exception')
 
         self.click(L.motion_tracker.btn_ok)
         time.sleep(DELAY_TIME*3)
@@ -155,7 +166,8 @@ class Motion_Tracker(Main_Page, BasePage):
             return False
         else:
             return True
-
+        
+    @step('[Action][Motion Tracker] Remove Tracker 2 in [Motion Tracker]')
     def remove_tracker2(self):
         all_simple_track = self.exist(L.motion_tracker.text_trackers)
         if len(all_simple_track) < 2:

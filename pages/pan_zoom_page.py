@@ -11,6 +11,7 @@ from .base_page import BasePage
 
 from ATFramework.utils.Image_Search import CompareImage
 from .locator import locator as L
+from reportportal_client import step
 
 OPERATION_DELAY = 1 # sec
 
@@ -19,19 +20,21 @@ class Pan_Zoom(BasePage):
         super().__init__(*args, **kwargs)
         self.magic_motion_designer = Magic_Motion_Designer(*args, **kwargs)
 
+    @step('[Verify][Pan Zoom] Check if [Pan Zoom] window is shown')
     def is_enter_pan_zoom(self):
         return self.is_exist(L.pan_zoom.title_pan_zoom)
-
+    
+    @step('[Action][Pan Zoom] Click [Close] button to leave [Pan Zoom] window')
     def click_close(self):
         try:
             self.click(L.pan_zoom.btn_close)
             time.sleep(OPERATION_DELAY)
             if not self.is_not_exist(L.pan_zoom.title_pan_zoom, None, 3):
                 logger('Fail to close Pan Zoom window')
-                raise Exception
+                raise Exception('Fail to close Pan Zoom window')
         except Exception as e:
             logger(f'Exception occurs. error={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. error={e}')
         return True
 
     def click_i_button(self):
@@ -55,9 +58,11 @@ class Pan_Zoom(BasePage):
     def click_reset(self):
         return self.click(L.pan_zoom.btn_reset)
 
+    @step('[Action][Pan Zoom] Click [Motion Designer] button')
     def click_motion_designer(self):
         return self.click(L.pan_zoom.btn_motion_designer)
 
+    @step('[Action][Pan Zoom] Click [Apply to All] button')
     def click_apply_to_all(self):
         return self.click(L.pan_zoom.btn_apply_to_all)
 
@@ -74,6 +79,7 @@ class Pan_Zoom(BasePage):
             raise Exception
         return image_file
 
+    @step('[Action][Pan Zoom] Apply [Motion Style] by index')
     def apply_motion_style(self, index):
         try:
             els_image = self.exist(L.pan_zoom.unit_motion_style_image)
@@ -81,7 +87,7 @@ class Pan_Zoom(BasePage):
             time.sleep(OPERATION_DELAY * 0.5)
         except Exception as e:
             logger(f'Exception occurs. error={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. error={e}')
         return True
 
     def apply_user_defined_style(self):
@@ -256,6 +262,7 @@ class Magic_Motion_Designer(BasePage):
     def set_aspect_ratio_4_3(self, btn_confirm=''):
         return self.set_aspect_ratio('4:3', btn_confirm)
 
+    @step('[Action][Magic Motion Designer] Set [Aspect Ratio] 16:9')
     def set_aspect_ratio_16_9(self, btn_confirm=''):
         return self.set_aspect_ratio('16:9', btn_confirm)
 
@@ -265,9 +272,11 @@ class Magic_Motion_Designer(BasePage):
     def set_aspect_ratio_1_1(self, btn_confirm=''):
         return self.set_aspect_ratio('1:1', btn_confirm)
 
+    @step('[Action][Magic Motion Designer] Set [Aspect Ratio]')
     def set_aspect_ratio_freeform(self, btn_confirm=''):
         return self.set_aspect_ratio('Freeform', btn_confirm)
 
+    @step('[Action][Magic Motion Designer] Get [Aspect Ratio] value in [Motion Designer]')
     def get_current_aspect_ratio(self):
         return self.exist(L.pan_zoom.magic_motion_designer.btn_aspect_ratio).AXTitle
 
@@ -282,21 +291,25 @@ class Magic_Motion_Designer(BasePage):
             raise Exception
         return True
 
+    @step('[Action][Magic Motion Designer] Click [Undo] button in [Motion Designer]')
     def click_undo(self):
         return self.click(L.pan_zoom.magic_motion_designer.btn_undo)
 
     def click_redo(self):
         return self.click(L.pan_zoom.magic_motion_designer.btn_redo)
 
+    @step('[Action][Magic Motion Designer] Click [OK] button to leave [Motion Designer]')
     def click_ok(self):
         return self.click(L.pan_zoom.magic_motion_designer.btn_ok)
 
     def click_cancel(self):
         return self.click(L.pan_zoom.magic_motion_designer.btn_cancel)
 
+    @step('[Action][Magic Motion Designer] Click [Reset] button')
     def click_reset(self):
         return self.click(L.pan_zoom.magic_motion_designer.btn_reset)
 
+    @step('[Action][Magic Motion Designer] Set [Timecode] in [Motion Designer]')
     def set_timecode(self, timecode):
         return self._set_timecode(timecode, L.pan_zoom.magic_motion_designer.timecode)
 
@@ -345,6 +358,7 @@ class Magic_Motion_Designer(BasePage):
             return False
         return True
 
+    @step('[Action][Magic Motion Designer] Drag preview object to rotate clockwise with degree')
     def drag_preview_object_rotate_clockwise(self, radius=190): # only the rotate dot is on the top
         try:
             el_object = self.exist(L.pan_zoom.magic_motion_designer.preview_selected_object)
@@ -362,10 +376,10 @@ class Magic_Motion_Designer(BasePage):
             logger(f'{rotation_value_after=}')
             if rotation_value == rotation_value_after:
                 logger('Fail to verify the rotation value after rotated preview object')
-                raise Exception
+                raise Exception('Fail to verify the rotation value after rotated preview object')
         except Exception as e:
             logger(f'Exception occurs. error={e}')
-            return False
+            raise Exception(f'Exception occurs. error={e}')
         return True
 
     def check_snap_line(self, verify_rgb=(242, 139, 249)): # check RGB color: https://www.rapidtables.com/convert/color/rgb-to-hex.html
@@ -536,10 +550,12 @@ class Stepper_Operation(BasePage):
         self.locator_group = locator_group
         self.category = category
 
+    @step('[Action][Magic Motion Designer] Get [Value] in [Motion Designer]')
     def get_value(self):
         el_parent = self.exist(self.locator_group)
         return self.exist(L.pan_zoom.magic_motion_designer.unit_stepper_value, el_parent).AXValue
-
+    
+    @step('[Action][Magic Motion Designer] Set [Value] in [Motion Designer]')
     def set_value(self, value):
         try:
             el_parent = self.exist(self.locator_group)

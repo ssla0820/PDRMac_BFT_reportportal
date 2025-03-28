@@ -83,16 +83,17 @@ class Import_Downloaded_Media_From_CL(Main_Page, BasePage):
             raise Exception
         return True
 
+    @step('[Action][Import Download Media From CL] Switch to [Music] page')
     def switch_to_music_page(self):
         try:
             if not self.exist(L.import_downloaded_media_from_cl.downloaded_media_window):
                 logger("No downloaded media window show up")
-                raise Exception
+                raise Exception("No downloaded media window show up")
             self.exist_click(L.import_downloaded_media_from_cl.music_page)
             self.mouse.move(0, 0)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def highlight_download_media_content(self, folder_index, file_index=None):
