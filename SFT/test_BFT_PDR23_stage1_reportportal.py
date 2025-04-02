@@ -17675,7 +17675,6 @@ class Test_BFT_365_OS14():
             main_page.start_app()
             main_page.click_close_then_back_to_launcher()
         else:
-            pass
 
         # [L71] 1.3 Tool Area > Video Speed > Single click module
         # with uuid("cfa51f03-9f74-4161-bf9e-bae9ebc06cdf") as case:
@@ -17926,6 +17925,7 @@ class Test_BFT_365_OS14():
         self.ensure_dependency(dependency_test)
         
         with step("[Action] Set Timecode to '00_00_37_07' at main page"):
+            time.sleep(DELAY_TIME*0.5)
             main_page.set_timeline_timecode('00_00_37_07')
         
         # [L65] 2.3 Title Room > Add Built-In templates to timeline & Preview >  Motion Graphic 007, Clover_04, Windshield
@@ -18175,8 +18175,10 @@ class Test_BFT_365_OS14():
         4. Verify description is 'Instantly remove the background of your footage and replace it with a video clip or image.'
         """
         dependency_test = "test_title_particle_effect_launcher_cross_func_18_9"
-        self.ensure_dependency(dependency_test)
-        
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+
         # [L29] 1.3 New Launcher > Showcase > AI Background Remover > Caption & Text
         # with uuid("41f702aa-87ea-481c-b6b6-02c23b5639e1") as case:
 
@@ -18211,7 +18213,9 @@ class Test_BFT_365_OS14():
         2. Verify intro video is playing
         """
         dependency_test = "test_title_particle_effect_launcher_cross_func_18_9"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
         
         # [L18] 1.3 New Launcher > Showcase > Video Stabilizer > Video
         # with uuid("b672e064-b17a-4e17-82a1-34ea04dc35fb") as case:
@@ -18237,7 +18241,7 @@ class Test_BFT_365_OS14():
     def test_bg_music_func_19_1(self):
         """
         1. Start App
-        2. Open packed project ('Packed_Project/test_bg_music_func_19_1.pdk', 'Extracted_Folder/test_bg_music_func_19_1')
+        2. Open packed project ('Packed_Project/test_bg_music_func_19_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 'Extracted_Folder/test_bg_music_func_19_1')
         3. Enter [Background Music] Room
         4. Search for 'Hey Baby' in library
         5. Check download mark is shown for 'Hey Baby (Your Lullaby Song)'
@@ -18247,7 +18251,7 @@ class Test_BFT_365_OS14():
             main_page.start_app()
         
         with step("[Action] Open packed project"):
-            self.open_packed_project('Packed_Project/test_bg_music_func_19_1.pdk', 
+            self.open_packed_project('Packed_Project/test_bg_music_func_19_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 
                                      'Extracted_Folder/test_bg_music_func_19_1')
         
         # [L41] 2.1 Media Room > Background Music / Sound Clips > Sample preview
@@ -18382,7 +18386,11 @@ class Test_BFT_365_OS14():
         6. Check [Download OK] mark (L.media_room.scroll_area.table_view_text_field_download_ok) if not exist
         '''
         dependency_test = "test_bg_music_func_19_4"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.start_app()
+            self.open_packed_project('Packed_Project/test_bg_music_func_19_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 
+                            'Extracted_Folder/test_bg_music_func_19_1')
+            media_room_page.enter_background_music_CL()
 
         with step("[Action] Enter [Sound Clip] Category and wait for delay"):
             media_room_page.enter_sound_clips()
@@ -18431,10 +18439,13 @@ class Test_BFT_365_OS14():
         7. Check if Download button exist (L.media_room.scroll_area.table_view_text_field_download_button)
         """
         dependency_test = "test_bg_music_func_19_5"
-        self.ensure_dependency(dependency_test)
-
-        with step("[Action] Enter [Background Music (CL)] Category and select category 'Atmosphere'"):
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.start_app()
+            self.open_packed_project('Packed_Project/test_bg_music_func_19_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 
+                            'Extracted_Folder/test_bg_music_func_19_1')
             media_room_page.enter_background_music_CL()
+
+        with step("[Action] Select category 'Atmosphere'"):
             media_room_page.select_specific_category("Atmosphere")
 
         # [L150] 2.1 Media Room > BGM (CL BGM) > Input ENU character
@@ -18486,7 +18497,11 @@ class Test_BFT_365_OS14():
         matches GT (Ground_Truth_Folder + 'L152_empty_search_result.png') with similarity=0.97
         """
         dependency_test = "test_bg_music_func_19_6"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.start_app()
+            self.open_packed_project('Packed_Project/test_bg_music_func_19_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 
+                            'Extracted_Folder/test_bg_music_func_19_1')
+            media_room_page.enter_background_music_CL()
         
         # [L152] 2.1 Media Room > BGM (CL BGM) > Input '.'
         # with uuid("27de6e31-2601-4ac1-8323-8b1bd8c6a1ae") as case:
@@ -18521,16 +18536,16 @@ class Test_BFT_365_OS14():
     def test_shape_pip_transition_cross_func_20_1(self):
         """
         1. Start APP
-        2. Open packed project ('Packed_Project/test_shape_pip_transition_cross_func_20_1.pdk', 'Extracted_Folder/test_shape_pip_transition_cross_func_20_1')
+        2. Open packed project ('Packed_Project/test_shape_pip_transition_cross_func_20_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 'Extracted_Folder/test_shape_pip_transition_cross_func_20_1')
         3. Set timecode '00_00_47_07' at main page
         4. Enter Room (Pip) (index 4) and capture preview
-        5. Search 'Shape 017' in library, insert media to selected track, and click [Cancel] in search library
+        5. Search 'Shape 017' in library, insert media to selected track
         6. Check preview is updated after insertion (similarity=0.95)
         7. Select timeline track 2 and capture preview
-        8. Search 'Wedding' in library, insert media to selected track, and click [Cancel] in search library
+        8. Search 'Wedding' in library, insert media to selected track
         9. Check preview is updated after insertion (similarity=0.95)
         10. Select timeline track 2, set timecode '00_00_50_07' at main page, and capture preview
-        11. Search 'Mood' in library, select media 'Mood Stickers 07', right click and click "Add to Timeline", wait for (DELAY_TIME * 6)
+        11. Search 'Mood' in library, select media 'Mood 07', right click and click "Add to Timeline", wait for (DELAY_TIME * 6)
         12. Select timeline track 1, click [Previous Frame] button 3 times
         13. Verify preview matches GT (Ground_Truth_Folder + 'L68_shape_wedding.png') with similarity=0.95
         14. Click [Next Frame] button 5 times and capture preview
@@ -18539,8 +18554,8 @@ class Test_BFT_365_OS14():
         with step("[Action] Start APP"):
             main_page.start_app()
 
-        with step("[Action] Open packed project ('Packed_Project/test_shape_pip_transition_cross_func_20_1.pdk', 'Extracted_Folder/test_shape_pip_transition_cross_func_20_1')"):
-            self.open_packed_project('Packed_Project/test_shape_pip_transition_cross_func_20_1.pdk', 'Extracted_Folder/test_shape_pip_transition_cross_func_20_1')
+        with step("[Action] Open packed project ('Packed_Project/test_shape_pip_transition_cross_func_20_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 'Extracted_Folder/test_shape_pip_transition_cross_func_20_1')"):
+            self.open_packed_project('Packed_Project/test_shape_pip_transition_cross_func_20_1_from_test_title_particle_effect_launcher_cross_func_18_8.pdk', 'Extracted_Folder/test_shape_pip_transition_cross_func_20_1')
 
         # [L68] 2.3 Pip Room > Shape 017, Dialog_07, Wedding_2
         # with uuid("c805bedd-ee5f-4a40-9476-be67a8c75ccb") as case:
@@ -18552,17 +18567,15 @@ class Test_BFT_365_OS14():
             main_page.enter_room(4)
             initial_preview = main_page.snapshot(locator=main_page.area.preview.main)
 
-        with step("[Action] Search 'Shape 017' in library, insert media, and click [Cancel]"):
+        with step("[Action] Search 'Shape 017' in library, insert media"):
             # # Input search Shape 017
             # main_page.exist_click(L.media_room.input_search)
             # main_page.keyboard.send('Shape 017')
             # main_page.press_enter_key()
             # time.sleep(DELAY_TIME * 3)
-
             media_room_page.search_library("Shape 017")
             main_page.tips_area_insert_media_to_selected_track(option=-1)
-            media_room_page.search_library_click_cancel()
-
+            
         with step("[Verify] Check preview updated after inserting 'Shape 017' (similarity=0.95)"):
             preview_after_shape = main_page.snapshot(locator=main_page.area.preview.main)
             if main_page.compare(initial_preview, preview_after_shape, similarity=0.95):
@@ -18570,10 +18583,11 @@ class Test_BFT_365_OS14():
                 assert False, "Preview did not update after inserting 'Shape 017'! Similarity should < 0.95"
 
         with step("[Action] Select timeline track 2 and capture preview"):
+            media_room_page.search_library_click_cancel()
             main_page.timeline_select_track(2)
             timeline2_preview = main_page.snapshot(locator=main_page.area.preview.main)
 
-        with step("[Action] Search 'Wedding' in library, insert media, and click [Cancel]"):
+        with step("[Action] Search 'Wedding' in library, insert media"):
             # # Input search Wedding 2
             # main_page.exist_click(L.media_room.input_search)
             # main_page.keyboard.send('Wedding')
@@ -18582,7 +18596,7 @@ class Test_BFT_365_OS14():
 
             media_room_page.search_library("Wedding")
             main_page.tips_area_insert_media_to_selected_track(option=-1)
-            media_room_page.search_library_click_cancel()
+            
 
         with step("[Verify] Check preview updated after inserting 'Wedding' (similarity=0.95)"):
             preview_after_wedding = main_page.snapshot(locator=main_page.area.preview.main)
@@ -18591,10 +18605,11 @@ class Test_BFT_365_OS14():
                 assert False, "Preview did not update after inserting 'Wedding'! Similarity should < 0.95"
 
         with step("[Action] Select timeline track 2, set timecode to '00_00_50_07'"):
+            media_room_page.search_library_click_cancel()
             main_page.timeline_select_track(2)
             main_page.set_timeline_timecode('00_00_50_07')
 
-        with step("[Action] Search 'Mood' in library, select 'Mood Stickers 07', right click and click 'Add to Timeline', wait for download"):
+        with step("[Action] Search 'Mood' in library, select 'Mood 07', right click and click 'Add to Timeline', wait for download"):
             # # Input search Dialog_07
             # main_page.exist_click(L.media_room.input_search)
             # main_page.keyboard.send('Mood')
@@ -18602,7 +18617,7 @@ class Test_BFT_365_OS14():
             # time.sleep(DELAY_TIME * 3)
             
             media_room_page.search_library("Mood")
-            main_page.select_library_icon_view_media("Mood Stickers 07")
+            main_page.select_library_icon_view_media("Mood 07")
             time.sleep(DELAY_TIME * 2)
             main_page.right_click()
             main_page.select_right_click_menu("Add to Timeline")
@@ -19676,8 +19691,8 @@ class Test_BFT_365_OS14():
         # with uuid("0777102c-fc09-474d-b4bf-07a85ca9cfb2") as case:
 
         with step("[Action] Import media from specified path and handle high definition dialog"):
-            media_room_page.import_media_file(Test_Material_Folder + "Crop_Zoom_Pan/AVC(16_9, 1920x1056, 23.976)_AAC(6ch).mov", option=0, timeout=30)
-            media_room_page.handle_high_definition_dialog(option="no")
+            media_room_page.import_media_file(Test_Material_Folder + "Crop_Zoom_Pan/AVC(16_9, 1920x1056, 23.976)_AAC(6ch).mov")
+            media_room_page.handle_high_definition_dialog()
             main_page.snapshot(locator=L.base.Area.library_icon_view, 
                                file_name=Auto_Ground_Truth_Folder + "preview_befroe_recording.png") # for test_audio_mixing_n_voice_over_recording_func_22_6
 
