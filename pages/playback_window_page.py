@@ -177,6 +177,7 @@ class Playback_window(BasePage):
     @step('[Action][Playback_window] Click preview operation -- play, pause, stop, previous frame, next frame, fast forward')
     def Edit_Timeline_PreviewOperation(self, operation):
         self.find(getattr(L.playback_window.operation, operation.lower())).press()
+        time.sleep(OPERATION_DELAY*0.5)
         return True
 
     def Edit_TimelinePreview_ClickTakeSnapshot(self):

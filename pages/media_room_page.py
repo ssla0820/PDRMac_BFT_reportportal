@@ -21,6 +21,7 @@ class Media_Room(BasePage):
             self.exist_click(L.media_room.btn_import_media)
             self.exist_click(L.media_room.import_media.option_import_media_file)
             self.select_file(full_path)
+            time.sleep(OPERATION_DELAY*3)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
@@ -259,7 +260,7 @@ class Media_Room(BasePage):
             if result_verify:
                 logger('Fail to verify after clicked select all')
                 raise Exception('Fail to verify after clicked select all')
-            time.sleep(OPERATION_DELAY)
+            time.sleep(OPERATION_DELAY*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')

@@ -4024,7 +4024,7 @@ class Pip_Designer(Main_Page, BasePage):
         def switch_to_animation(self):
             try:
                 if not self.exist(L.pip_designer.tab_animation):
-                    raise Exception
+                    raise Exception("No animation tab show up")
                 self.click(L.pip_designer.tab_animation)
 
                 time.sleep(DELAY_TIME*3)

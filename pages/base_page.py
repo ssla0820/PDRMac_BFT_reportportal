@@ -516,7 +516,7 @@ class BasePage(BasePage):
             if show_more := self.exist(L.base.file_picker.show_more_options, timeout=5):
                 if not show_more.AXValue:
                     show_more.press()
-                    time.sleep(5)
+                    time.sleep(2)
                 self.find(_file_name).AXValue = path.pop(-1)
         except:
             logger("Disclosure Triangle is not found")
@@ -530,6 +530,7 @@ class BasePage(BasePage):
         for dialog_locator in dialog_list:
             try:
                 if self.exist(dialog_locator):
+                    time.sleep(0.5)
                     self.exist([dialog_locator, {"AXRole": "AXList", "index": -1}], timeout=0).AXFocused = True
                     break
             except:
@@ -540,9 +541,10 @@ class BasePage(BasePage):
         for name in path:
             if os.path.exists(base := os.path.abspath(f"{base}/{name}")):
                 self.keyboard.right()
+                time.sleep(1)
                 logger(f"{base=}")
                 with self.keyboard.pressed(*name):
-                    time.sleep(0.5)
+                    time.sleep(1)
             else:
                 logger(f"folder is not exist: {base=} / {name=}")
                 self.find({"AXRole": "AXButton", "AXTitle": "New Folder"}).press()
@@ -554,6 +556,7 @@ class BasePage(BasePage):
                     locators = [[{'AXTitle': 'New Folder'}, {"AXRole": "AXTextField"}]]
                 for locator in locators:
                     try:
+                        time.sleep(0.5)
                         input_text = self.exist(locator, timeout=1)
                         current_text = input_text.AXValue
                         break
@@ -571,6 +574,7 @@ class BasePage(BasePage):
                 dialog_locator,
                 {"AXTitle": btn_name, "AXRole": "AXButton"},
             ], timeout=0, no_warning=True):
+                time.sleep(OPERATION_DELAY)
                 self.mouse.click(*btn.center)
                 return True
         return False

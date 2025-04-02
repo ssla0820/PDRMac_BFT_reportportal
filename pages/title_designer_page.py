@@ -23,7 +23,7 @@ def _checkbox_status(self, _locator, value=1, get_status=False, get_enable=False
             return not current_enabled
         if current_value != value:
             target.press()
-            time.sleep(DELAY_TIME*1)
+            time.sleep(DELAY_TIME*2)
     except Exception as e:
         logger(f'Exception occurs. log={e}')
         return False(f'Exception occurs. log={e}')
@@ -1319,17 +1319,19 @@ class Title_Designer(Main_Page, BasePage):
             raise Exception
         return True
 
-    @step('[Action][Title Designer] Set Border Depth by Value')
+    @step('[Action][Title Designer] Set [Border Depth] by Value')
     def input_border_depth_value(self, value):
         try:
             if not self.exist(L.title_designer.area.window_title_designer):
                 logger("No title designer window show up")
                 raise Exception("No title designer window show up")
+
             self.exist_click(L.title_designer.border.edittext_depth)
             self.mouse.click(times=3)
-            self.keyboard.send(value)
+            self.keyboard.send(str(value))
             self.exist_click(L.title_designer.border.edittext_depth)
             time.sleep(DELAY_TIME * 2)
+
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
@@ -5523,7 +5525,7 @@ class AdjustInCanvas(Main_Page, BasePage):
 
             if is_left:
                 drag_x = -drag_x
-            ori_pos = (x , y)
+            ori_pos = (x-30 , y-33)
             self.mouse.move(ori_pos[0], ori_pos[1])
             time.sleep(DELAY_TIME * 2)
 
@@ -5532,7 +5534,7 @@ class AdjustInCanvas(Main_Page, BasePage):
             time.sleep(DELAY_TIME * 0.5)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            return False
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def rotate(self, angle=45, pos_rotate_btn=12,  is_title=False, is_clock=False):

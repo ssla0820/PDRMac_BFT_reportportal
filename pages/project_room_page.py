@@ -28,7 +28,7 @@ class Project_Room(Main_Page, BasePage):
                 raise Exception("Not find My Project")
             else:
                 self.click(L.project_room.check_My_Project)
-            time.sleep(DELAY_TIME)
+            time.sleep(DELAY_TIME*2)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')

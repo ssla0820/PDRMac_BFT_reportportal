@@ -240,7 +240,9 @@ class Produce(BasePage):
         @step('[Action][Produce][Local] Enable/ Disable [Upload Copy to CyberLink Cloud]')
         def set_check_upload_copy_to_cyberlink_cloud(self, is_check=1):
             locator = L.produce.local.chx_upload_copy_to_cyberlink_cloud
-            return checkbox_set_check(self, locator, is_check)
+            result =  checkbox_set_check(self, locator, is_check)
+            time.sleep(OPERATION_DELAY)
+            return result
 
         @step('[Action][Produce][Local] Click [Yes]/ [No] button on [Convert CyberLink Cloud Copy to MP4] dialog')
         def click_option_convert_cyberlink_cloud_copy_to_mp4_dialog(self, option=1): # 1: yes, 0: no

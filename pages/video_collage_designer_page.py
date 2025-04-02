@@ -54,7 +54,9 @@ class VideoCollageDesigner(BasePage):
 
     @step('[Action][VideoCollageDesigner] Click [OK] button to leave [Video Collage Designer] window')
     def click_ok(self):
-        return self.press(L.video_collage_designer.btn_ok)
+        result =  self.press(L.video_collage_designer.btn_ok)
+        time.sleep(DELAY_TIME)
+        return result
 
     def click_save_as_ok(self, name):
         self.exist(L.video_collage_designer.save_as.input_name).AXValue = name
@@ -130,7 +132,9 @@ class VideoCollageDesigner(BasePage):
 
     @step('[Action][VideoCollageDesigner] Click preview operation -- play, pause, stop, previous frame, next frame, fast forward')
     def click_preview_operation(self, op):
-        return bool(self.exist_press(getattr(L.video_collage_designer.preview, op.lower())))
+        result = bool(self.exist_press(getattr(L.video_collage_designer.preview, op.lower())))
+        time.sleep(DELAY_TIME)
+        return result
 
     def click_snapshot(self, path):
         self.exist_press(L.video_collage_designer.preview.btn_snapshot)
@@ -349,6 +353,7 @@ class VideoCollageDesigner(BasePage):
             def set_delay_sec(self, sec):
                 target = self.exist(L.video_collage_designer.border.advanced.input_delay_sec)
                 self.mouse.click(*target.center)
+                time.sleep(DELAY_TIME)
                 target.AXValue = str(sec)
                 self.keyboard.enter()
                 return True
@@ -375,7 +380,9 @@ class VideoCollageDesigner(BasePage):
 
             @step('[Action][VideoCollageDesigner][Border][Advanced] Click [OK] button to leave Advanced Setting')
             def click_ok(self):
-                return bool(self.exist_press(L.video_collage_designer.border.advanced.btn_ok))
+                result = bool(self.exist_press(L.video_collage_designer.border.advanced.btn_ok))
+                time.sleep(DELAY_TIME)
+                return result
 
 
     class Media(BasePage):
@@ -620,6 +627,8 @@ class VideoCollageDesigner(BasePage):
     class Preview(BasePage):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
+            self.zoom = self.Zoom(*args, **kwargs)
+            self.trim = self.Trim(*args, **kwargs)
 
         def set_duration(self, timecode):
             '''
@@ -655,6 +664,7 @@ class VideoCollageDesigner(BasePage):
         def enter_duration_setting_by_right_click_menu(self):
             self._open_right_click_menu()
             self.select_right_click_menu('Set duration...')
+            time.sleep(DELAY_TIME)
 
         @step('[Action][VideoCollageDesigner][Preview] Remove Clip on Preview by Right Click Menu')
         def remove_clip_on_preview_by_right_click_menu(self):
@@ -673,6 +683,7 @@ class VideoCollageDesigner(BasePage):
         
         @step('[Action][VideoCollageDesigner][Preview] Hover on slot with layout 10')
         def hover_on_slot_with_layout_10(self, times_of_size_w, times_of_size_h): # only enable to hover on slot 3 with layout 10 now
+            time.sleep(DELAY_TIME)
             # Mouse Hover Slot 3
             elelm_menu = self.exist(L.video_collage_designer.border.menu_frame_animation)
             ori_pos = elelm_menu.AXPosition
@@ -681,7 +692,6 @@ class VideoCollageDesigner(BasePage):
             self.mouse.move(target_slot_pos[0], target_slot_pos[1])
             if not self.exist(locator=L.video_collage_designer.preview.btn_mute):
                 raise Exception("Mute button doesn't exist after hover on slot. Please check if icon not display or not hover on slot.")
-        
 
         class Zoom(BasePage):
             @step('[Action][VideoCollageDesigner][Preview][Zoom] Zoom In by Arrow')

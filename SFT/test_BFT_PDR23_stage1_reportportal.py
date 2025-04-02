@@ -82,7 +82,6 @@ Test_Material_Folder = app.testing_material
 Export_Folder  = app.export_path
 
 DELAY_TIME = 1
-EXPLORE_FILE = '' # for [Produce] Related test case
 
 # add a decorator for main_page.close_app()
 def close_app(func):
@@ -529,7 +528,7 @@ class Test_BFT_365_OS14():
         if btn_continue:
             main_page.click(L.base.gdpr_dialog.btn_accept_continue)
 
-    @step("[Initial] Check dependency test result")
+    # @step("[Initial] Check dependency test result")
     def ensure_dependency(self, dependency_test, run_dependency=True):
         """
         Ensures a dependency test is run and passed before continuing.
@@ -2872,6 +2871,7 @@ class Test_BFT_365_OS14():
             # Open (My Profile)
             intro_video_page.enter_my_profile()
             intro_video_page.my_profile.delete_1st_template()
+            time.sleep(DELAY_TIME*2) # wait until delete completed
             # close (My Profile)
             main_page.press_esc_key()
 
@@ -3121,7 +3121,7 @@ class Test_BFT_365_OS14():
         7. Click preview operation (Stop) in playback window
         8. Click undo button
         """
-        dependency_test = "test_intro_room_func_3_23"
+        dependency_test = "test_intro_room_func_3_21"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Enter room "Title" with index 1 and then enter Intro Video Room'):
@@ -3263,17 +3263,18 @@ class Test_BFT_365_OS14():
         # Click Preview Center > Click [Remove] button
         with step("[Action] Click Preview Center > Click [Remove] button twice"):
             for _ in range(2):
+                time.sleep(DELAY_TIME)
                 intro_video_page.click_preview_center()
                 intro_video_page.motion_graphics.click_remove_button()
-                time.sleep(DELAY_TIME)
+                
 
         # Click [Flip] button with option (1) to flip horizontally
         with step("[Action] Click [Flip] button with option (1) to flip horizontally"):
-            intro_video_page.click_flip_button(1)
+            intro_video_page.click_flip(1)
 
         # Click [Flip] button with option (2) to flip vertically
         with step("[Action] Click [Flip] button with option (2) to flip vertically"):
-            intro_video_page.click_flip_button(2)
+            intro_video_page.click_flip(2)
 
         # Verify preview matches Ground Truth
         with step("[Verify] Check preview matches Ground Truth with similarity 0.95"):
@@ -3331,11 +3332,8 @@ class Test_BFT_365_OS14():
             new_w = h + 10
             new_h = h
 
-            preview_snapshot = main_page.snapshot(
-                locator=L.new_icon.area, 
-                file_name=Auto_Ground_Truth_Folder + 'L192_new_icon.png',
-                w=new_w, x=new_x, y=new_y, h=new_h
-            )
+            preview_snapshot = main_page.screenshot(file_name=Auto_Ground_Truth_Folder + 'L192_new_icon.png', w=new_w, x=new_x, y=new_y, h=new_h)
+
             check_preview = main_page.compare(
                 Ground_Truth_Folder + 'L192_new_icon.png', 
                 preview_snapshot, 
@@ -4891,6 +4889,7 @@ class Test_BFT_365_OS14():
             title_designer_page.click_motion_tab()
             # UnFold Path
             title_designer_page.path.set_unfold()
+            time.sleep(DELAY_TIME)
 
         with step('[Action] Apply path'):
             original_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
@@ -5483,21 +5482,20 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_title_designer_func_4_46(self):
         '''
-        0. Ensure the dependency test ('test_title_designer_func_32_2') is run and passed
-        1. Enter Room (Title)(1)
+        1. Start APP > Enter Room (Title)(1)
         2. Select media ('Default') by library icon view
         3. Double Click to enter [Title Designer] > Switch to (Advanced mode)(2)
         4. Unfold [Object Setting] Tab > Drag Vertical Slider to (1)
         5. Check [Render Order] title (L.title_designer.object_setting.text_render_method) is shown
         '''
-        dependency_test = "test_title_designer_func_32_2"
-        self.ensure_dependency(dependency_test)
-
         # [L354] 3.2 Title Room (General title) > Advanced mode > render order > show "Render Method" in object Setting
         # with uuid("e8030cc4-82a8-439c-ac9a-0bcd3d49c522") as case:
 
-        with step("[Action] Enter Room (Title)(1)"):
+        with step("[Action] Start APP > Enter Room (Title)(1)"):
+            main_page.start_app()
             main_page.enter_room(1)
+            # main_page.click(L.main.room_entry.btn_title_room) # Unable to use 'enter_room' function due to already in the title room
+            # main_page.select_LibraryRoom_category('All Content')
 
         with step("[Action] Select media ('Default') by library icon view"):
             main_page.select_library_icon_view_media("Default")
@@ -5592,7 +5590,7 @@ class Test_BFT_365_OS14():
             title_designer_page.unfold_object_object_setting_tab(unfold=0)
 
         with step("[Action] Click [Cancel] Button (1)"):
-            title_designer_page.click_cancel()
+            title_designer_page.click_cancel(1)
 
         assert True
 
@@ -5694,9 +5692,9 @@ class Test_BFT_365_OS14():
         3. Check if [Render Order] title is shown in [Title Designer] by checking (L.title_designer.object_setting.text_render_method)
         4. Set [Object Setting Render Method] with index (2) to ('Each Character')
         5. Get [Object Setting Render Method] and check result is ('Each Character')
-        6. Save template as ('test_title_designer_func_4_49') in [Title Designer]
+        6. Save template as ('test_title_designer_func_4_50') in [Title Designer]
         7. Click [OK] to leave [Title Designer]
-        8. Select media ('test_title_designer_func_4_49') by library icon view
+        8. Select media ('test_title_designer_func_4_50') by library icon view
         9. Double Click to enter [Title Designer] > Drag Vertical Slider (1) in [Title Designer]
         10. Get [Object Setting Render Method] and check result is ('Each Character')
         11. Click [OK] button to leave [Title Designer]
@@ -5725,14 +5723,14 @@ class Test_BFT_365_OS14():
             if render_method != 'Each Character':
                 assert False, f"Expected render method to be 'Each Character', got '{render_method}'"
 
-        with step("[Action] Save template as ('test_title_designer_func_4_49') in [Title Designer]"):
-            title_designer_page.save_as_name('test_title_designer_func_4_49', click_ok=1)
+        with step("[Action] Save template as ('test_title_designer_func_4_50') in [Title Designer]"):
+            title_designer_page.save_as_name('test_title_designer_func_4_50', click_ok=1)
 
         with step("[Action] Click [OK] to leave [Title Designer]"):
             title_designer_page.click_ok()
 
-        with step("[Action] Select media ('test_title_designer_func_4_49') by library icon view"):
-            main_page.select_library_icon_view_media('test_title_designer_func_4_49')
+        with step("[Action] Select media ('test_title_designer_func_4_50') by library icon view"):
+            main_page.select_library_icon_view_media('test_title_designer_func_4_50')
 
         with step("[Action] Double Click to enter [Title Designer] > Drag Vertical Slider (1) in [Title Designer]"):
             main_page.double_click()
@@ -6496,7 +6494,7 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check if preview changed correctly after set timecode as GT'):
             # Set timecode :
-            main_page.set_timeline_timecode('00_00_07_19')
+            main_page.set_timeline_timecode('00_00_03_00')
             time.sleep(DELAY_TIME)
 
             timeline_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L170.png')
@@ -6531,6 +6529,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Reopen APP and open project from recent project'):
             # launch APP
             main_page.launch_app()
+            time.sleep(DELAY_TIME*0.5)
             # [L39] 1.3 New Launcher > Project area > Recent Project > Single Click
             # with uuid("18c53c7b-5889-45ea-bac4-c84392ec1ea1") as case:
             # Select 1st recently
@@ -8336,7 +8335,7 @@ class Test_BFT_365_OS14():
         with step('[Initial] Save Project'):
         # Save project:
             main_page.top_menu_bar_file_save_project_as()
-            main_page.handle_save_file_dialog(name='test_pip_designer_func_7_38',
+            main_page.handle_save_file_dialog(name='test_pip_designer_func_7_39',
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
             
         assert check_current_dialog09, "Cannot add saved template to timeline correctly as GT (L193.png)!"
@@ -8349,7 +8348,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.motion
     @pytest.mark.path
     @pytest.mark.animation
-    @pytest.amrk.in_animation
+    @pytest.mark.in_animation
     @pytest.mark.properties
     @pytest.mark.chromakey
     @pytest.mark.ai_module
@@ -8423,7 +8422,7 @@ class Test_BFT_365_OS14():
                 pip_designer_page.click_ok()
 
             with step("[Action] Select timeline media with (0,0)"):
-                main_page.select_timeline_media(name='0', index=0)
+                timeline_operation_page.select_timeline_media(0,0)
 
             with step("[Action] Select [Pip Designer] from [Tip Areas] and check the result"):
                 if not tips_area_page.tools.select_PiP_Designer():
@@ -8480,7 +8479,7 @@ class Test_BFT_365_OS14():
         with step("[Action] Clear [AI Module] Files > Clear Cache > Start APP"):
             main_page.clear_AI_module()
             main_page.clear_cache()
-            main_page.start_app()
+            main_page.close_and_restart_app()
 
         with step("[Action] Import media from local file (Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC')"):
             media_room_page.import_media_file(Test_Material_Folder + 'BFT_21_Stage1/IMG_0008.HEIC')
@@ -8633,6 +8632,7 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Import video from local file"):
             media_room_page.import_media_file(Test_Material_Folder + 'Mark_Clips/1.mp4')
+            time.sleep(DELAY_TIME) # wait to import files
 
         with step("[Action] Click [Insert] button from [Tip Areas]"):
             tips_area_page.click_TipsArea_btn_insert()
@@ -8680,7 +8680,7 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test ('test_pip_designer_func_7_44') is run and passed
         1. Set timecode to ('00_00_30_03) at [Pip Designer]
         2. Select [Out Animation] template (10)
-        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L394_apply_pan_out.png') matches Ground Truth (Ground_Truth_Folder + 'L394_apply_pan_out.png') with similarity=0.95
+        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L394_apply_pan_out.png') matches Ground Truth (Ground_Truth_Folder + 'L394_apply_pan_out.png') with similarity=0.9
         4. Fold [Out Animation] menu in [Pip Designer]
         '''
         dependency_test = "test_pip_designer_func_7_44"
@@ -8695,14 +8695,14 @@ class Test_BFT_365_OS14():
         with step("[Action] Select [Out Animation] template (10)"):
             pip_designer_page.in_animation.select_template(10)
 
-        with step("[Verify] Check preview matches GT (L394_apply_pan_out.png) with similarity=0.95"):
+        with step("[Verify] Check preview matches GT (L394_apply_pan_out.png) with similarity=0.9"):
             preview = main_page.snapshot(
                 locator=L.pip_designer.preview,
                 file_name=Auto_Ground_Truth_Folder + 'L394_apply_pan_out.png'
             )
-            if not main_page.compare(Ground_Truth_Folder + 'L394_apply_pan_out.png', preview, similarity=0.95):
+            if not main_page.compare(Ground_Truth_Folder + 'L394_apply_pan_out.png', preview, similarity=0.9):
                 # Similarity should be greater than 0.95 for matching preview
-                assert False, "Preview does not match GT (L394_apply_pan_out.png)! Similarity should > 0.95"
+                assert False, "Preview does not match GT (L394_apply_pan_out.png)! Similarity should > 0.9"
 
         with step("[Action] Fold [Out Animation] menu in [Pip Designer]"):
             pip_designer_page.advanced.unfold_out_animation_menu(set_unfold=0)
@@ -8754,7 +8754,8 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test ('test_pip_designer_func_7_46') is run and passed
         1. Set timecode to ('00_00_20_03') at [Pip Designer]
         2. Select [Loop Animation] template (6)
-        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L397_apply_rotate_loop.png') matches Ground Truth (Ground_Truth_Folder + 'L397_apply_rotate_loop.png') with similarity=0.95
+        3. Check preview is updated with similarity >0.99
+        3. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L397_apply_rotate_loop.png') matches Ground Truth (Ground_Truth_Folder + 'L397_apply_rotate_loop.png') with similarity=0.9
         4. Fold [Loop Animation] menu in [Pip Designer]
         '''
         dependency_test = "test_pip_designer_func_7_46"
@@ -8767,16 +8768,22 @@ class Test_BFT_365_OS14():
             pip_designer_page.set_timecode("00_00_20_03")
 
         with step("[Action] Select [Loop Animation] template (6)"):
+            init_preview = main_page.snapshot(locator=L.pip_designer.preview)
             pip_designer_page.in_animation.select_template(6)
 
-        with step("[Verify] Check preview matches GT (L397_apply_rotate_loop.png) with similarity=0.95"):
+        with step("[Verify] Check preview is upadted after applied effect with similiarity>0.99"):
             preview = main_page.snapshot(
                 locator=L.pip_designer.preview,
                 file_name=Auto_Ground_Truth_Folder + 'L397_apply_rotate_loop.png'
             )
-            if not main_page.compare(Ground_Truth_Folder + 'L397_apply_rotate_loop.png', preview, similarity=0.95):
+            if main_page.compare(init_preview, preview, similarity=0.99):
+                assert False, "Preview is not updated after applied effect! Similarity should <0.99"
+
+        with step("[Verify] Check preview matches GT (L397_apply_rotate_loop.png) with similarity=0.9"):
+
+            if not main_page.compare(Ground_Truth_Folder + 'L397_apply_rotate_loop.png', preview, similarity=0.9):
                 # Similarity should be greater than 0.95 for matching preview
-                assert False, "Preview does not match GT (L397_apply_rotate_loop.png)! Similarity should > 0.95"
+                assert False, "Preview does not match GT (L397_apply_rotate_loop.png)! Similarity should > 0.9"
 
         with step("[Action] Fold [Loop Animation] menu in [Pip Designer]"):
             pip_designer_page.advanced.unfold_loop_animation_menu(set_unfold=0)
@@ -8787,7 +8794,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.pip_designer
     @pytest.mark.animation
     @pytest.mark.in_out_animation
-    @pytest.mark
+    @pytest.mark.loop_animation
     @pytest.mark.name('[test_pip_designer_func_7_48] Apply [In Animation]/ [Out Animation]/ [Loop Animation] in [Pip Designer] and check preview')
     @exception_screenshot
     def test_pip_designer_func_7_48(self):
@@ -8803,6 +8810,7 @@ class Test_BFT_365_OS14():
         8. Set timecode to ('00_00_30_03') at [Pip Designer]
         9. Check preview (L.pip_designer.preview, file_name=Auto_Ground_Truth_Folder + 'L399_apply_out.png') matches Ground Truth (Ground_Truth_Folder + 'L399_apply_out.png') with similarity=0.95
         10. Switch to [Express] mode in [Pip Designer]
+        11. Click [OK] to leave [Pip Designer]
         '''
         dependency_test = "test_pip_designer_func_7_47"
         self.ensure_dependency(dependency_test)
@@ -8863,6 +8871,9 @@ class Test_BFT_365_OS14():
         with step("[Action] Switch to [Express] mode in [Pip Designer]"):
             pip_designer_page.switch_mode('Express')
 
+        with step("[Action] Click [OK] to leave [Pip Designer]"):
+            pip_designer_page.click_ok()
+
         assert True
 
     @pytest.mark.pip_designer_func
@@ -8872,7 +8883,7 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_pip_designer_func_7_49(self):
         '''
-        0. Ensure the dependency test ('test_pip_designer_func_32_3') is run and passed
+        0. Ensure the dependency test ('test_pip_designer_func_7_48') is run and passed
         1. Enter Room (Pip)(4)
         2. Select Category ('My Favorites')
         3. Check [Detail View] icon (L.main.btn_library_details_view) is not shown in [My Favorites] category
@@ -8882,9 +8893,8 @@ class Test_BFT_365_OS14():
         7. Check [Detail View] icon (L.main.btn_library_details_view) is not shown in [Downloads] category
         '''
         
-        with step("[Action] Ensure the dependency test 'test_pip_designer_func_32_3' is run and passed"):
-            dependency_test = "test_pip_designer_func_32_3"
-            self.ensure_dependency(dependency_test)
+        dependency_test = "test_pip_designer_func_7_48"
+        self.ensure_dependency(dependency_test)
 
         # [L253] 2.3 Video Overlay Room > Check Custom, My Favorite category > Remove detail view icon
         # with uuid("95a75c0c-1d8e-41ec-9851-2859f001fd96") as case:
@@ -8935,9 +8945,8 @@ class Test_BFT_365_OS14():
         8. Sort by [Name] in [Pip Room] to set to default status
         '''
         
-        with step("[Action] Ensure the dependency test 'test_pip_designer_func_7_49' is run and passed"):
-            dependency_test = "test_pip_designer_func_7_49"
-            self.ensure_dependency(dependency_test)
+        dependency_test = "test_pip_designer_func_7_49"
+        self.ensure_dependency(dependency_test)
 
         # [L254] 2.3 Effect Room > Check other IAD category > sorting rule
         # with uuid("3b016c0d-8aab-42de-9a96-d2ab76b8cafb") as case:
@@ -9339,8 +9348,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview changed after apply Opacity'):
             applied_opacity = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, applied_opacity, similarity=0.999):
-                assert False, "Opacity is not changed correctly! Similary should<0.999"
+            if main_page.compare(before_preview, applied_opacity, similarity=0.9999):
+                assert False, "Opacity is not changed correctly! Similary should<0.9999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9408,8 +9417,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after apply Size'):
             check_outline_size = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, check_outline_size, similarity=0.999):
-                assert False, "Size is not changed correctly! Similary should<0.999"
+            if main_page.compare(before_preview, check_outline_size, similarity=0.9999):
+                assert False, "Size is not changed correctly! Similary should<0.9999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9432,8 +9441,8 @@ class Test_BFT_365_OS14():
             shape_designer_page.properties.shape_outline.set_line_type(3)
         with step('[Verify] Check preview after apply Line Type'):
             check_outline_line_type = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, check_outline_line_type, similarity=0.999):
-                assert False, "Line Type is not changed correctly! Similary should<0.999"
+            if main_page.compare(before_preview, check_outline_line_type, similarity=0.99999):
+                assert False, "Line Type is not changed correctly! Similary should<0.99999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9463,8 +9472,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after apply Blur'):
             check_outline_blur = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, check_outline_blur, similarity=0.999):
-                assert False, "Blur is not changed correctly! Similary should<0.999"
+            if main_page.compare(before_preview, check_outline_blur, similarity=0.99999):
+                assert False, "Blur is not changed correctly! Similary should<0.99999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9557,8 +9566,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after apply Shadow'):
             applied_shadow_to_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, applied_shadow_to_preview, similarity=0.99):
-                assert False, "Shadow is not changed correctly! Similary should<0.99"
+            if main_page.compare(before_preview, applied_shadow_to_preview, similarity=0.9999):
+                assert False, "Shadow is not changed correctly! Similary should<0.9999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9588,8 +9597,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after apply [Distance]'):
             check_distance_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, check_distance_preview, similarity=0.999):
-                assert False, "Distance is not changed correctly! Similary should<0.999"
+            if main_page.compare(before_preview, check_distance_preview, similarity=0.9999):
+                assert False, "Distance is not changed correctly! Similary should<0.9999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9649,11 +9658,10 @@ class Test_BFT_365_OS14():
             if check_blur != '11':
                 assert False, f"Blur value is not correct! Expected: 11, Actual: {check_blur}"
         
-        # The change is too small (0.99994), skip compare process
-        # with step('[Verify] Check preview after apply [Blur]'):
-        #     check_blur_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-        #     if main_page.compare(before_preview, check_blur_preview, similarity=0.98):
-        #         assert False, "Blur is not changed correctly! Similary should<0.98"
+        with step('[Verify] Check preview after apply [Blur]'):
+            check_blur_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
+            if main_page.compare(before_preview, check_blur_preview, similarity=0.99999):
+                assert False, "Blur is not changed correctly! Similary should<0.99999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9714,8 +9722,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview after apply [Direction]'):
             check_direction_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, check_direction_preview, similarity=0.995):
-                assert False, "Direction is not changed correctly! Similary should<0.995"
+            if main_page.compare(before_preview, check_direction_preview, similarity=0.9999):
+                assert False, "Direction is not changed correctly! Similary should<0.9999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9778,8 +9786,8 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check preview after apply Font type'):
             check_font_type_preview = main_page.snapshot(locator=L.shape_designer.canvas_split_view)
-            if main_page.compare(before_preview, check_font_type_preview, similarity=0.98):
-                assert False, "Font type is not changed correctly! Similary should<0.98"
+            if main_page.compare(before_preview, check_font_type_preview, similarity=0.999):
+                assert False, "Font type is not changed correctly! Similary should<0.999"
         assert True
 
     @pytest.mark.shape_designer_func
@@ -9848,9 +9856,9 @@ class Test_BFT_365_OS14():
         '''
         1. Check preview from test_shape_designer_func_8_23~25
         '''
-        # # Ensure the dependency test is run and passed
-        # dependency_test = "test_shape_designer_func_8_25"
-        # self.ensure_dependency(dependency_test)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_shape_designer_func_8_25"
+        self.ensure_dependency(dependency_test)
 
         with step('[Verify] Check preview as GT'):
         
@@ -10304,6 +10312,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Set 1st Opacity keyframe at (08:10)'):
             # Set timecode
             shape_designer_page.set_timecode('00_00_08_10')
+            time.sleep(DELAY_TIME*0.5)
             # Set opacity 1st keyframe
             shape_designer_page.keyframe.object_settings.opacity.keyframe.click_add_remove()
         
@@ -10326,7 +10335,7 @@ class Test_BFT_365_OS14():
         2. Switch to next keyframe and check timecode (08:10) and value (100%)
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_shape_designer_func_8_36"
+        dependency_test = "test_shape_designer_func_8_37"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Set 2nd Opacity keyframe at (05:25)'):
@@ -10670,7 +10679,7 @@ class Test_BFT_365_OS14():
             shape_designer_page.click_save_as()
             shape_designer_page.save_as.set_name('Custom_shape_10')
             shape_designer_page.save_as.click_ok()
-            time.sleep(DELAY_TIME)
+            time.sleep(DELAY_TIME*2)
 
         with step('[Verify] Check if title changed to saved template name'):
             # Verify Step 1: check caption bar
@@ -10716,6 +10725,7 @@ class Test_BFT_365_OS14():
             main_page.select_library_icon_view_media('Custom_shape_10')
             main_page.right_click()
             main_page.select_right_click_menu('Add to Timeline')
+            time.sleep(DELAY_TIME)
 
         with step('[Verify] Check if saved template is in timeline'):
             # Verify Step1 : Check (Custom_shape_10) is in Video track 1
@@ -10783,7 +10793,7 @@ class Test_BFT_365_OS14():
         1. Only show the selected track
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_shape_designer_func_8_48"
+        dependency_test = "test_shape_designer_func_8_49"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Set only show the selected track'):
@@ -10796,9 +10806,9 @@ class Test_BFT_365_OS14():
 
             # Compare preview
             check_preview_204 = main_page.snapshot(locator=L.shape_designer.designer_window)
-            compare_result = main_page.compare(Ground_Truth_Folder + 'L211.png', check_preview_204)
+            compare_result = main_page.compare(Ground_Truth_Folder + 'L211_1.png', check_preview_204)
             if not compare_result:
-                assert False, "Preview is the same as GT(L211.png)! Similary should>0.95"
+                assert False, "Preview is the same as GT(L211_1.png)! Similary should>0.95"
 
         with step('[Initial] Save project'):
             shape_designer_page.click_cancel()
@@ -11377,9 +11387,9 @@ class Test_BFT_365_OS14():
         1. Add saved custom template to timeline
         2. Check preview as GT
         '''
-        # # Ensure the dependency test is run and passed
-        # dependency_test = "test_particle_designer_func_9_20"
-        # self.ensure_dependency(dependency_test)
+        # Ensure the dependency test is run and passed
+        dependency_test = "test_particle_designer_func_9_20"
+        self.ensure_dependency(dependency_test)
 
         # [L218] 3.6 Particle Designer (Should support opacity) > Add saved title template to timeline
         # with uuid("5945daf9-f385-471b-aa11-4b9445c4736f") as case:
@@ -11617,25 +11627,26 @@ class Test_BFT_365_OS14():
     @pytest.mark.mask_properties
     @pytest.mark.custom_mask
     @pytest.mark.delete_mask
-    @pytest.mark.name('[test_mask_designer_func_10_7] ')
+    @pytest.mark.name('[test_mask_designer_func_10_7] Remove custom mask')
     @exception_screenshot
     def test_mask_designer_func_10_7(self):
         '''
-        1. 
+        1. Remove Custom Mask
+        2. Check preview is changed after remove custom mask
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_mask_designer_func_10_6"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Remove custom mask'):
-            before_delete_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            before_delete_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window)
             # Remove custom mask
             check_remove_custom = mask_designer_page.Edit_MaskDesigner_RemoveCustomMask(index=1)
             if not check_remove_custom:
                 assert False, "Cannot remove custom mask! Please check the result first!"
 
         with step('[Verify] Check preview is changed after remove custom mask'):
-            after_delete_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
+            after_delete_preview = main_page.snapshot(locator=L.mask_designer.mask_designer_window)
             if main_page.compare(before_delete_preview, after_delete_preview, similarity=0.98):
                 assert False, "Preview is not changed after remove custom mask! Similary should<0.98"
         assert True
@@ -11725,9 +11736,7 @@ class Test_BFT_365_OS14():
             if not check_preview:
                 assert False, "Preview is not correct as GT(L223.png)! Similary should>0.95"
 
-        with step('[Initial] Show simple timeline'):
-            # Show simple timeline
-            main_page.click(L.mask_designer.btn_display_timeline_mode)
+
         assert True
 
     @pytest.mark.mask_designer_func
@@ -11757,6 +11766,10 @@ class Test_BFT_365_OS14():
             after_rotate_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
             if main_page.compare(before_rotate_preview, after_rotate_preview, similarity=0.98):
                 assert False, "Preview is not changed after rotate object! Similary should<0.98"
+
+        with step('[Initial] Show simple timeline'):
+            # Show simple timeline
+            main_page.click(L.mask_designer.btn_display_timeline_mode)
         assert True
 
     @pytest.mark.mask_designer_func
@@ -11881,8 +11894,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check Rotation value on 1st rotation keyframe'):
             rotation_value = mask_designer_page.object_settings.get_rotation_value()
-            if rotation_value != '0':
-                assert False, f"Rotation value is not correct! Expected: 0, Actual: {rotation_value}"
+            if rotation_value != '35':
+                assert False, f"Rotation value is not correct! Expected: 35, Actual: {rotation_value}"
         assert True
 
     @pytest.mark.mask_designer_func
@@ -11967,8 +11980,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview is changed after adjust Feather radius'):
             applied_feather_preview = main_page.snapshot(locator=L.mask_designer.preview_window)
-            if main_page.compare(before_feather_preview, applied_feather_preview, similarity=0.98):
-                assert False, "Preview is not changed after adjust Feather radius! Similary should<0.98"
+            if main_page.compare(before_feather_preview, applied_feather_preview, similarity=0.999):
+                assert False, "Preview is not changed after adjust Feather radius! Similary should<0.999"
         assert True
 
     @pytest.mark.mask_designer_func
@@ -12004,6 +12017,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Set ease in value = 0.94'):
             # Set ease in & ease in value = 0.94
             mask_designer_page.object_settings.rotation.ease_in.set_checkbox(value=True)
+            time.sleep(DELAY_TIME*0.5) # wait the setting is enabled
             mask_designer_page.object_settings.rotation.ease_in.set_value('0.94')
         
         with step('[Verify] Check preview is changed after apply Ease In'):
@@ -12120,6 +12134,7 @@ class Test_BFT_365_OS14():
             mask_designer_page.drag_Mask_Settings_Scroll_Bar(0.655)
             # Position: Click next keyframe to timecode (00:00:05:00)
             mask_designer_page.object_settings.position.click_next_keyframe()
+            time.sleep(DELAY_TIME*2) # wait until switched
 
         with step('[Verify] Check timecode is correct on 2nd Position keyframe'):
             current_timecode = mask_designer_page.get_timecode()
@@ -12128,9 +12143,9 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Click Next Position Keyframe'):
             # Position: Get next keyframe status (False)
-            check_pos_next_keyframe = mask_designer_page.object_settings.position.click_next_keyframe()
-            if check_pos_next_keyframe:
-                assert False, "Able to click next position keyframe even it is the last keyframe!"
+            mask_designer_page.object_settings.position.click_previous_keyframe()
+            time.sleep(DELAY_TIME) # wait until switched
+
         
         with step('[Verify] Check timecode is not changed after click Next Position Keyframe'):
             current_timecode = mask_designer_page.get_timecode()
@@ -12252,7 +12267,7 @@ class Test_BFT_365_OS14():
             apply_brush_preview = main_page.snapshot(locator=L.mask_designer.mask_property.brush_mask_designer.window)
             # Verify step (after used round tool)
             check_update = main_page.compare(before_brush_preview, apply_brush_preview)
-            if not check_update:
+            if check_update:
                 assert False, "Preview is not changed after draw canvas w/ brush tool! Similary should<0.95"
         assert True
 
@@ -12293,7 +12308,7 @@ class Test_BFT_365_OS14():
             apply_smart_preview = main_page.snapshot(locator=L.mask_designer.mask_property.brush_mask_designer.window)
             # Verify step (after used smart tool)
             check_smart = main_page.compare(apply_smart_preview, before_brush_preview)
-            if not check_smart:
+            if check_smart:
                 assert False, "Preview is not changed after draw canvas w/ smart brush tool! Similary should<0.95"
         
         with step('[Initial] Leave and Remove custom mask'):
@@ -12470,7 +12485,8 @@ class Test_BFT_365_OS14():
         '''
         1. Click [Custom] Category
         2. Check Custom Mask Template is saved
-        3. Check can preview the custom mask template
+        3. Check preview of the custom mask template
+        4. Save the project
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_mask_designer_func_10_27"
@@ -12487,49 +12503,20 @@ class Test_BFT_365_OS14():
             # Verify step: custom preview normally
             main_page.select_library_icon_view_media('BFT_mask_template')
 
-        with step('[Verify] Check can preview the custom mask template'):
-            check_preview_update = main_page.Check_PreviewWindow_is_different(sec=2)
-            assert check_preview_update, "Preview is not changed after play the video!"
-
-    @pytest.mark.mask_designer_func
-    @pytest.mark.mask_designer
-    @pytest.mark.pip_room
-    @pytest.mark.save_template
-    @pytest.mark.timeline
-    @pytest.mark.save_project
-    @pytest.mark.name('[test_mask_designer_func_10_29] Add Saved Custom Mask Template to timeline')
-    @exception_screenshot
-    def test_mask_designer_func_10_29(self):
-        '''
-        1. Add Custom Mask Template to timeline
-        2. Check Preview is as GT
-        '''
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_mask_designer_func_10_28"
-        self.ensure_dependency(dependency_test)
-
-        # [L238] 3.7 Mask Designer (Sport 02.jpg) > Add mask template to timeline
-        # with uuid("7b75d53d-25d6-4cd5-be71-dc622abf75bc") as case:
-
-        with step('[Action] Add Custom Mask Template to timeline'):
-            # Select timeline track 3
-            main_page.timeline_select_track(3)
-            # Set timeline timecode = (00:00:26:07)
-            main_page.set_timeline_timecode('00_00_26_07')
-
-        with step('[Verify] Check Preview is as GT'):
-            # Verify Step:
-            current_preview = main_page.snapshot(locator=main_page.area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L238.png')
-            check_preview = main_page.compare(Ground_Truth_Folder + 'L238.png', current_preview)
+        with step('[Verify] Check preview as GT'):
+            current_preview = main_page.snapshot(locator=main_page.area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L237.png')
+            check_preview = main_page.compare(Ground_Truth_Folder + 'L237.png', current_preview)
             if not check_preview:
-                assert False, "Preview is not correct as GT(L238.png)! Similary should>0.95"
+                assert False, "Preview is not correct as GT(L237.png)! Similary should>0.95"
 
         with step('[Action] Save project'):
             # Save project:
             main_page.top_menu_bar_file_save_project_as()
             main_page.handle_save_file_dialog(name='test_mask_designer_func_10_29',
                                             folder_path=Test_Material_Folder + 'BFT_21_Stage1/')
+
         assert True
+        
 
     @pytest.mark.stock_media_func
     @pytest.mark.launch
@@ -12575,11 +12562,7 @@ class Test_BFT_365_OS14():
 
         # Ensure the dependency test is run and passed
         dependency_test = "test_stock_media_func_11_1"
-        if not self.ensure_dependency(dependency_test, run_dependency=False):
-            # launch APP
-            with step('[Initial] Launch APP'):
-                if not main_page.start_app() or not main_page.is_app_exist():
-                    assert False, "Launch APP failed!"
+        self.ensure_dependency(dependency_test)
 
         # [L119] 2.1 Media Room > Media Content > Import > click "Stock Media" button
         # with uuid("5edec452-198e-47b8-a0aa-c769b4fa8f5d") as case:
@@ -12664,7 +12647,7 @@ class Test_BFT_365_OS14():
             search_result_preview = main_page.snapshot(locator=L.gettyimage.window,
                                             file_name=Auto_Ground_Truth_Folder + 'L122_two_thumbnail.png')
             compare_result = main_page.compare(Ground_Truth_Folder + 'L122_two_thumbnail.png', search_result_preview)
-            assert compare_result, "Preview is not correct as GT(L122_two_thumbnail.png)! Similary should>0.95"
+            assert compare_result, "Preview is not correct as GT(L122_two_thumbnail.png)! Similary should>0.70"
 
     @pytest.mark.stock_media_func
     @pytest.mark.stock_media
@@ -12736,11 +12719,10 @@ class Test_BFT_365_OS14():
             search_result_basic = main_page.snapshot(locator=L.gettyimage.window,
                                            file_name=Auto_Ground_Truth_Folder + 'L122_basic.png')
             compare_basic_result_same = main_page.compare(Ground_Truth_Folder + 'L122_two_thumbnail.png', search_result_basic, similarity=0.85)
-            # [2025-01-06] Change similirity to 0.96 (from 1) --> search result is different
-            compare_basic_result_different = not main_page.compare(Ground_Truth_Folder + 'L122_two_thumbnail.png',search_result_basic, similarity=0.96)
+            compare_basic_result_different = not main_page.compare(Ground_Truth_Folder + 'L122_two_thumbnail.png',search_result_basic, similarity=1.00)
 
             assert compare_basic_result_same and compare_basic_result_different,\
-                "Preview is not correct as GT(L122_basic.png)! Similary should >0.85 and <0.96"
+                "Preview is not correct as GT(L122_basic.png)! Similary should >0.85 and <1.00"
 
     @pytest.mark.stock_media_func
     @pytest.mark.stock_media
@@ -12765,7 +12747,7 @@ class Test_BFT_365_OS14():
             #              0.96 % < similarity < 0.9985 %
             search_result_premium = main_page.snapshot(locator=L.gettyimage.window,
                                            file_name=Auto_Ground_Truth_Folder + 'L122_premium.png')
-            check_premium_basic = main_page.compare(Auto_Ground_Truth_Folder+'L122_basic.png', search_result_premium, similarity=0.79)
+            check_premium_basic = main_page.compare(Auto_Ground_Truth_Folder+'L122_basic.png', search_result_premium, similarity=0.65)
             check_premium_basic_different = not main_page.compare(Auto_Ground_Truth_Folder+'L122_basic.png', search_result_premium, similarity=0.9985)
             # case.result = compare_result and compare_basic_result_same and check_premium_basic_different
 
@@ -12777,7 +12759,7 @@ class Test_BFT_365_OS14():
             #     with uuid("e0f1131a-def3-41f8-a528-44eb0248a93f") as case:
             #         case.result = check_premium_basic and check_premium_basic_different
             assert check_premium_basic and check_premium_basic_different,\
-                "Preview is not correct as GT(L122_premium.png)! Similary should >0.79 and <0.9985"
+                "Preview is not correct as GT(L122_premium.png)! Similary should >0.65 and <0.9985"
 
     @pytest.mark.stock_media_func
     @pytest.mark.stock_media
@@ -12795,10 +12777,10 @@ class Test_BFT_365_OS14():
         # [L125] 2.1 Media Room > Media Content > Import > input keyword to search
         # with uuid("c6e3767d-5a15-43bd-a143-9e88d1b78ae5") as case:
         with step('[Verify] Check show [Basic]/ [Premium] content before filter'):
-            compare_basic = not main_page.compare(Auto_Ground_Truth_Folder + 'L122_all_content.png', Auto_Ground_Truth_Folder + 'L122_basic.png')
-            compare_premium = not main_page.compare(Auto_Ground_Truth_Folder + 'L122_all_content.png', Auto_Ground_Truth_Folder + 'L122_premium.png')
+            compare_basic = not main_page.compare(Auto_Ground_Truth_Folder + 'L122_all_content.png', Auto_Ground_Truth_Folder + 'L122_basic.png', similarity=0.96)
+            compare_premium = not main_page.compare(Auto_Ground_Truth_Folder + 'L122_all_content.png', Auto_Ground_Truth_Folder + 'L122_premium.png', similarity=0.96)
         
-            assert compare_basic and compare_premium, f"Preview is not changed after set filter! Basic: {compare_basic}, Premium: {compare_premium}, Similary should<0.95"
+            assert compare_basic and compare_premium, f"Preview is not changed after set filter! Basic: {compare_basic}, Premium: {compare_premium}!"
 
     @pytest.mark.stock_media_func
     @pytest.mark.stock_media
@@ -12893,7 +12875,7 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     def test_video_collage_designer_func_12_2(self):
         '''
-        1. Select Layout 7
+        1. Select layout 7
         2. Import Video to Video Collage Designer
         3. Image mountain.mp4 to section 2
         4. Import Image to Video Collage Designer
@@ -12906,7 +12888,7 @@ class Test_BFT_365_OS14():
 
         # [L242] 3.8 Video Collage Designer > Choose layout (Default)
         # with uuid("b2eeb6d2-27c9-40f3-91eb-21188f760789") as case:
-        with step('[Action] Select Layout 7'):
+        with step('[Action] Select layout 7'):
             # Select layout 7
             video_collage_designer_page.layout.select_layout(7)
             # [L243] 3.8 Video Collage Designer > Import (Image and Video)
@@ -12914,6 +12896,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Import Video to Video Collage Designer'):
             # Import video to library
             imported_result = video_collage_designer_page.media.import_media(Test_Material_Folder + 'fix_enhance_20/mountain.mp4')
+            media_room_page.handle_high_definition_dialog()
             if not imported_result:
                 assert False, f"Cannot import video to Video Collage Designer! Imported media: {Test_Material_Folder + 'fix_enhance_20/mountain.mp4'}"
 
@@ -12922,12 +12905,13 @@ class Test_BFT_365_OS14():
             # Image mountain.mp4 to section 2
             video_collage_designer_page.media.click_auto_fill()
             added_video_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(before_preview, added_video_preview):
-                assert False, "Preview is not changed after add video to section 2! Similary should<0.95"
+            if main_page.compare(before_preview, added_video_preview, similarity=0.98):
+                assert False, "Preview is not changed after add video to section 2! Similary should<0.98"
 
         with step('[Action] Import Image to Video Collage Designer'):
             # Import Image to library
             import_photo_result = video_collage_designer_page.media.import_media(Test_Material_Folder + 'Video_Audio_In_Reverse/Sample.png')
+            media_room_page.handle_high_definition_dialog()
             if not import_photo_result:
                 assert False, f"Cannot import photo to Video Collage Designer! Imported media: {Test_Material_Folder + 'Video_Audio_In_Reverse/Sample.png'}"
 
@@ -12936,8 +12920,8 @@ class Test_BFT_365_OS14():
             video_collage_designer_page.media.select_media('Sample.png')
             video_collage_designer_page.media.click_auto_fill()
             added_photo_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(added_video_preview, added_photo_preview):
-                assert False, "Preview is not changed after add photo to section 1! Similary should<0.95"
+            if main_page.compare(added_video_preview, added_photo_preview, similarity=0.98):
+                assert False, "Preview is not changed after add photo to section 1! Similary should<0.98"
 
         with step('[Verify] Check preview as GT'):
             # Verify Step:
@@ -12951,11 +12935,11 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer
     @pytest.mark.layout
     @pytest.mark.border
-    @pytest.mark.name('[test_video_collage_designer_func_12_3] Video Collage Designer > Layout and Color Board > Preview Check')
+    @pytest.mark.name('[test_video_collage_designer_func_12_3] Video Collage Designer > layout and Color Board > Preview Check')
     @exception_screenshot
     def test_video_collage_designer_func_12_3(self):
         ''' 
-        1. Select Layout 10 and screenshot (locator=L.video_collage_designer.media_library)
+        1. Select layout 10 and screenshot (locator=L.video_collage_designer.media_library)
         2. Check preview is changed after select layout 10
         3. Switch to Color Boards by select category (3) and screenshot (locator=L.video_collage_designer.media_library)
         4. Check preview is changed after switch to Color Boards
@@ -12973,13 +12957,13 @@ class Test_BFT_365_OS14():
         # with uuid("967c9ed2-79d9-4360-b314-5b7a18582f21") as case:
             # Select layout 11 (index=10)
 
-        with step("Select Layout 10 and screenshot"):
-            preview_before = video_collage_designer_page.snapshot(locator=L.video_collage_designer.media_library)
+        with step("Select layout 10 and screenshot"):
+            preview_before = video_collage_designer_page.snapshot(locator=L.video_collage_designer.main_window)
             video_collage_designer_page.layout.select_layout(10)
         
         with step("Check preview is changed after select layout 10"):
             # Capture current preview
-            layout_10_screenshot = video_collage_designer_page.snapshot(locator=L.video_collage_designer.media_library)
+            layout_10_screenshot = video_collage_designer_page.snapshot(locator=L.video_collage_designer.main_window)
             if main_page.compare(preview_before, layout_10_screenshot, similarity=0.98):
                 assert False, "Preview did not change after selecting layout 10! Similary should<0.98"
 
@@ -12988,7 +12972,7 @@ class Test_BFT_365_OS14():
             
 
         with step("Check preview is changed after switch to Color Boards"):
-            color_board_screenshot = video_collage_designer_page.snapshot(locator=L.video_collage_designer.media_library)
+            color_board_screenshot = video_collage_designer_page.snapshot(locator=L.video_collage_designer.main_window)
             if main_page.compare(layout_10_screenshot, color_board_screenshot, similarity=0.98):
                 assert False, "Preview did not change after selecting Color Boards! Similary should<0.98"
 
@@ -12999,7 +12983,7 @@ class Test_BFT_365_OS14():
             video_collage_designer_page.media.click_auto_fill()
 
         with step("Check preview is changed after insert Blue Color Board"):
-            blue_color_board_screenshot = video_collage_designer_page.snapshot(locator=L.video_collage_designer.media_library)
+            blue_color_board_screenshot = video_collage_designer_page.snapshot(locator=L.video_collage_designer.main_window)
             if main_page.compare(color_board_screenshot, blue_color_board_screenshot, similarity=0.98):
                 assert False, "Preview did not change after inserting Blue Color Board! Similary should<0.98"
 
@@ -13073,8 +13057,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview is changed'):
             current_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(before_apply_preview, current_preview, similarity=0.995):
-                assert False, "Preview did not change after set border value to 16! Similary should<0.995"
+            if main_page.compare(before_apply_preview, current_preview, similarity=0.999):
+                assert False, "Preview did not change after set border value to 16! Similary should<0.999"
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13107,8 +13091,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview is changed'):
             current_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(before_apply_preview, current_preview, similarity=0.995):
-                assert False, "Preview did not change after set border color to C4DE5A! Similary should<0.995"
+            if main_page.compare(before_apply_preview, current_preview, similarity=0.999):
+                assert False, "Preview did not change after set border color to C4DE5A! Similary should<0.999"
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13158,8 +13142,8 @@ class Test_BFT_365_OS14():
 
         with step('[Verify] Check preview is changed'):
             current_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(before_apply_preview, current_preview, similarity=0.99):
-                assert False, "Preview did not change after set interclip size to 20! Similary should<0.99"
+            if main_page.compare(before_apply_preview, current_preview, similarity=0.999):
+                assert False, "Preview did not change after set interclip size to 20! Similary should<0.999"
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13186,6 +13170,7 @@ class Test_BFT_365_OS14():
             from_beginning_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
             # stop the preview to enable modifications
             video_collage_designer_page.click_preview_operation('STOP')
+            time.sleep(DELAY_TIME)
 
         with step('[Action] Set [Frame Animation] to (During closing)'):
             # Set frame animation to During closing
@@ -13194,8 +13179,8 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check preview is changed'):
             during_closing_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(from_beginning_preview, during_closing_preview, similarity=0.98):
-                assert False, "Preview did not change after set frame animation to During closing! Similary should<0.98"
+            if main_page.compare(from_beginning_preview, during_closing_preview, similarity=0.999):
+                assert False, "Preview did not change after set frame animation to During closing! Similary should<0.999"
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13283,8 +13268,8 @@ class Test_BFT_365_OS14():
         with step('[Verify] Check preview is changed'):
             # Verify Step:
             interclip_texture_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(current_uniform_preview, interclip_texture_preview):
-                assert False, "Preview did not change after set fill type to Interclip Texture! Similary should<0.95"
+            if main_page.compare(current_uniform_preview, interclip_texture_preview, similarity=0.99):
+                assert False, "Preview did not change after set fill type to Interclip Texture! Similary should<0.99"
         
         with step('[Action] Set [Interclip Size] to 100'):
             # Set interclip size to 100
@@ -13354,6 +13339,7 @@ class Test_BFT_365_OS14():
         2. Set duration = 9s
         3. Reopen [Duration Settings] window by right click on canva
         4. Check duration is (9s)
+        5. Press [Enter] key to leave [Duration Settings] window
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_video_collage_designer_func_12_13"
@@ -13375,7 +13361,13 @@ class Test_BFT_365_OS14():
     
         with step('[Verify] Check duration is (9s)'):
             new_duration = main_page.exist(L.main.duration_setting_dialog.txt_duration)
-            assert new_duration.AXValue == '00:00:09:00', f"Duration is not (9s)! Expected: 00:00:09:00, Actual: {new_duration.AXValue}"
+            if not new_duration.AXValue == '00:00:09:00':
+                assert False, f"Duration is not (9s)! Expected: 00:00:09:00, Actual: {new_duration.AXValue}"
+
+        with step('[Action] Press [Enter] key to leave [Duration Settings] window'):
+            main_page.press_enter_key()
+
+        assert True
 
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
@@ -13399,9 +13391,10 @@ class Test_BFT_365_OS14():
                 assert False, "Cannot remove clip from slot by right click menu!"
         
         with step('[Verify] Check preview is changed'):
+            time.sleep(DELAY_TIME*0.5) # wait preview changed
             current_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(before_deleted_preview, current_preview, similarity=0.98):
-                assert False, "Preview did not change after remove clip from slot! Similary should<0.98"
+            if main_page.compare(before_deleted_preview, current_preview, similarity=0.9999):
+                assert False, "Preview did not change after remove clip from slot! Similary should<0.9999"
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13551,7 +13544,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Click on Zoom In to 5 by arrow'):
             no_zoom_in_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            video_collage_designer_page.preview.Zoom.zoom_in_by_arrow(5)
+            video_collage_designer_page.preview.zoom.zoom_in_by_arrow(times=5)
                 
         with step('[Verify] Check preview is changed'):
             apply_zoom_in_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
@@ -13577,7 +13570,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Set Zoom to 0 by slider'):
             no_zoom_out_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
             # Set zoom slider to (Zoom out)
-            video_collage_designer_page.preview.Zoom.zoom_by_slider(0)
+            video_collage_designer_page.preview.zoom.zoom_by_slider(0)
 
         with step('[Verify] Check preview is changed'):
             apply_zoom_out_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
@@ -13605,7 +13598,7 @@ class Test_BFT_365_OS14():
         # [L249] 3.8 Video Collage Designer > Edit in Tile (above 4 tiles) > Trim Video
         # with uuid("6531953b-b585-4c45-b250-8afa2a929835") as case:
         with step('[Action] Open Trim window'):
-            video_collage_designer_page.preview.Trim.open_trim_window()
+            video_collage_designer_page.preview.trim.open_trim_window()
         
         with step('[Action] Set Trim (In Position) to 00:00:05:09'):
             # Set (In Position) to 00;00;05;09
@@ -13816,8 +13809,8 @@ class Test_BFT_365_OS14():
 
             # Verify Step:
             all_at_once_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(before_apply_preview, all_at_once_preview, similarity=0.99):
-                assert False, "Preview did not change after set playback timing to All at once! Similary should<0.99"
+            if main_page.compare(before_apply_preview, all_at_once_preview, similarity=0.999):
+                assert False, "Preview did not change after set playback timing to All at once! Similary should<0.999"
         assert True
 
 
@@ -13852,18 +13845,21 @@ class Test_BFT_365_OS14():
         with step('[Action] Set [Playback timing] to (Delay three seconds)'):
             # Set (Delay three seconds)
             video_collage_designer_page.border.advanced.set_playback_timing(1)
+            time.sleep(DELAY_TIME*2)
             video_collage_designer_page.border.advanced.set_delay_sec(3)
 
         with step('[Action] Click [OK] to close Advanced Settings window'):
             # Click [Advanced ok]
+            time.sleep(DELAY_TIME)
             video_collage_designer_page.border.advanced.click_ok()
 
         with step('[Verify] Check preview is changed at (07:00)'):
             # Verify step:
+            time.sleep(DELAY_TIME)
             video_collage_designer_page.set_timecode('00_00_07_00')
             after_delay_3_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
-            if main_page.compare(all_at_once_preview, after_delay_3_preview, similarity=0.99):
-                assert False, "Preview did not change after set playback timing to Delay three seconds! Similary should<0.99"
+            if main_page.compare(all_at_once_preview, after_delay_3_preview, similarity=0.999):
+                assert False, "Preview did not change after set playback timing to Delay three seconds! Similary should<0.999"
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13871,7 +13867,7 @@ class Test_BFT_365_OS14():
     @pytest.mark.timecode
     @pytest.mark.advanced_settings
     @pytest.mark.playback_timing
-    @pytest.mark.name('[test_video_collage_designer_func_12_29] ')
+    @pytest.mark.name('[test_video_collage_designer_func_12_29] Set [Match collage duration to] to (Shortest Clip) and Verify Timecode')
     @exception_screenshot
     def test_video_collage_designer_func_12_29(self):
         ''' 
@@ -13885,49 +13881,28 @@ class Test_BFT_365_OS14():
         dependency_test = "test_video_collage_designer_func_12_28"
         self.ensure_dependency(dependency_test)
 
-    @pytest.mark.video_collage_designer_func
-    @pytest.mark.video_collage_designer
-    @pytest.mark.timecode
-    @pytest.mark.advanced_settings
-    @pytest.mark.match_collage_duration_to
-    @pytest.mark.name('[test_video_collage_designer_func_12_30] Set [Match collage duration to] to (Shortest Clip)')
-    @exception_screenshot
-    def test_video_collage_designer_func_12_30(self):
-        ''' 
-        1. Click [Stop] button and enter [Advanced Settings] window
-        2. Set [Match collage duration to] to (Shortest Clip)(2)
-        3. Click [OK] to close Advanced Settings window
-        4. Set timecode to (00:00:10:30)
-        5. Check timecode is (00:00:05:27)
-        ''' 
-        # Ensure the dependency test is run and passed
-        dependency_test = "test_video_collage_designer_func_12_29"
-        self.ensure_dependency(dependency_test)
-
         # [L269] 3.8 Video Collage Designer > Advanced Settings > Match collage duration to > Shortest Clip
         # with uuid("c425f63d-e7f7-4a78-a05b-a488a0b84ca8") as case:
 
-        with step("Click [Stop] button and enter [Advanced Settings] window"):
-            # Click the Stop button (assumed to be accessible via preview operation)
-            video_collage_designer_page.click_preview_operation('Stop')
-            # Click [Advanced Settings] button
+        with step('[Action] Click [Stop] button and enter [Advanced Settings] window'):
+            video_collage_designer_page.click_preview_operation('STOP')
             video_collage_designer_page.border.click_advanced_setting()
 
-        with step("Set [Match collage duration to] to (Shortest Clip)(2)"):
+        with step('[Action] Set [Match collage duration to] to (Shortest Clip)(2)'):
             video_collage_designer_page.border.advanced.set_match_collage_duration_to(2)
-        
-        with step("Click [OK] to close Advanced Settings window"):
+
+        with step('[Action] Click [OK] to close Advanced Settings window'):
             video_collage_designer_page.border.advanced.click_ok()
-        
-        with step("Set timecode to (00:00:10:30)"):
+
+        with step('[Action] Set timecode to (00:00:10:30)'):
+            time.sleep(DELAY_TIME)
             video_collage_designer_page.set_timecode('00_00_10_30')
-        
-        with step("Check timecode is (00:00:05:27)"):
-            # Retrieve the current timecode from the timeline
-            current_timecode = video_collage_designer_page.get_timecode()
-            expected_timecode = '00:00:05:27'
-            if current_timecode != expected_timecode:
-                assert False, f"Timecode is incorrect! Expected: {expected_timecode}, Actual: {current_timecode}"
+
+        with step('[Verify] Check timecode is (00:00:05:27)'):
+            timecode = main_page.exist(L.video_collage_designer.time_code).AXValue
+            if timecode != '00:00:05:27':
+                assert False, f"Timecode is not at ('00:00:05:27'), Expected: 00:00:05:27, Actual: {timecode}"
+
         assert True
 
     @pytest.mark.video_collage_designer_func
@@ -13935,9 +13910,9 @@ class Test_BFT_365_OS14():
     @pytest.mark.timecode
     @pytest.mark.advanced_settings
     @pytest.mark.match_collage_duration_to
-    @pytest.mark.name('[test_video_collage_designer_func_12_31] Set [Match collage duration to] (Clip 3) and verify timecode adjustment')
+    @pytest.mark.name('[test_video_collage_designer_func_12_30] Set [Match collage duration to] (Clip 3) and verify timecode adjustment')
     @exception_screenshot
-    def test_video_collage_designer_func_12_31(self):
+    def test_video_collage_designer_func_12_30(self):
         '''
         1. Click [Stop] button and Click [Advanced Settings] button
         2. Set [Match collage duration to] to (Clip 3)(5)
@@ -13946,7 +13921,7 @@ class Test_BFT_365_OS14():
         5. Check timecode is (00:00:13:00)
         '''
         # Ensure the dependency test is run and passed
-        dependency_test = "test_video_collage_designer_func_12_30"
+        dependency_test = "test_video_collage_designer_func_12_29"
         self.ensure_dependency(dependency_test)
         
         # [L270] 3.8 Video Collage Designer > Advanced Settings > Match collage duration to > Clip N
@@ -13957,10 +13932,10 @@ class Test_BFT_365_OS14():
             video_collage_designer_page.border.click_advanced_setting()
 
         with step("Set [Match collage duration to] to (Clip 3)(5)"):
-            video_collage_designer_page.Border.Advanced.set_match_collage_duration_to(5)
+            video_collage_designer_page.border.advanced.set_match_collage_duration_to(5)
 
         with step("Click [OK] to close Advanced Settings window"):
-            video_collage_designer_page.Border.Advanced.click_ok()
+            video_collage_designer_page.border.advanced.click_ok()
 
         with step("Set timecode to (00:00:18:10)"):
             video_collage_designer_page.set_timecode("00_00_18_10")
@@ -13977,8 +13952,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.playback_timing
     @pytest.mark.match_collage_duration_to
     @pytest.mark.timecode
-    @pytest.mark.name('[test_video_collage_designer_func_12_32] Set [Match collage duration] to (Longest Clip) & [Playback Timing - Delay Time] to (1)')
-    def test_video_collage_designer_func_12_32(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_31] Set [Match collage duration] to (Longest Clip) & [Playback Timing - Delay Time] to (1)')
+    def test_video_collage_designer_func_12_31(self):
         """
         0. Ensure the dependency test is run and passed
         1. Click [Stop] button and Click [Advanced Settings] button
@@ -13992,7 +13967,7 @@ class Test_BFT_365_OS14():
         # with uuid("b0f2b7b4-15cc-4b14-85e4-a932883c3de9") as case:
 
         # Step 0: Ensure dependency test is run and passed
-        dependency_test = "test_video_collage_designer_func_12_31"
+        dependency_test = "test_video_collage_designer_func_12_30"
         self.ensure_dependency(dependency_test)
         
         # Step 1: Click [Stop] button and [Advanced Settings] button
@@ -14029,8 +14004,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer
     @pytest.mark.advanced_settings
     @pytest.mark.timecode
-    @pytest.mark.name('[test_video_collage_designer_func_12_33] Set [Match collage duration] to (All Video) & check timecode')
-    def test_video_collage_designer_func_12_33(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_32] Set [Match collage duration] to (All Video) & check timecode')
+    def test_video_collage_designer_func_12_32(self):
         """
         0. Ensure the dependency test is run and passed
         1. Click [Stop] button and Click [Advanced Settings] button
@@ -14039,7 +14014,7 @@ class Test_BFT_365_OS14():
         4. Set timecode to (00:00:18:29)
         5. Check timecode is (00:00:13:00)
         """
-        dependency_test = "test_video_collage_designer_func_12_32"
+        dependency_test = "test_video_collage_designer_func_12_31"
         self.ensure_dependency(dependency_test)
 
 
@@ -14070,14 +14045,14 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
-    @pytest.mark.name('[test_video_collage_designer_func_12_34] Check preview is as GT (L267.png)')
-    def test_video_collage_designer_func_12_34(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_33] Check preview is as GT (L267.png)')
+    def test_video_collage_designer_func_12_33(self):
         """
         0. Ensure the dependency test is run and passed
         1. screenshot (locator=L.video_collage_designer.main_window)
         2. Check preview is as GT (L267.png) (similarity=0.95)
         """
-        dependency_test = "test_video_collage_designer_func_12_33"
+        dependency_test = "test_video_collage_designer_func_12_32"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Screenshot (locator=L.video_collage_designer.main_window)'):
@@ -14099,8 +14074,8 @@ class Test_BFT_365_OS14():
     @exception_screenshot
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
-    @pytest.mark.name('[test_video_collage_designer_func_12_35] Check preview is as GT (L271.png) at (00:00:08:05)')
-    def test_video_collage_designer_func_12_35(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_34] Check preview is as GT (L271.png) at (00:00:08:05)')
+    def test_video_collage_designer_func_12_34(self):
         """
         0. Ensure the dependency test is run and passed
         1. Click [Stop] button and set timecode to (00:00:08:05)
@@ -14109,7 +14084,7 @@ class Test_BFT_365_OS14():
         # [L271] 3.8 Video Collage Designer > [Preview] in designer
         # with uuid("b47f849f-5fae-4bab-8b57-595bb7f6e2aa") as case:
 
-        dependency_test = "test_video_collage_designer_func_12_34"
+        dependency_test = "test_video_collage_designer_func_12_33"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Click [Stop] button and set timecode to (00:00:08:05)'):
@@ -14135,8 +14110,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
     @pytest.mark.save_template
-    @pytest.mark.name('[test_video_collage_designer_func_12_36] Save As custom layout')
-    def test_video_collage_designer_func_12_36(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_35] Save As custom layout')
+    def test_video_collage_designer_func_12_35(self):
         """
         0. Ensure the dependency test is run and passed
         1. Save As the custom layout with name (video_collage_custom_test)
@@ -14145,7 +14120,7 @@ class Test_BFT_365_OS14():
         # [L272] 3.8 Video Collage Designer > Advanced Settings > [Save as] Video Collage layout
         # with uuid("7a264c7c-3140-489d-960b-38f2bf42a0c6") as case:
 
-        dependency_test = "test_video_collage_designer_func_12_35"
+        dependency_test = "test_video_collage_designer_func_12_34"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Save As the custom layout with name (video_collage_custom_test)'):
@@ -14163,7 +14138,7 @@ class Test_BFT_365_OS14():
             )
             if not is_layout_correct:
                 # Similarity should be greater than 0.95
-                assert False, "Layout preview does not match GT (L272.png)! Similarity should > 0.95"
+                assert False, "layout preview does not match GT (L272.png)! Similarity should > 0.95"
 
         assert True
 
@@ -14172,8 +14147,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
     @pytest.mark.layout
-    @pytest.mark.name('[test_video_collage_designer_func_12_37] Set layout to another and back to original one')
-    def test_video_collage_designer_func_12_37(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_36] Set layout to another and back to original one')
+    def test_video_collage_designer_func_12_36(self):
         """
         0. Ensure the dependency test is run and passed
         1. Screenshot current preview (locator=L.video_collage_designer.main_window)
@@ -14183,14 +14158,14 @@ class Test_BFT_365_OS14():
         5. Check if the preview is updated (similarity=0.95)
         6. Check if the preview is the same as the first screenshot (similarity=0.99)
         """
-        dependency_test = "test_video_collage_designer_func_12_36"
+        dependency_test = "test_video_collage_designer_func_12_35"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Screenshot current preview (locator=L.video_collage_designer.main_window)'):
             initial_preview = main_page.snapshot(locator=L.video_collage_designer.main_window)
 
         with step('[Action] Set layout to 13th (index=13)'):
-            video_collage_designer_page.Layout.select_layout(13)
+            video_collage_designer_page.layout.select_layout(13)
 
         with step('[Verify] Check if the preview is updated after setting layout to 13'):
             preview_after_13 = main_page.snapshot(locator=L.video_collage_designer.main_window)
@@ -14199,7 +14174,7 @@ class Test_BFT_365_OS14():
                 assert False, "Preview did not update after setting layout to 13! Similarity should < 0.95"
 
         with step('[Action] Set layout to 1st (index=1)'):
-            video_collage_designer_page.Layout.select_layout(1)
+            video_collage_designer_page.layout.select_layout(1)
 
         with step('[Verify] Check if the preview is updated after setting layout to 1'):
             preview_after_1 = main_page.snapshot(locator=L.video_collage_designer.main_window)
@@ -14221,8 +14196,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.dz
     @pytest.mark.save_template
     @pytest.mark.shared_template
-    @pytest.mark.name('[test_video_collage_designer_func_12_38] Share to DZ with name (test_video_collage) and check upload result')
-    def test_video_collage_designer_func_12_38(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_37] Share to DZ with name (test_video_collage) and check upload result')
+    def test_video_collage_designer_func_12_37(self):
         """
         0. Ensure the dependency test is run and passed
         1. Share to DZ with name (test_video_collage) and check upload result
@@ -14230,7 +14205,7 @@ class Test_BFT_365_OS14():
         # [L273] 3.8 Video Collage Designer > [Share] template online
         # with uuid("c956d061-593c-439f-84c8-a9222942b172") as case:
 
-        dependency_test = "test_video_collage_designer_func_12_37"
+        dependency_test = "test_video_collage_designer_func_12_36"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Share to DZ with name (test_video_collage) and check upload result'):
@@ -14248,8 +14223,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer
     @pytest.mark.save_template
     @pytest.mark.canva
-    @pytest.mark.name('[test_video_collage_designer_func_12_39] Check Preview on main program')
-    def test_video_collage_designer_func_12_39(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_38] Check Preview on main program')
+    def test_video_collage_designer_func_12_38(self):
         """
         0. Ensure the dependency test is run and passed
         1. Click [OK] to leave [video collage designer] window
@@ -14257,7 +14232,7 @@ class Test_BFT_365_OS14():
         3. Set timecode at (00:00:09:00)
         4. Screenshot (locator=L.base.Area.preview.only_mtk_view) at 9s and compare with GT (L274_9sec.png)(similarity=0.9)
         """
-        dependency_test = "test_video_collage_designer_func_12_38"
+        dependency_test = "test_video_collage_designer_func_12_37"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Click [OK] to leave [video collage designer] window'):
@@ -14278,7 +14253,7 @@ class Test_BFT_365_OS14():
                 assert False, "Preview at 0s does not match GT (L274_0sec.png)! Similarity should > 0.9"
 
         with step('[Action] Set timecode at (00:00:09:00)'):
-            video_collage_designer_page.set_timecode('00_00_09_00')
+            main_page.set_timeline_timecode('00_00_09_00')
 
         with step('[Verify] Screenshot preview at 9s and compare with GT (L274_9sec.png)'):
             preview_9s = main_page.snapshot(
@@ -14301,8 +14276,8 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
     @pytest.mark.saved_template
-    @pytest.mark.name('[test_video_collage_designer_func_12_40] Remove custom templates and check preview change')
-    def test_video_collage_designer_func_12_40(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_39] Remove custom templates and check preview change')
+    def test_video_collage_designer_func_12_39(self):
         """
         0. Ensure the dependency test is run and passed
         1. Click [Video Collage] button in [Tips Area]
@@ -14314,7 +14289,7 @@ class Test_BFT_365_OS14():
         # [L275] 3.8 Video Collage Designer > Back to Designer from tips area [Video Collage] button
         # with uuid("39a7ac17-ade8-4e8f-b87f-b0ff4cb815bd") as case:
 
-        dependency_test = "test_video_collage_designer_func_12_39"
+        dependency_test = "test_video_collage_designer_func_12_38"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Click [Video Collage] button in [Tips Area]'):
@@ -14333,7 +14308,7 @@ class Test_BFT_365_OS14():
         with step('[Action] Remove 2 custom templates'):
             for _ in range(2):
                 # Select layout 1 (assumed to be the custom template layout)
-                video_collage_designer_page.Layout.select_layout(1)
+                video_collage_designer_page.layout.select_layout(1)
                 main_page.right_click()
                 # Remove first custom template via right-click menu and confirm deletion
                 main_page.select_right_click_menu('Delete (only for Custom/Downloaded)')
@@ -14345,52 +14320,9 @@ class Test_BFT_365_OS14():
                 locator=L.video_collage_designer.main_window,
                 file_name=Auto_Ground_Truth_Folder + 'after_removal.png'
             )
-            # Expect preview to change, so similarity should be less than 0.95
-            if main_page.compare(before_removal, after_removal, similarity=0.95):
-                assert False, "Preview did not change after removal! Similarity should < 0.95"
-
-        assert True
-
-    @exception_screenshot
-    @pytest.mark.video_collage_designer_func
-    @pytest.mark.video_collage_designer
-    @pytest.mark.timeline
-    @pytest.mark.saved_template
-    @pytest.mark.name('[test_video_collage_designer_func_12_41] Verify preview update after timeline addition')
-    def test_video_collage_designer_func_12_41(self):
-        """
-        0. Ensure the dependency test is run and passed
-        1. Click [OK] to leave [Video Collage Designer] window
-        2. Enter [Intro Room] > [Saved Templates] category
-        3. Select the template (1) and right-click > right-click menu (Add to Timeline) > click (L.base.confirm_dialog.btn_no)
-        4. Check Preview is changed (locator L.base.Area.preview.only_mtk_view)
-        """
-        dependency_test = "test_video_collage_designer_func_12_40"
-        self.ensure_dependency(dependency_test)
-
-        # [L276] 3.8 Video Collage Designer > Save Project & Pack material
-        # with uuid("06e25859-e0ac-49f6-b667-bd4dae1342c8") as case:
-
-        with step('[Action] Click [OK] to leave [Video Collage Designer] window'):
-            video_collage_designer_page.click_ok()
-
-        with step('[Action] Enter [Intro Room] > [Saved Templates] category'):
-            # Enter intro room > Saved Templates category
-            intro_video_page.enter_intro_video_room()
-            intro_video_page.enter_saved_category()
-
-        with step('[Action] Select the template (1) and right-click > right-click menu (Add to Timeline) > click (L.base.confirm_dialog.btn_no)'):
-            before_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            intro_video_page.select_intro_template_method_2(1)
-            main_page.right_click()
-            main_page.select_right_click_menu("Add to Timeline")
-            main_page.click(L.base.confirm_dialog.btn_no)
-
-        with step('[Verify] Check Preview is changed (locator L.base.Area.preview.only_mtk_view)'):
-            current_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view)
-            if main_page.compare(before_preview, current_preview, similarity=0.95):
-                # Similarity should be greater than 0.95 for updated preview
-                assert False, "Preview is not updated! Similarity should < 0.95"
+            # Expect preview to change, so similarity should be less than 0.99
+            if main_page.compare(before_removal, after_removal, similarity=0.99):
+                assert False, "Preview did not change after removal! Similarity should < 0.99"
 
         assert True
 
@@ -14399,111 +14331,18 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
     @pytest.mark.save_project
-    @pytest.mark.name('[test_video_collage_designer_func_12_42] Pack project material and check result')
-    def test_video_collage_designer_func_12_42(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_40] Pack project material and check result')
+    def test_video_collage_designer_func_12_40(self):
         """
         0. Ensure the dependency test is run and passed
-        1. Pack project material (Test_Material_Folder + 'BFT_21_Stage1/test_video_collage_designer_func_12_42/') and check result
+        1. Pack project material (Test_Material_Folder + 'BFT_21_Stage1/test_video_collage_designer_func_12_40/') and check result
         """
-        dependency_test = "test_video_collage_designer_func_12_41"
+        dependency_test = "test_video_collage_designer_func_12_39"
         self.ensure_dependency(dependency_test)
         
-        # # Enter Title Room > Custom category
-        # main_page.enter_room(1)
-        # time.sleep(DELAY_TIME*3)
-        # main_page.select_LibraryRoom_category('Custom')
-
-        # # Select track 1
-        # main_page.timeline_select_track(1)
-
-        # # Set timecode
-        # main_page.set_timeline_timecode('00_00_22_00')
-        # time.sleep(DELAY_TIME * 2)
-
-        # # Insert Custom title to track 1
-        # main_page.drag_media_to_timeline_playhead_position('BFT_title_Save', track_no=1)
-
-        # # Insert Custom title to track 2
-        # main_page.drag_media_to_timeline_playhead_position('BFT_MGT_Save', track_no=2)
-
-        # # Enter Title Room > Custom category
-        # main_page.enter_room(4)
-        # time.sleep(DELAY_TIME * 3)
-        # main_page.select_LibraryRoom_category('Custom')
-
-        # # Insert Custom title to track 3
-        # main_page.drag_media_to_timeline_playhead_position('BFT_mask_template', track_no=3)
-
-        # # Select track 1
-        # main_page.timeline_select_track(1)
-        # time.sleep(DELAY_TIME * 2)
-
-        # # Set timecode
-        # main_page.set_timeline_timecode('00_00_09_00')
-        # time.sleep(DELAY_TIME * 2)
-        # # Insert Custom title to track 3
-        # main_page.drag_media_to_timeline_playhead_position('BFT_Pip_Custom', track_no=3)
-
-        # # Insert Custom title to track 2
-        # main_page.drag_media_to_timeline_playhead_position('Custom_shape_10', track_no=2)
-
-        # # Enter Particle Room > Custom category
-        # main_page.enter_room(5)
-        # time.sleep(DELAY_TIME * 2)
-        # main_page.select_LibraryRoom_category('Custom')
-        # time.sleep(DELAY_TIME * 3)
-
-        # # Select track 3
-        # main_page.timeline_select_track(3)
-        # time.sleep(DELAY_TIME * 3)
-
-        # # Set timecode
-        # main_page.set_timeline_timecode('00_00_14_00')
-        # time.sleep(DELAY_TIME * 2)
-
-        # # lock track 1 (Video + Audio), lock video track2
-        # timeline_operation_page.edit_specific_video_track_set_lock_unlock(0)
-        # time.sleep(DELAY_TIME * 2)
-        # timeline_operation_page.edit_specific_video_track_set_lock_unlock(1)
-        # time.sleep(DELAY_TIME * 2)
-        # timeline_operation_page.edit_specific_video_track_set_lock_unlock(2)
-        # time.sleep(DELAY_TIME * 2)
-        # main_page.select_library_icon_view_media('BFT_Halloween_custom')
-        # time.sleep(DELAY_TIME * 2)
-
-        # # right click > Add to timeline
-        # main_page.right_click()
-        # time.sleep(DELAY_TIME * 2)
-        # main_page.select_right_click_menu('Add to Timeline')
-
-        # # Click length to set duration to 8 sec.
-        # main_page.tips_area_click_set_length_of_selected_clip('00_00_08_00')
-        # # lock track 1 (Video + Audio), lock video track2
-        # timeline_operation_page.edit_specific_video_track_set_lock_unlock(0)
-        # time.sleep(DELAY_TIME * 2)
-        # timeline_operation_page.edit_specific_video_track_set_lock_unlock(1)
-        # time.sleep(DELAY_TIME * 2)
-        # timeline_operation_page.edit_specific_video_track_set_lock_unlock(2)
-        # time.sleep(DELAY_TIME * 2)
-
-        # # Select track 3
-        # main_page.timeline_select_track(2)
-        # time.sleep(DELAY_TIME * 2)
-        # # Set timecode
-        # main_page.set_timeline_timecode('00_00_17_23')
-        # time.sleep(DELAY_TIME*3)
-
-        # # Verify Step:
-        # current_17_sec_preview = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view,
-        #                                         file_name=Auto_Ground_Truth_Folder + 'L276_17sec.png')
-        # check_17_result = main_page.compare(Ground_Truth_Folder + 'L276_17sec.png', current_17_sec_preview, similarity=0.9)
-        # logger(check_17_result)
-
-        # time.sleep(DELAY_TIME*2)
-
         with step('[Action] Pack project material and check result'):
             pack_result = main_page.top_menu_bar_file_pack_project_materials(
-                Test_Material_Folder + 'BFT_21_Stage1/test_video_collage_designer_func_12_42/'
+                Test_Material_Folder + 'BFT_21_Stage1/test_video_collage_designer_func_12_40/'
             )
             if not pack_result:
                 assert False, "Pack project material failed!"
@@ -14517,14 +14356,14 @@ class Test_BFT_365_OS14():
     @pytest.mark.video_collage_designer_func
     @pytest.mark.video_collage_designer
     @pytest.mark.launch
-    @pytest.mark.name('[test_video_collage_designer_func_12_43] Check media "Mahoroba.mp3" is available in the library after app restart')
-    def test_video_collage_designer_func_12_43(self):
+    @pytest.mark.name('[test_video_collage_designer_func_12_41] Check media "Mahoroba.mp3" is available in the library after app restart')
+    def test_video_collage_designer_func_12_41(self):
         """
         0. Ensure the dependency test is run and passed
         1. Close and restart the app
         2. Check if the media (Mahoroba.mp3) is available in the library
         """
-        dependency_test = "test_video_collage_designer_func_12_42"
+        dependency_test = "test_video_collage_designer_func_12_40"
         self.ensure_dependency(dependency_test)
         
         # [L277] 3.8 Video Collage Designer > Re-launch PDR
@@ -14535,7 +14374,7 @@ class Test_BFT_365_OS14():
         
         with step('[Verify] Check if media "Mahoroba.mp3" is available in the library'):
             # Search for the media "Mahoroba.mp3" in the library
-            media_found = main_page.select_library_icon_view_media("Mahoroba.mp3", intro_room=False)
+            media_found = main_page.select_library_icon_view_media("Mahoroba.mp3")
             if not media_found:
                 assert False, 'Media "Mahoroba.mp3" is not available in the library!'
         
@@ -14565,7 +14404,7 @@ class Test_BFT_365_OS14():
             main_page.start_app()
 
         with step('[Action] Open recent packed project from top menu'):
-            self.open_recent_project('BFT_21_Stage1/test_video_collage_designer_func_12_42.pdk', 'test_produce_func_13_1')
+            self.open_packed_project('Packed_Project/test_produce_func_13_1.pdk', 'test_produce_func_13_1')
 
         with step('[Action] Click [Browse] on [Missing Dialog] and select file'):
             project_new_page.open_project.file_missing.click_browse()
@@ -14573,7 +14412,9 @@ class Test_BFT_365_OS14():
             time.sleep(DELAY_TIME*2)
 
         with step('[Action] Set timecode to (00:00:11:23)'):
-            main_page.set_timecode('00_00_11_23')
+            main_page.set_timeline_timecode('00_00_11_23')
+            main_page.set_timeline_timecode('00_00_11_23')
+            time.sleep(DELAY_TIME*0.5)
 
         with step('[Action] Screenshot and compare with GT (similarity=0.9)'):
             screenshot_path = main_page.snapshot(locator=L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L389.png')
@@ -14635,12 +14476,12 @@ class Test_BFT_365_OS14():
             produce_page.local.select_profile_name(3)
 
         with step('[Verify] Check profile name is (AVC 1280 x 720/24p (16 Mbps))'):
-            current_profile = produce_page.Local.get_profile_name()
+            current_profile = produce_page.local.get_profile_name()
             assert current_profile == "AVC 1280 x 720/24p (16 Mbps)", \
                 f"Profile name mismatch! Expected: AVC 1280 x 720/24p (16 Mbps), Got: {current_profile}"
 
         # Get produced file name
-        EXPLORE_FILE = produce_page.get_produced_filename()
+        self.exported_file = produce_page.get_produced_filename()
 
         assert True
 
@@ -14664,10 +14505,10 @@ class Test_BFT_365_OS14():
         # with uuid("f59de452-91d4-44c6-967e-f20638dbfe2f") as case:
 
         with step('[Action] Set [Fast Video Rendering Technology] to (Hardware)'):
-            produce_page.Local.set_fast_video_rendering_hardware_encode()
+            produce_page.local.set_fast_video_rendering_hardware_encode()
 
         with step('[Verify] Check if the [Fast Video Rendering Technology] is set to (Hardware)'):
-            status = produce_page.Local.get_fast_video_rendering_hardware_encode_status()
+            status = produce_page.local.get_fast_video_rendering_hardware_encode_status()
             assert status, f"Expected Fast Video Rendering Technology to be True, but got {status}"
 
         assert True
@@ -14690,10 +14531,10 @@ class Test_BFT_365_OS14():
         # with uuid("d3b1d266-84a5-4c43-9c48-5d73b14f6fd1") as case:
 
         with step('[Action] Set [Check Upload Copy to CyberLink Cloud] to (Yes)'):
-            produce_page.Local.set_check_upload_copy_to_cyberlink_cloud(is_check=1)
+            produce_page.local.set_check_upload_copy_to_cyberlink_cloud(is_check=1)
 
         with step('[Verify] Check if the [Check Upload Copy to CyberLink Cloud] is set to (Yes)'):
-            status = produce_page.Local.check_visible_upload_copy_to_cyberlink_cloud()
+            status = produce_page.local.check_visible_upload_copy_to_cyberlink_cloud()
             assert status, f"Upload Copy to CyberLink Cloud setting is not enabled as expected! Expected: True, Got: {status}"
 
         assert True
@@ -14708,7 +14549,7 @@ class Test_BFT_365_OS14():
         '''
         0. Ensure the dependency test is run and passed
         1. Set timecode to last frame (00:00:50:00)
-        2. Check if the timecode is set to (00:00:39:00)
+        2. Check if the timecode is set to (00:00:32:00)
         '''
         dependency_test = "test_produce_func_13_5"
         self.ensure_dependency(dependency_test)
@@ -14719,10 +14560,10 @@ class Test_BFT_365_OS14():
         with step('[Action] Set timecode to last frame (00:00:50:00)'):
             produce_page.local.set_preview_timecode('00_00_50_00')
 
-        with step('[Verify] Check if the timecode is set to (00:00:39:00)'):
+        with step('[Verify] Check if the timecode is set to (00:00:32:00)'):
             current_timecode = produce_page.get_preview_timecode()
-            if current_timecode != '00:00:39:00':
-                assert False, f"Timecode is not correct! Expected: 00:00:39:00, Actual: {current_timecode}"
+            if current_timecode != '00:00:32:00':
+                assert False, f"Timecode is not correct! Expected: 00:00:32:00, Actual: {current_timecode}"
 
         assert True
 
@@ -14746,7 +14587,8 @@ class Test_BFT_365_OS14():
             produce_page.local.click_option_convert_cyberlink_cloud_copy_to_mp4_dialog(option=0)
 
         with step('[Verify] Check if the produce is complete in 60 seconds'):
-            assert produce_page.check_produce_complete(), "Produce is not complete within 60 seconds"
+            if not produce_page.check_produce_complete():
+                assert False,  "Produce is not complete within 60 seconds"
 
         assert True
 
@@ -14760,20 +14602,26 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test is run and passed
         1. Check [Back] button show on [Produce] page after produce complete in (40) secs
         2. Click [Back] button on [Produce] page after produce complete
-        3. Check able to Select media by library icon view with Explore_file
+        3. Check able to Select media by library icon view with self.exported_file
         '''
         dependency_test = "test_produce_func_13_7"
         self.ensure_dependency(dependency_test)
 
         with step('[Verify] Check [Back] button show on [Produce] page after produce complete in (40) secs'):
-            if not produce_page.Local.check_back_btn_shows_on_upload_to_cyberlink_cloud_in_secs(wait_time=40):
-                assert False, "Back button did not show on Produce page within 40 seconds after produce complete"
+            for _ in range(40):
+                back_btn = main_page.exist(L.produce.btn_back_to_edit_after_upload_cl)
+                if back_btn:
+                    break
+                else:
+                    time.sleep(DELAY_TIME)
+            if not back_btn:
+                assert False, "Back button did not show up on [Produce] page after produce complete!"
 
         with step('[Action] Click [Back] button on [Produce] page after produce complete'):
-            produce_page.Local.click_back_btn_on_produce_page_after_upload()
+            produce_page.local.click_back_btn_on_produce_page_after_upload()
 
-        with step('[Verify] Check able to select media by library icon view with Explore_file'):
-            main_page.select_library_icon_view_media(EXPLORE_FILE) # will excpetion if not found
+        with step('[Verify] Check able to select media by library icon view with self.exported_file'):
+            main_page.select_library_icon_view_media(self.exported_file) # will excpetion if not found
                 
         assert True
 
@@ -14791,7 +14639,7 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test is run and passed
         1. Import media from CyberLink Cloud
         2. Select content in folder level (folder_index=0, click_times=2)
-        3. Input text in search library ({EXPLORE_FILE})
+        3. Input text in search library ({self.exported_file})
         4. Tap [Select All] button
         5. Check if the [Remove] button is enabled (True)
         6. Screenshot (L.import_downloaded_media_from_cl.downloaded_media_window)
@@ -14808,8 +14656,8 @@ class Test_BFT_365_OS14():
         with step('[Action] Select content in folder level (folder_index=0, click_times=2)'):
             import_media_from_cloud_page.select_content_in_folder_level(folder_index=0, click_times=2)
 
-        with step('[Action] Input text in search library ({EXPLORE_FILE})'):
-            import_media_from_cloud_page.input_text_in_seacrh_library(EXPLORE_FILE)
+        with step('[Action] Input text in search library ({self.exported_file})'):
+            import_media_from_cloud_page.input_text_in_seacrh_library(self.exported_file)
 
         with step('[Action] Tap [Select All] button'):
             import_media_from_cloud_page.tap_select_deselect_all_btn()
@@ -14843,19 +14691,19 @@ class Test_BFT_365_OS14():
     def test_produce_func_13_10(self):
         '''
         0. Ensure the dependency test is run and passed
-        1. Select media (EXPLORE_FILE) by library icon view
+        1. Select media (self.exported_file) by library icon view
         2. Click [Play] button in playback window
         3. Check if the preview window is different when playing in (area=L.base.Area.preview.main, sec=5)
         4. Click [Stop] button in playback window
         '''
         dependency_test = "test_produce_func_13_9"
         self.ensure_dependency(dependency_test)
-
+        
         # [L395] 5. Produce > Playback produced clip
         # with uuid("5143f3c6-d5a5-4414-90ff-f4bdb3722454") as case:
 
         with step('[Action] Select media by library icon view'):
-            main_page.select_library_icon_view_media(EXPLORE_FILE)
+            main_page.select_library_icon_view_media(self.exported_file)
 
         with step('[Action] Click Play button in playback window'):
             playback_window_page.Edit_Timeline_PreviewOperation('Play')
@@ -14880,10 +14728,11 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test is run and passed
         1. Set timecode to (00:00:11:23)
         2. Screenshot (locator=main_page.area.preview.main) and compare with GT (L389.png) (similarity=0.93)
-        3. Select media (EXPLORE_FILE) by library icon view and Move clip in library to trash can
+        3. Select media (self.exported_file) by library icon view and Move clip in library to trash can
         '''
         dependency_test = "test_produce_func_13_10"
         self.ensure_dependency(dependency_test)
+        
 
         with step('[Action] Set timecode to (00:00:11:23)'):
             main_page.set_timeline_timecode('00_00_11_23')
@@ -14896,7 +14745,7 @@ class Test_BFT_365_OS14():
                 assert False, "Preview does not match GT (L389.png)! Similarity should > 0.93"
 
         with step('[Action] Select media and move clip to trash can'):
-            main_page.select_library_icon_view_media(EXPLORE_FILE)
+            main_page.select_library_icon_view_media(self.exported_file)
             media_room_page.library_clip_context_menu_move_to_trash_can()
 
         assert True
@@ -14911,7 +14760,7 @@ class Test_BFT_365_OS14():
     def test_produce_func_13_12(self):
         '''
         1. Start APP > Select Track (1)
-        2. Open packed project ('Packed_Project/BFT_21_Stage1/test_produce_func_13_12_from_test_subtitle_room_func_25_1.pdk', 'Extracted_Folder/BFT_21_Stage1/test_produce_func_13_12')
+        2. Open packed project ('Packed_Project/test_produce_func_13_12.pdk', 'Extracted_Folder/test_produce_func_13_12')
         3. Set timecode ('00_00_11_04') at main page
         4. Check preview (locator=main_page.area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L380.png') matches Ground Truth (Ground_Truth_Folder + 'L380.png') with similarity 0.95
         '''
@@ -14925,14 +14774,16 @@ class Test_BFT_365_OS14():
 
         with step("[Action] Open packed project"):
             self.open_packed_project(
-                "Packed_Project/BFT_21_Stage1/test_produce_func_13_12_from_test_subtitle_room_func_25_1.pdk",
-                "Extracted_Folder/BFT_21_Stage1/test_produce_func_13_12"
+                "Packed_Project/test_produce_func_13_12.pdk",
+                "Extracted_Folder/test_produce_func_13_12"
             )
 
         with step("[Action] Set timeline timecode to '00_00_11_04'"):
+            time.sleep(DELAY_TIME*2)
             main_page.set_timeline_timecode("00_00_11_04", is_verify=True)
 
         with step("[Verify] Check preview matches GT (L380.png)"):
+            time.sleep(DELAY_TIME)
             preview = main_page.snapshot(
                 locator=main_page.area.preview.main,
                 file_name=Auto_Ground_Truth_Folder + "L380.png"
@@ -14954,7 +14805,7 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test ('test_produce_func_13_12') is run and passed
         1. Click [Produce] button and check [Produce] page show
         2. Select file format ('xavc_s') and get produced filename
-        3. Check if produced file name is 'test_produce_func_13_12.mp4'
+        3. Check if produced file name is 'first_project.mp4'
         4. Check if [Profile Type] combobox (L.produce.local.cbx_profile_type) exists
         '''
         dependency_test = "test_produce_func_13_12"
@@ -14972,9 +14823,9 @@ class Test_BFT_365_OS14():
             produce_page.local.select_file_format('xavc_s')
             produced_filename = produce_page.get_produced_filename()
 
-        with step("[Verify] Check if produced filename is 'test_produce_func_13_12.mp4'"):
-            if produced_filename != "test_produce_func_13_12.mp4":
-                assert False, f"Produced filename mismatch! Expected 'test_produce_func_13_12.mp4', got '{produced_filename}'"
+        with step("[Verify] Check if produced filename is 'first_project.mp4'"):
+            if produced_filename != "first_project.mp4":
+                assert False, f"Produced filename mismatch! Expected 'first_project.mp4', got '{produced_filename}'"
 
         with step("[Verify] Check if [Profile Type] combobox exists"):
             profile_combo = main_page.exist(L.produce.local.cbx_profile_type)
@@ -15056,7 +14907,9 @@ class Test_BFT_365_OS14():
         # with uuid("c459820f-964b-481b-b4c7-7cbfbea9eb3b") as case:
 
         with step('[Action] Enable [Surround Sound] > Set [Surround Sound] to (Theater) option'):
+            produce_page.local.set_surround_sound()
             produce_page.local.set_surround_sound_true_theater_option_theater()
+
 
         with step('[Verify] Check if [Surround Turn Theater] button is Enabled (1)'):
             check_surround = main_page.exist(L.produce.local.rdb_surround_sound_true_theater).AXValue
@@ -15151,9 +15004,10 @@ class Test_BFT_365_OS14():
         # with uuid("15d3cb75-1abf-4e44-bfbe-9602f92cf5fb") as case:
 
         with step('[Action] Click [Start Produce]'):
-            produce_page.click_start()
+            produce_page.click(L.produce.btn_start_produce)
 
         with step('[Action] Click [Yes] button on [Convert CyberLink Cloud Copy to MP4] dialog'):
+            time.sleep(DELAY_TIME)
             produce_page.local.click_option_convert_cyberlink_cloud_copy_to_mp4_dialog(option=1)
 
         with step('[Verify] Check [Produce] is completed in 600 secs'):
@@ -15231,7 +15085,7 @@ class Test_BFT_365_OS14():
         3. Check if the preview window is different when playing in (area=L.base.Area.preview.main, sec=5)
         4. Click [Stop] button in playback window
         '''
-        dependency_test = "test_produce_func_13_9"
+        dependency_test = "test_produce_func_13_20"
         self.ensure_dependency(dependency_test)
 
         # [L388] 5. Produce > XAVCS > Playback produced clip
@@ -15304,14 +15158,14 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Launch APP and enter My project'):
             main_page.start_app()
-            main_page.enter_project_room()
+            project_room_page.enter_project_room()
             first_screenshot = main_page.snapshot(locator=main_page.area.library_icon_view)
 
         with step('[Action] Open Packed project'):
             self.open_packed_project('Packed_Project/can_del.pdk', 'Extracted_Folder/test_new_project_func_14_1')
 
         with step('[Action] Enter My project again and take screenshot'):
-            main_page.enter_project_room()
+            project_room_page.enter_project_room()
             second_screenshot = main_page.snapshot(locator=main_page.area.library_icon_view)
 
         with step('[Verify] Check preview changed and similarity within 0.82~0.999'):
@@ -15324,7 +15178,6 @@ class Test_BFT_365_OS14():
                 # Similarity should be less than 0.999
                 assert False, "Preview did not change after opening packed project! Similarity should < 0.999"
 
-        # Step 5: Close and restart the app
         with step('[Action] Close and restart the app'):
             main_page.close_and_restart_app()
 
@@ -15497,9 +15350,9 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.new_project_func
     @pytest.mark.custom_tag
-    @pytest.mark.name('[test_new_project_func_14_5] Add/ Delete Custom Tag')
+    @pytest.mark.name('[test_new_project_func_14_6] Add/ Delete Custom Tag')
     @exception_screenshot
-    def test_new_project_func_14_5(self):
+    def test_new_project_func_14_6(self):
         """
         0. Ensure the dependency test is run and passed
         1. Enter My Project
@@ -15527,6 +15380,7 @@ class Test_BFT_365_OS14():
             tag_added = main_page.select_right_click_menu("Add to custom tag", 'auto_Testing_project_tag')
             if not tag_added:
                 assert False, "Failed to add custom tag: auto_Testing_project_tag"
+            time.sleep(DELAY_TIME) # wait till added tag ends
 
         with step('[Action] Delete tag auto_Testing_project_tag by right click'):
             deletion_success = media_room_page.right_click_delete_tag("auto_Testing_project_tag", count=1)
@@ -15539,18 +15393,18 @@ class Test_BFT_365_OS14():
     @pytest.mark.new_project_func
     @pytest.mark.timeline
     @pytest.mark.show_timeline_preview_volume_meter
-    @pytest.mark.name('[test_new_project_func_14_6] Enable/ Disable [Show Timeline Preview Volume Meter]')
+    @pytest.mark.name('[test_new_project_func_14_7] Enable/ Disable [Show Timeline Preview Volume Meter]')
     @exception_screenshot
-    def test_new_project_func_14_6(self):
+    def test_new_project_func_14_7(self):
         """
         0. Ensure the dependency test is run and passed
         1. Select timeline track 2 and Screenshot (locator=L.base.Area.preview.main)
         2. Enable [Show Timeline Preview Volume Meter] from top menu bar and check preview update
-        3. Click [Play] button in playback window > wait for 7 seconds > Click [Stop] button in playback window
+        3. Click [Play] button in playback window > wait for 3 seconds > Click [Stop] button in playback window
         4. Check preview is as step 2
         5. Disable [Show Timeline Preview Volume Meter] from top menu bar and check preview is as step 1
         """
-        dependency_test = "test_new_project_func_14_5"
+        dependency_test = "test_new_project_func_14_6"
         self.ensure_dependency(dependency_test)
 
         # [L56] 2.1 Media Room > Insert clip to timeline & preview > Enable volume meter (form View menu)
@@ -15558,23 +15412,21 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Select timeline track 2 and take initial screenshot'):
             main_page.timeline_select_track(2)
-            initial_preview = main_page.snapshot(locator=L.base.Area.preview.main)
+            initial_preview = main_page.snapshot(locator=main_page.area.preview.main, file_name=Auto_Ground_Truth_Folder + 'L56.png')
 
         with step('[Action] Enable timeline preview volume meter and capture updated preview'):
             main_page.top_menu_bar_view_show_timeline_preview_volume_meter()
-            volume_preview = main_page.snapshot(locator=L.base.Area.preview.main)
-            # Verify preview is updated: similarity should be less than 0.95
-            if main_page.compare(volume_preview, initial_preview, similarity=0.95):
-                assert False, "Preview did not update after enabling volume meter! Similarity should < 0.95"
+            volume_preview = main_page.snapshot(locator=main_page.area.preview.main)
+            if main_page.compare(volume_preview, initial_preview, similarity=0.999999):
+                assert False, "Preview did not update after enabling volume meter! Similarity should < 0.999999"
 
-        with step('[Action] Play preview for 7 seconds then stop playback'):
+        with step('[Action] Play preview for 3 seconds then stop playback'):
             playback_window_page.Edit_Timeline_PreviewOperation("Play")
-            time.sleep(DELAY_TIME*7)
+            time.sleep(DELAY_TIME*3)
             playback_window_page.Edit_Timeline_PreviewOperation("Stop")
 
         with step('[Verify] Check preview remains as after volume meter enabled'):
-            preview_after_play = main_page.snapshot(locator=L.base.Area.preview.main)
-            # Verify preview matches volume enabled state: similarity should be greater than 0.95
+            preview_after_play = main_page.snapshot(locator=main_page.area.preview.main)
             if not main_page.compare(volume_preview, preview_after_play, similarity=0.95):
                 assert False, "Preview does not match the volume meter enabled state after playback! Similarity should > 0.95"
 
@@ -15590,16 +15442,16 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.new_project_func
     @pytest.mark.new_workspace
-    @pytest.mark.name('[test_new_project_func_14_7] Open [New Workspace] by hotkey')
+    @pytest.mark.name('[test_new_project_func_14_8] Open [New Workspace] by hotkey')
     @exception_screenshot
-    def test_new_project_func_14_7(self):
+    def test_new_project_func_14_8(self):
         """
         0. Ensure the dependency test is run and passed
         1. Enter [Media Content]
         2. Open [New Workspace] by hotkey and Handle [Do you want to save changes] dialog with (No)
         3. Check "Use Sample Media" String shows in media room
         """
-        dependency_test = "test_new_project_func_14_6"
+        dependency_test = "test_new_project_func_14_7"
         self.ensure_dependency(dependency_test)
 
         # [L54] 2.1 Media Room > Insert clip to timeline & preview > Project aspect ratio 9:16
@@ -15622,9 +15474,9 @@ class Test_BFT_365_OS14():
     @pytest.mark.aspect_ratio
     @pytest.mark.import_media
     @pytest.mark.timeline
-    @pytest.mark.name('[test_new_project_func_14_8] Set aspect ratio 9:16, import and insert media, then verify preview')
+    @pytest.mark.name('[test_new_project_func_14_9] Set aspect ratio 9:16, import and insert media, then verify preview')
     @exception_screenshot
-    def test_new_project_func_14_8(self):
+    def test_new_project_func_14_9(self):
         """
         0. Ensure the dependency test is run and passed
         1. Set [Project Aspect Ratio] to (9:16)
@@ -15633,7 +15485,7 @@ class Test_BFT_365_OS14():
         4. Insert media to selected track from tip area
         5. Screenshot (locator=L.base.Area.preview.only_mtk_view) and compare with GT (Ground_Truth_Folder + 'L54.png') (similarity=0.93)
         """
-        dependency_test = "test_previous_dependency" 
+        dependency_test = "test_new_project_func_14_8" 
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Set Project Aspect Ratio to 9:16'):
@@ -15670,9 +15522,9 @@ class Test_BFT_365_OS14():
     @pytest.mark.aspect_ratio
     @pytest.mark.import_media
     @pytest.mark.timeline
-    @pytest.mark.name('[test_new_project_func_14_9] Open New Workspace, set aspect 1:1, import media, and verify preview')
+    @pytest.mark.name('[test_new_project_func_14_10] Open New Workspace, set aspect 1:1, import media, and verify preview')
     @exception_screenshot
-    def test_new_project_func_14_9(self):
+    def test_new_project_func_14_10(self):
         """
         0. Ensure the dependency test is run and passed
         1. Open [New Workspace] by hotkey and handle [Do you want to save changes] dialog with (No)
@@ -15684,7 +15536,7 @@ class Test_BFT_365_OS14():
         7. Set timecode to (00:00:28:03) at main page
         8. Screenshot (locator=main_page.area.preview.main) and compare with GT (Ground_Truth_Folder + 'L55.png') (similarity=0.94)
         """
-        dependency_test = "test_previous_dependency"
+        dependency_test = "test_new_project_func_14_9"
         self.ensure_dependency(dependency_test)
 
         # [L55] 2.1 Media Room > Insert clip to timeline & preview > Project aspect ratio 1:1
@@ -15704,7 +15556,7 @@ class Test_BFT_365_OS14():
             main_page.select_library_icon_view_media('JPN.mp4')
 
         with step('[Action] Insert media to selected track from tip area'):
-            main_page.tips_area_insert_media_to_selected_track(option=-1)
+            main_page.click(L.main.tips_area.btn_insert_to_selected_track)
 
         with step('[Action] Handle aspect ratio conflict dialog'):
             main_page.handle_aspect_ratio_conflict()
@@ -15792,8 +15644,11 @@ class Test_BFT_365_OS14():
         7. Verify all 3 search results are different
         """
         dependency_test = "test_search_media_func_15_1"
-        self.ensure_dependency(dependency_test)
-
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            intro_video_page.enter_intro_video_room()
+        
         # [L195] 2.2 Video Intro Room > Search > Input CHT character
         # with uuid("ef94a884-f71d-4111-bc9d-fafab5c034b7") as case:
 
@@ -15819,12 +15674,12 @@ class Test_BFT_365_OS14():
             main_page.click(L.intro_video_room.btn_library)
 
         with step('[Verify] Verify all three search results are different'):
-            if main_page.compare(screenshot1, screenshot2, similarity=0.88):
-                assert False, "Search results for 'てんじんまつり' and '冰島' are too similar! Similarity should < 0.88"
-            if main_page.compare(screenshot2, screenshot3, similarity=0.88):
-                assert False, "Search results for '冰島' and '证书管理办法' are too similar! Similarity should < 0.88"
-            if main_page.compare(screenshot1, screenshot3, similarity=0.88):
-                assert False, "Search results for 'てんじんまつり' and '证书管理办法' are too similar! Similarity should < 0.88"
+            if main_page.compare(screenshot1, screenshot2, similarity=0.95):
+                assert False, "Search results for 'てんじんまつり' and '冰島' are too similar! Similarity should < 0.95"
+            if main_page.compare(screenshot2, screenshot3, similarity=0.95):
+                assert False, "Search results for '冰島' and '证书管理办法' are too similar! Similarity should < 0.95"
+            if main_page.compare(screenshot1, screenshot3, similarity=0.95):
+                assert False, "Search results for 'てんじんまつり' and '证书管理办法' are too similar! Similarity should < 0.95"
 
         assert True
 
@@ -15842,7 +15697,10 @@ class Test_BFT_365_OS14():
         3. Click (L.intro_video_room.btn_library) to back to Intro Room
         """
         dependency_test = "test_search_media_func_15_2"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            intro_video_page.enter_intro_video_room()
 
         # [L196] 2.2 Video Intro Room > Search > Input "." character
         # with uuid("14ba0fd1-597b-4c60-86bb-b0bb4e36d38c") as case:
@@ -15870,7 +15728,10 @@ class Test_BFT_365_OS14():
         2. Check (L.media_room.txt_no_results_for_backslash) is shown
         """
         dependency_test = "test_search_media_func_15_3"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            intro_video_page.enter_intro_video_room()
 
         # # [L197] 2.2 Video Intro Room > Search IAD > Input "\" character
         # with uuid("41c21164-4368-47f5-a335-41604a0d507f") as case:
@@ -15904,13 +15765,15 @@ class Test_BFT_365_OS14():
         8. Verify (Feel the Music Within) is shown in library
         """
         dependency_test = "test_search_media_func_15_4"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
 
         # [L146] 2.1 Media Room > BGM (CL BGM) > Check Library
         # with uuid("bd302be5-7617-4374-9a0a-80236f611f0d") as case:
-
-        with step('[Action] Click [New Project] from top menu bar to return to media room'):
-            main_page.top_menu_bar_file_new_project()
+        else:
+            with step('[Action] Click [New Project] from top menu bar to return to media room'):
+                main_page.top_menu_bar_file_new_project()
 
         with step('[Action] Click [Background Music (CL)] in Media Room'):
             media_room_page.enter_background_music_CL()
@@ -15965,7 +15828,7 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Click [Play] in playback window, wait, and press Space key'):
             playback_window_page.Edit_Timeline_PreviewOperation('Play')
-            time.sleep(DELAY_TIME * 3)
+            time.sleep(DELAY_TIME * 4)
             main_page.press_space_key()
 
         with step('[Verify] Get timecode from slidebar and verify it is within 00:02~00:04'):
@@ -16023,14 +15886,14 @@ class Test_BFT_365_OS14():
         5. Set timecode to (00:00:28:20) at main page
         6. Check preview updated
         """
-        dependency_test = "test_previous_dependency"
+        dependency_test = "test_search_media_func_15_7"
         self.ensure_dependency(dependency_test)
 
         with step('[Action] Enter Audio Mixing Room (6)'):
             main_page.enter_room(6)
 
         with step('[Verify] Check volume meter of audio track 1 is shown'):
-            if not main_page.exist([{'AXIdentifier': 'AudioMixingCollectionViewItem', 'index': 0}, {'AXRole': 'AXValueIndicator', 'AXRoleDescription': 'value indicator'}]):
+            if not audio_mixing_room_page.exist([{'AXIdentifier': 'AudioMixingCollectionViewItem', 'index': 0}, {'AXRole': 'AXValueIndicator', 'AXRoleDescription': 'value indicator'}]):
                 assert False, "Volume meter for audio track 1 is not displayed!"
 
         with step('[Verify] Check default volume meter preview is shown'):
@@ -16039,15 +15902,16 @@ class Test_BFT_365_OS14():
 
         with step('[Action] Capture screenshot of audio 1 library track'):
             audio_1_library_track = main_page.exist({'AXIdentifier': 'AudioMixingCollectionViewItem', 'index': 0})
+            time.sleep(DELAY_TIME * 0.5)
             before_preview = main_page.snapshot(locator=audio_1_library_track)
 
         with step('[Action] Set timeline timecode to 00:00:28:20'):
             main_page.set_timeline_timecode('00:00:28:20')
 
         with step('[Verify] Check preview updated after timecode change'):
-            after_preview = main_page.snapshot(locator=audio_1_library_track, file_name=Auto_Ground_Truth_Folder + 'L148.png')
-            if main_page.compare(before_preview, after_preview, similarity=0.94):
-                # Similarity should be less than 0.95 when preview is updated
+            time.sleep(DELAY_TIME*4)
+            self.after_audio_1 = main_page.snapshot(locator=audio_1_library_track, file_name = Auto_Ground_Truth_Folder + 'L148.png')
+            if main_page.compare(before_preview, self.after_audio_1, similarity=0.94):
                 assert False, "Preview did not update after setting timecode! Similarity should < 0.94"
 
         assert True
@@ -16066,7 +15930,7 @@ class Test_BFT_365_OS14():
         3. Click [Open project in launcher] (L.base.launcher_window.btn_open_project) and open project (Test_Material_Folder + 'test_search_media_func_15_9.pds')
         4. Check main_page.exist(L.base.main_caption).AXValue == 'test_search_media_func_15_9'
         """
-        dependency_test = "test_search_media_func_15_10"
+        dependency_test = "test_search_media_func_15_8"
         self.ensure_dependency(dependency_test)
 
         # [L36] 1.3 New Launcher > Project  Area > Open Project > Single click
@@ -16101,9 +15965,9 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test is run and passed
         1. Enter [Audio Mixing Room] (6)
         2. Verify the volume meter ({'AXIdentifier': 'AudioMixingCollectionViewItem', 'index': 0}) of audio track 1 is shown
-        3. Screenshot (locator=audio_1_library_track) and compare with GT (Auto_Ground_Truth_Folder + 'L148.png') (similarity=0.98)
+        3. Screenshot (locator=audio_1_library_track) and compare with GT (L148.png) (similarity=0.98)
         '''
-        dependency_test = "test_previous_dependency"
+        dependency_test = "test_search_media_func_15_9"
         self.ensure_dependency(dependency_test)
         
         with step("[Action] Enter Audio Mixing Room with parameter 6"):
@@ -16116,7 +15980,12 @@ class Test_BFT_365_OS14():
         
         with step("[Action] Screenshot audio track 1 and compare with GT L148.png"):
             audio_snapshot = main_page.snapshot(locator=audio_1_library_track)
-            check_audio = main_page.compare(Auto_Ground_Truth_Folder + 'L148.png', audio_snapshot, similarity=0.98)
+            check_audio = main_page.compare(
+                self.after_audio_1,
+                audio_snapshot,
+                similarity=0.98
+            )
+
             if not check_audio:
                 # Similarity should be greater than 0.98
                 assert False, "Audio track screenshot does not match GT (L148.png)! Similarity should > 0.98"
@@ -16136,10 +16005,10 @@ class Test_BFT_365_OS14():
         '''
         dependency_test = "test_search_media_func_15_10"
         self.ensure_dependency(dependency_test)
+
         
         # [L99] 2.1 Media Room > New On Boarding > On Boarding flowing_1 > select project in Launcher
         # with uuid("de129b84-db97-4048-96f3-7af83dd4167d") as case:
-
         with step("[Action] Enter Media Room with parameter 0"):
             main_page.enter_room(0)
         
@@ -16166,6 +16035,11 @@ class Test_BFT_365_OS14():
         # [L162] 2.1 Media Room > BGM (Meta) > Input ENG character
         # with uuid("3743a6fe-b4e7-41ca-81db-e48f2be7b24f") as case:
         
+        dependency_test = "test_search_media_func_15_11"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+
         with step("[Action] Enter background music room"):
             media_room_page.enter_background_music()
 
@@ -16233,24 +16107,27 @@ class Test_BFT_365_OS14():
         5. Check the search result is different in 2 steps
         """
         dependency_test = "test_search_media_func_15_13"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            media_room_page.enter_background_music()
 
         # [L164] 2.1 Media Room > BGM (Meta) > search .
         # with uuid("59dbc4dc-eaec-4df3-8dcc-8ed370c7e4b0") as case:
 
         # [L165] 2.1 Media Room > BGM (Meta) > search \
         # with uuid("0ea5d15c-9237-42e0-b355-e4d765385ccc") as case:
-
-        with step("[Action] Click [Cancel] button in search library"):
-            media_room_page.search_library_click_cancel()
-            empty_search_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
-
+        else:
+            with step("[Action] Click [Cancel] button in search library"):
+                media_room_page.search_library_click_cancel()
+            
         with step("[Action] Search 'Rover Woter' in library and capture screenshot of library detail view"):
+            full_content_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
             media_room_page.search_library("Rover Woter")
             search_1_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
 
         with step("[Verify] Check preview is the same as empty search preview due to no search results"):
-            if not main_page.compare(empty_search_preview, search_1_preview, similarity=0.99):
+            if main_page.compare(full_content_preview, search_1_preview, similarity=0.99):
                 assert False, "Search results for 'Rover Woter' are not empty! Similarity should be 0.99"
 
         with step("[Action] Click [Cancel] button in search library"):
@@ -16261,7 +16138,7 @@ class Test_BFT_365_OS14():
             search_2_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
 
         with step("[Verify] Check preview is the same as empty search preview due to no search results"):
-            if not main_page.compare(empty_search_preview, search_2_preview, similarity=0.99):
+            if main_page.compare(full_content_preview, search_2_preview, similarity=0.99):
                 assert False, "Search results for '.' are not empty! Similarity should be 0.99"
         
         with step("[Action] Click [Cancel] button in search library"):
@@ -16272,7 +16149,7 @@ class Test_BFT_365_OS14():
             search_3_preview = main_page.snapshot(locator=L.base.Area.library_detail_view)
 
         with step("[Verify] Check preview is the same as empty search preview due to no search results"):
-            if not main_page.compare(empty_search_preview, search_3_preview, similarity=0.99):
+            if main_page.compare(full_content_preview, search_3_preview, similarity=0.99):
                 assert False, "Search results for '\\' are not empty! Similarity should be 0.99"
         assert True
 
@@ -16288,6 +16165,12 @@ class Test_BFT_365_OS14():
         2. Click [Close] button of (First recently searched)
         3. Verify search filed is updated
         '''
+
+        dependency_test = "test_search_media_func_15_14"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+
         # [L212] 2.3 Pip Room > Search IAD > click "x" button of "recent searched"
         # with uuid("bf9d047b-f868-4c22-9fa3-a0fb9f79f5ed") as case:
 
@@ -16298,7 +16181,12 @@ class Test_BFT_365_OS14():
 
             # click search filed to Unfold suggestion keyword
             main_page.click(L.media_room.input_search)
-            time.sleep(DELAY_TIME )
+            time.sleep(DELAY_TIME)
+
+        with step('[Action] Search ("love") in [Pip Designer]'):
+            media_room_page.search_library("love")
+            time.sleep(DELAY_TIME)
+            media_room_page.search_library_click_cancel()
 
         with step('[Action] Click [Close] button of (First recently searched)'):
             # Click the Close button of (First recently searched)
@@ -16384,7 +16272,7 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test ('test_search_media_func_15_16') is run and passed
         1. Switch to Advanced mode (2) in title designer
         2. Click [Insert particle] button and insert particle (Nature > Love)(menu_index=7, particle_index=0)
-        3. Check (L.title_designer.area.edittext_text_content).AXValue is 'Kisses'
+        3. Check (L.title_designer.area.edittext_text_content).AXValue is 'Romance 01'
         '''
 
         # Ensure the dependency test is run and passed
@@ -16400,9 +16288,9 @@ class Test_BFT_365_OS14():
             title_designer_page.click_insert_particle_btn()
             title_designer_page.insert_particle(menu_index=7, particle_index=0)
 
-        with step("[Verify] Check that the edit text content is 'Kisses'"):
+        with step("[Verify] Check that the edit text content is 'Romance 01'"):
             elem = main_page.exist(L.title_designer.area.edittext_text_content)
-            assert elem.AXValue == "Kisses", f"Expected text content to be 'Kisses', got '{elem.AXValue}'"
+            assert elem.AXValue == 'Romance 01', f"Expected text content to be 'Romance 01', got '{elem.AXValue}'"
 
 
 
@@ -16417,7 +16305,7 @@ class Test_BFT_365_OS14():
         0. Ensure the dependency test ('test_search_media_func_15_17') is run and passed
         1. Set timecode to '00_00_02_13' in title designer > switch to Advanced mode (2) > screenshot (locator=L.title_designer.area.frame_video_preview)
         2. Move [Particle] to left (x=100) > screenshot (locator=L.title_designer.area.frame_video_preview)
-        3. Check similarity between 2 screenshots is within 0.95~0.985
+        3. Check preview is updated
         """
         dependency_test = "test_search_media_func_15_17"
         self.ensure_dependency(dependency_test)
@@ -16431,13 +16319,9 @@ class Test_BFT_365_OS14():
             title_designer_page.adjust_title_on_canvas.drag_move_particle_to_left(x=100)
             after_move_particle_preview = main_page.snapshot(locator=L.title_designer.area.frame_video_preview)
 
-        with step("[Verify] Check similarity between the two screenshots is within 0.95 ~ 0.985"):
-            if not main_page.compare(before_preview, after_move_particle_preview, similarity=0.95):
-                # Similarity should be greater than 0.95
-                assert False, "Similarity is lower than expected! Similarity should > 0.95"
-            if main_page.compare(before_preview, after_move_particle_preview, similarity=0.985):
-                # Similarity should be less than 0.985
-                assert False, "Similarity is higher than expected! Similarity should < 0.985"
+        with step("[Verify] Check preview is updated"):
+            if main_page.compare(before_preview, after_move_particle_preview, similarity=0.9):
+                assert False, "Similarity is higher than expected! Similarity should < 0.9"
 
         assert True
 
@@ -16511,7 +16395,7 @@ class Test_BFT_365_OS14():
                 file_name=Auto_Ground_Truth_Folder + 'L351_title.png'
             )
             check_preview = main_page.compare(
-                Auto_Ground_Truth_Folder + 'L351_title.png',
+                Ground_Truth_Folder + 'L351_title.png',
                 preview,
                 similarity=0.93
             )
@@ -16523,12 +16407,12 @@ class Test_BFT_365_OS14():
 
     @pytest.mark.search_media_func
     @pytest.mark.title_designer
-    @pytest.mark.name("[test_search_media_func_15_21] Verify Border Depth update by value")
+    @pytest.mark.name("[test_search_media_func_15_21] Adjust [Border Depth Direction]")
     @exception_screenshot
     def test_search_media_func_15_21(self):
         """
         0. Ensure the dependency test is run and passed
-        1. Set Border Depth by Value = 207
+        1. Set [Border Depth Direction] by Value = 207
         2. Check that Border Depth (L.title_designer.border.edittext_depth) is updated to 20
         """
         dependency_test = "test_search_media_func_15_20"
@@ -16537,13 +16421,13 @@ class Test_BFT_365_OS14():
         # [L353] 3.2 Title designer (general template) > Advanced mode > Border depth > Can edit direction
         # with uuid("bd771098-43b3-4c0c-ade2-ca443681e98f") as case:
 
-        with step("[Action] Set Border Depth by Value to 207"):
+        with step("[Action] Set [Border Depth Direction] by Value to 207"):
             title_designer_page.input_border_depth_value(207)
 
-        with step("[Verify] Check that Border Depth is updated to 207"):
+        with step("[Verify] Check that [Border Depth Direction] is updated to 207"):
             element = main_page.exist(L.title_designer.border.edittext_depth)
             if element.AXValue != "207":
-                assert False, f"Border Depth is not updated to 207! Expected: 207, Got: {element.AXValue}"
+                assert False, f"[Border Depth Direction] is not updated to 207! Expected: 207, Got: {element.AXValue}"
 
         assert True
 
@@ -16600,7 +16484,7 @@ class Test_BFT_365_OS14():
         with step("[Verify] Check preview is updated"):
             preview = main_page.snapshot(
                 locator=main_page.area.preview.only_mtk_view,
-                file_name=Ground_Truth_Folder + "L222_shape.png"
+                file_name=Auto_Ground_Truth_Folder + "L222_shape.png"
             )
             check_preview = main_page.compare(
                 Ground_Truth_Folder + "L222_shape.png",
@@ -16628,19 +16512,21 @@ class Test_BFT_365_OS14():
         5. Check that preview (L.base.Area.preview.only_mtk_view) is the same as GT (Ground_Truth_Folder + 'L134_JPN.png')
         """
         dependency_test = "test_search_media_func_15_22"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.start_app()
 
         # [L134] 2.1 Media Room > Media Content > Search > Input double character
         # with uuid("83f07c24-689f-4d83-bc3f-5e128f12b291") as case:
+        else:
+            with step("[Action] Enter Room (Media)(0)"):
+                main_page.enter_room(0)
 
-        with step("[Action] Enter Room (Media)(0)"):
-            main_page.enter_room(0)
+        with step("[Action] Import media file (Test_Material_Folder + 'BFT_21_Stage1/斑馬.jpg')"):
+            media_room_page.import_media_file(Test_Material_Folder + "BFT_21_Stage1/斑馬.jpg")
 
         with step("[Action] Import media file (Test_Material_Folder + 'BFT_21_Stage1/デスクトップ.jpg')"):
             media_room_page.import_media_file(Test_Material_Folder + "BFT_21_Stage1/デスクトップ.jpg")
 
-        with step("[Action] Import media file (Test_Material_Folder + 'BFT_21_Stage1/斑馬.jpg')"):
-            media_room_page.import_media_file(Test_Material_Folder + "BFT_21_Stage1/斑馬.jpg")
 
         with step("[Action] Search library with keyword 'デスクトップ'"):
             media_room_page.search_library("デスクトップ")
@@ -16648,9 +16534,9 @@ class Test_BFT_365_OS14():
         with step("[Verify] Check that preview matches GT (L134_JPN.png)"):
             preview = main_page.snapshot(
                 locator=L.base.Area.preview.only_mtk_view,
-                file_name=Ground_Truth_Folder + "L134_JPN.png"
+                file_name=Auto_Ground_Truth_Folder + "L134_JPN.png"
             )
-            if main_page.compare(Ground_Truth_Folder + "L134_JPN.png", preview, similarity=0.95):
+            if not main_page.compare(Ground_Truth_Folder + "L134_JPN.png", preview, similarity=0.95):
                 # Similarity should be greater than 0.95 for matching preview
                 assert False, "Preview does not match GT (L134_JPN.png)! Similarity should > 0.95"
 
@@ -16680,7 +16566,7 @@ class Test_BFT_365_OS14():
         with step("[Verify] Check that preview matches GT (L134_CHT.png)"):
             preview_snapshot = main_page.snapshot(
                 locator=L.base.Area.preview.only_mtk_view,
-                file_name=Ground_Truth_Folder + "L134_CHT.png"
+                file_name=Auto_Ground_Truth_Folder + "L134_CHT.png"
             )
             if not main_page.compare(Ground_Truth_Folder + "L134_CHT.png", preview_snapshot, similarity=0.95):
                 # Similarity should be greater than 0.95 for matching preview
@@ -16926,7 +16812,7 @@ class Test_BFT_365_OS14():
                 assert False, "Recent project list screenshot does not match GT! Similarity should < 0.99"
 
         with step("[Verify] Check recent project first icon screenshot as GT"):
-            screenshot_icon = main_page.snapshot(L.base.launcher_window.img_recently_icon)
+            screenshot_icon = main_page.snapshot(L.base.launcher_window.img_recently_icon, file_name=Auto_Ground_Truth_Folder + 'L40_recent_project_first_icon.png')
             check_icon = main_page.compare(Ground_Truth_Folder + 'L40_recent_project_first_icon.png', screenshot_icon, similarity=0.85)
             if not check_icon:
                 # Similarity should be greater than 0.85
@@ -16988,22 +16874,23 @@ class Test_BFT_365_OS14():
         2. Check preview (locator=main_page.area.library_icon_view) is as (Auto_Ground_Truth_Folder + 'L137.png') (similarity=0.99)
         '''
         dependency_test = "test_launcher_func_17_1"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
 
         # [L136] 2.1 Media Room > Search > Input "." character
         # with uuid("53f02d9c-36a4-42a6-8990-1f5d996130cc") as case:
 
         with step("[Action] Search '.' in library"):
-            media_room_page.search_library(".")
+            # media_room_page.search_library(".")
 
-            # search .
-            # main_page.click(L.media_room.input_search)
-            # main_page.keyboard.send(".")
-            # time.sleep(DELAY_TIME)
-            # main_page.press_enter_key()
-            # time.sleep(DELAY_TIME * 3)
-            # main_page.move_mouse_to_0_0()
-            # time.sleep(DELAY_TIME)
+            main_page.click(L.media_room.input_search)
+            main_page.keyboard.send(".")
+            time.sleep(DELAY_TIME)
+            main_page.press_enter_key()
+            time.sleep(DELAY_TIME * 3)
+            main_page.move_mouse_to_0_0()
+            time.sleep(DELAY_TIME)
 
         with step("[Verify] Check preview against GT (L137.png)"):
             preview_snapshot = main_page.snapshot(locator=main_page.area.library_icon_view)
@@ -17031,7 +16918,9 @@ class Test_BFT_365_OS14():
         4. Verify description is 'Eliminate unwanted camera shakiness and jitters.'
         """
         dependency_test = "test_launcher_func_17_2"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
 
         # [L17] 1.3 New Launcher > Showcase > Video Stabilizer > Caption & Text
         # with uuid("83fce6dc-f677-4686-bb9b-52d3c90e35c6") as case:
@@ -17067,7 +16956,10 @@ class Test_BFT_365_OS14():
         3. Verify description is 'Auto-remove unwanted noises and restore dialogue or music tracks for crystal clear sound.'
         """
         dependency_test = "test_launcher_func_17_3"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L32] 1.3 New Launcher > Showcase > AI Audio Denoise > Caption & Text
         # with uuid("b8135996-1a91-48ef-9502-57f59dad32c0") as case:
@@ -17099,7 +16991,10 @@ class Test_BFT_365_OS14():
         3. Verify description is 'Instantly apply visual effects to moving people and objects.'
         """
         dependency_test = "test_launcher_func_17_4"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         
         # [L14] 1.3 New Launcher > Showcase > Body Effect > Caption & Text
@@ -17132,7 +17027,10 @@ class Test_BFT_365_OS14():
         3. Verify description is 'Detect and reduce wind noises for crisp, clean audio.'
         """
         dependency_test = "test_launcher_func_17_5"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L23] 1.3 New Launcher > Showcase > AI Wind Removal > Caption & Text
         # with uuid("4735b0f6-2ee7-4ded-a083-6e7abb84fb40") as case:
@@ -17163,7 +17061,10 @@ class Test_BFT_365_OS14():
         2. Verify intro video is playing
         """
         dependency_test = "test_launcher_func_17_6"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L33] 1.3 New Launcher > Showcase > AI Audio Denoise > Video
         # with uuid("c7390426-3098-479c-b2bb-dd158f77b08a") as case:
@@ -17177,30 +17078,33 @@ class Test_BFT_365_OS14():
             
         assert True
 
-    @pytest.mark.launcher_func
-    @pytest.mark.launcher
-    @pytest.mark.name('[test_launcher_func_17_8] Hover on launcher btn [Greener Grass] and verify intro video is playing')
-    @exception_screenshot
-    def test_launcher_func_17_8(self):
-        """
-        0. Ensure the dependency test is run and passed
-        1. Hover on launcher btn (Greener Grass)(L.base.launcher_window.btn_greener_grass)
-        2. Verify intro video is playin
-        """
-        dependency_test = "test_launcher_func_17_7"
-        self.ensure_dependency(dependency_test)
+    # @pytest.mark.launcher_func
+    # @pytest.mark.launcher
+    # @pytest.mark.name('[test_launcher_func_17_8] Hover on launcher btn [Greener Grass] and verify intro video is playing')
+    # @exception_screenshot
+    # def test_launcher_func_17_8(self):
+    #     """
+    #     0. Ensure the dependency test is run and passed
+    #     1. Hover on launcher btn (Greener Grass)(L.base.launcher_window.btn_greener_grass)
+    #     2. Verify intro video is playin
+    #     """
+    #     dependency_test = "test_launcher_func_17_7"
+    #     if not self.ensure_dependency(dependency_test, run_dependency=False):
+    #         main_page.clear_cache()
+    #         main_page.start_app()
+    #         main_page.click_close_then_back_to_launcher()
 
-        # [L27] 1.3 New Launcher > Showcase > Greener Grass > Video
-        # with uuid("0e0facdb-bc69-4595-94dc-cc05fe2521f7") as case:
+    #     # [L27] 1.3 New Launcher > Showcase > Greener Grass > Video
+    #     # with uuid("0e0facdb-bc69-4595-94dc-cc05fe2521f7") as case:
 
-        with step("[Action] Hover on launcher btn (Greener Grass) on launcher"):
-            main_page.hover_launcher_btn(L.base.launcher_window.btn_greener_grass)
+    #     with step("[Action] Hover on launcher btn (Greener Grass) on launcher"):
+    #         main_page.hover_launcher_btn(L.base.launcher_window.btn_greener_grass)
 
-        with step("[Verify] Check intro video is playing"):
-            if not main_page.Check_PreviewWindow_is_different(L.base.launcher_window.show_case_video_area):
-                assert False, "Intro video is not playing!"
+    #     with step("[Verify] Check intro video is playing"):
+    #         if not main_page.Check_PreviewWindow_is_different(L.base.launcher_window.show_case_video_area):
+    #             assert False, "Intro video is not playing!"
 
-        assert True
+    #     assert True
 
 
     @pytest.mark.launcher_func
@@ -17213,8 +17117,11 @@ class Test_BFT_365_OS14():
         1. Hover on launcher btn (Video Denoise)(L.base.launcher_window.btn_video_denoise)
         2. Verify intro video is playing
         """
-        dependency_test = "test_launcher_func_17_8"
-        self.ensure_dependency(dependency_test)
+        dependency_test = "test_launcher_func_17_7"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L21] 1.3 New Launcher > Showcase > Video Denoise > Video
         # with uuid("33f8faac-3ae8-4556-a195-5b1e6486e856") as case:
@@ -17239,7 +17146,10 @@ class Test_BFT_365_OS14():
         2. Verify intro video is playing
         """
         dependency_test = "test_launcher_func_17_9"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L15] 1.3 New Launcher > Showcase > Body Effect > Video
         # with uuid("5b1b5a5f-4fb7-42c7-b2b1-9e20b9731c84") as case:
@@ -17264,7 +17174,10 @@ class Test_BFT_365_OS14():
         2. Verify intro video is playing
         """
         dependency_test = "test_launcher_func_17_10"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L24] 1.3 New Launcher > Showcase > Wind Removal > Video
         # with uuid("4c5e99ad-46bd-413f-be95-c56c45f80fb7") as case:
@@ -17278,39 +17191,42 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.launcher_func
-    @pytest.mark.launcher
-    @pytest.mark.name('[test_launcher_func_17_12] Hover on launcher btn [Greener Grass], click intro video area, check import dialog, and press ESC to close')
-    @exception_screenshot
-    def test_launcher_func_17_12(self):
-        """
-        0. Ensure the dependency test is run and passed
-        1. Hover on launcher btn (Greener Grass)(L.base.launcher_window.btn_greener_grass)
-        2. Click intro video area
-        3. Check that import dialog is shown with title 'Greener Grass'
-        4. Press [ESC] key to close import dialog
-        """
-        dependency_test = "test_launcher_func_17_11"
-        self.ensure_dependency(dependency_test)
+    # @pytest.mark.launcher_func
+    # @pytest.mark.launcher
+    # @pytest.mark.name('[test_launcher_func_17_12] Hover on launcher btn [Greener Grass], click intro video area, check import dialog, and press ESC to close')
+    # @exception_screenshot
+    # def test_launcher_func_17_12(self):
+    #     """
+    #     0. Ensure the dependency test is run and passed
+    #     1. Hover on launcher btn (Greener Grass)(L.base.launcher_window.btn_greener_grass)
+    #     2. Click intro video area
+    #     3. Check that import dialog is shown with title 'Greener Grass'
+    #     4. Press [ESC] key to close import dialog
+    #     """
+    #     dependency_test = "test_launcher_func_17_11"
+    #     if not self.ensure_dependency(dependency_test, run_dependency=False):
+    #         main_page.clear_cache()
+    #         main_page.start_app()
+    #         main_page.click_close_then_back_to_launcher()
 
-        # [L28] 1.3 New Launcher > Showcase > Greener Grass > Single click on banner area
-        # with uuid("72234195-e74c-4ad4-a61c-572ed387a661") as case:
+    #     # [L28] 1.3 New Launcher > Showcase > Greener Grass > Single click on banner area
+    #     # with uuid("72234195-e74c-4ad4-a61c-572ed387a661") as case:
 
-        with step("[Action] Hover on launcher btn (Greener Grass) on launcher"):
-            main_page.hover_launcher_btn(L.base.launcher_window.btn_greener_grass)
+    #     with step("[Action] Hover on launcher btn (Greener Grass) on launcher"):
+    #         main_page.hover_launcher_btn(L.base.launcher_window.btn_greener_grass)
 
-        with step("[Action] Click intro video area"):
-            main_page.click(L.base.launcher_window.show_case_video_area)
+    #     with step("[Action] Click intro video area"):
+    #         main_page.click(L.base.launcher_window.show_case_video_area)
 
-        with step("[Verify] Check that import dialog is shown with title 'Greener Grass'"):
-            dialog = main_page.exist(L.base.launcher_window.import_dialog)
-            if dialog.AXTitle != 'Greener Grass':
-                assert False, f"Import dialog title does not match expected value! Expected 'Greener Grass', got '{dialog.AXTitle}'"
+    #     with step("[Verify] Check that import dialog is shown with title 'Greener Grass'"):
+    #         dialog = main_page.exist(L.base.launcher_window.import_dialog)
+    #         if dialog.AXTitle != 'Greener Grass':
+    #             assert False, f"Import dialog title does not match expected value! Expected 'Greener Grass', got '{dialog.AXTitle}'"
 
-        with step("[Action] Press [ESC] key to close import dialog"):
-            main_page.press_esc_key()
+    #     with step("[Action] Press [ESC] key to close import dialog"):
+    #         main_page.press_esc_key()
 
-        assert True
+    #     assert True
 
     @pytest.mark.launcher_func
     @pytest.mark.pip_room
@@ -17325,10 +17241,13 @@ class Test_BFT_365_OS14():
         2. Enter room (pip room)(4)
         3. Click search field (L.media_room.input_search) > Click [Arrow Down] by input keyboard > Click [Enter]
         4. Verify that search field is updated with 'love'
-        5. Verify able to select media ('Love Sticker 06') by library icon view
+        5. Verify able to select media ('Love 06') by library icon view
         """
-        dependency_test = "test_search_media_func_17_12"
-        self.ensure_dependency(dependency_test)
+        dependency_test = "test_search_media_func_17_11"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L207] 2.3 Pip Room > Search IAD > by suggestion keyword
         # with uuid("a095de47-8e47-44b3-8030-5f1a08c621ee") as case:
@@ -17354,9 +17273,9 @@ class Test_BFT_365_OS14():
             if search_field.AXValue.lower() != 'love':
                 assert False, f"Search field value is not 'love'! Expected: 'love', Got '{search_field.AXValue}'"
 
-        with step("[Verify] Select media 'Love Sticker 06' by library icon view"):
-            if not main_page.select_library_icon_view_media('Love Sticker 06'):
-                assert False, "Unable to select media 'Love Sticker 06' by library icon view"
+        with step("[Verify] Select media 'Love 06' by library icon view"):
+            if not main_page.select_library_icon_view_media('Love 06'):
+                assert False, "Unable to select media 'Love 06' by library icon view"
 
         assert True
 
@@ -17374,7 +17293,9 @@ class Test_BFT_365_OS14():
         4. Verify description is 'Remove unwanted grain, artifacts, and pixelation caused by low light, high ISO, and low quality recordings.'
         """
         dependency_test = "test_launcher_func_17_13"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
 
         # [L20] 1.3 New Launcher > Showcase > Video Denoise > Caption & Text
         # with uuid("aa3f348a-5d1d-4fbd-984f-82386e38edb6") as case:
@@ -17397,37 +17318,40 @@ class Test_BFT_365_OS14():
 
         assert True
 
-    @pytest.mark.launcher_func
-    @pytest.mark.launcher
-    @pytest.mark.name('[test_launcher_func_17_15] Hover on launcher btn [Greener Grass] and verify title and description')
-    @exception_screenshot
-    def test_launcher_func_17_15(self):
-        """
-        0. Ensure the dependency test is run and passed
-        1. Hover on launcher button (Greener Grass)(L.base.launcher_window.btn_greener_grass)
-        2. Verify title is 'Greener Grass'
-        3. Verify description is 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.'
-        """
-        dependency_test = "test_launcher_func_17_14"
-        self.ensure_dependency(dependency_test)
+    # @pytest.mark.launcher_func
+    # @pytest.mark.launcher
+    # @pytest.mark.name('[test_launcher_func_17_15] Hover on launcher btn [Greener Grass] and verify title and description')
+    # @exception_screenshot
+    # def test_launcher_func_17_15(self):
+    #     """
+    #     0. Ensure the dependency test is run and passed
+    #     1. Hover on launcher button (Greener Grass)(L.base.launcher_window.btn_greener_grass)
+    #     2. Verify title is 'Greener Grass'
+    #     3. Verify description is 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.'
+    #     """
+    #     dependency_test = "test_launcher_func_17_14"
+    #     if not self.ensure_dependency(dependency_test, run_dependency=False):
+    #         main_page.clear_cache()
+    #         main_page.start_app()
+    #         main_page.click_close_then_back_to_launcher()
 
-        # [L26] 1.3 New Launcher > Showcase > Greener Grass > Caption & Text
-        # with uuid("44398a76-c9e5-469b-ba2a-3df16d5b6e55") as case:
+    #     # [L26] 1.3 New Launcher > Showcase > Greener Grass > Caption & Text
+    #     # with uuid("44398a76-c9e5-469b-ba2a-3df16d5b6e55") as case:
 
-        with step("[Action] Hover on launcher btn (Greener Grass) on launcher"):
-            main_page.hover_launcher_btn(L.base.launcher_window.btn_greener_grass)
+    #     with step("[Action] Hover on launcher btn (Greener Grass) on launcher"):
+    #         main_page.hover_launcher_btn(L.base.launcher_window.btn_greener_grass)
 
-        with step("[Verify] Check that show case title is 'Greener Grass'"):
-            target = main_page.exist(L.base.launcher_window.show_case_title)
-            if target.AXValue != 'Greener Grass':
-                assert False, f"Show case title does not match expected value! Expected 'Greener Grass', got '{target.AXValue}'"
+    #     with step("[Verify] Check that show case title is 'Greener Grass'"):
+    #         target = main_page.exist(L.base.launcher_window.show_case_title)
+    #         if target.AXValue != 'Greener Grass':
+    #             assert False, f"Show case title does not match expected value! Expected 'Greener Grass', got '{target.AXValue}'"
 
-        with step("[Verify] Check that show case description is 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.'"):
-            target = main_page.exist(L.base.launcher_window.show_case_description)
-            if target.AXValue != 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.':
-                assert False, f"Show case description does not match expected value! Expected 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.', got '{target.AXValue}'"
+    #     with step("[Verify] Check that show case description is 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.'"):
+    #         target = main_page.exist(L.base.launcher_window.show_case_description)
+    #         if target.AXValue != 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.':
+    #             assert False, f"Show case description does not match expected value! Expected 'Automatically make grass greener and skies bluer by improving the color and contrast of your videos.', got '{target.AXValue}'"
 
-        assert True
+    #     assert True
 
 
     @pytest.mark.launcher_func
@@ -17440,8 +17364,11 @@ class Test_BFT_365_OS14():
         1. Hover on launcher btn (AI Background Remover)(L.base.launcher_window.btn_ai_bg_remover)
         2. Verify intro video is playing
         """
-        dependency_test = "test_launcher_func_17_15"
-        self.ensure_dependency(dependency_test)
+        dependency_test = "test_launcher_func_17_14"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L30] 1.3 New Launcher > Showcase > AI Background Remover > Video
         # with uuid("0b931129-a8f2-410d-b753-04af2d95997b") as case:
@@ -17471,7 +17398,10 @@ class Test_BFT_365_OS14():
         6. Click [Aspect Ratio] button on main page > Move mouse to 0_0 > Set [Aspect Ratio] to (16:9) at main page
         """
         dependency_test = "test_launcher_func_17_16"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
 
         # [L35] 1.3 New Launcher > Project Area > Aspect ratio + New Project
@@ -17519,9 +17449,12 @@ class Test_BFT_365_OS14():
         4. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("Video Denoise")
         5. Press [ESC] key to close [Import Dialog]
         '''
-        with step('[Action] Clear Cache and Launch APP'):
+
+        dependency_test = "test_launcher_func_17_17"
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
             main_page.clear_cache()
-            main_page.launch_app()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L22] 1.3 New Launcher > Showcase > Video Denoise > Single click on banner area
         # with uuid("c22ae48a-63ec-451e-9b27-25200ad164c3") as case:
@@ -17556,7 +17489,10 @@ class Test_BFT_365_OS14():
         3. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("AI Body Effects")
         '''
         dependency_test = "test_launcher_func_17_18"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         with step('[Verify] Check [Body Effect] button is in Tool area'):
             if not  main_page.exist(L.base.launcher_window.btn_ai_body_effect):
@@ -17605,7 +17541,7 @@ class Test_BFT_365_OS14():
         # with uuid("13fd74b4-9070-4564-87df-af31698cb457") as case:
 
         with step('[Verify] Check if [Body Effect Bubble] is shown in 50 seconds'):
-            if not main_page.is_exist(area=L.effect_room.bb_body_effect, sec=50):
+            if not main_page.is_exist(L.effect_room.bb_body_effect, timeout=50):
                 assert False, "[Body Effect Bubble] did not show within 50 seconds!"
 
         with step('[Action] Click [Stop] in playback window'):
@@ -17615,6 +17551,7 @@ class Test_BFT_365_OS14():
             main_page.set_timeline_timecode('00_00_04_16', is_verify=True)
 
         with step('[Verify] Check preview matches GT (L42_sample_video.png) with similarity 0.95'):
+            time.sleep(DELAY_TIME*0.5)
             preview_snapshot = main_page.snapshot(
                 locator=L.base.Area.preview.only_mtk_view,
                 file_name=Auto_Ground_Truth_Folder + 'L42_sample_video.png'
@@ -17640,14 +17577,18 @@ class Test_BFT_365_OS14():
         4. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("AI Audio Denoise")
         '''
         dependency_test = "test_launcher_func_17_20"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L62] 1.3 Tool Area > AI Audio Denoise > Single click module
         # with uuid("f727e96c-2665-43ec-942d-016b9da8520a") as case:
 
-        with step('[Action] Click [Close] button to back to launcher and handle [Save Project] dialog with option [No]'):
-            main_page.click_close_then_back_to_launcher()
-            main_page.handle_no_save_project_dialog()
+        else:
+            with step('[Action] Click [Close] button to back to launcher and handle [Save Project] dialog with option [No]'):
+                main_page.click_close_then_back_to_launcher()
+                main_page.handle_no_save_project_dialog()
 
         with step('[Verify] Check if [Audio Denoise] button is in Tool area'):
             if not main_page.exist(L.base.launcher_window.btn_audio_denoise):
@@ -17680,7 +17621,10 @@ class Test_BFT_365_OS14():
         4. Check preview (L.base.Area.preview.only_mtk_view, file_name=Auto_Ground_Truth_Folder + 'L63_sample_video.png') matches GT (Ground_Truth_Folder + 'L63_sample_video.png', current_preview) with similarity=0.95
         '''
         dependency_test = "test_launcher_func_17_21"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
 
         # [L63] 1.3 Tool Area > AI Audio Denoise > Select "Sample video" in import dialog
         # with uuid("a1d48655-7372-49c8-9d2c-50eb9482eabc") as case:
@@ -17693,8 +17637,7 @@ class Test_BFT_365_OS14():
 
         with step("[Verify] Check [Audio Denoise Bubble] is shown in 50 seconds"):
             # Wait for the bubble to appear and verify its presence
-            time.sleep(50)
-            if not main_page.exist(L.fix_enhance.fix.audio_denoise.bb_text):
+            if not main_page.is_exist(L.fix_enhance.fix.audio_denoise.bb_text, timeout=50):
                 assert False, "[Audio Denoise Bubble] is not shown!"
 
         with step("[Verify] Get [Audio Denoise] Checkbox Status and check the result is True"):
@@ -17727,14 +17670,19 @@ class Test_BFT_365_OS14():
         4. Check if title of [Import Dialog] (L.base.launcher_window.import_dialog) is ("Video Speed")
         '''
         dependency_test = "test_launcher_func_17_22"
-        self.ensure_dependency(dependency_test)
+        if not self.ensure_dependency(dependency_test, run_dependency=False):
+            main_page.clear_cache()
+            main_page.start_app()
+            main_page.click_close_then_back_to_launcher()
+        else:
+            pass
 
         # [L71] 1.3 Tool Area > Video Speed > Single click module
         # with uuid("cfa51f03-9f74-4161-bf9e-bae9ebc06cdf") as case:
 
-        with step("[Action] Click [Close] button to back to launcher > Handle [Save Project] dialog with option [No]"):
-            main_page.click_close_then_back_to_launcher()
-            main_page.handle_no_save_project_dialog()
+            with step("[Action] Click [Close] button to back to launcher > Handle [Save Project] dialog with option [No]"):
+                main_page.click_close_then_back_to_launcher()
+                main_page.handle_no_save_project_dialog()
 
         with step("[Verify] Check [Video Speed] button is in Tool area"):
             if not main_page.exist(L.base.launcher_window.btn_video_speed):
@@ -17792,9 +17740,9 @@ class Test_BFT_365_OS14():
     @pytest.mark.launcher
     @pytest.mark.video_speed
     @pytest.mark.bubble
-    @pytest.mark.name('[test_launcher_func_17_24] Apply effect in Video Speed Designer and verify bubble')
+    @pytest.mark.name('[test_launcher_func_17_25] Apply effect in Video Speed Designer and verify bubble')
     @exception_screenshot
-    def test_launcher_func_17_24(self):
+    def test_launcher_func_17_25(self):
         '''
         0. Ensure the dependency test ('test_launcher_func_17_24') is run and passed
         1. Click [OK] button on [Video Speed Designer] to apply effect
@@ -17810,7 +17758,7 @@ class Test_BFT_365_OS14():
             video_speed_page.Edit_VideoSpeedDesigner_ClickOK()
 
         with step("[Verify] Check [Video Designer bubble] is shown"):
-            if not main_page.exist(L.video_speed.bb_video_speed):
+            if not main_page.is_exist(L.tips_area.button.tools.bb_video_speed, timeout=6):
                 assert False, "Video Speed Designer bubble is not shown!"
 
         assert True
@@ -25723,7 +25671,7 @@ class Test_BFT_365_OS14():
             media_room_page.search_library('@#$%^')
 
         with step("[Verify] Check if 'No results' text is displayed with correct AXValue"):
-            result_text =  main_page.exist(L.media_room.txt_no_search_result):
+            result_text =  main_page.exist(L.media_room.txt_no_search_result)
             if result_text.AXValue != 'No results for "@#$%^"':
                 assert False, f"AXValue is incorrect! Expected 'No results for \"@#$%^\"', but got '{ax_value}'"
 

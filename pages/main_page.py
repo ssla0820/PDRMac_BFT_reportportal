@@ -36,7 +36,7 @@ class Main_Page(BasePage):
 
                     if self.exist(L.media_room.string_use_sample_media, timeout=7):
                         self.click(L.media_room.string_use_sample_media)
-                        time.sleep(OPERATION_DELAY * 4)
+                        time.sleep(OPERATION_DELAY * 6) # Wait sample image loading
                     else:
                         logger('cannot find use sample media')
 
@@ -118,9 +118,11 @@ class Main_Page(BasePage):
                 else:
                     logger('Fail to get the position of target')
                     raise Exception('Fail to get the position of target')
-            if self.is_exist(L.main.tips_area.btn_insert_to_selected_track, None, 2):
-                logger('Fail to add media to selected track')
-                raise Exception('Fail to add media to selected track')
+            for _ in range(10):
+                if self.is_exist(L.main.tips_area.btn_insert_to_selected_track, None, 2):
+                    time.sleep(OPERATION_DELAY)
+                else: return True
+            raise Exception('Fail to add media to selected track')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
@@ -922,6 +924,7 @@ class Main_Page(BasePage):
             self.click(L.main.top_menu_bar.btn_view)
             time.sleep(OPERATION_DELAY*2)
             self.click(L.main.top_menu_bar.menu_show_library_preview_window)
+            time.sleep(OPERATION_DELAY)
             # # verify if volume meter shows
             # self.wait_for_image_changes(img_before, L.library_preview.display_panel, OPERATION_DELAY * 10)
         except Exception as e:

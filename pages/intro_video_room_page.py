@@ -334,10 +334,11 @@ class Intro_Video_Room(Main_Page, BasePage):
             if index < 1:
                 logger('Invalid index')
                 return False
+            time.sleep(DELAY_TIME*4)
             self.activate()
-            time.sleep(DELAY_TIME*2)
             value = index - 1
             logger(value)
+
             if index < 21:
                 x, y = self.exist({"AXIdentifier": "LibraryCollectionViewItem", 'index': value}).center
                 # logger('111')

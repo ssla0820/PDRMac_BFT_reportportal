@@ -14,8 +14,8 @@ PDR_cap = {
     'ground_truth_root': root + '/Desktop/ground_truth',
     'auto_ground_truth_root': root + '/Desktop/auto_ground_truth',
     'testing_material': os.path.abspath('../Material') + "/",
-    'ground_truth_root': root + '/Desktop/AT/Trunk_22/SFT/ground_truth',
-    'auto_ground_truth_root': root + '/Desktop/AT/Trunk_22/SFT/auto_ground_truth',
+    'ground_truth_root': root + '/Desktop/AT/GroundTruth/ground_truth',
+    'auto_ground_truth_root': root + '/Desktop/AT/GroundTruth/auto_ground_truth',
     'testing_material': root + '/Desktop/AT/Material_m320/',
     'export_path': root + '/Desktop/AT/export_path',
 }

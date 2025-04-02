@@ -92,10 +92,10 @@ class launcher_window:
     aspect_ratio_list = [aspect_ratio_menu, {'AXRole': "AXStaticText", "get_all": True}]
 
     # Tool area
-    btn_ai_body_effect = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 0}]
-    btn_video_stabilizer = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 1}]
-    btn_video_denoise = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 2}]
-    btn_greener_grass = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 3}]
+    btn_ai_body_effect = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 1}]
+    btn_video_stabilizer = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 2}]
+    btn_video_denoise = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 3}]
+    # btn_greener_grass = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 3}]
     btn_ai_bg_remover = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 4}]
     btn_audio_denoise = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 5}]
     btn_wind_removal = [main, {'AXIdentifier': 'LauncherToolCollectionViewItem', 'AXRole': 'AXGroup', 'index': 6}]
