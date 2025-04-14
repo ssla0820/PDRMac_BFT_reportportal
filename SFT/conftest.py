@@ -168,19 +168,15 @@ from reportportal_client import RPLogger
 import logging
 
 
-# Uncomment the following lines to get full HTTP logging in console
-# from http.client import HTTPConnection
-# HTTPConnection.debuglevel = 1
-
-
 @pytest.fixture(scope='session')
 def rp_logger():
+    # 設定 logger class 為 RPLogger
+    logging.setLoggerClass(RPLogger)
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.DEBUG)
-    logging.setLoggerClass(RPLogger)
+
     return logger
-
-
+    
 @pytest.fixture(autouse=True)
 def skip_by_mark(request):
     if request.node.get_closest_marker('fixture_skip'):
@@ -222,181 +218,12 @@ def pytest_runtest_makereport(item, call):
 
         if report.passed:
             pytest.test_results[test_name] = True
-        # elif report.failed:
-        #     # Capture exception message if available
-        #     # if call.excinfo:
-        #     #     pytest.test_results[test_name] = f"Exception: {call.excinfo.exconly()}"
-        #     # else:
-        #     pytest.test_results[test_name] = False
-        # elif report.skipped:
-        #     pytest.test_results[test_name] = False
         else:
             pytest.test_results[test_name] = False
 
-# import functools
-# import os
-# import subprocess
-# import sys
-# import traceback
-# import base64
-# import inspect
-
-# import functools
-# import os
-# import sys
-# import traceback
-# import base64
-# import inspect
-# import pytest
-
-# from ATFramework.utils.log import logger  # your custom logger
-# # from reportportal_client import RPLogger  # you might already have it
-
-# class ReportPortal_screenshot:
-#     """
-#     A helper class to handle taking/attaching screenshots to ReportPortal.
-#     """
-
-#     def __init__(self, udid=None, driver=None, rp_logger=None):
-#         """
-#         :param udid: Unique device ID (string or list).
-#         :param driver: The Appium or Selenium driver (could be a list).
-#         :param rp_logger: The logger fixture that supports attachments.
-#         """
-#         self.driver = driver
-#         self.udid = udid or "unknown_device"
-#         self.start_recording_flag = 0
-
-#         # Keep a reference to the ReportPortal logger
-#         self.rp_logger = rp_logger
-
-#         # Data path
-#         self.source_path = os.path.dirname(inspect.stack()[2].filename)
-
-#         # Set up the report path
-#         if isinstance(self.udid, list):  # multi-devices
-#             self.output_path = f"{self.source_path}/report/{self.udid[0]}"
-#         else:
-#             self.output_path = f"{self.source_path}/report/{self.udid}"
-
-#     def exception_screenshot(self, func):
-#         """
-#         Decorator that automatically takes a screenshot on exception,
-#         then attaches it to ReportPortal.
-#         """
-#         @functools.wraps(func)
-#         def wrapper(*args, **kwargs):
-#             try:
-#                 return func(*args, **kwargs)
-#             except Exception as e:
-#                 # If driver is a single instance, make it a list for uniform handling
-#                 driver_list = self.driver if isinstance(self.driver, list) else [self.driver]
-
-#                 # Extract traceback info
-#                 tb = sys.exc_info()[2]
-#                 lineno = traceback.extract_tb(tb)[-1].lineno
-#                 funcname = func.__name__
-#                 filename = os.path.basename(traceback.extract_tb(tb)[-1].filename)
-
-#                 # Ensure the folder exists
-#                 os.makedirs(self.output_path, exist_ok=True)
-
-#                 screenshot_file = f"[Exception]{funcname}_{lineno}.png"
-#                 screenshot_path = os.path.join(self.output_path, screenshot_file)
-
-#                 # Take screenshot on the first driver
-#                 if driver_list[0] and hasattr(driver_list[0], "get_screenshot_as_file"):
-#                     driver_list[0].get_screenshot_as_file(screenshot_path)
-
-#                 # Log with your local logger
-#                 logger(f"Exception screenshot: {screenshot_path}",
-#                        line=lineno, file_name=filename, function=funcname)
-#                 # get rp_logger from *args
-#                 rp_logger = args[0].rp_logger if args and hasattr(args[0], "rp_logger") else None
-
-#                 # Attach screenshot to RP
-#                 self.attach_to_reportportal(
-#                     name=screenshot_file,
-#                     path=screenshot_path,
-#                     content_type="image/png",
-#                 )
-
-#                 # If screen recording is active, stop & attach
-#                 if self.start_recording_flag == 1:
-#                     self.stop_and_attach_video(func.__name__)
-
-#                 raise  # re-raise the exception
-#         return wrapper
-
-#     def attach_screenshot(self, file_name, file_path):
-#         """
-#         Public method to attach an existing screenshot file to ReportPortal.
-#         """
-#         if not os.path.isfile(file_path):
-#             logger(f"File not found for attachment: {file_path}")
-#             return
-
-#         self.attach_to_reportportal(file_name, file_path, "image/png")
-
-#     def attach_to_reportportal(self, name, path, content_type):
-#         """
-#         Low-level method that actually calls rp_logger.info(..., attachment=...).
-#         """
-#         def rp_logger():
-#             logger = logging.getLogger(__name__)
-#             logger.setLevel(logging.DEBUG)
-#             logging.setLoggerClass(RPLogger)
-#             return logger
-#         rp_logger = rp_logger()
-
-#         if not rp_logger:
-#             logger("rp_logger not set! Cannot attach to ReportPortal.")
-#             return
-
-#         if not os.path.isfile(path):
-#             logger(f"File not found: {path}")
-#             return
-
-#         try:
-#             with open(path, "rb") as f:
-#                 content = f.read()
-
-#             rp_logger.info(
-#                 f"Uploading file to ReportPortal: {name}",
-#                 attachment={
-#                     "name": name,
-#                     "data": content,
-#                     "mime": content_type,
-#                 },
-#             )
-#         except Exception as e:
-#             logger(f"Error: Failed to upload file to ReportPortal. {str(e)}")
-
-#     def stop_and_attach_video(self, func_name):
-#         """
-#         Stop screen recording (if the driver supports it), save, then attach to RP.
-#         """
-#         driver_list = self.driver if isinstance(self.driver, list) else [self.driver]
-
-#         for idx, drv in enumerate(driver_list):
-#             if drv and hasattr(drv, "stop_recording_screen"):
-#                 base64_data = drv.stop_recording_screen()
-#                 # Build file name for each device
-#                 device_suffix = self.udid[idx] if isinstance(self.udid, list) else self.udid
-#                 video_file = f"[Exception]{func_name}({device_suffix}).mp4"
-#                 video_path = os.path.join(self.output_path, video_file)
-
-#                 with open(video_path, "wb") as fh:
-#                     fh.write(base64.b64decode(base64_data))
-
-#                 logger(f"Exception recording video: {video_path}")
-
-#                 # Attach the MP4 to ReportPortal
-#                 self.attach_to_reportportal(video_file, video_path, "video/mp4")
-
-#                 # Optional: If you want to run an ADB command to refresh media store
-#                 # cmd = f'adb -s {device_suffix} shell am broadcast -a android.intent.action.MEDIA_SCANNER_SCAN_FILE -d file:///storage///emulated///0///'
-#                 # self.shell(cmd)
-
-#         # Turn off the flag after stopping
-#         self.start_recording_flag = 0
+# In your pytest configuration file or conftest.py
+def pytest_runtest_makereport(item, call):
+    if 'Skipping' in str(call.excinfo):
+        # Check if the test was skipped due to a failed dependency
+        if 'did not pass' in str(call.excinfo):
+            item.add_marker(pytest.mark.issue(reason="skipped due to dependency test failure", issue_type="ND"))

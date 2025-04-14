@@ -9,6 +9,7 @@ from AppKit import NSScreen
 from .locator.locator import blending_mode as L
 from reportportal_client import step
 
+DELAY_TIME=1
 
 def arrow(obj, button="up", times=1, locator=None):
     locator = locator[button.lower() == "up"]
@@ -80,12 +81,12 @@ def _set_checkbox(self, _locator, value=True, _get_status_only=False):
                 break
             else:
                 target.press()
-                time.sleep(1)
+                time.sleep(DELAY_TIME)
         except:
             logger("First round, force click it")
             if _get_status_only: target.press()
             target.press()
-            time.sleep(1)
+            time.sleep(DELAY_TIME)
     else:
         return False
     return True
@@ -102,7 +103,7 @@ def hover_download(self, _btn=None):
 
 def verify_download_tooltip(self, ground_truth, _btn=None, _offset=(0, 20, 62, 20), _hover_it=True):
     if _hover_it: hover_download(self, _btn)
-    time.sleep(1)
+    time.sleep(DELAY_TIME)
     _x, _y = self.mouse.position()
     x = _x + _offset[0]
     y = _y + _offset[1]
@@ -118,7 +119,9 @@ class Blending(BasePage):
         return self.is_exist(L.main_window, timeout=timeout)
     @step('[Action][Blending] Click [OK] button to leave [Blending]')
     def click_ok(self):
-        return bool(self.exist_press(L.btn_ok))
+        result = bool(self.exist_press(L.btn_ok))
+        time.sleep(DELAY_TIME)
+        return result
 
     def click_cancel(self):
         return bool(self.exist_press(L.btn_cancel))
@@ -132,5 +135,7 @@ class Blending(BasePage):
         target = L.menu_item_mode.copy()
         target.append({"AXValue": value})
         self.exist_click(L.menu_mode)
-        return bool(self.exist_click(target))
+        result = bool(self.exist_click(target))
+        time.sleep(DELAY_TIME)
+        return result
 

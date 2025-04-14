@@ -224,6 +224,7 @@ class BasePage(BasePage):
                 elem = locator
             w, h = elem.AXSize
             x, y = elem.AXPosition
+            time.sleep(OPERATION_DELAY*0.5)
             return self.screenshot(file_name=file_name, w=w, x=x, y=y, h=h)
         except Exception as e:
             logger(f"[Warning] : {e}")
@@ -507,7 +508,7 @@ class BasePage(BasePage):
         '''
         if self.is_os_version_greater_than_or_equal_to("10.16"):
             _file_name = L.base.file_picker.file_name_big_sur
-            time.sleep(1.5)
+            time.sleep(OPERATION_DELAY)
         else:
             _file_name = L.base.file_picker.file_name
         self.exist(L.base.file_picker.popup_button)
@@ -516,7 +517,7 @@ class BasePage(BasePage):
             if show_more := self.exist(L.base.file_picker.show_more_options, timeout=5):
                 if not show_more.AXValue:
                     show_more.press()
-                    time.sleep(2)
+                    time.sleep(OPERATION_DELAY)
                 self.find(_file_name).AXValue = path.pop(-1)
         except:
             logger("Disclosure Triangle is not found")
@@ -530,25 +531,24 @@ class BasePage(BasePage):
         for dialog_locator in dialog_list:
             try:
                 if self.exist(dialog_locator):
-                    time.sleep(0.5)
+                    time.sleep(OPERATION_DELAY*0.5)
                     self.exist([dialog_locator, {"AXRole": "AXList", "index": -1}], timeout=0).AXFocused = True
                     break
             except:
                 logger("search next dialog")
             if dialog_locator == dialog_list[-1]: raise Exception("File picker is not found")
         with self.keyboard.pressed(self.keyboard.key.cmd, self.keyboard.key.shift, "h"):
-            time.sleep(1)
+            time.sleep(OPERATION_DELAY)
         for name in path:
             if os.path.exists(base := os.path.abspath(f"{base}/{name}")):
                 self.keyboard.right()
-                time.sleep(1)
+                time.sleep(OPERATION_DELAY*0.5)
                 logger(f"{base=}")
                 with self.keyboard.pressed(*name):
-                    time.sleep(1)
+                    time.sleep(OPERATION_DELAY*0.5)
             else:
                 logger(f"folder is not exist: {base=} / {name=}")
                 self.find({"AXRole": "AXButton", "AXTitle": "New Folder"}).press()
-                time.sleep(1)
                 if self.is_os_version_greater_than_or_equal_to("10.16"):
                     locators = [[{"AXIdentifier": "open-panel"}, {"AXRole": "AXSheet"}, {"AXRole": "AXTextField"}],
                                 [{"AXIdentifier": "save-panel"}, {"AXRole": "AXSheet"}, {"AXRole": "AXTextField"}]]
@@ -556,7 +556,7 @@ class BasePage(BasePage):
                     locators = [[{'AXTitle': 'New Folder'}, {"AXRole": "AXTextField"}]]
                 for locator in locators:
                     try:
-                        time.sleep(0.5)
+                        time.sleep(OPERATION_DELAY*0.5)
                         input_text = self.exist(locator, timeout=1)
                         current_text = input_text.AXValue
                         break
@@ -564,17 +564,17 @@ class BasePage(BasePage):
                         logger(f"not found - {locator}")
                         pass
                 if current_text != name: input_text.AXValue = name
-                time.sleep(1)
+                time.sleep(OPERATION_DELAY*0.5)
                 self.find({"AXRole": "AXButton", "AXTitle": "Create"}).press()
-                time.sleep(1)
+                time.sleep(OPERATION_DELAY*0.5)
                 self.keyboard.right()
-                time.sleep(0.5)
+                time.sleep(OPERATION_DELAY*0.5)
         for btn_name in btn_confirms:
             if btn := self.exist([
                 dialog_locator,
                 {"AXTitle": btn_name, "AXRole": "AXButton"},
             ], timeout=0, no_warning=True):
-                time.sleep(OPERATION_DELAY)
+                time.sleep(OPERATION_DELAY*0.5)
                 self.mouse.click(*btn.center)
                 return True
         return False
@@ -1294,10 +1294,12 @@ class BasePage(BasePage):
     # For Launcher related pages ------>
     @step("[Action][Base_page] click 'New Project' button on Launcher")
     def click_new_project_on_launcher(self):
-        # if find launcher
-        if self.is_exist(L.base.launcher_window.main):
-            if self.click(L.base.launcher_window.btn_new_project):
-                return True
+        for _ in range(10):
+            # if find launcher
+            if self.is_exist(L.base.launcher_window.main):
+                if self.click(L.base.launcher_window.btn_new_project):
+                    return True
+            time.sleep(OPERATION_DELAY)
         return False
 
     def check_WOW_content_OK_on_launcher(self):

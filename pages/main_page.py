@@ -14,6 +14,8 @@ class Main_Page(BasePage):
 
     def start_app(self):
         try:
+            self.close_app()
+            time.sleep(OPERATION_DELAY*0.5)
             self.launch_app(30)
             print('launch app ok')
             timeout = 30
@@ -51,19 +53,20 @@ class Main_Page(BasePage):
     def launch_free_version(self):
         try:
             check_free_version = False
-            for _ in range(10):
+            for _ in range(30):
                 # Click [Launch Free Version]
                 free_version_link = self.exist({'AXTitle': 'LAUNCH FREE VERSION', 'AXRole': 'AXLink'})
                 free_version_btn = self.exist({'AXTitle': 'Launch Free Version', 'AXRole': 'AXButton'})
                 logger(f'{free_version_link=}, {free_version_btn=}')
-                time.sleep(OPERATION_DELAY*3) # wait for the dialog is ready to click
+                time.sleep(OPERATION_DELAY) # wait for the dialog is ready to click
                 
                 if free_version_link:
                     self.mouse.click(*free_version_link.center)
-                    check_free_version = True
-                    break
                 elif free_version_btn:
                     self.mouse.click(*free_version_btn.center)
+
+                # check if launcher is shown
+                if self.is_exist(L.base.launcher_window.main):
                     check_free_version = True
                     break
                     
@@ -121,12 +124,13 @@ class Main_Page(BasePage):
             for _ in range(10):
                 if self.is_exist(L.main.tips_area.btn_insert_to_selected_track, None, 2):
                     time.sleep(OPERATION_DELAY)
-                else: return True
+                else: 
+                    time.sleep(OPERATION_DELAY)
+                    return True
             raise Exception('Fail to add media to selected track')
         except Exception as e:
             logger(f'Exception occurs. log={e}')
             raise Exception(f'Exception occurs. log={e}')
-        return True
 
     def timeline_trim_enlarge_drag_clip_edge_menu(self, option=1): # option: -1-None, 0-Overwrite,
         # 1-Trim and Move Clips, 2-Trim and Move All Clips
@@ -302,6 +306,7 @@ class Main_Page(BasePage):
                 self.keyboard.send(unit)
                 time.sleep(OPERATION_DELAY * 0.5)
             self.keyboard.enter()
+            time.sleep(OPERATION_DELAY * 0.5)
             #time.sleep(OPERATION_DELAY * 0.5)
             #value = el_locator.AXValue
             #logger(f'Final {value=}')
@@ -670,7 +675,7 @@ class Main_Page(BasePage):
                 import shutil
                 shutil.rmtree(uncompress_folder_path)
             self.select_file(file_path)
-            time.sleep(4)
+            time.sleep(OPERATION_DELAY)
             if uncompress_folder_path:
                 self.select_file(uncompress_folder_path)
                 time.sleep(OPERATION_DELAY)
@@ -1260,7 +1265,12 @@ class Main_Page(BasePage):
 
     @step('[Action] Close AP and back to launcher')
     def click_close_then_back_to_launcher(self):
-        result = self.click(L.main.main_window.btn_close)
-        time.sleep(1)
+        for _ in range(10):
+            result = self.click(L.main.main_window.btn_close)
+            if self.is_exist(L.base.launcher_window.main):
+                break
+            else:
+                time.sleep(1)
+        time.sleep(0.5)
         return result 
         

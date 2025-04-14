@@ -7,7 +7,7 @@ from AppKit import NSScreen
 from .locator import locator as L
 from reportportal_client import step
 
-
+DELAY_TIME = 1
 def arrow(obj, button="up", times=1, locator=None):
     locator = locator[button.lower() == "up"]
     elem = obj.exist(locator)
@@ -96,13 +96,13 @@ def _set_checkbox(self, _locator, value=True, _get_status_only=False):
                 break
             else:
                 target.press()
-                time.sleep(1)
+                time.sleep(DELAY_TIME)
                 break
         except:
             logger("First round, force click it")
             if _get_status_only: target.press()
             target.press()
-            time.sleep(1)
+            time.sleep(DELAY_TIME)
     else:
         return False
     return True
@@ -134,6 +134,7 @@ class FixEnhance(BasePage):
     def set_check_compare_in_split_preview(self, value):
         target = self.exist(L.fix_enhance.checkbox_compare_in_split_preview)
         if bool(target.AXValue) != value: target.press()
+        time.sleep(DELAY_TIME*2)
         return True
 
     class Fix(BasePage):
@@ -222,12 +223,14 @@ class FixEnhance(BasePage):
 
             self.click(L.fix_enhance.fix.wind_removal.btn_apply)
             processing_render_audio = False
-            for x in range(delay_time):
-                if self.is_not_exist(L.fix_enhance.enhance.tab_color_adjustment, timeout=0.5):
+            for _ in range(delay_time):
+                # if self.is_not_exist(L.fix_enhance.enhance.tab_color_adjustment, timeout=1):
+                if self.is_not_exist(L.fix_enhance.fix.wind_removal.main_window, timeout=1):
                     processing_render_audio = True
                     break
                 else:
-                    time.sleep(1)
+                    time.sleep(DELAY_TIME)
+            time.sleep(DELAY_TIME*5) # wait for the processing render audio
             return processing_render_audio
 
     class Enhance(BasePage):
@@ -405,7 +408,7 @@ class LensCorrection(BasePage):
         target[-1]["AXValue"] = type
         self.exist_click(L.fix_enhance.fix.lens_correction.menu_maker)
         self.exist_click(target)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         return True
 
     def get_marker_type(self):

@@ -407,21 +407,23 @@ class VideoCollageDesigner(BasePage):
             timer = time.time()
             self.exist_press(L.video_collage_designer.media.btn_import)
             self.select_file(file_path, "Open")
-            time.sleep(DELAY_TIME)
-            while time.time()-timer < timeout:
-                self.exist_press(target, timeout=0)
-                dialogs = self.find({"AXSubrole":"AXDialog","recursive":False,"get_all":True})
-                for dialog in dialogs:
-                    if "Importing Media" in dialog.AXTitle:
-                        logger("importing media, wait a sec")
-                        time.sleep(DELAY_TIME)
-                        continue
-                logger("Importation completed")
-                time.sleep(DELAY_TIME)
-                return True
-            else:
-                return False
             
+            while time.time() - timer < timeout:
+                seen_dialog = False  # Track if we ever saw the "Importing Media" dialog
+                self.exist_press(target, timeout=0)
+                dialogs = self.find({"AXSubrole": "AXDialog", "recursive": False, "get_all": True})
+                dialog_titles = [d.AXTitle for d in dialogs]
+
+                if any("Importing Media" in title for title in dialog_titles):
+                    seen_dialog = True  # Detected at least once
+                elif seen_dialog:
+                    # It was seen before and now it's gone — done!
+                    return True
+
+                time.sleep(DELAY_TIME * 0.5)
+
+            return False  # Timed out
+                    
         @step('[Action][VideoCollageDesigner][Media] Select media category')
         def select_category(self, index):
             target = [

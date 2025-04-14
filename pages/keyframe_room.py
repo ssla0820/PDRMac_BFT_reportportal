@@ -52,6 +52,7 @@ def set_category_fold_enable(obj, category, value): # category: fix, clip, volum
         if not el_triangle.AXValue == value:
             el_triangle.press()
             time.sleep(OPERATION_DELAY)
+        time.sleep(OPERATION_DELAY*0.5)
     except Exception as e:
         logger(f'Exception occurs: {e}')
         raise Exception

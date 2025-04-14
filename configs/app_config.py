@@ -11,13 +11,9 @@ PDR_cap = {
     'app_name': 'PowerDirector 365',
     'app_bundleID': 'com.cyberlink.powerdirector',
     'app_path': '/Applications/PowerDirector 365.app',
-    'ground_truth_root': root + '/Desktop/ground_truth',
-    'auto_ground_truth_root': root + '/Desktop/auto_ground_truth',
-    'testing_material': os.path.abspath('../Material') + "/",
     'ground_truth_root': root + '/Desktop/AT/GroundTruth/ground_truth',
     'auto_ground_truth_root': root + '/Desktop/AT/GroundTruth/auto_ground_truth',
-    'testing_material': root + '/Desktop/AT/Material_m320/',
-    'export_path': root + '/Desktop/AT/export_path',
+    'testing_material': root + '/Desktop/AT/BFT_Material/',
 }
 
 PDR_hardcode_cap = {

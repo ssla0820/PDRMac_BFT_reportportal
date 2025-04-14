@@ -1043,7 +1043,7 @@ class Subtitle_Room(BasePage):
             return False
         else:
             self.click(L.subtitle_room.btn_merge)
-            time.sleep(DELAY_TIME*0.5)
+            time.sleep(DELAY_TIME)
             return True
 
     def get_merge_btn(self):

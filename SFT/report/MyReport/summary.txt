@@ -1,1 +1,0 @@
-{'title': '', 'date': '2025-01-21', 'time': '17:38:12', 'server': 'Mac OS', 'os': "driver.capabilities['os']", 'device': "driver.capabilities['device']", 'version': "driver.capabilities['version']", 'pass': 0, 'fail': 0, '_fail': 0, 'na': 0, 'skip': 627, 'duration': '0:00:43', 'tr': 'input_tr', 'sr': 'input_sr', 'build_version': 'input_build_ver'}

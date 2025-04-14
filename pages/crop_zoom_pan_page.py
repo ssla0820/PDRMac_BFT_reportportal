@@ -199,6 +199,7 @@ class Crop_Zoom_Pan(BasePage):
 
     def click_cancel(self):
         self.exist_click(L.crop_zoom_pan.cancel)
+        time.sleep(OPERATION_DELAY)
         return self.is_not_exist(L.crop_zoom_pan.window, timeout=3)
 
     def get_reset_status(self):

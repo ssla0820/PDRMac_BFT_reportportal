@@ -20,7 +20,7 @@ option_project_aspect_ratio_9_16 = {'AXIdentifier': 'IDM_PROJECT_ASPECT_RATIO_9_
 option_project_aspect_ratio_1_1 = {'AXIdentifier': 'IDM_PROJECT_ASPECT_RATIO_1_1'}
 dlg_loading_project = {'AXRoleDescription': 'dialog'}
 
-dlg_whats_name_title = {'AXTitle': 'New Features in 2024 PowerDirector', 'AXRole': 'AXWindow'}
+dlg_whats_name_title = {'AXTitle': 'New Features in 2025 PowerDirector      ', 'AXRole': 'AXWindow'}
 
 class top_menu_bar():
     btn_powerdirector = {'AXRoleDescription': 'menu bar item', 'AXTitle': 'PowerDirector'}

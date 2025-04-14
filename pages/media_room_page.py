@@ -2089,13 +2089,13 @@ class Media_Room(BasePage):
             logger(f'Exception occurs. log={e}')
             raise Exception
         return True
-
+    
     def drag_media_content_scroll_bar(self, value):
         try:
             self.drag_color_board_scroll_bar(value)
         except Exception as e:
             logger(f'Exception occurs. log={e}')
-            raise Exception
+            raise Exception(f'Exception occurs. log={e}')
         return True
 
     def drag_background_music_scroll_bar_vertical(self, value):

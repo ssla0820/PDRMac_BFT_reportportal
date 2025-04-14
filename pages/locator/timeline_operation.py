@@ -3,6 +3,7 @@ render_preview_dialog = {'AXIdentifier': '_NS:34', 'AXRole': 'AXStaticText'} # 2
 render_preview_progress_bar = {'AXTitle': 'Render Preview', 'AXRole': 'AXWindow'}
 #rendering_dialog = {'AXIdentifier': '_NS:11', 'AXRole': 'AXStaticText'} # unused
 workspace = {'AXIdentifier': 'IDD_WORKSPACE', 'AXRole': 'AXWindow'}
+drag_n_drop_media_str = {'AXIdentifier': '_NS:78', 'AXRole': 'AXStaticText', 'AXValue': 'Drag and drop media here to start creating.'}
 
 timeline_context_menu = {'AXIdentifier': '_NS:9', 'AXRole': 'AXMenu'} # 2529: _NS:9
 timeline_context_menu_overwrite = [{'AXIdentifier': '_NS:9', 'AXRole': 'AXMenu'}, {'AXIdentifier': '_NS:12', 'AXRole': 'AXMenuItem'}] # 2529: _NS:9/12

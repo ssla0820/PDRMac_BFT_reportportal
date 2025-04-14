@@ -5,6 +5,7 @@ from .locator import locator as L
 from ATFramework.utils import logger
 from reportportal_client import step
 
+DELAY_TIME = 1
 def arrow(obj, button="up", times=1, locator=None):
     locator = locator[button.lower() == "up"]
     elem = obj.exist(locator)
@@ -59,7 +60,7 @@ class Video_speed_page(BasePage):
 
         pos_click = tuple(map(int, (x + w * 0.1, y + h * 0.5)))
         self.mouse.click(*pos_click)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         self.keyboard.send(timecode.replace("_", ""))
         self.keyboard.enter()
         return True
@@ -91,7 +92,7 @@ class Video_speed_page(BasePage):
         x, y = elem.AXPosition
         pos_click = tuple(map(int, (x + w * 0.1, y + h * 0.5)))
         self.mouse.click(*pos_click)
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         if _clear:
             with self.keyboard.pressed(self.keyboard.key.cmd, "a"): time.sleep(0.3)
         self.keyboard.send(timecode.replace("_", ""))
@@ -132,7 +133,7 @@ class Video_speed_page(BasePage):
 
     def Edit_VideoSpeedDesigner_SelectRange_Click_i_Button(self):
         self.exist(L.video_speed.i_button).press()
-        time.sleep(1)
+        time.sleep(DELAY_TIME)
         return self.is_exist(L.video_speed.i_dialog)
 
     @step('[Action][Video Speed] Click [Create Time Shift] button to upper')
@@ -214,6 +215,7 @@ class Video_speed_page(BasePage):
     @step('[Action][Video Speed] Click [Reset] button in [Video Speed Designer]')
     def Edit_VideoSpeedDesigner_ClickReset(self):
         self.find(L.video_speed.reset).press()
+        time.sleep(DELAY_TIME*2)
         return True
 
     def Edit_VideoSpeedDesigner_ClickCancel(self):
