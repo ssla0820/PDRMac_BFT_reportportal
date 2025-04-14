@@ -914,7 +914,7 @@ class Test_BFT_365_OS14():
         '''
         # Ensure the dependency test is run and passed
         dependency_test = "test_media_room_func_2_4"
-        # self.ensure_dependency(dependency_test)
+        self.ensure_dependency(dependency_test)
 
 
         # # [L102] On Boarding flow_2> Continue above case > check UI response of "bubbles"
@@ -922,11 +922,13 @@ class Test_BFT_365_OS14():
 
         blue_bubble_1_image = main_page.snapshot(L.media_room.string_on_boarding_blue_bubble_media, file_name=Auto_Ground_Truth_Folder + 'L102_1.png')
         blue_bubble_2_image = main_page.snapshot(L.media_room.string_on_boarding_blue_bubble_tooltip, file_name=Auto_Ground_Truth_Folder + 'L102_2.png')
-        bubble_1_preview_result = main_page.compare(Ground_Truth_Folder + 'L102_1.png', blue_bubble_1_image)
-        bubble_2_preview_result = main_page.compare(Ground_Truth_Folder + 'L102_2.png', blue_bubble_2_image)
+
+        if not main_page.compare(Ground_Truth_Folder + 'L102_1.png', blue_bubble_1_image):
+            assert False, "Bubble content is incorrect!, media bubble reuslt=False"
+        if not main_page.compare(Ground_Truth_Folder + 'L102_2.png', blue_bubble_2_image):
+            assert False, "Bubble content is incorrect!, tooltip bubble reuslt=False"
         
-        assert bubble_1_preview_result and bubble_2_preview_result, f"Bubble content is incorrect!, media bubble= {bubble_1_preview_result}, tooltip bubble= {bubble_2_preview_result}"
-    
+        assert True    
     
     @pytest.mark.media_room_func
     @pytest.mark.media_room

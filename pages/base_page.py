@@ -8,6 +8,7 @@ from reportportal_client import step
 
 from ATFramework.pages.base_page import BasePage
 from ATFramework.utils import logger
+from ATFramework.utils.image_diff import diff_image
 
 from .locator import locator as L
 
@@ -140,6 +141,8 @@ class BasePage(BasePage):
 
     @step("[Action] Base_page: Compare Images")
     def compare(self, source_path, target_path, similarity=0.95, color=False):
+        img_diff = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'compare_image.png')
+        logger(img_diff)
         logger(f"{source_path=}\n{target_path=}\n{similarity=}")
         try:
             if not os.path.exists(source_path):
@@ -147,9 +150,10 @@ class BasePage(BasePage):
                 os.makedirs(os.path.dirname(source_path), exist_ok=True)
                 shutil.copyfile(target_path, source_path)
                 return
-            ret = self.image.search(source_path, target_path, color=color)
-            logger(f"Result similarity = {ret.similarity}")
-            return True if ret.similarity > similarity else False
+            result_similar = diff_image.generate_diff_image(source_path, target_path, img_diff)
+            # ret = self.image.search(source_path, target_path, color=color)
+            logger(f"Result similarity = {result_similar}")
+            return True if result_similar > similarity else False
         except Exception as e:
             logger(f"compare fail -> {e}")
 
